@@ -1,0 +1,256 @@
+/* ========================================
+   CUSTOM BUTTON SETTINGS OVERRIDE
+   Connected to Theme Settings > Button Settings
+   This file overrides all button styles from base.css
+   ======================================== */
+
+/* Override base button styles for ALL buttons EXCEPT cart remove */
+.button:not(cart-remove-button .button),
+.customer button,
+.shopify-challenge__button,
+.shopify-payment-button__button--unbranded,
+.shopify-payment-button [role="button"],
+.cart__dynamic-checkout-buttons [role="button"],
+button.button:not(cart-remove-button button.button),
+a.button:not(cart-remove-button a.button),
+input[type="submit"].button,
+input[type="button"].button,
+button[type="submit"]:not(cart-remove-button button),
+.product-form__submit,
+.quick-add__submit,
+.cart__checkout-button {
+  /* Display and layout */
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  /* Background - with gradient support */
+  {% if settings.button_gradient_enabled %}
+    background: {{ settings.button_gradient }} !important;
+    background-color: transparent !important;
+  {% else %}
+    background: {{ settings.button_background_color }} !important;
+    background-color: {{ settings.button_background_color }} !important;
+  {% endif %}
+
+  /* Text color and font */
+  color: {{ settings.button_text_color }} !important;
+  font-weight: {{ settings.button_font_weight | default: 700 }} !important;
+  font-size: {{ settings.button_font_size_mobile | default: 14 }}px !important;
+  letter-spacing: {{ settings.button_letter_spacing | default: 0 }}px !important;
+  text-transform: {{ settings.button_text_transform | default: 'none' }} !important;
+  text-decoration: none !important;
+  font-family: inherit !important;
+
+  /* Border */
+  border: {{ settings.button_border_width | default: 0 }}px solid {{ settings.button_border_color }} !important;
+  border-radius: {{ settings.button_border_radius | default: 0 }}px !important;
+
+  /* Padding */
+  padding: {{ settings.button_padding_vertical | default: 12 }}px {{ settings.button_padding_horizontal | default: 30 }}px !important;
+
+  /* Other properties */
+  transition: all 0.3s ease !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  z-index: 0 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+}
+
+/* Desktop font size and padding */
+@media screen and (min-width: 750px) {
+  .button:not(cart-remove-button .button),
+  .customer button,
+  .shopify-challenge__button,
+  .shopify-payment-button__button--unbranded,
+  .shopify-payment-button [role="button"],
+  .cart__dynamic-checkout-buttons [role="button"],
+  button.button:not(cart-remove-button button.button),
+  a.button:not(cart-remove-button a.button),
+  input[type="submit"].button,
+  input[type="button"].button,
+  button[type="submit"]:not(cart-remove-button button),
+  .product-form__submit,
+  .quick-add__submit,
+  .cart__checkout-button {
+    font-size: {{ settings.button_font_size_desktop | default: 16 }}px !important;
+    padding: {{ settings.button_padding_vertical | default: 12 }}px {{ settings.button_padding_horizontal | default: 30 }}px !important;
+  }
+}
+
+/* Button hover state */
+{% if settings.button_hover_enabled %}
+.button:hover:not(cart-remove-button .button:hover),
+.customer button:hover,
+.shopify-challenge__button:hover,
+.shopify-payment-button__button--unbranded:hover,
+.shopify-payment-button [role="button"]:hover,
+.cart__dynamic-checkout-buttons [role="button"]:hover,
+button.button:hover:not(cart-remove-button button.button:hover),
+a.button:hover:not(cart-remove-button a.button:hover),
+input[type="submit"].button:hover,
+input[type="button"].button:hover,
+button[type="submit"]:hover:not(cart-remove-button button:hover),
+.product-form__submit:hover,
+.quick-add__submit:hover,
+.cart__checkout-button:hover {
+  {% if settings.button_hover_gradient_enabled %}
+    background: {{ settings.button_hover_gradient }} !important;
+  {% elsif settings.button_hover_background_color %}
+    background: {{ settings.button_hover_background_color }} !important;
+    background-color: {{ settings.button_hover_background_color }} !important;
+  {% else %}
+    opacity: 0.9 !important;
+  {% endif %}
+
+  {% if settings.button_hover_text_color %}
+    color: {{ settings.button_hover_text_color }} !important;
+  {% endif %}
+
+  {% if settings.button_hover_border_color %}
+    border-color: {{ settings.button_hover_border_color }} !important;
+  {% endif %}
+
+  transform: translateY(-2px) !important;
+}
+{% endif %}
+
+/* Remove ALL button pseudo-elements and box-shadows */
+.button:before,
+.button:after,
+.customer button:before,
+.customer button:after,
+.shopify-challenge__button:before,
+.shopify-challenge__button:after,
+.shopify-payment-button__button--unbranded:before,
+.shopify-payment-button__button--unbranded:after,
+.cart__dynamic-checkout-buttons [role=button]:before,
+.cart__dynamic-checkout-buttons [role=button]:after,
+.shopify-payment-button [role=button]:before,
+.shopify-payment-button [role=button]:after,
+button.button:before,
+button.button:after,
+a.button:before,
+a.button:after,
+input[type="submit"].button:before,
+input[type="submit"].button:after,
+input[type="button"].button:before,
+input[type="button"].button:after,
+button[type="submit"]:before,
+button[type="submit"]:after,
+.product-form__submit:before,
+.product-form__submit:after,
+.quick-add__submit:before,
+.quick-add__submit:after,
+.cart__checkout-button:before,
+.cart__checkout-button:after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Override CSS variables for all buttons */
+body {
+  --color-button: {{ settings.button_background_color | color_extract: 'red' }}, {{ settings.button_background_color | color_extract: 'green' }}, {{ settings.button_background_color | color_extract: 'blue' }};
+  --color-button-text: {{ settings.button_text_color | color_extract: 'red' }}, {{ settings.button_text_color | color_extract: 'green' }}, {{ settings.button_text_color | color_extract: 'blue' }};
+  --alpha-button-background: 1;
+  --buttons-border-width: {{ settings.button_border_width | default: 0 }}px;
+  --buttons-radius: {{ settings.button_border_radius | default: 0 }}px;
+  --buttons-radius-outset: {{ settings.button_border_radius | default: 0 }}px;
+  --border-opacity: 1;
+  --border-offset: 0px;
+}
+
+/* Override for specific button types */
+.button:not(.button--secondary):not(.button--tertiary) {
+  --color-button: {{ settings.button_background_color | color_extract: 'red' }}, {{ settings.button_background_color | color_extract: 'green' }}, {{ settings.button_background_color | color_extract: 'blue' }} !important;
+  --color-button-text: {{ settings.button_text_color | color_extract: 'red' }}, {{ settings.button_text_color | color_extract: 'green' }}, {{ settings.button_text_color | color_extract: 'blue' }} !important;
+}
+
+/* Ensure all button text inherits the color */
+.button *:not(cart-remove-button .button *),
+.customer button *,
+.shopify-challenge__button *,
+.shopify-payment-button__button--unbranded *,
+.shopify-payment-button [role="button"] *,
+.cart__dynamic-checkout-buttons [role="button"] *,
+button.button *:not(cart-remove-button button.button *),
+a.button *:not(cart-remove-button a.button *),
+input[type="submit"].button *,
+input[type="button"].button *,
+button[type="submit"] *:not(cart-remove-button button *),
+.product-form__submit *,
+.quick-add__submit *,
+.cart__checkout-button * {
+  color: inherit !important;
+}
+
+/* Disabled button states */
+.button:disabled,
+.customer button:disabled,
+.shopify-challenge__button:disabled,
+button.button:disabled,
+input[type="submit"].button:disabled,
+input[type="button"].button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* Override any section-specific button colors */
+.color-accent-1 .button:not(.button--secondary):not(.button--tertiary):not(cart-remove-button .button),
+.color-accent-2 .button:not(.button--secondary):not(.button--tertiary):not(cart-remove-button .button),
+.color-background-1 .button:not(.button--secondary):not(.button--tertiary):not(cart-remove-button .button),
+.color-background-2 .button:not(.button--secondary):not(.button--tertiary):not(cart-remove-button .button),
+.color-inverse .button:not(.button--secondary):not(.button--tertiary):not(cart-remove-button .button) {
+  {% if settings.button_gradient_enabled %}
+    background: {{ settings.button_gradient }} !important;
+  {% else %}
+    background-color: {{ settings.button_background_color }} !important;
+  {% endif %}
+  color: {{ settings.button_text_color }} !important;
+  border-color: {{ settings.button_border_color }} !important;
+}
+
+/* Cart Remove Button - Just the icon */
+cart-remove-button .button,
+cart-remove-button a.button,
+cart-remove-button button {
+  background: transparent !important;
+  border: none !important;
+  padding: 0.5rem !important;
+  min-width: auto !important;
+  min-height: auto !important;
+  width: auto !important;
+  height: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: inherit !important;
+}
+
+cart-remove-button .button:before,
+cart-remove-button .button:after,
+cart-remove-button a.button:before,
+cart-remove-button a.button:after,
+cart-remove-button button:before,
+cart-remove-button button:after {
+  display: none !important;
+}
+
+cart-remove-button .button svg,
+cart-remove-button a.button svg,
+cart-remove-button button svg {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  fill: rgba(var(--color-foreground), 0.7) !important;
+}
+
+cart-remove-button .button:hover svg,
+cart-remove-button a.button:hover svg,
+cart-remove-button button:hover svg {
+  fill: rgb(var(--color-foreground)) !important;
+  transform: scale(1.1) !important;
+  transition: all 0.2s ease !important;
+}

@@ -1,0 +1,2728 @@
+{% comment %}
+  Renders quantity breaks bundle selector with instant cart update and connected pricing
+  
+  Accepts:
+  - product: {Object} product object
+  - block: {Object} block settings
+  - product_form_id: {String} product form ID
+  
+  Usage:
+  {% render 'quantity-breaks-v2', product: product, block: block, product_form_id: product_form_id %}
+{% endcomment %}
+
+{%- liquid
+  comment
+    ===========================================
+    QUANTITY BREAK 1 SETTINGS
+    ===========================================
+  endcomment
+  
+  assign qb1_image = block.settings.qb1_image
+  assign qb1_title = block.settings.qb1_title | default: 'Single Pack'
+  assign qb1_text = block.settings.qb1_text
+
+  comment
+    ===========================================
+    QUANTITY BREAK 1 BADGE SETTINGS
+    ===========================================
+  endcomment
+  
+  assign qb1_enable_badge = block.settings.qb1_enable_badge | default: false
+  assign qb1_badge_text = block.settings.qb1_badge_text | default: 'POPULAR'
+  assign qb1_badge_color = block.settings.qb1_badge_color | default: '#ffffff'
+  assign qb1_badge_bg_color = block.settings.qb1_badge_bg_color | default: '#ff4444'
+  assign qb1_badge_enable_gradient = block.settings.qb1_badge_enable_gradient | default: false
+  assign qb1_badge_gradient_start = block.settings.qb1_badge_gradient_start | default: '#ff4444'
+  assign qb1_badge_gradient_end = block.settings.qb1_badge_gradient_end | default: '#ff6666'
+  assign qb1_badge_font_size = block.settings.qb1_badge_font_size | default: 11
+  assign qb1_badge_font_weight = block.settings.qb1_badge_font_weight | default: '600'
+  assign qb1_badge_border_radius = block.settings.qb1_badge_border_radius | default: 4
+  assign qb1_badge_border_width = block.settings.qb1_badge_border_width | default: 0
+  assign qb1_badge_border_color = block.settings.qb1_badge_border_color | default: '#ffffff'
+  assign qb1_badge_padding_top = block.settings.qb1_badge_padding_top | default: 4
+  assign qb1_badge_padding_bottom = block.settings.qb1_badge_padding_bottom | default: 4
+  assign qb1_badge_padding_left = block.settings.qb1_badge_padding_left | default: 12
+  assign qb1_badge_padding_right = block.settings.qb1_badge_padding_right | default: 12
+  assign qb1_badge_full_width = block.settings.qb1_badge_full_width | default: false
+  assign qb1_show_save_badge = block.settings.qb1_show_save_badge | default: false
+  
+  comment
+    ===========================================
+    QUANTITY BREAK 2 SETTINGS
+    ===========================================
+  endcomment
+
+  assign qb2_quantity = block.settings.qb2_quantity | default: 2
+  assign qb2_discount = block.settings.qb2_discount | default: 10
+  assign qb2_image = block.settings.qb2_image
+  assign qb2_title = block.settings.qb2_title | default: 'Double Pack'
+  assign qb2_text = block.settings.qb2_text
+
+  comment
+    ===========================================
+    QUANTITY BREAK 2 BADGE SETTINGS
+    ===========================================
+  endcomment
+  
+  assign qb2_enable_badge = block.settings.qb2_enable_badge | default: false
+  assign qb2_badge_text = block.settings.qb2_badge_text | default: 'POPULAR'
+  assign qb2_badge_color = block.settings.qb2_badge_color | default: '#ffffff'
+  assign qb2_badge_bg_color = block.settings.qb2_badge_bg_color | default: '#ff4444'
+  assign qb2_badge_enable_gradient = block.settings.qb2_badge_enable_gradient | default: false
+  assign qb2_badge_gradient_start = block.settings.qb2_badge_gradient_start | default: '#ff4444'
+  assign qb2_badge_gradient_end = block.settings.qb2_badge_gradient_end | default: '#ff6666'
+  assign qb2_badge_font_size = block.settings.qb2_badge_font_size | default: 11
+  assign qb2_badge_font_weight = block.settings.qb2_badge_font_weight | default: '600'
+  assign qb2_badge_border_radius = block.settings.qb2_badge_border_radius | default: 4
+  assign qb2_badge_border_width = block.settings.qb2_badge_border_width | default: 0
+  assign qb2_badge_border_color = block.settings.qb2_badge_border_color | default: '#ffffff'
+  assign qb2_badge_padding_top = block.settings.qb2_badge_padding_top | default: 4
+  assign qb2_badge_padding_bottom = block.settings.qb2_badge_padding_bottom | default: 4
+  assign qb2_badge_padding_left = block.settings.qb2_badge_padding_left | default: 12
+  assign qb2_badge_padding_right = block.settings.qb2_badge_padding_right | default: 12
+  assign qb2_badge_full_width = block.settings.qb2_badge_full_width | default: false
+  assign qb2_show_save_badge = block.settings.qb2_show_save_badge | default: false
+  
+  comment
+    ===========================================
+    QUANTITY BREAK 3 SETTINGS
+    ===========================================
+  endcomment
+
+  assign qb3_hide = block.settings.qb3_hide | default: false
+  assign qb3_quantity = block.settings.qb3_quantity | default: 3
+  assign qb3_discount = block.settings.qb3_discount | default: 15
+  assign qb3_image = block.settings.qb3_image
+  assign qb3_title = block.settings.qb3_title | default: 'Triple Pack'
+  assign qb3_text = block.settings.qb3_text
+
+  comment
+    ===========================================
+    QUANTITY BREAK 3 BADGE SETTINGS
+    ===========================================
+  endcomment
+  
+  assign qb3_enable_badge = block.settings.qb3_enable_badge | default: false
+  assign qb3_badge_text = block.settings.qb3_badge_text | default: 'BEST VALUE'
+  assign qb3_badge_color = block.settings.qb3_badge_color | default: '#ffffff'
+  assign qb3_badge_bg_color = block.settings.qb3_badge_bg_color | default: '#00C7FF'
+  assign qb3_badge_enable_gradient = block.settings.qb3_badge_enable_gradient | default: false
+  assign qb3_badge_gradient_start = block.settings.qb3_badge_gradient_start | default: '#00C7FF'
+  assign qb3_badge_gradient_end = block.settings.qb3_badge_gradient_end | default: '#00A8D4'
+  assign qb3_badge_font_size = block.settings.qb3_badge_font_size | default: 11
+  assign qb3_badge_font_weight = block.settings.qb3_badge_font_weight | default: '600'
+  assign qb3_badge_border_radius = block.settings.qb3_badge_border_radius | default: 4
+  assign qb3_badge_border_width = block.settings.qb3_badge_border_width | default: 0
+  assign qb3_badge_border_color = block.settings.qb3_badge_border_color | default: '#ffffff'
+  assign qb3_badge_padding_top = block.settings.qb3_badge_padding_top | default: 4
+  assign qb3_badge_padding_bottom = block.settings.qb3_badge_padding_bottom | default: 4
+  assign qb3_badge_padding_left = block.settings.qb3_badge_padding_left | default: 12
+  assign qb3_badge_padding_right = block.settings.qb3_badge_padding_right | default: 12
+  assign qb3_badge_full_width = block.settings.qb3_badge_full_width | default: false
+  assign qb3_show_save_badge = block.settings.qb3_show_save_badge | default: false
+  
+  comment
+    ===========================================
+    STYLING SETTINGS
+    ===========================================
+  endcomment
+  
+  assign active_border_color = block.settings.active_border_color | default: '#ff0000'
+  assign inactive_border_color = block.settings.inactive_border_color | default: '#e5e5e5'
+  assign border_width = block.settings.border_width | default: 2
+  assign active_bg_color = block.settings.active_bg_color | default: '#ffffff'
+  assign inactive_bg_color = block.settings.inactive_bg_color | default: '#ffffff'
+  assign enable_gradient = block.settings.enable_gradient | default: false
+  assign gradient_start = block.settings.gradient_start | default: '#ffffff'
+  assign gradient_end = block.settings.gradient_end | default: '#f8f8f8'
+  assign hide_prices = block.settings.hide_prices | default: false
+  assign hide_images = block.settings.hide_images | default: false
+  assign variant_border_color = block.settings.variant_border_color | default: '#e5e5e5'
+  assign title_text_color = block.settings.title_text_color | default: '#333333'
+  assign title_text_color_active = block.settings.title_text_color_active | default: '#000000'
+  assign price_text_color = block.settings.price_text_color | default: '#00C7FF'
+  assign compare_price_text_color = block.settings.compare_price_text_color | default: '#999999'
+  assign border_radius = block.settings.border_radius | default: 8
+  
+  comment
+    ===========================================
+    SPACING SETTINGS
+    ===========================================
+  endcomment
+  
+  assign margin_top = block.settings.margin_top | default: 16
+  assign margin_bottom = block.settings.margin_bottom | default: 16
+  assign qb_padding_top = block.settings.qb_padding_top | default: 16
+  assign qb_padding_bottom = block.settings.qb_padding_bottom | default: 16
+  assign qb_padding_left = block.settings.qb_padding_left | default: 16
+  assign qb_padding_right = block.settings.qb_padding_right | default: 16
+
+  # Spacing & Layout
+  assign qb_gap_image_text = block.settings.qb_gap_image_text | default: 16
+  assign qb_gap_options = block.settings.qb_gap_options | default: 12
+
+  # Container Width
+  assign qb_container_width_desktop = block.settings.qb_container_width_desktop | default: 100
+  assign qb_container_width_mobile = block.settings.qb_container_width_mobile | default: 100
+
+  # Image Settings
+  assign qb_image_size = block.settings.qb_image_size | default: 60
+  assign qb_image_border_radius = block.settings.qb_image_border_radius | default: 8
+  
+  # Typography
+  assign qb_title_font_size = block.settings.qb_title_font_size | default: 16
+  assign qb_title_font_weight = block.settings.qb_title_font_weight | default: '600'
+  assign qb_price_font_size = block.settings.qb_price_font_size | default: 18
+  assign qb_price_font_weight = block.settings.qb_price_font_weight | default: '600'
+  assign qb_text_color_inactive = block.settings.qb_text_color_inactive | default: '#666666'
+  assign qb_text_color_active = block.settings.qb_text_color_active | default: '#000000'
+  assign qb_text_font_size = block.settings.qb_text_font_size | default: 14
+  assign qb_text_font_weight = block.settings.qb_text_font_weight | default: '400'
+  assign qb_text_margin_top = block.settings.qb_text_margin_top | default: 4
+  assign qb_compare_price_font_size = block.settings.qb_compare_price_font_size | default: 14
+  assign qb_compare_price_font_weight = block.settings.qb_compare_price_font_weight | default: '400'
+  
+  # Active State Colors
+  assign qb_active_bg_color = block.settings.qb_active_bg_color | default: '#f8f9fa'
+  assign qb_active_title_color = block.settings.qb_active_title_color | default: '#000000'
+  assign qb_active_price_color = block.settings.qb_active_price_color | default: '#00C7FF'
+  assign qb_active_compare_price_color = block.settings.qb_active_compare_price_color | default: '#999999'
+  assign qb_active_savings_color = block.settings.qb_active_savings_color | default: '#28a745'
+  assign qb_active_badge_text_color = block.settings.qb_active_badge_text_color | default: '#ffffff'
+  assign qb_active_badge_bg_color = block.settings.qb_active_badge_bg_color | default: '#ff4444'
+
+  # Additional UI Colors
+  assign qb_header_line_color = block.settings.qb_header_line_color | default: '#dddddd'
+  assign qb_sold_out_bg_color = block.settings.qb_sold_out_bg_color | default: '#f5f5f5'
+  assign qb_sold_out_border_color = block.settings.qb_sold_out_border_color | default: '#e5e5e5'
+  assign qb_sold_out_badge_bg_color = block.settings.qb_sold_out_badge_bg_color | default: '#ff4444'
+  assign qb_sold_out_badge_text_color = block.settings.qb_sold_out_badge_text_color | default: '#ffffff'
+  assign qb_radio_border_color = block.settings.qb_radio_border_color | default: '#bbbbbb'
+  assign qb_radio_active_color = block.settings.qb_radio_active_color | default: price_text_color
+-%}
+
+<style>
+  .qb-wrapper {
+    margin: {{ margin_top }}px 0 {{ margin_bottom }}px 0;
+  }
+  .qb-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .qb-header-line { flex: 1; height: 1px; background: {{ qb_header_line_color }}; }
+  .qb-header-text { 
+    font-weight: 700; 
+    font-size: 18px; 
+    white-space: nowrap;
+    color: {{ title_text_color }};
+  }
+  .qb-options {
+    display: flex;
+    flex-direction: row;
+    gap: {{ qb_gap_options }}px;
+    width: {{ qb_container_width_desktop }}%;
+    margin: 0;
+    justify-content: flex-start;
+  }
+
+  @media screen and (max-width: 749px) {
+    .qb-options {
+      width: {{ qb_container_width_mobile }}%;
+    }
+  }
+
+  .qb-option {
+    display: flex;
+    align-items: center;
+    padding: {{ qb_padding_top }}px {{ qb_padding_right }}px {{ qb_padding_bottom }}px {{ qb_padding_left }}px;
+    border: 2px solid {{ inactive_border_color }};
+    border-radius: {{ border_radius }}px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    flex-direction: column;
+    background-color: {{ inactive_bg_color }};
+    {% if qb_container_width_desktop == 100 %}
+    flex: 1;
+    {% endif %}
+  }
+
+  @media screen and (max-width: 749px) {
+    .qb-option {
+      {% if qb_container_width_mobile == 100 %}
+      flex: 1;
+      {% endif %}
+    }
+  }
+  .qb-option.qb-active {
+    border-color: {{ active_border_color }};
+    {% if enable_gradient %}
+      background: linear-gradient(to right, {{ gradient_start }}, {{ gradient_end }});
+    {% else %}
+      background-color: {{ active_bg_color }};
+    {% endif %}
+  }
+  
+  .qb-option.qb-active .qb-title {
+    color: {{ title_text_color_active }} !important;
+  }
+
+  .qb-option.qb-active .qb-text {
+    color: {{ qb_text_color_active }} !important;
+  }
+
+  .qb-option.qb-active .qb-price {
+    color: {{ qb_active_price_color }};
+  }
+
+  .qb-option.qb-active .qb-compare {
+    color: {{ qb_active_compare_price_color }};
+  }
+  .qb-option.qb-sold-out {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: {{ qb_sold_out_bg_color }};
+  }
+  .qb-option.qb-sold-out:hover {
+    border-color: {{ qb_sold_out_border_color }};
+    background: {{ qb_sold_out_bg_color }};
+  }
+  .qb-sold-out-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 8px 24px;
+    background: {{ qb_sold_out_badge_bg_color }};
+    color: {{ qb_sold_out_badge_text_color }};
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    z-index: 10;
+    pointer-events: none;
+  }
+  
+  .qb-radio {
+    width: 20px;
+    height: 20px;
+    border: 2px solid {{ qb_radio_border_color }};
+    border-radius: 50%;
+    margin-right: 16px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .qb-option.qb-active .qb-radio { border-color: {{ qb_radio_active_color }}; }
+  .qb-radio::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: {{ qb_radio_active_color }};
+    transition: transform 0.2s;
+  }
+  .qb-option.qb-active .qb-radio::after { transform: translate(-50%, -50%) scale(1); }
+  
+  .qb-badge {
+    position: absolute;
+    padding: 4px 12px;
+    z-index: 1;
+    white-space: nowrap;
+  }
+
+  .qb-badge-top-center:not(.qb-badge-full-width) {
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .qb-content {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 3px;
+    flex-direction: column;
+    width: 100%;
+  }
+  .qb-left {
+    display: flex;
+    gap: {{ qb_gap_image_text }}px;
+    align-items: center;
+    flex: 1;
+    flex-direction: column;
+  }
+  .qb-image {
+    width: {{ qb_image_size }}px;
+    height: {{ qb_image_size }}px;
+    border-radius: {{ qb_image_border_radius }}px;
+    overflow: hidden;
+    flex-shrink: 0;
+    {% if hide_images %}
+      display: none !important;
+    {% endif %}
+  }
+  .qb-image img { width: 100%; height: 100%; object-fit: cover; }
+  
+  .qb-info {
+    flex: 1;
+    text-align: center;
+  }
+  .qb-title {
+    font-size: {{ qb_title_font_size }}px;
+    font-weight: {{ qb_title_font_weight }};
+    color: {{ title_text_color }};
+  }
+  .qb-text {
+    margin-top: {{ qb_text_margin_top }}px;
+    transition: color 0.2s ease;
+    text-align: center;
+  }
+  .qb-pricing {
+    text-align: center;
+    width: max-content;
+  }
+  .qb-price {
+    font-size: {{ qb_price_font_size }}px;
+    font-weight: {{ qb_price_font_weight }};
+    color: {{ price_text_color }};
+    transition: all 0.2s ease;
+  }
+  .qb-price.qb-price-updating {
+    opacity: 0.5;
+    transform: scale(0.98);
+  }
+  .qb-compare {
+    font-size: {{ qb_compare_price_font_size }}px;
+    font-weight: {{ qb_compare_price_font_weight }};
+    color: {{ compare_price_text_color }};
+    text-decoration: line-through;
+    transition: all 0.2s ease; 
+  }
+  
+  @media (max-width: 768px) {
+    .qb-content {
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+    .qb-pricing {
+      text-align: center;
+      width: max-content;
+    }
+      flex-direction: row;
+      align-items: stretch;
+    }
+      width: 100%;
+    }
+  }
+
+  .qb-has-badge {
+    margin-top: 6px;
+  }
+
+  /* AGGRESSIVE: Prevent buy button price from ever being hidden */
+  #main-atc-price-{{ section.id }},
+  .main-atc-price {
+    display: inline !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transition: none !important;
+  }
+
+  #main-atc-price-{{ section.id }}.hidden,
+  .main-atc-price.hidden {
+    display: inline !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* AGGRESSIVE: Prevent add to cart button from appearing disabled */
+  .product-form button[type="submit"],
+  button[type="submit"][name="add"],
+  #{{ product_form_id }} button[type="submit"] {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    opacity: 1 !important;
+  }
+
+  .product-form button[type="submit"][disabled],
+  button[type="submit"][name="add"][disabled],
+  #{{ product_form_id }} button[type="submit"][disabled] {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    opacity: 1 !important;
+  }
+
+  /* Force hide empty cart when loading */
+  cart-drawer.is-loading .cart__empty-text,
+  cart-drawer.is-loading .cart-drawer__empty,
+  cart-drawer.is-loading .cart__empty,
+  cart-drawer.is-loading [class*="empty"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+
+</style>
+
+<div class="qb-wrapper" data-product-id="{{ product.id }}" data-form-id="{{ product_form_id }}" data-qb2-discount="{{ qb2_discount }}" data-qb3-discount="{{ qb3_discount }}" {{ block.shopify_attributes }}>
+  {% if show_title %}
+    <div class="qb-header">
+      <div class="qb-header-line"></div>
+      <div class="qb-header-text">{{ title_text }}</div>
+      <div class="qb-header-line"></div>
+    </div>
+  {% endif %}
+
+  <div class="qb-options">
+    {% for n in (1..3) %}
+      {%- liquid
+        case n
+          when 1
+            assign qty = 1
+            assign title = qb1_title
+            assign text = qb1_text
+            assign text_color_inactive = qb_text_color_inactive
+            assign text_color_active = qb_text_color_active
+            assign text_font_size = qb_text_font_size
+            assign text_font_weight = qb_text_font_weight
+            assign enable_badge = qb1_enable_badge
+            assign badge_text = qb1_badge_text
+            assign badge_color = qb1_badge_color
+            assign badge_bg_color = qb1_badge_bg_color
+            assign badge_enable_gradient = qb1_badge_enable_gradient
+            assign badge_gradient_start = qb1_badge_gradient_start
+            assign badge_gradient_end = qb1_badge_gradient_end
+            assign badge_font_size = qb1_badge_font_size
+            assign badge_font_weight = qb1_badge_font_weight
+            assign badge_border_radius = qb1_badge_border_radius
+            assign badge_border_width = qb1_badge_border_width
+            assign badge_border_color = qb1_badge_border_color
+            assign badge_padding_top = qb1_badge_padding_top
+            assign badge_padding_bottom = qb1_badge_padding_bottom
+            assign badge_padding_left = qb1_badge_padding_left
+            assign badge_padding_right = qb1_badge_padding_right
+            assign badge_full_width = qb1_badge_full_width
+            assign show_save_badge = qb1_show_save_badge
+            assign discount = 0
+            assign use_custom_pricing = qb1_use_custom_pricing
+            assign custom_price = qb1_custom_price
+            assign custom_compare_price = qb1_custom_compare_price
+            assign custom_image = qb1_image
+          when 2
+            assign qty = qb2_quantity
+            assign title = qb2_title
+            assign text = qb2_text
+            assign text_color_inactive = qb_text_color_inactive
+            assign text_color_active = qb_text_color_active
+            assign text_font_size = qb_text_font_size
+            assign text_font_weight = qb_text_font_weight
+            assign enable_badge = qb2_enable_badge
+            assign badge_text = qb2_badge_text
+            assign badge_color = qb2_badge_color
+            assign badge_bg_color = qb2_badge_bg_color
+            assign badge_enable_gradient = qb2_badge_enable_gradient
+            assign badge_gradient_start = qb2_badge_gradient_start
+            assign badge_gradient_end = qb2_badge_gradient_end
+            assign badge_font_size = qb2_badge_font_size
+            assign badge_font_weight = qb2_badge_font_weight
+            assign badge_border_radius = qb2_badge_border_radius
+            assign badge_border_width = qb2_badge_border_width
+            assign badge_border_color = qb2_badge_border_color
+            assign badge_padding_top = qb2_badge_padding_top
+            assign badge_padding_bottom = qb2_badge_padding_bottom
+            assign badge_padding_left = qb2_badge_padding_left
+            assign badge_padding_right = qb2_badge_padding_right
+            assign badge_full_width = qb2_badge_full_width
+            assign show_save_badge = qb2_show_save_badge
+            assign discount = qb2_discount
+            assign use_custom_pricing = qb2_use_custom_pricing
+            assign custom_price = qb2_custom_price
+            assign custom_compare_price = qb2_custom_compare_price
+            assign custom_image = qb2_image
+          when 3
+            assign qty = qb3_quantity
+            assign title = qb3_title
+            assign text = qb3_text
+            assign text_color_inactive = qb_text_color_inactive
+            assign text_color_active = qb_text_color_active
+            assign text_font_size = qb_text_font_size
+            assign text_font_weight = qb_text_font_weight
+            assign enable_badge = qb3_enable_badge
+            assign badge_text = qb3_badge_text
+            assign badge_color = qb3_badge_color
+            assign badge_bg_color = qb3_badge_bg_color
+            assign badge_enable_gradient = qb3_badge_enable_gradient
+            assign badge_gradient_start = qb3_badge_gradient_start
+            assign badge_gradient_end = qb3_badge_gradient_end
+            assign badge_font_size = qb3_badge_font_size
+            assign badge_font_weight = qb3_badge_font_weight
+            assign badge_border_radius = qb3_badge_border_radius
+            assign badge_border_width = qb3_badge_border_width
+            assign badge_border_color = qb3_badge_border_color
+            assign badge_padding_top = qb3_badge_padding_top
+            assign badge_padding_bottom = qb3_badge_padding_bottom
+            assign badge_padding_left = qb3_badge_padding_left
+            assign badge_padding_right = qb3_badge_padding_right
+            assign badge_full_width = qb3_badge_full_width
+            assign show_save_badge = qb3_show_save_badge
+            assign discount = qb3_discount
+            assign use_custom_pricing = qb3_use_custom_pricing
+            assign custom_price = qb3_custom_price
+            assign custom_compare_price = qb3_custom_compare_price
+            assign custom_image = qb3_image
+        endcase
+
+        # Skip the third quantity break if it's hidden
+        if n == 3 and qb3_hide
+          continue
+        endif
+
+        assign base_price = product.price | times: qty
+        
+        if use_custom_pricing and custom_price > 0
+          assign final_price = custom_price
+        elsif discount > 0
+          assign discount_multiplier = 100 | minus: discount
+          assign final_price = base_price | times: discount_multiplier | divided_by: 100
+        else
+          assign final_price = base_price
+        endif
+        
+        if use_custom_pricing and custom_compare_price > 0
+          assign final_compare = custom_compare_price
+        elsif product.compare_at_price and product.compare_at_price > product.price
+          assign final_compare = product.compare_at_price | times: qty
+        else
+          assign final_compare = base_price
+        endif
+        
+        assign savings = final_compare | minus: final_price
+
+        assign badge_height = badge_font_size | plus: badge_padding_top | plus: badge_padding_bottom | plus: badge_border_width | plus: badge_border_width
+        assign badge_top_offset = badge_height | divided_by: 2 | plus: 3
+        assign badge_top_position = badge_top_offset | times: -1
+      -%}
+
+      <div class="qb-option {% if n == 1 %}qb-active{% endif %}{% if enable_badge and badge_text != blank %} qb-has-badge{% endif %}"
+           data-qty="{{ qty }}"
+           data-option="{{ n }}"
+           data-final-price="{{ final_price }}"
+           data-final-compare="{{ final_compare }}"
+           style="{% if badge_full_width == true %}margin-top: -{{ badge_height }}px; padding-top: calc({{ qb_padding_top }}px + {{ badge_height }}px);{% endif %}">
+        <div class="qb-badge qb-badge-top-center {% if badge_full_width == true %}qb-badge-full-width{% endif %}"
+             style="
+               {% if enable_badge == false %}display: none !important;{% endif %}
+               color: {{ badge_color }};
+               font-size: {{ badge_font_size }}px;
+               font-weight: {{ badge_font_weight }};
+               border: {{ badge_border_width }}px solid {{ badge_border_color }};
+               padding: {{ badge_padding_top }}px {{ badge_padding_right }}px {{ badge_padding_bottom }}px {{ badge_padding_left }}px;
+               {% if badge_full_width == true %}
+                 position: absolute !important;
+                 top: 0 !important;
+                 left: 0 !important;
+                 right: 0 !important;
+                 width: 100% !important;
+                 margin: 0 !important;
+                 text-align: center !important;
+                 z-index: 1;
+                 border-radius: calc({{ border_radius }}px - {{ border_width }}px) calc({{ border_radius }}px - {{ border_width }}px) 0 0 !important;
+               {% else %}
+                 position: absolute;
+                 top: {{ badge_top_position }}px;
+                 right: 12px;
+                 width: max-content;
+                 z-index: 1;
+                 border-radius: {{ badge_border_radius }}px;
+               {% endif %}
+               white-space: nowrap;
+               {% if badge_enable_gradient %}
+                 background: linear-gradient(45deg, {{ badge_gradient_start }}, {{ badge_gradient_end }});
+               {% else %}
+                 background-color: {{ badge_bg_color }};
+               {% endif %}
+             ">
+          {{ badge_text }}
+        </div>
+        
+        {% if show_save_badge and savings > 0 %}
+          {%- liquid
+            if qty == 1 and product.compare_at_price and product.compare_at_price > product.price
+              assign original_price = product.compare_at_price
+              assign current_price = product.price
+              assign savings_amount = original_price | minus: current_price
+              assign save_percentage = savings_amount | times: 100 | divided_by: original_price
+            else
+              assign single_price = product.price
+              assign total_original_price = single_price | times: qty
+              assign total_discounted_price = final_price
+              assign savings_amount = total_original_price | minus: total_discounted_price
+              assign save_percentage = savings_amount | times: 100 | divided_by: total_original_price
+            endif
+            assign save_percentage_rounded = save_percentage | round
+          -%}
+          <div class="qb-save-badge qb-badge-top-left"
+               style="
+                 color: {{ qb_active_badge_text_color }};
+                 font-size: 11px;
+                 font-weight: 600;
+                 border-radius: 4px;
+                 border: 0px solid {{ qb_active_badge_text_color }};
+                 padding: 4px 8px;
+                 background-color: {{ qb_active_savings_color }};
+                 position: absolute;
+                 top: -13px;
+                 left: 12px;
+                 z-index: 1;
+                 white-space: nowrap;
+               ">
+            SAVE {{ save_percentage_rounded }}%
+          </div>
+        {% endif %}
+        
+        <div class="qb-radio"></div>
+        
+        <div class="qb-content">
+          <div class="qb-left">
+            {% if custom_image != blank %}
+              <div class="qb-image">
+                <img src="{{ custom_image | image_url: width: 200 }}" alt="{{ title }}" loading="lazy" width="200" height="200">
+              </div>
+            {% elsif product.featured_image %}
+              <div class="qb-image">
+                <img src="{{ product.featured_image | image_url: width: 200 }}" alt="{{ product.title }}" loading="lazy" width="200" height="200">
+              </div>
+            {% endif %}
+            
+            <div class="qb-info">
+              <div>
+                <span class="qb-title">{{ title }}</span>
+                {% if text != blank %}
+                  <div class="qb-text"
+                       data-inactive-color="{{ text_color_inactive }}"
+                       data-active-color="{{ text_color_active }}"
+                       style="font-size: {{ text_font_size }}px;
+                              font-weight: {{ text_font_weight }};
+                              color: {{ text_color_inactive }};">
+                    {{ text }}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          {% unless hide_prices %}
+            <div class="qb-pricing">
+              <div class="qb-price">{{ final_price | money }}</div>
+              {% if final_compare > final_price %}
+                <div class="qb-compare">{{ final_compare | money }}</div>
+              {% endif %}
+            </div>
+          {% endunless %}
+        </div>
+        
+        {% unless product.has_only_default_variant %}
+          {% comment %} Check if there are any visible variants {% endcomment %}
+          {% assign has_visible_variants = false %}
+          {% for option in product.options_with_values %}
+            {% assign option_name_lower = option.name | downcase | strip %}
+            {% assign is_hidden = false %}
+            {% for hidden_variant in qb_hidden_variants %}
+              {% assign hidden_variant_trimmed = hidden_variant | strip %}
+              {% if option_name_lower == hidden_variant_trimmed %}
+                {% assign is_hidden = true %}
+                {% break %}
+              {% endif %}
+            {% endfor %}
+            {% unless is_hidden %}
+              {% assign has_visible_variants = true %}
+              {% break %}
+            {% endunless %}
+          {% endfor %}
+
+        {% endunless %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script type="application/json" id="qb-variants-{{ product.id }}">
+  {{ product.variants | json }}
+</script>
+
+<script>
+(function() {
+  'use strict';
+
+  const wrapper = document.querySelector('.qb-wrapper[data-product-id="{{ product.id }}"]');
+  if (!wrapper) {
+    return;
+  }
+
+  const productId = {{ product.id }};
+  const formId = '{{ product_form_id }}';
+  const variantsJson = document.getElementById('qb-variants-' + productId);
+  const variants = variantsJson ? JSON.parse(variantsJson.textContent) : [];
+
+  let selectedQty = 1;
+  let bundleData = { items: [] };
+  let cartDrawerOpenedByUs = false;
+
+  // ===== FORM HELPER =====
+  function getProductForm() {
+    // Try specific form ID first
+    let form = document.getElementById(formId);
+
+    if (!form) {
+      // Try to find any product form
+      form = document.querySelector('form[action*="/cart/add"]') ||
+             document.querySelector('form[action="/cart/add"]') ||
+             document.querySelector('[id*="product-form"]');
+    }
+
+    return form;
+  }
+
+  // ===== MONEY FORMATTING =====
+  function formatMoney(cents) {
+    if (typeof Shopify !== 'undefined' && typeof Shopify.formatMoney === 'function') {
+      return Shopify.formatMoney(cents, Shopify.money_format);
+    }
+    
+    const existingPrice = document.querySelector('.main-price, .price-item--sale');
+    if (existingPrice) {
+      const priceText = existingPrice.textContent.trim();
+      const hasSymbolAfter = /\d[\$£€]/.test(priceText);
+      const value = (cents / 100).toFixed(2);
+      
+      if (hasSymbolAfter) {
+        const symbol = priceText.match(/[\$£€]/)?.[0] || '£';
+        return value + symbol;
+      } else {
+        const symbol = priceText.match(/[\$£€]/)?.[0] || '£';
+        return symbol + value;
+      }
+    }
+    
+    const value = (cents / 100).toFixed(2);
+    return '£' + value;
+  }
+  
+  // ===== PRICE UPDATE FUNCTION - DISABLED =====
+  // Price updates removed - buy button now handles all price calculations
+  function updateAllPrices(finalPrice, comparePrice) {
+    const eventDetail = {
+      quantity: selectedQty || 1,
+      qbDiscount: getDiscountForQuantity(selectedQty || 1),
+      basePrice: finalPrice,
+      baseComparePrice: comparePrice
+    };
+
+    // Fire event for buy button to listen
+    document.dispatchEvent(new CustomEvent('qb:state-changed', {
+      detail: eventDetail,
+      bubbles: true
+    }));
+  }
+  
+  // ===== INITIALIZATION =====
+  function init() {
+    // Set the first option as active by default
+    const firstOption = wrapper.querySelector('.qb-option:first-child');
+    if (firstOption && !firstOption.classList.contains('qb-sold-out')) {
+      firstOption.classList.add('qb-active');
+      selectedQty = parseInt(firstOption.dataset.qty);
+
+      // Set initial text color to active
+      const textEl = firstOption.querySelector('.qb-text');
+      if (textEl) {
+        textEl.style.color = textEl.dataset.activeColor;
+      }
+    }
+    
+    setupOptionClicks();
+    setupOverlayCleanup();
+    updateQuantity(selectedQty);
+
+    // Initial bundle data setup - will be overridden by buildCombinedBundle if variant picker is present
+    updateBundleData();
+
+    checkSoldOutOptions();
+
+    // Ensure active state is applied after all initialization
+    const activeOption = wrapper.querySelector('.qb-option.qb-active');
+    if (activeOption) {
+      // Force a reflow to ensure CSS is applied
+      activeOption.offsetHeight;
+
+      const qty = parseInt(activeOption.dataset.qty);
+
+      // ALWAYS recalculate prices with discount (don't use stored prices)
+      updateDynamicPricing(qty);
+
+      // Also update quantity-based pricing for ATC buttons
+      updateQuantity(qty);
+
+      // Force update of sticky button if it exists
+      const stickyButton = document.querySelector('.sticky-atc button[data-cart-add]');
+      if (stickyButton) {
+        stickyButton.dataset.qty = qty;
+      }
+    }
+  }
+  
+  // ===== VARIANT AVAILABILITY =====
+  function updateVariantAvailability() {
+    const selects = wrapper.querySelectorAll('.qb-variant-select');
+    
+    selects.forEach(select => {
+      const bundleOption = select.dataset.bundleOption;
+      const itemNum = select.dataset.item;
+      const optionPosition = select.dataset.optionPosition;
+      
+      const options = select.querySelectorAll('option');
+      
+      options.forEach(option => {
+        const value = option.value;
+        
+        const selections = {};
+        
+        const itemSelects = wrapper.querySelectorAll(
+          `.qb-variant-select[data-bundle-option="${bundleOption}"][data-item="${itemNum}"]`
+        );
+        
+        itemSelects.forEach(otherSelect => {
+          const pos = otherSelect.dataset.optionPosition;
+          if (pos === optionPosition) {
+            selections['option' + pos] = value;
+          } else {
+            selections['option' + pos] = otherSelect.value;
+          }
+        });
+        
+        const matchingVariant = variants.find(v => {
+          return Object.keys(selections).every(key => v[key] === selections[key]);
+        });
+        
+        const originalValue = option.getAttribute('data-value') || value.replace(' - Sold Out', '');
+        option.textContent = originalValue;
+        option.disabled = false;
+        option.style.color = '';
+        
+        if (matchingVariant && !matchingVariant.available) {
+          option.textContent = originalValue + ' - Sold Out';
+          option.disabled = true;
+          option.style.color = '#999';
+        } else if (!matchingVariant) {
+          option.disabled = true;
+          option.style.color = '#999';
+        }
+      });
+    });
+  }
+  
+  function checkSoldOutOptions() {
+    const options = wrapper.querySelectorAll('.qb-option');
+    
+    options.forEach(option => {
+      const bundleOption = option.dataset.option;
+      const qty = parseInt(option.dataset.qty);
+      
+      let allAvailable = true;
+      
+      for (let i = 1; i <= qty; i++) {
+        const variant = getVariantForItem(bundleOption, i);
+        if (!variant || !variant.available) {
+          allAvailable = false;
+          break;
+        }
+      }
+      
+      if (!allAvailable) {
+        option.classList.add('qb-sold-out');
+        option.style.pointerEvents = 'none';
+        
+        const soldOutBadge = document.createElement('div');
+        soldOutBadge.className = 'qb-sold-out-badge';
+        soldOutBadge.textContent = 'SOLD OUT';
+        option.appendChild(soldOutBadge);
+        
+        if (option.classList.contains('qb-active')) {
+          option.classList.remove('qb-active');
+
+          // Reset text color to inactive for sold out option
+          const soldOutTextEl = option.querySelector('.qb-text');
+          if (soldOutTextEl) {
+            soldOutTextEl.style.color = soldOutTextEl.dataset.inactiveColor;
+          }
+
+          const availableOption = wrapper.querySelector('.qb-option:not(.qb-sold-out)');
+          if (availableOption) {
+            availableOption.classList.add('qb-active');
+            selectedQty = parseInt(availableOption.dataset.qty);
+
+            // Set text color to active for new active option
+            const newActiveTextEl = availableOption.querySelector('.qb-text');
+            if (newActiveTextEl) {
+              newActiveTextEl.style.color = newActiveTextEl.dataset.activeColor;
+            }
+
+            updateQuantity(selectedQty);
+            updateBundleData();
+
+            // ALWAYS recalculate with discount instead of using stored prices
+            updateDynamicPricing(selectedQty);
+          }
+        }
+      }
+    });
+  }
+  
+  // ===== EVENT SETUP =====
+  function setupOptionClicks() {
+    const options = wrapper.querySelectorAll('.qb-option');
+
+    options.forEach(option => {
+      option.addEventListener('click', function(e) {
+        if (e.target.closest('.qb-variants')) return;
+
+        if (this.classList.contains('qb-sold-out')) {
+          return;
+        }
+
+        const clickedQty = parseInt(this.dataset.qty);
+        const clickedPrice = parseInt(this.dataset.finalPrice);
+        const clickedCompare = parseInt(this.dataset.finalCompare);
+
+        // Remove active class from all options
+        options.forEach(opt => {
+          opt.classList.remove('qb-active');
+          // Reset text color to inactive
+          const textEl = opt.querySelector('.qb-text');
+          if (textEl) {
+            textEl.style.color = textEl.dataset.inactiveColor;
+          }
+        });
+
+        // Add active class to clicked option
+        this.classList.add('qb-active');
+
+        // Update text color to active
+        const activeTextEl = this.querySelector('.qb-text');
+        if (activeTextEl) {
+          activeTextEl.style.color = activeTextEl.dataset.activeColor;
+        }
+
+        // Force a reflow to ensure CSS is applied
+        this.offsetHeight;
+
+        selectedQty = clickedQty;
+
+        updateQuantity(selectedQty);
+
+        // Update bundle data (will use buildCombinedBundle if variant picker sync is active)
+        updateBundleData();
+
+        // If variant picker sync is active, also trigger combined bundle build
+        if (typeof buildCombinedBundle === 'function') {
+          buildCombinedBundle();
+        }
+
+        // ALWAYS recalculate with discount instead of using stored prices
+        updateDynamicPricing(selectedQty);
+
+        // Force update of sticky button if it exists
+        const stickyButton = document.querySelector('.sticky-atc button[data-cart-add]');
+        if (stickyButton) {
+          stickyButton.dataset.qty = selectedQty;
+        }
+      });
+    });
+  }
+  
+  function setupVariantSelects() {
+    const selects = wrapper.querySelectorAll('.qb-variant-select');
+
+    selects.forEach(select => {
+      select.addEventListener('change', function(e) {
+        e.stopPropagation();
+        updateBundleData();
+        const activeOption = wrapper.querySelector('.qb-option.qb-active');
+        const qty = activeOption ? parseInt(activeOption.dataset.qty) : 1;
+        updateDynamicPricing(qty);
+        updateQBOptionPrices();
+        updateVariantAvailability();
+        checkSoldOutOptions();
+      });
+
+      select.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+    });
+  }
+
+  // ===== PRICE UPDATES =====
+  function updateQBOptionPrices() {
+
+    // Get the currently selected variant from the main form
+    const form = getProductForm();
+    let currentVariantId = null;
+    if (form) {
+      const variantInput = form.querySelector('input[name="id"]');
+      if (variantInput) {
+        currentVariantId = variantInput.value;
+      }
+    }
+
+    // Find the variant details
+    const currentVariant = variants.find(v => v.id == currentVariantId);
+
+    // Get current variant picker selection
+    const pickerByPosition = getPickerSelectionsByPosition();
+
+    // Update each QB option
+    wrapper.querySelectorAll('.qb-option').forEach(option => {
+      const bundleOption = option.dataset.option;
+      const qty = parseInt(option.dataset.qty);
+
+      // Calculate price for this bundle with current picker selection
+      let totalPrice = 0;
+      let totalComparePrice = 0;
+
+      for (let i = 1; i <= qty; i++) {
+        const optionsByPosition = {};
+
+        // Start with picker selections
+        Object.assign(optionsByPosition, pickerByPosition);
+
+        // Get QB selections for this specific option (dropdowns)
+        const qbSelects = wrapper.querySelectorAll(
+          `.qb-variant-select[data-bundle-option="${bundleOption}"][data-item="${i}"]`
+        );
+
+        qbSelects.forEach(select => {
+          const position = select.dataset.optionPosition;
+          // Use default value (first option) for calculation
+          optionsByPosition[position] = select.value || select.options[0]?.value;
+        });
+
+        // Get QB swatch selections for this specific option
+        const qbSwatches = wrapper.querySelectorAll(
+          `.qb-variant-swatches[data-bundle-option="${bundleOption}"][data-item="${i}"]`
+        );
+
+        qbSwatches.forEach(swatchContainer => {
+          const position = swatchContainer.dataset.optionPosition;
+          const activeSwatch = swatchContainer.querySelector('.qb-variant-swatch.qb-swatch-active');
+          if (activeSwatch) {
+            optionsByPosition[position] = activeSwatch.dataset.value;
+          } else {
+            // Use first swatch as default
+            const firstSwatch = swatchContainer.querySelector('.qb-variant-swatch');
+            if (firstSwatch) {
+              optionsByPosition[position] = firstSwatch.dataset.value;
+            }
+          }
+        });
+
+        // Find matching variant
+        const variant = variants.find(v => {
+          for (let pos in optionsByPosition) {
+            if (v['option' + pos] !== optionsByPosition[pos]) {
+              return false;
+            }
+          }
+          return true;
+        });
+
+        if (variant) {
+          totalPrice += variant.price;
+          totalComparePrice += variant.compare_at_price || variant.price;
+        }
+      }
+
+      // Apply discount based on THIS option's number (not the active one)
+      const optionNum = parseInt(bundleOption);
+      let discount = 0;
+      switch(optionNum) {
+        case 1: discount = 0; break;
+        case 2: discount = {{ qb2_discount }}; break;
+        case 3: discount = {{ qb3_discount }}; break;
+        default: discount = 0;
+      }
+
+      const discountedPrice = totalPrice - (totalPrice * discount / 100);
+
+      // Update the option's displayed prices
+      const priceEl = option.querySelector('.qb-price');
+      const compareEl = option.querySelector('.qb-compare');
+
+      if (priceEl) {
+        // Update price immediately
+        priceEl.textContent = formatMoney(discountedPrice);
+      }
+
+      if (compareEl && totalComparePrice > discountedPrice) {
+        // Update compare price immediately
+        compareEl.textContent = formatMoney(totalComparePrice);
+        compareEl.style.display = '';
+      } else if (compareEl) {
+        compareEl.style.display = 'none';
+      }
+
+      // Update data attributes for future reference
+      option.dataset.finalPrice = discountedPrice;
+      option.dataset.finalCompare = totalComparePrice;
+    });
+  }
+
+  // ===== SWATCH SELECTION =====
+  function setupSwatchClicks() {
+    const swatches = wrapper.querySelectorAll('.qb-variant-swatch, .qb-variant-swatch-pill');
+
+    swatches.forEach(swatch => {
+      swatch.addEventListener('click', function(e) {
+        e.stopPropagation();
+
+        const value = this.dataset.value;
+        const swatchContainer = this.closest('.qb-variant-swatches');
+
+        // Remove active from all swatches/pills in this container
+        swatchContainer.querySelectorAll('.qb-variant-swatch, .qb-variant-swatch-pill').forEach(s => {
+          s.classList.remove('qb-swatch-active');
+          s.classList.remove('qb-pill-active');
+        });
+
+        // Add active to clicked swatch/pill
+        this.classList.add('qb-swatch-active');
+        this.classList.add('qb-pill-active');
+
+        // Update bundle data and pricing IMMEDIATELY (no delays)
+        updateBundleData();
+        const activeOption = wrapper.querySelector('.qb-option.qb-active');
+        const qty = activeOption ? parseInt(activeOption.dataset.qty) : 1;
+        updateDynamicPricing(qty);
+        updateQBOptionPrices();
+        updateVariantAvailability();
+        checkSoldOutOptions();
+      });
+    });
+  }
+
+  function setupPillClicks() {
+    const pills = wrapper.querySelectorAll('.qb-variant-pill');
+
+    pills.forEach(pill => {
+      pill.addEventListener('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        const pillContainer = this.closest('.qb-variant-pills');
+        const radioInput = this.querySelector('input[type="radio"]');
+
+        // Remove active from all pills in this container
+        pillContainer.querySelectorAll('.qb-variant-pill').forEach(p => {
+          p.classList.remove('qb-pill-active');
+          p.querySelector('input[type="radio"]').checked = false;
+        });
+
+        // Add active to clicked pill
+        this.classList.add('qb-pill-active');
+        radioInput.checked = true;
+
+        // Update bundle data and pricing IMMEDIATELY (no delays)
+        updateBundleData();
+        const activeOption = wrapper.querySelector('.qb-option.qb-active');
+        const qty = activeOption ? parseInt(activeOption.dataset.qty) : 1;
+        updateDynamicPricing(qty);
+        updateQBOptionPrices();
+        updateVariantAvailability();
+        checkSoldOutOptions();
+      });
+    });
+  }
+
+  // ===== UPDATE SWATCH IMAGES =====
+  function updateSwatchImages() {
+
+    // Get current picker selections by position
+    const pickerByPosition = getPickerSelectionsByPosition();
+
+    // Update each swatch (including pill-style swatches)
+    wrapper.querySelectorAll('.qb-variant-swatch').forEach(swatch => {
+      const variantsData = swatch.dataset.variants;
+      if (!variantsData) return;
+
+      // Parse variant data: id|opt1|opt2|opt3|image_url;;id|opt1|opt2|opt3|image_url
+      const variants = variantsData.split(';;');
+
+      // Find the variant that matches current picker selections
+      // If using custom URLs, just use the first variant's image since all have the same URL
+      let matchedVariant = null;
+      for (const variantStr of variants) {
+        const parts = variantStr.split('|');
+        const variantId = parts[0];
+        const opt1 = parts[1];
+        const opt2 = parts[2];
+        const opt3 = parts[3];
+        const imageUrl = parts[4];
+
+        // Check if this variant matches picker selections
+        let matches = true;
+        if (pickerByPosition[1] && opt1 !== pickerByPosition[1]) matches = false;
+        if (pickerByPosition[2] && opt2 !== pickerByPosition[2]) matches = false;
+        if (pickerByPosition[3] && opt3 !== pickerByPosition[3]) matches = false;
+
+        if (matches) {
+          matchedVariant = { id: variantId, opt1, opt2, opt3, imageUrl };
+          break;
+        }
+      }
+
+      // If no match found (e.g., no picker selection yet) and using custom URLs, use first variant
+      if (!matchedVariant && variants.length > 0) {
+        const parts = variants[0].split('|');
+        matchedVariant = {
+          id: parts[0],
+          opt1: parts[1],
+          opt2: parts[2],
+          opt3: parts[3],
+          imageUrl: parts[4]
+        };
+      }
+
+      // Update the swatch image
+      if (swatch.classList.contains('qb-variant-swatch-pill')) {
+        // For pill-style swatches, update the image placeholder if it exists
+        const imagePlaceholder = swatch.querySelector('.qb-swatch-image-placeholder');
+        if (imagePlaceholder) {
+          if (matchedVariant && matchedVariant.imageUrl) {
+            imagePlaceholder.innerHTML = `<img src="${matchedVariant.imageUrl}" alt="${swatch.dataset.value}" loading="lazy" style="width:30px;height:30px;object-fit:cover;border-radius:4px;display:block;">`;
+          } else {
+            // No image, show placeholder (only if placeholder exists)
+            imagePlaceholder.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#999;background:#f0f0f0;border-radius:4px;">${swatch.dataset.value.slice(0, 2).toUpperCase()}</div>`;
+          }
+        }
+      } else {
+        // Regular swatch
+        if (matchedVariant && matchedVariant.imageUrl) {
+          swatch.innerHTML = `<img src="${matchedVariant.imageUrl}" alt="${swatch.dataset.value}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;">`;
+        } else {
+          // No image, show placeholder
+          const placeholder = `<div class="qb-swatch-placeholder" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:12px;color:#999;background:#f0f0f0;">${swatch.dataset.value.slice(0, 2).toUpperCase()}<br><small style="font-size:8px;">URL:${swatch.dataset.debugUrlIndex || '?'}</small></div>`;
+          swatch.innerHTML = placeholder;
+        }
+      }
+    });
+  }
+  
+  // ===== OVERLAY CLEANUP =====
+  function setupOverlayCleanup() {
+    const forceCleanup = () => {
+      // Force cleanup of cart drawer element only
+      const cartDrawer = document.querySelector('cart-drawer');
+      if (cartDrawer) {
+        cartDrawer.classList.remove('active', 'animate', 'is-loaded');
+        cartDrawer.removeAttribute('open');
+      }
+
+      // Hide overlays - be very specific
+      const overlaySelectors = [
+        '#CartDrawer-Overlay',
+        '.cart-drawer__overlay'
+      ];
+
+      overlaySelectors.forEach(selector => {
+        const overlays = document.querySelectorAll(selector);
+        overlays.forEach(overlay => {
+          overlay.classList.remove('active', 'visible');
+          overlay.style.display = 'none';
+          overlay.style.visibility = 'hidden';
+          overlay.style.opacity = '0';
+        });
+      });
+
+      // Restore scroll
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      document.body.classList.remove('overflow-hidden');
+    };
+
+    const cleanupOnClose = () => {
+      setTimeout(forceCleanup, 50);
+    };
+
+    // Listen to native cart close events
+    document.addEventListener('cart:close', cleanupOnClose);
+    document.addEventListener('drawer:close', cleanupOnClose);
+
+    // Also listen for clicks on close buttons and overlays
+    document.addEventListener('click', (e) => {
+      const target = e.target;
+
+      // Check if clicked element is a close button or overlay
+      if (
+        target.matches('.drawer__close, .cart-drawer__close, [aria-label*="Close"], .drawer-overlay, #CartDrawer-Overlay') ||
+        target.closest('.drawer__close, .cart-drawer__close, [aria-label*="Close"]')
+      ) {
+        setTimeout(forceCleanup, 100);
+      }
+    }, true);
+  }
+  
+  // ===== QUANTITY & PRICING =====
+  function updateQuantity(qty) {
+    // Get form using helper function
+    const form = getProductForm();
+
+    // Find quantity inputs - try form first, then global search
+    let quantityInputs;
+    if (form) {
+      quantityInputs = form.querySelectorAll('input[name="quantity"]');
+    }
+
+    // If no inputs found in form, search globally
+    if (!quantityInputs || quantityInputs.length === 0) {
+      quantityInputs = document.querySelectorAll('input[name="quantity"]');
+    }
+
+    if (!quantityInputs || quantityInputs.length === 0) {
+      // Create a hidden quantity input if none exists
+      if (form) {
+        let quantityInput = form.querySelector('input[name="quantity"]');
+        if (!quantityInput) {
+          quantityInput = document.createElement('input');
+          quantityInput.type = 'hidden';
+          quantityInput.name = 'quantity';
+          quantityInput.value = qty;
+          form.appendChild(quantityInput);
+        } else {
+          quantityInput.value = qty;
+        }
+      } else {
+        // No form exists, try to create input in document body as fallback
+        let quantityInput = document.querySelector('input[name="quantity"]');
+        if (!quantityInput) {
+          quantityInput = document.createElement('input');
+          quantityInput.type = 'hidden';
+          quantityInput.name = 'quantity';
+          quantityInput.value = qty;
+          quantityInput.id = 'qb-quantity-fallback';
+          document.body.appendChild(quantityInput);
+        } else {
+          quantityInput.value = qty;
+        }
+      }
+    } else {
+      quantityInputs.forEach(input => {
+        input.value = qty;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+    }
+
+    // Dispatch custom event for other components (free gifts, subscription, etc.)
+    const event = new CustomEvent('quantity-update', {
+      detail: {
+        quantity: qty,
+        source: 'quantity-breaks-no-variant',
+        formId: form ? (form.id || 'fallback-form') : 'no-form'
+      },
+      bubbles: true
+    });
+
+    document.dispatchEvent(event);
+
+    updateDynamicPricing(qty);
+  }
+  
+  function getCurrentVariant() {
+    const activeOption = wrapper.querySelector('.qb-option.qb-active');
+    if (!activeOption) return variants[0];
+    
+    const bundleOption = activeOption.dataset.option;
+    return getVariantForItem(bundleOption, 1) || variants[0];
+  }
+  
+  function updateDynamicPricing(qty) {
+    let activeOption = wrapper.querySelector('.qb-option.qb-active');
+
+    // If no active option, use the first one (default)
+    if (!activeOption) {
+      activeOption = wrapper.querySelector('.qb-option');
+    }
+
+    if (!activeOption) {
+      return;
+    }
+
+    const quantity = parseInt(activeOption.dataset.qty);
+    const discount = getDiscountForQuantity(quantity);
+
+    // Calculate actual price based on bundleData items (which includes combined picker + QB selections)
+    let totalPrice = 0;
+    let totalComparePrice = 0;
+
+    if (bundleData.items && bundleData.items.length > 0) {
+      // Use actual variants from bundleData
+      bundleData.items.forEach(item => {
+        const variant = variants.find(v => v.id === item.id);
+        if (variant) {
+          totalPrice += variant.price * item.quantity;
+          totalComparePrice += (variant.compare_at_price || variant.price) * item.quantity;
+        }
+      });
+    } else {
+      // Fallback to old method if bundleData isn't populated yet
+      const bundleOption = activeOption.dataset.option;
+      for (let i = 1; i <= quantity; i++) {
+        const variant = getVariantForItem(bundleOption, i);
+        if (variant) {
+          totalPrice += variant.price;
+          totalComparePrice += variant.compare_at_price || variant.price;
+        }
+      }
+    }
+
+    // Apply discount
+    const discountedPrice = totalPrice - (totalPrice * discount / 100);
+    const discountAmount = totalPrice - discountedPrice;
+
+    updateAllPrices(discountedPrice, totalComparePrice);
+  }
+
+  function getDiscountForQuantity(qty) {
+    let activeOption = wrapper.querySelector('.qb-option.qb-active');
+
+    // If no active option, use the first one
+    if (!activeOption) {
+      activeOption = wrapper.querySelector('.qb-option');
+    }
+
+    if (!activeOption) return 0;
+
+    const optionNum = parseInt(activeOption.dataset.option);
+    let discount = 0;
+    switch(optionNum) {
+      case 1: discount = 0; break;
+      case 2: discount = {{ qb2_discount }}; break;
+      case 3: discount = {{ qb3_discount }}; break;
+      default: discount = 0;
+    }
+    return discount;
+  }
+  
+  // ===== VARIANT MANAGEMENT =====
+  function getVariantForItem(bundleOption, itemNum) {
+    // Get ALL possible selections
+    const finalSelections = {};
+
+    // Step 1: Get variant picker selections (for non-hidden options)
+    const pickerSelections = getPickerSelectionsByPosition();
+
+    // Step 2: Get QB selections (for hidden options)
+    const qbSelections = {};
+
+    // Get QB dropdown selections
+    const selects = wrapper.querySelectorAll(
+      `.qb-variant-select[data-bundle-option="${bundleOption}"][data-item="${itemNum}"]`
+    );
+    selects.forEach(select => {
+      const position = parseInt(select.dataset.optionPosition);
+      qbSelections[position] = select.value;
+    });
+
+    // Get QB pill selections
+    const pillContainers = wrapper.querySelectorAll(
+      `.qb-variant-pills[data-bundle-option="${bundleOption}"][data-item="${itemNum}"]`
+    );
+    pillContainers.forEach(container => {
+      const position = parseInt(container.dataset.optionPosition);
+      const activePill = container.querySelector('.qb-variant-pill.qb-pill-active input[type="radio"]');
+      if (activePill) {
+        qbSelections[position] = activePill.value;
+      }
+    });
+
+    // Get QB swatch selections
+    const swatchContainers = wrapper.querySelectorAll(
+      `.qb-variant-swatches[data-bundle-option="${bundleOption}"][data-item="${itemNum}"]`
+    );
+    swatchContainers.forEach(container => {
+      const position = parseInt(container.dataset.optionPosition);
+      const activeSwatch = container.querySelector('.qb-variant-swatch.qb-swatch-active, .qb-variant-swatch-pill.qb-swatch-active');
+      if (activeSwatch) {
+        qbSelections[position] = activeSwatch.dataset.value;
+      }
+    });
+
+    // Step 3: Combine selections - QB overrides picker for its positions
+    for (let pos = 1; pos <= 3; pos++) {
+      if (qbSelections[pos]) {
+        finalSelections['option' + pos] = qbSelections[pos];
+      } else if (pickerSelections[pos]) {
+        finalSelections['option' + pos] = pickerSelections[pos];
+      }
+    }
+
+    // Find matching variant
+    const variant = variants.find(v => {
+      let matches = true;
+      for (let pos = 1; pos <= 3; pos++) {
+        const key = 'option' + pos;
+        if (finalSelections[key] && v[key] !== finalSelections[key]) {
+          matches = false;
+          break;
+        }
+      }
+      return matches;
+    });
+
+    return variant;
+  }
+  
+  function updateBundleData() {
+    const activeOption = wrapper.querySelector('.qb-option.qb-active');
+    if (!activeOption) return;
+
+    const bundleOption = activeOption.dataset.option;
+    const qty = parseInt(activeOption.dataset.qty);
+    const finalPrice = parseInt(activeOption.dataset.finalPrice);
+    const finalCompare = parseInt(activeOption.dataset.finalCompare);
+    const discount = getDiscountForQuantity(qty);
+
+    bundleData.items = [];
+    const variantMap = {}; // Track variants to bundle identical ones
+
+    for (let i = 1; i <= qty; i++) {
+      const variant = getVariantForItem(bundleOption, i);
+      if (variant) {
+        const variantId = variant.id;
+
+        // Group identical variants together
+        if (variantMap[variantId]) {
+          variantMap[variantId].quantity += 1;
+        } else {
+          variantMap[variantId] = {
+            id: variantId,
+            quantity: 1
+            // Removed properties to allow stacking with same variant+selling_plan
+          };
+        }
+      }
+    }
+
+    // Convert map to array
+    bundleData.items = Object.values(variantMap);
+
+    bundleData.totalQty = qty;
+    bundleData.productId = productId;
+    bundleData.discount = discount;
+    bundleData.finalPrice = finalPrice;
+    bundleData.finalCompare = finalCompare;
+    window.qbBundleData = bundleData;
+
+    // REMOVED: Don't update variant input - let variant picker handle it independently
+    // This allows variant and QB to work in any order
+    // updateMainFormVariant();
+  }
+
+  // ===== HELPER: Update main form variant input - FIXED to actually update =====
+  function updateMainFormVariant() {
+    // Update the main form's variant input with the first item's variant ID
+    // This ensures other components can read the current variant
+    if (bundleData.items && bundleData.items.length > 0) {
+      const form = getProductForm();
+      if (form) {
+        const variantInput = form.querySelector('input[name="id"]');
+        if (variantInput) {
+          const firstVariant = bundleData.items[0].id;
+          if (variantInput.value !== String(firstVariant)) {
+            variantInput.value = firstVariant;
+            // Dispatch change event to notify other components
+            variantInput.dispatchEvent(new Event('change', { bubbles: true }));
+            // Fire BOTH event formats to ensure ALL components get notified
+            document.dispatchEvent(new CustomEvent('variant-change', {
+              detail: { variant: { id: firstVariant } }
+            }));
+            document.dispatchEvent(new CustomEvent('variant:change', {
+              detail: { variant: { id: firstVariant } }
+            }));
+          }
+        }
+      }
+    }
+  }
+
+  // ===== HELPER: Enable add to cart button =====
+  function enableAddToCartButton() {
+    const form = getProductForm();
+    if (!form) return;
+
+    // Enable main add to cart button
+    const button = form.querySelector('button[type="submit"]');
+    if (button) {
+      button.disabled = false;
+      button.removeAttribute('disabled');
+      button.removeAttribute('data-unavailable');
+      button.setAttribute('aria-disabled', 'false');
+
+      // Remove all disabling classes
+      button.classList.remove('disabled', 'btn--disabled', 'unavailable');
+
+      // Add enabling classes
+      button.classList.add('enabled');
+
+      // Also remove any data attributes that might disable it
+      button.removeAttribute('data-required-fields');
+      button.removeAttribute('data-valid-fields');
+
+      // Fix button text if it shows "Sold Out"
+      const buttonTextEl = button.querySelector('.main-atc__label__text, .button__text, .atc-button__text');
+      if (buttonTextEl) {
+        const currentText = buttonTextEl.textContent.trim();
+        if (currentText.toLowerCase().includes('sold out') || currentText.toLowerCase().includes('unavailable')) {
+          // Try to restore original label from data attribute
+          const originalLabel = buttonTextEl.getAttribute('data-original-label');
+          if (originalLabel) {
+            buttonTextEl.textContent = originalLabel;
+          } else {
+            // Fallback to generic "Add to Cart"
+            buttonTextEl.textContent = 'Add to Cart';
+          }
+        }
+      }
+
+      // Force button text to be clickable
+      const buttonText = button.querySelector('span, .button__text');
+      if (buttonText) {
+        buttonText.style.pointerEvents = 'none';
+      }
+    }
+
+    // Enable sticky button by ID pattern (SectionAtcBtn-{section.id})
+    const stickyButtonById = document.getElementById('SectionAtcBtn-{{ section.id }}');
+    if (stickyButtonById) {
+      stickyButtonById.disabled = false;
+      stickyButtonById.removeAttribute('disabled');
+      stickyButtonById.removeAttribute('data-unavailable');
+      stickyButtonById.setAttribute('aria-disabled', 'false');
+      stickyButtonById.classList.remove('disabled', 'btn--disabled', 'unavailable');
+      stickyButtonById.classList.add('enabled');
+    }
+
+    // Enable type="button" sticky buttons
+    const stickyTypeButtons = document.querySelectorAll('button[type="button"].main-product-atc, button[type="button"][class*="sticky"]');
+    stickyTypeButtons.forEach(btn => {
+      btn.disabled = false;
+      btn.removeAttribute('disabled');
+      btn.removeAttribute('data-unavailable');
+      btn.setAttribute('aria-disabled', 'false');
+    });
+
+    // Enable sticky add to cart button (type="submit")
+    const stickyButtons = document.querySelectorAll('.sticky-atc button[type="submit"], [class*="sticky"] button[type="submit"], .product-sticky-atc button[type="submit"]');
+    stickyButtons.forEach(stickyButton => {
+      stickyButton.disabled = false;
+      stickyButton.removeAttribute('disabled');
+      stickyButton.removeAttribute('data-unavailable');
+      stickyButton.setAttribute('aria-disabled', 'false');
+    });
+
+    // Also try to enable any button that might be disabled
+    document.querySelectorAll('button[disabled]').forEach(btn => {
+      if (btn.form && btn.form.id === formId) {
+        btn.disabled = false;
+        btn.removeAttribute('disabled');
+        btn.removeAttribute('data-unavailable');
+        btn.setAttribute('aria-disabled', 'false');
+      }
+    });
+  }
+
+  // ===== CART MANAGEMENT =====
+  let isSubmitting = false;  // Prevent double submissions
+  let formSubmitHandlerAdded = false;  // Prevent duplicate listeners
+
+  function interceptFormSubmit() {
+    // DISABLED - Let form submit normally with updated inputs
+    // QB just updates the form inputs, doesn't intercept submission
+    return;
+
+    const form = getProductForm();
+    if (!form || formSubmitHandlerAdded) return;
+
+    formSubmitHandlerAdded = true;  // Mark handler as added
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Prevent double submissions
+      if (isSubmitting) {
+        return false;
+      }
+
+      isSubmitting = true;
+
+      // CRITICAL: Clear any stale bundle data before rebuilding
+      bundleData = { items: [] };
+      window.qbBundleData = { items: [] };
+
+      // Rebuild bundle data with latest selections before adding to cart
+      if (typeof buildCombinedBundle === 'function') {
+        buildCombinedBundle();
+      }
+
+      cartDrawerOpenedByUs = true;
+
+      // Double-check we have fresh data
+      let cartItems;
+      if (window.qbBundleData && window.qbBundleData.items && window.qbBundleData.items.length > 0) {
+        // Don't include properties at all to allow proper stacking
+        cartItems = window.qbBundleData.items.map(item => {
+          const cartItem = {
+            id: item.id,
+            quantity: item.quantity
+          };
+
+          // Only add properties if they actually exist and have values
+          if (item.properties && Object.keys(item.properties).length > 0) {
+            cartItem.properties = item.properties;
+          }
+
+          return cartItem;
+        });
+      } else {
+        const variantInput = form.querySelector('input[name="id"]');
+        const quantityInput = form.querySelector('input[name="quantity"]');
+
+        if (variantInput && variantInput.value) {
+          cartItems = [{
+            id: parseInt(variantInput.value),
+            quantity: quantityInput ? parseInt(quantityInput.value) || 1 : 1
+            // No properties at all for single items
+          }];
+        } else {
+          alert('Please select a variant');
+          cartDrawerOpenedByUs = false;
+          return false;
+        }
+      }
+
+      // Add products to cart first
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ items: cartItems })
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(err => {
+            throw new Error(err.description || `HTTP ${response.status}`);
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Immediately set loading state on drawer
+        const cartDrawer = document.querySelector('cart-drawer');
+        if (cartDrawer) {
+          cartDrawer.classList.add('is-loading');
+          cartDrawer.classList.remove('is-empty');
+
+          // Force hide ALL empty messages immediately
+          const emptyMessages = cartDrawer.querySelectorAll('.cart__empty-text, .cart-drawer__empty, .cart__empty, [class*="empty"]');
+          emptyMessages.forEach(msg => {
+            msg.style.display = 'none';
+            msg.style.visibility = 'hidden';
+          });
+        }
+
+        // Fetch sections immediately
+        return fetch(`?sections=cart-drawer,cart-icon-bubble&timestamp=${Date.now()}`)
+          .then(res => res.json())
+          .then(sections => ({ data, sections }));
+      })
+      .then(({ data, sections }) => {
+        // Update cart content FIRST, before opening
+        if (sections && sections['cart-drawer']) {
+          const cartDrawer = document.querySelector('cart-drawer');
+          if (cartDrawer) {
+            const parser = new DOMParser();
+            const newDoc = parser.parseFromString(sections['cart-drawer'], 'text/html');
+
+            // Update content immediately (before opening)
+            const cartItems = cartDrawer.querySelector('.cart-items, [id*="cart-items"], .drawer__inner');
+            const newCartItems = newDoc.querySelector('.cart-items, [id*="cart-items"], .drawer__inner');
+
+            if (cartItems && newCartItems) {
+              cartItems.innerHTML = newCartItems.innerHTML;
+            } else {
+              // Fallback: update the entire drawer content
+              const drawerContent = cartDrawer.querySelector('.drawer__content, .cart-drawer__content');
+              const newDrawerContent = newDoc.querySelector('.drawer__content, .cart-drawer__content');
+
+              if (drawerContent && newDrawerContent) {
+                drawerContent.innerHTML = newDrawerContent.innerHTML;
+              }
+            }
+
+            // Remove loading state
+            cartDrawer.classList.remove('is-empty', 'is-loading');
+            cartDrawer.classList.add('is-loaded');
+
+            // NOW open the drawer with content already loaded
+            setTimeout(() => {
+              openCartDrawer();
+
+              // Re-enable empty messages after drawer is open
+              setTimeout(() => {
+                const emptyMessages = cartDrawer.querySelectorAll('.cart__empty-text, .cart-drawer__empty, .cart__empty, [class*="empty"]');
+                emptyMessages.forEach(msg => {
+                  msg.style.display = '';
+                  msg.style.visibility = '';
+                });
+              }, 500);
+            }, 100);
+          }
+        }
+
+        // Update bubble
+        if (sections && sections['cart-icon-bubble']) {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(sections['cart-icon-bubble'], 'text/html');
+          const newBubble = doc.querySelector('.cart-count-bubble');
+          const cartIconBubble = document.querySelector('#cart-icon-bubble');
+          const existingBubble = cartIconBubble ? cartIconBubble.querySelector('.cart-count-bubble') : null;
+
+          if (cartIconBubble && newBubble) {
+            if (existingBubble) {
+              existingBubble.innerHTML = newBubble.innerHTML;
+            } else {
+              cartIconBubble.appendChild(newBubble.cloneNode(true));
+            }
+          }
+        }
+
+        // Reset submission flag
+        setTimeout(() => {
+          isSubmitting = false;
+        }, 100);
+
+        return data;
+      })
+      .catch(error => {
+        cartDrawerOpenedByUs = false;
+        isSubmitting = false;
+        alert('Failed to add items to cart: ' + error.message);
+      });
+
+      return false;
+    }, true);
+  }
+  
+  function refreshCartWithSectionRendering() {
+    return new Promise((resolve) => {
+      const sectionsUrl = `?sections=cart-drawer,cart-icon-bubble&timestamp=${Date.now()}`;
+
+      fetch(sectionsUrl)
+        .then(response => response.json())
+        .then(sections => {
+
+          if (sections['cart-drawer']) {
+            const cartDrawer = document.querySelector('cart-drawer');
+            if (cartDrawer) {
+              cartDrawer.innerHTML = sections['cart-drawer'];
+              cartDrawer.classList.remove('is-empty');
+              cartDrawer.classList.add('is-loaded');
+            }
+          }
+
+          if (sections['cart-icon-bubble']) {
+            // Parse the new section HTML to extract just the cart count bubble
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(sections['cart-icon-bubble'], 'text/html');
+            const newBubble = doc.querySelector('.cart-count-bubble');
+
+            const cartIconBubble = document.querySelector('#cart-icon-bubble');
+            const existingBubble = cartIconBubble ? cartIconBubble.querySelector('.cart-count-bubble') : null;
+
+            if (cartIconBubble) {
+              if (newBubble && existingBubble) {
+                // Replace only the cart count bubble, keep the icon
+                existingBubble.innerHTML = newBubble.innerHTML;
+              } else if (newBubble && !existingBubble) {
+                // Add the bubble if it doesn't exist
+                cartIconBubble.appendChild(newBubble.cloneNode(true));
+              } else if (!newBubble && existingBubble) {
+                // Remove the bubble if cart is empty
+                existingBubble.remove();
+              }
+            }
+          }
+
+          return fetch('/cart.js');
+        })
+        .then(response => response.json())
+        .then(cart => {
+          updateCartCounts(cart.item_count);
+          dispatchCartUpdateEvents(cart);
+
+          // Open drawer immediately
+          openCartDrawer();
+          resolve(cart);
+        })
+        .catch(error => {
+          cartDrawerOpenedByUs = false;
+          resolve(null);
+        });
+    });
+  }
+  
+  function dispatchCartUpdateEvents(cart) {
+    const events = ['cart:updated', 'cart:refresh', 'cart:change'];
+    events.forEach(eventName => {
+      document.dispatchEvent(new CustomEvent(eventName, { detail: cart, bubbles: true }));
+    });
+  }
+  
+  function updateCartCounts(itemCount) {
+    const selectors = ['[data-cart-count]', '.cart-count', '#cart-icon-bubble .count'];
+    selectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(el => {
+        el.textContent = itemCount;
+        el.setAttribute('data-cart-count', itemCount);
+      });
+    });
+  }
+  
+  function openCartDrawer() {
+    const cartDrawer = document.querySelector('cart-drawer');
+    if (cartDrawer) {
+      // Add animation class for smooth opening
+      cartDrawer.classList.add('animate', 'active');
+      cartDrawer.classList.remove('is-empty');
+
+      // Ensure the drawer is set to open
+      cartDrawer.setAttribute('open', '');
+
+      // Prevent body scroll
+      document.body.classList.add('overflow-hidden');
+    }
+
+    const triggers = [
+      '[data-cart-drawer-trigger]',
+      '.header__icon--cart',
+      '#cart-icon-bubble'
+    ];
+
+    for (const selector of triggers) {
+      const trigger = document.querySelector(selector);
+      if (trigger) {
+        trigger.click();
+        return;
+      }
+    }
+
+    if (cartDrawer && typeof cartDrawer.open === 'function') {
+      cartDrawer.open();
+    }
+  }
+
+  // ===== INTERCEPT STICKY BUTTON =====
+  function interceptStickyButton() {
+    const stickyButton = document.getElementById('SectionAtcBtn-{{ section.id }}');
+    if (!stickyButton) {
+      return;
+    }
+
+    // Mark that we've already intercepted this button
+    if (stickyButton.dataset.qbIntercepted === 'true') {
+      return;
+    }
+
+    stickyButton.dataset.qbIntercepted = 'true';
+
+    // Remove any existing click handlers by cloning the button
+    const newButton = stickyButton.cloneNode(true);
+    stickyButton.parentNode.replaceChild(newButton, stickyButton);
+
+    // Add our handler with capture phase to ensure it runs first
+    newButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+
+      // Trigger the main form submit which will use the bundleData
+      const form = getProductForm();
+      if (form) {
+        // Create and dispatch a submit event
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        form.dispatchEvent(submitEvent);
+      }
+
+      return false;
+    }, true);
+  }
+
+  // ===== START =====
+  // Initialize immediately
+  init();
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      interceptFormSubmit();
+      interceptStickyButton();
+    });
+  } else {
+    interceptFormSubmit();
+    interceptStickyButton();
+  }
+
+  // Also try to intercept sticky button immediately
+  interceptStickyButton();
+
+  // SIMPLIFIED: Listen for variant changes and enable button - DISABLED FOR TESTING
+  /*
+  const handleVariantChange = function() {
+    setTimeout(() => {
+      enableAddToCartButton();
+      // RECALCULATE prices after variant change with current QB quantity
+      const activeOption = wrapper.querySelector('.qb-option.qb-active');
+      if (activeOption) {
+        const currentQty = parseInt(activeOption.dataset.qty);
+        // Recalculate price for new variant with current quantity
+        updateDynamicPricing(currentQty);
+      }
+    }, 150);
+  };
+
+  // Listen for both event name formats for compatibility
+  document.addEventListener('variant:change', handleVariantChange);
+  document.addEventListener('variant-change', handleVariantChange);
+  document.addEventListener('coordinator:variant-changed', handleVariantChange);
+  */
+
+  // Also listen for shopify section renders
+  document.addEventListener('shopify:section:load', function() {
+    setTimeout(() => {
+      const activeOption = wrapper.querySelector('.qb-option.qb-active');
+      if (activeOption) {
+        const currentQty = parseInt(activeOption.dataset.qty);
+        // Recalculate price for current variant with current quantity
+        updateDynamicPricing(currentQty);
+      }
+    }, 150);
+  });
+
+  // Keep variant-selects visible
+  const variantSelects = document.querySelector('variant-selects');
+  if (variantSelects) {
+    // Ensure it stays visible
+    variantSelects.style.display = '';
+    variantSelects.style.visibility = '';
+    variantSelects.style.pointerEvents = '';
+  }
+
+  // ===== AGGRESSIVE BUTTON PROTECTION =====
+  // Prevent button from ever being disabled
+  const form = getProductForm();
+  if (form) {
+    const button = form.querySelector('button[type="submit"]');
+    if (button) {
+      // Initial enable
+      enableAddToCartButton();
+
+      // AGGRESSIVE: Intercept disabled property setter
+      const originalDisabledDescriptor = Object.getOwnPropertyDescriptor(HTMLButtonElement.prototype, 'disabled');
+
+      Object.defineProperty(button, 'disabled', {
+        get() {
+          return false; // Always return false
+        },
+        set(value) {
+          // Ignore any attempts to disable
+          // Keep it enabled
+          originalDisabledDescriptor.set.call(this, false);
+        }
+      });
+
+      // Watch for attribute changes and prevent them immediately
+      const buttonObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'disabled') {
+            if (button.hasAttribute('disabled')) {
+              button.removeAttribute('disabled');
+              button.setAttribute('aria-disabled', 'false');
+            }
+          }
+        });
+      });
+
+      buttonObserver.observe(button, {
+        attributes: true,
+        attributeFilter: ['disabled', 'aria-disabled']
+      });
+
+      // Make sure button stays enabled
+      button.disabled = false;
+      button.removeAttribute('disabled');
+      button.removeAttribute('data-unavailable');
+      button.setAttribute('aria-disabled', 'false');
+    }
+  }
+
+  // ===== SYNC WITH VARIANT PICKER - SIMPLE READ-ONLY MODE =====
+  // The simple-variant-picker is ONLY for display
+  // QB fully manages variant selection
+
+  // Get variant picker selections by position (global scope for swatch updates)
+  // FIXED: Properly map option names to positions
+  function getPickerSelectionsByPosition() {
+      const selections = {};
+
+      // Create option name to position mapping
+      const optionNameToPosition = {};
+      {% for option in product.options_with_values %}
+      optionNameToPosition['{{ option.name }}'] = {{ option.position }};
+      optionNameToPosition['options[{{ option.name }}]'] = {{ option.position }};
+      {% endfor %}
+
+      // Method 1: Get from variant-selects web component
+      const variantSelectsComponent = document.querySelector('variant-selects#variant-selects-{{ section.id }}');
+      if (variantSelectsComponent) {
+
+        // Try to get from selects
+        const selects = variantSelectsComponent.querySelectorAll('select');
+
+        selects.forEach((select) => {
+          const optionName = select.name;
+
+          // Find the actual position from the option name
+          let actualPosition = null;
+
+          // Try direct name match
+          if (optionNameToPosition[optionName]) {
+            actualPosition = optionNameToPosition[optionName];
+          } else if (optionName.startsWith('options[') && optionName.endsWith(']')) {
+            // Extract the option name from options[name]
+            const cleanName = optionName.slice(8, -1);
+            if (optionNameToPosition[cleanName]) {
+              actualPosition = optionNameToPosition[cleanName];
+            }
+          }
+
+          if (actualPosition && select.value) {
+            selections[actualPosition] = select.value;
+          }
+        });
+
+        // Try to get from radio buttons
+        const radios = variantSelectsComponent.querySelectorAll('input[type="radio"]:checked');
+
+        radios.forEach((radio) => {
+          const optionName = radio.name;
+
+          // Find the actual position from the option name
+          let actualPosition = null;
+
+          // Try direct name match
+          if (optionNameToPosition[optionName]) {
+            actualPosition = optionNameToPosition[optionName];
+          } else if (optionName.startsWith('options[') && optionName.endsWith(']')) {
+            // Extract the option name from options[name]
+            const cleanName = optionName.slice(8, -1);
+            if (optionNameToPosition[cleanName]) {
+              actualPosition = optionNameToPosition[cleanName];
+            }
+          }
+
+          if (actualPosition && radio.value && !selections[actualPosition]) {
+            selections[actualPosition] = radio.value;
+          }
+        });
+      }
+
+      // Method 2: Fallback to any variant-selects on page
+      if (Object.keys(selections).length === 0) {
+        const anyVariantSelects = document.querySelector('variant-selects');
+        if (anyVariantSelects) {
+          const allSelects = anyVariantSelects.querySelectorAll('select');
+          allSelects.forEach((select, index) => {
+            if (select.value) {
+              selections[index + 1] = select.value;
+            }
+          });
+        }
+      }
+
+      // Method 3: Get from form inputs directly
+      if (Object.keys(selections).length === 0) {
+        const form = document.querySelector('form[action*="/cart/add"]');
+        if (form) {
+          // Get all option inputs
+          {% for option in product.options_with_values %}
+            const option{{ option.position }}Input = form.querySelector('input[name="options[{{ option.name }}]"]:checked, select[name="options[{{ option.name }}]"]');
+            if (option{{ option.position }}Input && option{{ option.position }}Input.value) {
+              selections[{{ option.position }}] = option{{ option.position }}Input.value;
+            }
+          {% endfor %}
+        }
+      }
+
+      return selections;
+  }
+
+  // Make buildCombinedBundle globally accessible within the scope
+  let buildCombinedBundle;
+
+  // Expose it to window for debugging
+  window.qbBuildCombinedBundle = function() {
+    if (typeof buildCombinedBundle === 'function') {
+      buildCombinedBundle();
+    }
+  };
+
+  function setupVariantPickerSync() {
+
+    // REMOVED duplicate listeners - using attachVariantListeners instead
+
+    // Update QB when picker changes - restored full functionality
+    function updateQBBasedOnPicker() {
+      // Build combined bundle with new selections
+      buildCombinedBundle();
+
+      // Update pricing for active option
+      const activeOption = wrapper.querySelector('.qb-option.qb-active');
+      if (activeOption) {
+        const qty = parseInt(activeOption.dataset.qty);
+        updateDynamicPricing(qty);
+      }
+
+      // Update all option prices
+      updateQBOptionPrices();
+
+      // Update variant availability
+      updateVariantAvailability();
+
+      // Check for sold out options
+      checkSoldOutOptions();
+
+      // Update swatch images
+      updateSwatchImages();
+
+      // Enable button once at the end
+      enableAddToCartButton();
+    }
+
+    // Build bundle variants from combined selections
+    buildCombinedBundle = function() {
+      const activeQB = wrapper.querySelector('.qb-option.qb-active');
+      if (!activeQB) {
+        return;
+      }
+
+      const bundleOption = activeQB.dataset.option;
+      const qty = parseInt(activeQB.dataset.qty);
+
+      // Get picker selections
+      const pickerByPosition = getPickerSelectionsByPosition();
+
+      // Build variants for each bundle item
+      const bundleVariants = [];
+
+      for (let i = 1; i <= qty; i++) {
+        const optionsByPosition = {};
+
+        // Start with ALL picker selections
+        for (let pos = 1; pos <= 3; pos++) {
+          if (pickerByPosition[pos]) {
+            optionsByPosition[pos] = pickerByPosition[pos];
+          }
+        }
+
+        // Override with QB selections for this item (dropdowns)
+        const qbSelects = wrapper.querySelectorAll(
+          `.qb-variant-select[data-bundle-option="${bundleOption}"][data-item="${i}"]`
+        );
+
+        qbSelects.forEach(select => {
+          const position = parseInt(select.dataset.optionPosition);
+          if (select.value) {
+            optionsByPosition[position] = select.value;
+          }
+        });
+
+        // Override with QB swatch selections for this item
+        const qbSwatches = wrapper.querySelectorAll(
+          `.qb-variant-swatches[data-bundle-option="${bundleOption}"][data-item="${i}"]`
+        );
+
+        qbSwatches.forEach(swatchContainer => {
+          const position = parseInt(swatchContainer.dataset.optionPosition);
+          const activeSwatch = swatchContainer.querySelector('.qb-variant-swatch.qb-swatch-active, .qb-variant-swatch-pill.qb-swatch-active');
+          if (activeSwatch) {
+            const value = activeSwatch.dataset.value;
+            optionsByPosition[position] = value;
+          }
+        });
+
+        // Override with QB pill selections for this item
+        const qbPills = wrapper.querySelectorAll(
+          `.qb-variant-pills[data-bundle-option="${bundleOption}"][data-item="${i}"]`
+        );
+
+        qbPills.forEach(container => {
+          const position = parseInt(container.dataset.optionPosition);
+          const activePill = container.querySelector('.qb-variant-pill.qb-pill-active input[type="radio"]');
+          if (activePill) {
+            optionsByPosition[position] = activePill.value;
+          }
+        });
+
+        // Find matching variant - need to check all 3 positions
+        const variant = variants.find(v => {
+          let matches = true;
+
+          // Check all possible option positions (1, 2, 3)
+          for (let pos = 1; pos <= 3; pos++) {
+            const optionValue = optionsByPosition[pos];
+            const variantValue = v['option' + pos];
+
+            // If we have a value for this position, it must match
+            if (optionValue && variantValue && optionValue !== variantValue) {
+              matches = false;
+              break;
+            }
+
+            // If variant has a value but we don't, we need to match from picker
+            if (!optionValue && variantValue) {
+              // This is the problem - missing option value!
+              matches = false;
+              break;
+            }
+          }
+
+          return matches;
+        });
+
+        if (variant) {
+          bundleVariants.push(variant);
+        }
+      }
+
+      // Update bundle data
+      if (bundleVariants.length > 0) {
+        bundleData.items = [];
+        const variantMap = {};
+
+        bundleVariants.forEach(variant => {
+          if (variantMap[variant.id]) {
+            variantMap[variant.id].quantity += 1;
+          } else {
+            variantMap[variant.id] = {
+              id: variant.id,
+              quantity: 1
+              // Removed properties to allow stacking with same variant+selling_plan
+            };
+          }
+        });
+
+        bundleData.items = Object.values(variantMap);
+        bundleData.totalQty = qty;
+        bundleData.productId = productId;
+        bundleData.discount = getDiscountForQuantity(qty);
+
+        // Calculate total prices for the bundle
+        let totalPrice = 0;
+        let totalComparePrice = 0;
+        bundleVariants.forEach(variant => {
+          totalPrice += variant.price;
+          if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+            totalComparePrice += variant.compare_at_price;
+          } else {
+            totalComparePrice += variant.price;
+          }
+        });
+
+        // Apply discount
+        const discount = getDiscountForQuantity(qty);
+        const discountedPrice = Math.round(totalPrice * (1 - discount / 100));
+
+        bundleData.finalPrice = discountedPrice;
+        bundleData.finalCompare = totalComparePrice > discountedPrice ? totalComparePrice : 0;
+
+        window.qbBundleData = bundleData;
+
+        // DO NOT update form variant input - it causes infinite loops with main.js
+        // The variant is already selected by the main variant picker
+        // We just use that selection for our bundle calculations
+
+        // Update pricing display with calculated prices
+        updateAllPrices(discountedPrice, totalComparePrice);
+
+        // updateDynamicPricing is NOT called here anymore - prices are already updated above
+        // This was causing the price to revert to single-item price when variants changed
+
+        // Update QB option prices based on new variant selection
+        updateQBOptionPrices();
+
+        // Update swatch images based on picker selection
+        updateSwatchImages();
+
+        // Always enable the button
+        enableAddToCartButton();
+      }
+    }
+
+    // Function to attach variant listeners
+    function attachVariantListeners() {
+
+      const variantSelects = document.querySelector('variant-selects#variant-selects-{{ section.id }}') || document.querySelector('variant-selects');
+      let listenersAttached = false;
+
+      if (variantSelects) {
+        // Listen to SELECT dropdowns
+        const selects = variantSelects.querySelectorAll('select[name^="options"], select.select__select, select');
+        selects.forEach(select => {
+          if (!select.dataset.qbListenerAttached) {
+            select.dataset.qbListenerAttached = 'true';
+            select.addEventListener('change', function(e) {
+
+              const activeQB = wrapper.querySelector('.qb-option.qb-active');
+
+              // ALWAYS update QB option prices when variant changes - immediately, no delay
+              updateQBOptionPrices();
+              enableAddToCartButton();
+
+              // If bundle active (qty > 1), also rebuild bundle
+              if (activeQB && parseInt(activeQB.dataset.qty) > 1) {
+                // REMOVED: Don't block event - let variant picker update the form normally
+                // QB just reads the new variant value and updates prices
+                // e.stopImmediatePropagation();
+
+                // Call buildCombinedBundle SYNCHRONOUSLY - no delay
+                buildCombinedBundle();
+
+                // Force another update after a tiny delay to ensure it sticks
+                setTimeout(() => buildCombinedBundle(), 10);
+              }
+            }, true); // Use capture phase to run before theme
+            listenersAttached = true;
+          }
+        });
+
+        // Listen to RADIO buttons (pills)
+        const radios = variantSelects.querySelectorAll('input[type="radio"], fieldset input');
+        radios.forEach(input => {
+          if (!input.dataset.qbListenerAttached) {
+            input.dataset.qbListenerAttached = 'true';
+            input.addEventListener('change', function(e) {
+
+              const activeQB = wrapper.querySelector('.qb-option.qb-active');
+
+              // ALWAYS update QB option prices when variant changes - immediately, no delay
+              updateQBOptionPrices();
+              enableAddToCartButton();
+
+              // If bundle active (qty > 1), also rebuild bundle
+              if (activeQB && parseInt(activeQB.dataset.qty) > 1) {
+                // REMOVED: Don't block event - let variant picker update the form normally
+                // QB just reads the new variant value and updates prices
+                // e.stopImmediatePropagation();
+
+                // Call buildCombinedBundle SYNCHRONOUSLY - no delay
+                buildCombinedBundle();
+
+                // Force another update after a tiny delay to ensure it sticks
+                setTimeout(() => buildCombinedBundle(), 10);
+              }
+            }, true); // Use capture phase to run before theme
+            listenersAttached = true;
+          }
+        });
+      }
+
+      // Also listen to any product form changes as backup
+      const productForm = document.querySelector('form[action*="/cart/add"]');
+      if (productForm) {
+        productForm.addEventListener('change', function(event) {
+          if (event.target.name && event.target.name.includes('option')) {
+            // Don't call buildCombinedBundle here - let price protection handle it
+          }
+        });
+      }
+
+      return listenersAttached;
+    }
+
+    // Attach listeners immediately
+    attachVariantListeners();
+
+    // Try again after DOM ready to catch late-loading elements
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', attachVariantListeners);
+    } else {
+      setTimeout(attachVariantListeners, 100);
+    }
+
+    // Listen to QB changes
+    wrapper.querySelectorAll('.qb-variant-select').forEach(select => {
+      select.addEventListener('change', function() {
+        buildCombinedBundle();
+      });
+    });
+
+    // Listen to QB option clicks
+    wrapper.querySelectorAll('.qb-option').forEach(option => {
+      option.addEventListener('click', function(e) {
+        if (!e.target.closest('.qb-variants')) {
+          buildCombinedBundle();
+        }
+      });
+    });
+
+    // Initial build and price update
+    buildCombinedBundle();
+    updateQBOptionPrices();
+  }
+
+  // Run initialization - CRITICAL: This was missing and broke everything
+  init();
+
+  // Run setup
+  setupVariantPickerSync();
+
+  // Build initial bundle immediately
+  if (typeof buildCombinedBundle === 'function') {
+    buildCombinedBundle();
+  }
+
+  // Safe listener for form changes
+  const productForm = document.querySelector('form[action*="/cart/add"]');
+  if (productForm) {
+    productForm.addEventListener('change', function(e) {
+      if (e.target && e.target.name && e.target.name.includes('option')) {
+        // Enable button after variant change
+        setTimeout(() => enableAddToCartButton(), 50);
+        setTimeout(() => enableAddToCartButton(), 150);
+      }
+    });
+  }
+
+  // AGGRESSIVE: Watch price elements and immediately fix any wrong updates
+  let lastBundlePrice = null;
+  let priceWatchdog;
+
+  function startPriceWatchdog() {
+    const activeQB = wrapper.querySelector('.qb-option.qb-active');
+    if (!activeQB || parseInt(activeQB.dataset.qty) <= 1) return;
+
+    const priceElements = document.querySelectorAll('.price-item--sale, .price-item--regular');
+
+    priceElements.forEach(el => {
+      const observer = new MutationObserver(() => {
+        const activeQB = wrapper.querySelector('.qb-option.qb-active');
+        if (activeQB && parseInt(activeQB.dataset.qty) > 1) {
+          // If theme changed the price, immediately rebuild bundle
+          clearTimeout(priceWatchdog);
+          priceWatchdog = setTimeout(() => {
+            buildCombinedBundle();
+          }, 5);
+        }
+      });
+
+      observer.observe(el, {
+        childList: true,
+        characterData: true,
+        subtree: true
+      });
+    });
+  }
+
+  // Start watchdog
+  startPriceWatchdog();
+
+  // AGGRESSIVE: Prevent hidden class and intercept text changes to buy button price
+  function preventBuyButtonPriceHiding() {
+    const mainAtcPrice = document.getElementById('main-atc-price-{{ section.id }}');
+    const genericAtcPrice = document.querySelector('.main-atc-price');
+
+    [mainAtcPrice, genericAtcPrice].filter(Boolean).forEach(priceEl => {
+      // Override the textContent setter to prevent theme from hiding price
+      const originalTextContentDescriptor = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
+      let currentPrice = priceEl.textContent;
+
+      Object.defineProperty(priceEl, 'textContent', {
+        get() {
+          return originalTextContentDescriptor.get.call(this);
+        },
+        set(value) {
+          // Store the new value
+          currentPrice = value;
+
+          // Use requestAnimationFrame to ensure immediate update without flicker
+          requestAnimationFrame(() => {
+            originalTextContentDescriptor.set.call(this, value);
+            // Immediately force visibility
+            this.classList.remove('hidden');
+            this.style.cssText = 'display: inline !important; visibility: visible !important; opacity: 1 !important;';
+          });
+        }
+      });
+
+      // Watch for class and style changes
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'attributes') {
+            if (priceEl.classList.contains('hidden') ||
+                priceEl.style.display === 'none' ||
+                priceEl.style.visibility === 'hidden') {
+              priceEl.classList.remove('hidden');
+              priceEl.style.cssText = 'display: inline !important; visibility: visible !important; opacity: 1 !important;';
+            }
+          }
+        });
+      });
+
+      observer.observe(priceEl, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+      });
+
+      // Ensure it's visible from the start
+      priceEl.classList.remove('hidden');
+      priceEl.style.cssText = 'display: inline !important; visibility: visible !important; opacity: 1 !important;';
+    });
+  }
+
+  preventBuyButtonPriceHiding();
+
+  // Add a manual test button for debugging
+  window.testQBUpdate = function() {
+    const pickerSelections = getPickerSelectionsByPosition();
+    updateQBOptionPrices();
+  };
+
+  // Debug function to see what's being selected
+  window.debugQB = function() {
+
+    // Show current picker selections
+    const pickerSelections = getPickerSelectionsByPosition();
+
+    // Show QB selections
+    const activeQB = wrapper.querySelector('.qb-option.qb-active');
+  };
+
+})();
+</script>

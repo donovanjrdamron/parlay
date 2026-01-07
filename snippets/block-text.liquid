@@ -1,0 +1,52 @@
+{% comment %}
+  Block Text Snippet
+  Usage: {% render 'block-text', block: block, section_id: section.id %}
+{% endcomment %}
+
+<div class="block-text block-{{ block.id }}" {{ block.shopify_attributes }}>
+  <div class="text-content rte">
+    {{ block.settings.text }}
+  </div>
+</div>
+
+<style>
+  .block-{{ block.id }} .text-content {
+    text-align: {{ block.settings.text_alignment }};
+    letter-spacing: {{ settings.body_letter_spacing | divided_by: 1000.0 }}em;
+    line-height: {{ settings.body_line_height }};
+
+    {% if block.settings.override_theme_settings and block.settings.font_color != blank %}
+      color: {{ block.settings.font_color }};
+    {% else %}
+      color: {{ settings.body_color }};
+    {% endif %}
+
+    {% if block.settings.override_theme_settings and block.settings.font_size_desktop != blank %}
+      font-size: {{ block.settings.font_size_desktop }}px;
+    {% else %}
+      font-size: {{ settings.body_font_size_desktop }}px;
+    {% endif %}
+
+    {% if block.settings.override_theme_settings and block.settings.font_weight != blank %}
+      font-weight: {{ block.settings.font_weight }};
+    {% else %}
+      font-weight: normal;
+    {% endif %}
+
+    {% if block.settings.override_theme_settings and block.settings.font_style != blank %}
+      font-style: {{ block.settings.font_style }};
+    {% else %}
+      font-style: normal;
+    {% endif %}
+  }
+
+  @media screen and (max-width: 749px) {
+    .block-{{ block.id }} .text-content {
+      {% if block.settings.override_theme_settings and block.settings.font_size_mobile != blank %}
+        font-size: {{ block.settings.font_size_mobile }}px;
+      {% else %}
+        font-size: {{ settings.body_font_size_mobile }}px;
+      {% endif %}
+    }
+  }
+</style>

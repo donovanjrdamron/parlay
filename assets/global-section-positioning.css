@@ -1,0 +1,23 @@
+/* Global section positioning context for all sections */
+section {
+  position: relative;
+}
+
+/* Global highlighted text font family - applies to ALL sections */
+/* High specificity to override any section-specific font-family declarations */
+section .ic-highlighted-text,
+section .faq4-highlighted-text,
+section .bas-highlighted-text,
+section .ib-highlighted-text,
+section .crs-highlighted-text,
+section .tvs-highlighted-text,
+section .uvt-highlighted-text,
+section .highlighted-text,
+section [class*="-highlighted-text"],
+section [class*="highlighted-text"],
+.highlighted-text,
+[class*="-highlighted-text"],
+[class*="highlighted-text"] {
+  font-family: var(--highlighted-text-font-family) !important;
+}
+

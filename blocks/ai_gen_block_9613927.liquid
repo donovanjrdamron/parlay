@@ -1,0 +1,590 @@
+{% doc %}
+  @prompt
+    Create a custom Shopify section designed for a long-form Learn / Education page.
+    
+    This section will be reused multiple times on the page and must support:
+    
+    Headings
+    
+    Body text
+    
+    Optional subheadings
+    
+    Optional images or diagrams
+    
+    The style must feel editorial, calm, minimal, and premium.
+    This is not a sales section.
+    
+    STRUCTURE
+    
+    Single-column layout
+    
+    Content centered with a readable max width
+    
+    Clean vertical rhythm between sections
+    
+    Designed for long scrolling without feeling dense
+    
+    CONTENT BLOCKS (ALL ADJUSTABLE)
+    
+    The section must support the following blocks (toggleable):
+    
+    Section heading (H2 or H3)
+    
+    Body text (multi-paragraph rich text)
+    
+    Optional subheading
+    
+    Optional image (inline, full-width within content column)
+    
+    Optional divider (thin line, subtle)
+    
+    All text fields must be fully editable.
+    All blocks must be optional and reorderable.
+    
+    STYLING RULES
+    
+    No gradients
+    
+    No shadows
+    
+    No cards
+    
+    No icons unless explicitly added
+    
+    Neutral background (same as page or slightly off-white)
+    
+    Generous spacing
+    
+    Calm typography
+    
+    No aggressive emphasis styles
+    
+    This should feel like a design publication, not a marketing page.
+    
+    RESPONSIVE BEHAVIOR
+    
+    Desktop: narrow, readable column
+    
+    Mobile: full-width with generous padding
+    
+    Text should never feel cramped
+    
+    Images should scale naturally and stay within the content flow
+    
+    SECTION SETTINGS (REQUIRED)
+    
+    Max width control
+    
+    Text alignment (left / center)
+    
+    Padding controls (desktop + mobile)
+    
+    Optional image alignment
+    
+    Toggle dividers on/off
+    
+    GOAL
+    
+    This section should make long educational content feel:
+    
+    Clear
+    
+    Trustworthy
+    
+    Easy to read
+    
+    Calm and intentional
+    
+    It must work for a Learn page, not a product page.
+    
+    Do not add marketing language, CTAs, or promotional elements.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-learn-section-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding-top: {{ block.settings.padding_top_desktop }}px;
+    padding-bottom: {{ block.settings.padding_bottom_desktop }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-learn-section-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .ai-learn-section-content-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.content_spacing }}px;
+    text-align: {{ block.settings.text_alignment }};
+  }
+
+  .ai-learn-section-heading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-size: {{ block.settings.heading_size }}px;
+    line-height: {{ block.settings.heading_line_height }};
+    color: {{ block.settings.heading_color }};
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .ai-learn-section-subheading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-weight: {{ block.settings.body_font.weight }};
+    font-size: {{ block.settings.subheading_size }}px;
+    line-height: 1.5;
+    color: {{ block.settings.subheading_color }};
+    margin: 0;
+    opacity: 0.8;
+  }
+
+  .ai-learn-section-body-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-weight: {{ block.settings.body_font.weight }};
+    font-size: {{ block.settings.body_size }}px;
+    line-height: {{ block.settings.body_line_height }};
+    color: {{ block.settings.body_color }};
+  }
+
+  .ai-learn-section-body-{{ ai_gen_id }} p {
+    margin: 0 0 {{ block.settings.paragraph_spacing }}px 0;
+  }
+
+  .ai-learn-section-body-{{ ai_gen_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-learn-section-body-{{ ai_gen_id }} strong {
+    font-weight: 600;
+  }
+
+  .ai-learn-section-body-{{ ai_gen_id }} em {
+    font-style: italic;
+  }
+
+  .ai-learn-section-body-{{ ai_gen_id }} a {
+    color: {{ block.settings.link_color }};
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .ai-learn-section-body-{{ ai_gen_id }} a:hover {
+    opacity: 0.7;
+  }
+
+  .ai-learn-section-image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    margin: {{ block.settings.image_spacing }}px 0;
+  }
+
+  .ai-learn-section-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  {% if block.settings.image_alignment == 'center' %}
+    .ai-learn-section-image-wrapper-{{ ai_gen_id }} {
+      display: flex;
+      justify-content: center;
+    }
+    .ai-learn-section-image-{{ ai_gen_id }} {
+      max-width: 80%;
+    }
+  {% endif %}
+
+  .ai-learn-section-divider-{{ ai_gen_id }} {
+    width: 100%;
+    height: 1px;
+    background-color: {{ block.settings.divider_color }};
+    opacity: {{ block.settings.divider_opacity | divided_by: 100.0 }};
+    margin: {{ block.settings.divider_spacing }}px 0;
+    border: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-learn-section-{{ ai_gen_id }} {
+      padding-top: {{ block.settings.padding_top_mobile }}px;
+      padding-bottom: {{ block.settings.padding_bottom_mobile }}px;
+    }
+
+    .ai-learn-section-container-{{ ai_gen_id }} {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .ai-learn-section-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.7 }}px;
+    }
+
+    .ai-learn-section-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 0.85 }}px;
+    }
+
+    .ai-learn-section-body-{{ ai_gen_id }} {
+      font-size: {{ block.settings.body_size | times: 0.9 }}px;
+    }
+
+    {% if block.settings.image_alignment == 'center' %}
+      .ai-learn-section-image-{{ ai_gen_id }} {
+        max-width: 100%;
+      }
+    {% endif %}
+  }
+{% endstyle %}
+
+<div class="ai-learn-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-learn-section-container-{{ ai_gen_id }}">
+    <div class="ai-learn-section-content-{{ ai_gen_id }}">
+      {% if block.settings.heading != blank %}
+        {% if block.settings.heading_tag == 'h2' %}
+          <h2 class="ai-learn-section-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+        {% else %}
+          <h3 class="ai-learn-section-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h3>
+        {% endif %}
+      {% endif %}
+
+      {% if block.settings.subheading != blank %}
+        <p class="ai-learn-section-subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</p>
+      {% endif %}
+
+      {% if block.settings.body_text != blank %}
+        <div class="ai-learn-section-body-{{ ai_gen_id }}">
+          {{ block.settings.body_text }}
+        </div>
+      {% endif %}
+
+      {% if block.settings.image != blank %}
+        <div class="ai-learn-section-image-wrapper-{{ ai_gen_id }}">
+          <img
+            src="{{ block.settings.image | image_url: width: 1200 }}"
+            alt="{{ block.settings.image.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.image.width }}"
+            height="{{ block.settings.image.height }}"
+            class="ai-learn-section-image-{{ ai_gen_id }}"
+          >
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_divider %}
+        <hr class="ai-learn-section-divider-{{ ai_gen_id }}">
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Learn content section",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "richtext",
+      "id": "body_text",
+      "label": "Body text"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max content width",
+      "min": 400,
+      "max": 900,
+      "step": 50,
+      "unit": "px",
+      "default": 700
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "image_alignment",
+      "label": "Image alignment",
+      "options": [
+        {
+          "value": "full",
+          "label": "Full width"
+        },
+        {
+          "value": "center",
+          "label": "Center (80% width)"
+        }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Top padding - Desktop",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Bottom padding - Desktop",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding - Mobile",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding - Mobile",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "content_spacing",
+      "label": "Space between elements",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "paragraph_spacing",
+      "label": "Space between paragraphs",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "image_spacing",
+      "label": "Image vertical spacing",
+      "min": 0,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Divider"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show divider",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "divider_spacing",
+      "label": "Divider spacing",
+      "min": 8,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "divider_opacity",
+      "label": "Divider opacity",
+      "min": 5,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 18,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "heading_line_height",
+      "label": "Heading line height",
+      "min": 1,
+      "max": 1.8,
+      "step": 0.1,
+      "default": 1.2
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Subheading size",
+      "min": 14,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "label": "Body size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 17
+    },
+    {
+      "type": "range",
+      "id": "body_line_height",
+      "label": "Body line height",
+      "min": 1.3,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.7
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Body text",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Learn content section"
+    }
+  ]
+}
+{% endschema %}

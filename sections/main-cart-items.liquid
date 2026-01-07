@@ -1,0 +1,2425 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  /* Cart item styling - scoped to main cart page only */
+  .cart__items .cart-item {
+    --image-size-desktop: {{ section.settings.image_size_desktop }}px;
+    --image-size-mobile: {{ section.settings.image_size_mobile }}px;
+    --image-border-radius: {{ section.settings.image_border_radius | default: 4 }}px;
+    --title-font-size-desktop: {{ section.settings.title_font_size_desktop }}px;
+    --title-font-size-mobile: {{ section.settings.title_font_size_mobile }}px;
+    --title-font-weight: {{ section.settings.title_font_weight }};
+    --title-color: {{ section.settings.title_color }};
+  }
+
+  /* Cart item image border radius */
+  .cart__items .cart-item__image {
+    border-radius: var(--image-border-radius);
+  }
+
+  /* Fix for long product titles in cart */
+  .cart__items .cart-item__name {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    word-break: break-word !important;
+    hyphens: auto !important;
+    line-height: 1.3 !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    font-size: {{ section.settings.title_font_size_desktop }}px !important;
+    font-weight: {{ section.settings.title_font_weight }} !important;
+    color: {{ section.settings.title_color }} !important;
+  }
+
+  .cart__items .cart-item__name.h4 {
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    font-size: {{ section.settings.title_font_size_desktop }}px !important;
+    font-weight: {{ section.settings.title_font_weight }} !important;
+    color: {{ section.settings.title_color }} !important;
+  }
+
+  @media screen and (max-width: 749px) {
+    .cart__items .cart-item__name {
+      font-size: {{ section.settings.title_font_size_mobile }}px !important;
+    }
+
+    .cart__items .cart-item__name.h4 {
+      font-size: {{ section.settings.title_font_size_mobile }}px !important;
+    }
+  }
+
+  .cart__items .cart-item__details {
+    overflow: hidden !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .cart__items .cart-item__details > div {
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  /* Cart item images */
+  .cart__items .cart-item__media {
+    width: {{ section.settings.image_size_desktop }}px !important;
+    min-width: {{ section.settings.image_size_desktop }}px !important;
+  }
+
+  @media screen and (max-width: 749px) {
+    .cart__items .cart-item__media {
+      width: {{ section.settings.image_size_mobile }}px !important;
+      min-width: {{ section.settings.image_size_mobile }}px !important;
+    }
+  }
+
+  /* Price styling */
+  .cart__items .cart-item__final-price,
+  .cart__items .cart-item .price {
+    color: {{ section.settings.item_price_color }} !important;
+    font-size: {{ section.settings.price_font_size }}px !important;
+  }
+
+  .cart__items .cart-item__old-price {
+    color: {{ section.settings.item_compare_price_color }} !important;
+    font-size: {{ section.settings.compare_price_font_size }}px !important;
+  }
+
+  /* Discount badge styling */
+  .cart__items .cart-item__discount-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: {{ section.settings.discount_badge_padding_vertical }}px {{ section.settings.discount_badge_padding_horizontal }}px;
+    background-color: {{ section.settings.discount_badge_bg_color }};
+    border: {{ section.settings.discount_badge_border_width }}px solid {{ section.settings.discount_badge_border_color }};
+    border-radius: {{ section.settings.discount_badge_border_radius }}px;
+    font-size: {{ section.settings.discount_badge_font_size }}px;
+    font-weight: {{ section.settings.discount_badge_font_weight }};
+    color: {{ section.settings.discount_badge_text_color }};
+    margin-bottom: 4px;
+  }
+
+  .cart__items .cart-item__discount-badge-icon {
+    width: {{ section.settings.discount_badge_icon_size }}px;
+    height: {{ section.settings.discount_badge_icon_size }}px;
+    color: {{ section.settings.discount_badge_icon_color }};
+  }
+
+  /* Subscription badge styling */
+  .cart__items .cart-item__subscription-badge {
+    display: inline-block;
+    padding: {{ section.settings.subscription_badge_padding_vertical }}px {{ section.settings.subscription_badge_padding_horizontal }}px;
+    background-color: {{ section.settings.subscription_badge_bg }};
+    color: {{ section.settings.subscription_badge_text_color }};
+    font-size: {{ section.settings.subscription_badge_font_size }}px;
+    border-radius: {{ section.settings.subscription_badge_border_radius }}px;
+    border: {{ section.settings.subscription_badge_border_width }}px solid {{ section.settings.subscription_badge_border_color }};
+    font-weight: 500;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  /* Quantity selector styling */
+  .cart__items .cart-item quantity-input {
+    --quantity-font-size: {{ section.settings.quantity_font_size }}px;
+    --quantity-container-padding: {{ section.settings.quantity_container_padding }}em;
+    --quantity-corner-radius: {{ section.settings.quantity_corner_radius }}px;
+    --quantity-border-width: {{ section.settings.quantity_border_width }}px;
+    --quantity-border-color: {{ section.settings.quantity_border_color }};
+    --quantity-input-background: {{ section.settings.quantity_input_background }};
+    --quantity-input-padding: {{ section.settings.quantity_input_padding }}em;
+    --quantity-separators-opacity: {{ section.settings.quantity_separators_opacity | divided_by: 100.0 }};
+    --quantity-buttons-padding: {{ section.settings.quantity_padding }}em;
+    --quantity-buttons-background: {{ section.settings.quantity_buttons_background }};
+    --quantity-buttons-icon-color: {{ section.settings.quantity_buttons_icon_color }};
+    --quantity-buttons-border-color: {{ section.settings.quantity_buttons_border_color }};
+    --quantity-buttons-border-width: {{ section.settings.quantity_buttons_border_width }}px;
+    --quantity-icon-size: {{ section.settings.quantity_btns_icon_size }}%;
+  }
+
+  .cart__items .cart-item quantity-input .quantity__button,
+  .cart__items .cart-item quantity-input .quantity__input {
+    font-size: var(--quantity-font-size);
+  }
+
+  .cart__items .cart-item quantity-input {
+    border-radius: var(--quantity-corner-radius);
+    border: var(--quantity-border-width) solid var(--quantity-border-color);
+    padding: var(--quantity-container-padding);
+  }
+
+  .cart__items .cart-item quantity-input .quantity__input {
+    background: var(--quantity-input-background);
+    padding: 0 var(--quantity-input-padding);
+  }
+
+  .cart__items .cart-item quantity-input .quantity__button {
+    background: var(--quantity-buttons-background);
+    color: var(--quantity-buttons-icon-color);
+    padding: var(--quantity-buttons-padding);
+    {% if section.settings.quantity_outline_btns %}
+    border: var(--quantity-buttons-border-width) solid var(--quantity-buttons-border-color);
+    {% endif %}
+    {% if section.settings.quantity_round_btns %}
+    border-radius: var(--quantity-corner-radius);
+    {% endif %}
+  }
+
+  .cart__items .cart-item quantity-input .quantity__button svg {
+    width: var(--quantity-icon-size);
+    height: var(--quantity-icon-size);
+  }
+
+  /* Subscription upgrade button styles */
+  .cart__items .cart-item__subscription-upgrade {
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+  }
+
+  {% if section.settings.override_subscription_upgrade_button %}
+  .cart__items .cart-item__upgrade-button--custom {
+    padding: {{ section.settings.subscription_upgrade_padding_vertical }}px {{ section.settings.subscription_upgrade_padding_horizontal }}px !important;
+    font-size: {{ section.settings.subscription_upgrade_font_size }}px !important;
+    font-weight: {{ section.settings.subscription_upgrade_font_weight }} !important;
+    color: {{ section.settings.subscription_upgrade_text_color }} !important;
+    background: {{ section.settings.subscription_upgrade_bg_color }} !important;
+    border: {{ section.settings.subscription_upgrade_border_width }}px solid {{ section.settings.subscription_upgrade_border_color }} !important;
+    border-radius: {{ section.settings.subscription_upgrade_border_radius }}px !important;
+  }
+
+  .cart__items .cart-item__upgrade-button--custom:hover:not(:disabled) {
+    background: {{ section.settings.subscription_upgrade_hover_bg_color }} !important;
+    color: {{ section.settings.subscription_upgrade_hover_text_color }} !important;
+  }
+  {% endif %}
+
+  /* Toggle button styles */
+  {% if section.settings.subscription_upgrade_toggle_style %}
+  .cart__items .cart-item__subscription-upgrade--toggle {
+    --toggle-width: {{ section.settings.subscription_upgrade_toggle_width }}px;
+    --toggle-height: {{ section.settings.subscription_upgrade_toggle_height }}px;
+    --toggle-active-color: {{ section.settings.subscription_upgrade_toggle_active_color }};
+    --toggle-inactive-color: {{ section.settings.subscription_upgrade_toggle_inactive_color }};
+  }
+  {% endif %}
+
+  /* Cart page specific styles for remove button */
+  .cart__items .cart-item__remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .cart__items .cart-item__remove .icon-remove {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Cart page layout adjustments - use same structure as drawer */
+  .cart__items .cart-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .cart__items .cart-drawer-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(var(--color-foreground), 0.08);
+  }
+
+  .cart__items .cart-item__media {
+    width: var(--image-size-desktop, 150px);
+    min-width: var(--image-size-desktop, 150px);
+    flex-shrink: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .cart__items .cart-item__media {
+      width: var(--image-size-mobile, 100px);
+      min-width: var(--image-size-mobile, 100px);
+    }
+  }
+
+  .cart__items .cart-drawer-item__right {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .cart__items .cart-drawer-item__details-and-delete-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .cart__items .cart-item__details {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .cart__items .cart-drawer-item__cart-remove-button {
+    flex-shrink: 0;
+  }
+
+  .cart__items .cart-drawer-item__quantity-and-prices {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .cart__items .cart-drawer-item__quantity-and-prices--reverse {
+    flex-direction: row-reverse;
+  }
+
+  .cart__items .cart-item__quantity {
+    flex-shrink: 0;
+  }
+
+  .cart__items .cart-item__totals {
+    flex-shrink: 0;
+  }
+
+  /* Subscription upgrade in cart page */
+  .cart__items .cart-item__subscription-upgrade {
+    width: calc(100% - var(--image-size-desktop, 150px) - 1.5rem);
+    padding: var(--btn-spacing-top, 12px) 0 0 0;
+    margin-left: calc(var(--image-size-desktop, 150px) + 1.5rem);
+    order: 999;
+    flex-basis: auto;
+  }
+
+  @media screen and (max-width: 749px) {
+    .cart__items .cart-item__subscription-upgrade {
+      width: calc(100% - var(--image-size-mobile, 100px) - 1.5rem);
+      margin-left: calc(var(--image-size-mobile, 100px) + 1.5rem);
+    }
+  }
+
+  .cart__items .cart-item__subscription-upgrade--custom {
+    padding: var(--btn-spacing-top, 12px) 0 0 0 !important;
+  }
+
+  /* Toggle button style layout */
+  .cart__items .cart-item__subscription-upgrade--toggle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: var(--btn-spacing-top, 12px) 0 0 0 !important;
+  }
+
+  /* Grouped toggle style */
+  .cart__items .cart-item__subscription-upgrade--toggle.cart-item__subscription-upgrade--grouped {
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .cart__items .cart-item__subscription-upgrade--toggle .subscription-upgrade__text {
+    flex: 0 0 auto;
+    font-size: var(--btn-font-size, 14px);
+    font-weight: var(--btn-font-weight, 500);
+    color: var(--btn-text-color, #000000);
+    white-space: nowrap;
+  }
+
+  .cart__items .cart-item__subscription-upgrade--toggle.cart-item__subscription-upgrade--grouped .subscription-upgrade__text {
+    width: auto;
+    white-space: nowrap;
+  }
+
+  .cart__items .cart-item__subscription-upgrade--toggle .subscription-upgrade__toggle {
+    position: relative;
+    display: inline-block;
+    width: var(--toggle-width, 50px);
+    height: var(--toggle-height, 28px);
+    margin-left: 0;
+    flex-shrink: 0;
+  }
+
+  .cart__items .cart-item__subscription-upgrade--toggle .subscription-upgrade__toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+  }
+
+  .cart__items .cart-item__subscription-upgrade--toggle .subscription-upgrade__toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--toggle-inactive-color, #ccc);
+    transition: 0.3s;
+    border-radius: var(--toggle-height, 28px);
+    display: block;
+  }
+
+  .cart__items .cart-item__subscription-upgrade--toggle .subscription-upgrade__toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: calc(var(--toggle-height, 28px) - 8px);
+    width: calc(var(--toggle-height, 28px) - 8px);
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+
+  .cart__items .cart-item__subscription-upgrade--toggle .subscription-upgrade__toggle input:checked + .subscription-upgrade__toggle-slider {
+    background-color: var(--toggle-active-color, #000000);
+  }
+
+  .cart__items .cart-item__subscription-upgrade--toggle .subscription-upgrade__toggle input:checked + .subscription-upgrade__toggle-slider:before {
+    transform: translateX(calc(var(--toggle-width, 50px) - var(--toggle-height, 28px)));
+  }
+
+  .cart__items .cart-item__subscription-upgrade--toggle {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .cart__items .subscription-upgrade__toggle,
+  .cart__items .subscription-upgrade__toggle-slider {
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  /* Loading state for toggle */
+  .cart__items .cart-item__subscription-upgrade--toggle .subscription-upgrade__toggle-slider.loading {
+    opacity: 1 !important;
+  }
+
+  .cart__items .cart-item__subscription-upgrade--toggle .subscription-upgrade__toggle-slider.loading:before {
+    animation: subscription-toggle-spin 0.6s linear infinite !important;
+    background: linear-gradient(45deg, #fff 0%, #ccc 100%) !important;
+  }
+
+  @keyframes subscription-toggle-spin {
+    0% { transform: translateX(0) rotate(0deg); }
+    100% { transform: translateX(0) rotate(360deg); }
+  }
+
+  .cart__items .cart-item__upgrade-button {
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .cart__items .cart-item__upgrade-button .upgrade-button__spinner {
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+  }
+
+  .cart__items .cart-item__upgrade-button .upgrade-button__spinner .spinner-svg {
+    animation: button-spinner 0.8s linear infinite;
+    display: block;
+  }
+
+  @keyframes button-spinner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .cart__items .cart-item__upgrade-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  /* Loading overlay styles */
+  .cart__items .cart-drawer-item {
+    position: relative;
+  }
+
+  .cart__items .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: opacity 0.2s ease;
+  }
+
+  .cart__items .loading-overlay.hidden {
+    display: none;
+  }
+
+  .cart__items .loading-overlay__spinner {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cart__items .loading-overlay__spinner .spinner {
+    width: 100%;
+    height: 100%;
+    animation: spinner-rotation 1s linear infinite;
+  }
+
+  .cart__items .loading-overlay__spinner .spinner .path {
+    stroke: rgba(var(--color-foreground), 0.8);
+    stroke-linecap: round;
+    animation: spinner-dash 1.5s ease-in-out infinite;
+  }
+
+  @keyframes spinner-rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(270deg); }
+  }
+
+  @keyframes spinner-dash {
+    0% {
+      stroke-dasharray: 1, 150;
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: 90, 150;
+      stroke-dashoffset: -35;
+    }
+    100% {
+      stroke-dasharray: 90, 150;
+      stroke-dashoffset: -124;
+    }
+  }
+
+  /* Custom button styles when override is enabled */
+  .cart__items .cart-item__upgrade-button--custom {
+    padding: var(--btn-padding-vertical) var(--btn-padding-horizontal) !important;
+    font-size: var(--btn-font-size) !important;
+    font-weight: var(--btn-font-weight) !important;
+    color: var(--btn-text-color) !important;
+    background: var(--btn-bg-color) !important;
+    border: var(--btn-border-width) solid var(--btn-border-color) !important;
+    border-radius: var(--btn-border-radius) !important;
+  }
+
+  .cart__items .cart-item__upgrade-button--custom:hover:not(:disabled) {
+    background: var(--btn-hover-bg-color) !important;
+    color: var(--btn-hover-text-color) !important;
+    border-color: var(--btn-hover-bg-color) !important;
+  }
+{%- endstyle -%}
+
+<cart-items class="page-width{% if cart == empty %} is-empty{% else %} section-{{ section.id }}-padding{% endif %}">
+  <div class="title-wrapper-with-link title-wrapper-with-link--spacing">
+    <h1 class="title title--primary">{{ 'sections.cart.title' | t }}</h1>
+    <a href="{% if settings.continue_shopping_url == blank %}{{ routes.all_products_collection_url }}{% else %}{{ settings.continue_shopping_url }}{% endif %}" class="underlined-link">
+      {{ 'general.continue_shopping' | t }}
+    </a>
+  </div>
+
+  <div class="cart__warnings">
+    <h1 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h1>
+    {% if settings.display_continue_shopping %}
+      <a href="{% if settings.continue_shopping_url == blank %}{{ routes.all_products_collection_url }}{% else %}{{ settings.continue_shopping_url }}{% endif %}" class="button">
+        {{ 'general.continue_shopping' | t }}
+      </a>
+    {% endif %}
+
+    {%- if shop.customer_accounts_enabled and customer == null -%}
+      <h2 class="cart__login-title">{{ 'sections.cart.login.title' | t }}</h2>
+      <p class="cart__login-paragraph">
+        {{ 'sections.cart.login.paragraph_html' | t: link: routes.account_login_url }}
+      </p>
+    {%- endif -%}
+  </div>
+
+  <form action="{{ routes.cart_url }}" class="cart__contents critical-hidden" method="post" id="cart">
+    <div class="cart__items" id="main-cart-items" data-id="{{ section.id }}">
+      <div class="js-contents">
+        {%- if cart != empty -%}
+          <ul class="cart-items list-unstyled">
+            {%- for item in cart.items -%}
+              <li
+                id="CartItem-{{ item.index | plus: 1 }}"
+                class="cart-drawer-item cart-item cart-item--product-{{ item.product.handle }}"
+                role="row" data-index="{{ item.index | plus: 1 }}"
+              >
+                <div class="loading-overlay hidden">
+                  <div class="loading-overlay__spinner">
+                    <svg
+                      aria-hidden="true"
+                      focusable="false"
+                      class="spinner"
+                      viewBox="0 0 66 66"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                    </svg>
+                  </div>
+                </div>
+                <div class="cart-item__media" role="cell">
+                  {% if item.image %}
+                    {% comment %} Leave empty space due to a:empty CSS display: none rule {% endcomment %}
+                    {% if section.settings.image_link %}<a href="{{ item.url }}" class="cart-item__link" tabindex="-1" aria-hidden="true"> </a>{% endif %}
+                    <img
+                      class="cart-item__image"
+                      src="{{ item.image | image_url: width: section.settings.image_size_desktop }}"
+                      alt="{{ item.image.alt | escape }}"
+                      loading="lazy"
+                      width="{{ section.settings.image_size_desktop }}"
+                      height="{{ section.settings.image_size_desktop | divided_by: item.image.aspect_ratio | ceil }}"
+                    >
+                  {% endif %}
+                </div>
+
+                <div class='cart-drawer-item__right'>
+                  <div class='cart-drawer-item__details-and-delete-btn'>
+                    <div class="cart-item__details" role="cell">
+                      {%- if settings.show_vendor -%}
+                        <p class="caption-with-letter-spacing light">{{ item.product.vendor }}</p>
+                      {%- endif -%}
+
+                      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0;">
+                        <{% if section.settings.title_link %}a href="{{ item.url }}"{% else %}h4{% endif %} class="cart-item__name h4 break" style="margin: 0; flex: 1 1 auto; min-width: 0;">
+                          {{- item.product.title | escape -}}
+                        </{% if section.settings.title_link %}a{% else %}h4{% endif %}>
+
+                        {%- if section.settings.display_savings_badge -%}
+                          {%- liquid
+                            assign show_savings = false
+                            assign compare_price = 0
+                            assign actual_price = item.final_price
+
+                            if item.variant.compare_at_price and item.variant.compare_at_price > actual_price
+                              assign compare_price = item.variant.compare_at_price
+                              assign show_savings = true
+                            elsif item.original_price > actual_price
+                              assign compare_price = item.original_price
+                              assign show_savings = true
+                            endif
+                          -%}
+                          {%- if show_savings -%}
+                            {%- liquid
+                              assign per_unit_savings = compare_price | minus: actual_price
+                              assign total_savings = per_unit_savings | times: item.quantity
+
+                              if section.settings.savings_badge_use_theme_colors
+                                assign badge_text_color = settings.badge_text_color | default: '#FFFFFF'
+                                assign badge_bg_color = settings.badge_bg_color | default: '#FF0000'
+                                assign badge_border_color = settings.badge_border_color | default: '#000000'
+                                assign badge_font_size = settings.badge_font_size | default: 12
+                                assign badge_font_weight = settings.badge_font_weight | default: '600'
+                                assign badge_padding_v = settings.badge_padding_vertical | default: 4
+                                assign badge_padding_h = settings.badge_padding_horizontal | default: 8
+                                assign badge_border_width = settings.badge_border_width | default: 1
+                                assign badge_border_radius = settings.badge_border_radius | default: 4
+                                assign badge_text_template = settings.badge_text | default: 'Save [percentage]%'
+                              else
+                                assign badge_text_color = section.settings.savings_badge_text_color
+                                assign badge_bg_color = section.settings.savings_badge_bg_color
+                                assign badge_border_color = section.settings.savings_badge_border_color
+                                assign badge_font_size = section.settings.savings_badge_font_size
+                                assign badge_font_weight = section.settings.savings_badge_font_weight
+                                assign badge_padding_v = section.settings.savings_badge_padding_vertical
+                                assign badge_padding_h = section.settings.savings_badge_padding_horizontal
+                                assign badge_border_width = section.settings.savings_badge_border_width
+                                assign badge_border_radius = section.settings.savings_badge_border_radius
+                                assign badge_text_template = section.settings.savings_badge_text | default: 'Save [percentage]%'
+                              endif
+
+                              assign savings_percent = per_unit_savings | times: 100 | divided_by: compare_price
+                              assign price_savings_formatted = total_savings | money_without_trailing_zeros
+                              assign badge_display_text = badge_text_template | replace: '[percentage]', savings_percent | replace: '[price]', price_savings_formatted
+                            -%}
+                          <div class="cart-item__savings-badge" style="
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
+                            padding: {{ badge_padding_v }}px {{ badge_padding_h }}px;
+                            background-color: {{ badge_bg_color }};
+                            border: {{ badge_border_width }}px solid {{ badge_border_color }};
+                            border-radius: {{ badge_border_radius }}px;
+                            font-size: {{ badge_font_size }}px;
+                            font-weight: {{ badge_font_weight }};
+                            color: {{ badge_text_color }};
+                            white-space: nowrap;
+                          ">
+                            {{ badge_display_text }}
+                          </div>
+                          {%- endif -%}
+                        {%- endif -%}
+
+                        {%- if section.settings.display_discount_badge and item.discounts.size > 0 -%}
+                          <div class="cart-drawer__discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}" style="margin: 0;">
+                            {%- for discount in item.discounts -%}
+                              <div class="badge" style="color: {{ section.settings.discount_badge_text_color }}; background-color: {{ section.settings.discount_badge_bg_color }}; border: {{ section.settings.discount_badge_border_width }}px solid {{ section.settings.discount_badge_border_color }}; border-radius: {{ section.settings.discount_badge_border_radius }}px; padding: {{ section.settings.discount_badge_padding_vertical }}px {{ section.settings.discount_badge_padding_horizontal }}px; font-size: {{ section.settings.discount_badge_font_size }}px; font-weight: {{ section.settings.discount_badge_font_weight }}; display: inline-flex; align-items: center; gap: 5px;">
+                                {%- if section.settings.discount_badge_icon_type == 'default' -%}
+                                  <span style="color: {{ section.settings.discount_badge_icon_color }}; display: inline-flex; align-items: center; flex-shrink: 0; width: {{ section.settings.discount_badge_icon_size }}px; height: {{ section.settings.discount_badge_icon_size }}px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 100%; height: 100%;">
+                                      <path fill-rule="evenodd" d="M5.25 2.25a3 3 0 00-3 3v4.318a3 3 0 00.879 2.121l9.58 9.581c.92.92 2.39 1.186 3.548.428a18.849 18.849 0 005.441-5.44c.758-1.16.492-2.629-.428-3.548l-9.58-9.581a3 3 0 00-2.122-.879H5.25zM6.375 7.5a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25z" clip-rule="evenodd"/>
+                                    </svg>
+                                  </span>
+                                {%- elsif section.settings.discount_badge_icon_type == 'custom' and section.settings.discount_badge_custom_svg != blank -%}
+                                  <span style="color: {{ section.settings.discount_badge_icon_color }}; display: inline-flex; align-items: center; flex-shrink: 0; width: {{ section.settings.discount_badge_icon_size }}px; height: {{ section.settings.discount_badge_icon_size }}px;">
+                                    {{ section.settings.discount_badge_custom_svg }}
+                                  </span>
+                                {%- endif -%}
+                                <span>{{ discount.title }}</span>
+                              </div>
+                            {%- endfor -%}
+                          </div>
+                        {%- endif -%}
+                      </div>
+
+                      {%- if item.product.has_only_default_variant == false
+                        or item.properties != blank
+                        or item.selling_plan_allocation != null
+                      -%}
+                        <dl>
+                          {%- if item.product.has_only_default_variant == false -%}
+                            {% if section.settings.displayed_variants == 'compact' %}
+                              <div class="product-option">
+                                {{ item.options_with_values | map: 'value' | join: ' / ' }}
+                              </div>
+                            {% else %}
+                              {%- for option in item.options_with_values -%}
+                                <div class="product-option">
+                                  <dt>{{ option.name }}:</dt>
+                                  <dd>
+                                    {{ option.value -}}
+                                    {%- unless forloop.last %}, {% endunless %}
+                                  </dd>
+                                </div>
+                              {%- endfor -%}
+                            {% endif %}
+                          {%- endif -%}
+
+                          {%- for property in item.properties -%}
+                            {%- assign property_first_char = property.first | slice: 0 -%}
+                            {%- if property.last != blank and property_first_char != '_' -%}
+                              <div class="product-option">
+                                <dt>{{ property.first }}:</dt>
+                                <dd>
+                                  {%- if property.last contains '/uploads/' -%}
+                                    <a
+                                      href="{{ property.last }}"
+                                      class="link"
+                                      target="_blank"
+                                      aria-describedby="a11y-new-window-message"
+                                    >
+                                      {{ property.last | split: '/' | last }}
+                                    </a>
+                                  {%- else -%}
+                                    {{ property.last }}
+                                  {%- endif -%}
+                                </dd>
+                              </div>
+                            {%- endif -%}
+                          {%- endfor -%}
+                        </dl>
+
+                        {%- unless section.settings.show_subscription_badge -%}
+                          <p class="product-option">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+                        {%- endunless -%}
+                      {%- endif -%}
+                    </div>
+                    <cart-remove-button
+                      class='cart-drawer-item__cart-remove-button'
+                      id="Remove-{{ item.index | plus: 1 }}"
+                      data-index="{{ item.index | plus: 1 }}"
+                    >
+                      <button
+                        type="button"
+                        class="button button--tertiary"
+                        aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
+                      >
+                        {% render 'icon-remove' %}
+                      </button>
+                    </cart-remove-button>
+                  </div>
+
+                  <div class='cart-drawer-item__quantity-and-prices{% if section.settings.prices_position == 'left' %} cart-drawer-item__quantity-and-prices--reverse{% endif %}'>
+                    <div class="cart-item__quantity">
+                      <div class="cart-item__quantity-wrapper">
+                        <quantity-input
+                          class="quantity cart-quantity{% if section.settings.quantity_round_btns %} cart-quantity--round-btns{% endif %}{% if section.settings.quantity_outline_btns %} cart-quantity--outline-btns{% endif %}"
+                          style='
+                            --font-size:{{ section.settings.quantity_font_size | divided_by: 10.0 }}rem;
+                            --border-width:0.{{ section.settings.quantity_border_width }}rem;
+                            --border-color:{{ section.settings.quantity_border_color }};
+                            --corner-radius:{{ section.settings.quantity_corner_radius | divided_by: 10.0 }}rem;
+                            --container-padding:{{ section.settings.quantity_container_padding }}em;
+                            --input-padding:{{ section.settings.quantity_input_padding }}em;
+                            --separator-opacity:{{ section.settings.quantity_separators_opacity | divided_by: 100.0 }};
+                            --padding:{{ section.settings.quantity_padding }}em;
+                            --icon-size:{{ section.settings.quantity_btns_icon_size | divided_by: 100.0 }}em;
+                            --quantity-input-bg:{{ section.settings.quantity_input_background }};
+                            --quantity-button-bg:{{ section.settings.quantity_buttons_background }};
+                          '
+                        >
+                          <button class="quantity__button quantity__button--minus no-js-hidden" name="minus" type="button" style="background-color: {{ section.settings.quantity_buttons_background }}; color: {{ section.settings.quantity_buttons_icon_color }}; border: {{ section.settings.quantity_buttons_border_width }}px solid {{ section.settings.quantity_buttons_border_color }};">
+                            <span class="visually-hidden">
+                              {{-
+                                'products.product.quantity.decrease'
+                                | t: product: item.product.title
+                                | escape
+                              -}}
+                            </span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill='currentColor'>
+                              <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/>
+                            </svg>
+                          </button>
+                          <input
+                            class="quantity__input"
+                            type="number"
+                            data-quantity-variant-id="{{ item.variant.id }}"
+                            name="updates[]"
+                            value="{{ item.quantity }}"
+                            {% # theme-check-disable %}
+                            data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
+                            min="{{ item.variant.quantity_rule.min }}"
+                            {% if item.variant.quantity_rule.max != null %}
+                              max="{{ item.variant.quantity_rule.max }}"
+                            {% endif %}
+                            step="{{ item.variant.quantity_rule.increment }}"
+                            {% # theme-check-enable %}
+                            aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+                            id="Quantity-{{ item.index | plus: 1 }}"
+                            data-index="{{ item.index | plus: 1 }}"
+                            style="background-color: {{ section.settings.quantity_input_background }}"
+                          >
+                          <button class="quantity__button quantity__button--plus no-js-hidden" name="plus" type="button" style="background-color: {{ section.settings.quantity_buttons_background }}; color: {{ section.settings.quantity_buttons_icon_color }}; border: {{ section.settings.quantity_buttons_border_width }}px solid {{ section.settings.quantity_buttons_border_color }};">
+                            <span class="visually-hidden">
+                              {{-
+                                'products.product.quantity.increase'
+                                | t: product: item.product.title
+                                | escape
+                              -}}
+                            </span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill='currentColor'>
+                              <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
+                            </svg>
+                          </button>
+                        </quantity-input>
+                      </div>
+
+                      <div
+                        id="Line-item-error-{{ item.index | plus: 1 }}"
+                        class="cart-item__error"
+                        role="alert"
+                      >
+                        <small class="cart-item__error-text"></small>
+                        <svg
+                          aria-hidden="true"
+                          focusable="false"
+                          class="icon icon-error"
+                          viewBox="0 0 13 13"
+                        >
+                          <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+                          <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+                          <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+                          <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+                        </svg>
+                      </div>
+                    </div>
+
+                    <div class="cart-item__totals {{ section.settings.prices_position }}" role="cell">
+                      <div class="cart-item__price-wrapper" {% if section.settings.show_subscription_badge and item.selling_plan_allocation != null %}style="position: relative; top: -10px;"{% endif %}>
+                        {%- if item.final_line_price == 0 -%}
+                          {%- comment -%} Show FREE badge when price is 0 {%- endcomment -%}
+                          <div class="cart-item__free-badge-wrapper">
+                            <span class="cart-item__free-badge" style="
+                              background-color: {{ section.settings.free_badge_bg_color }};
+                              color: {{ section.settings.free_badge_text_color }};
+                              font-size: {{ section.settings.free_badge_font_size }}px;
+                              display: inline-block;
+                              padding: {{ section.settings.free_badge_padding_vertical }}px {{ section.settings.free_badge_padding_horizontal }}px;
+                              border-radius: {{ section.settings.free_badge_border_radius }}px;
+                              border: {{ section.settings.free_badge_border_width }}px solid {{ section.settings.free_badge_border_color }};
+                              font-weight: {{ section.settings.free_badge_font_weight }};
+                              line-height: 1;
+                              text-transform: uppercase;
+                            ">
+                              {{ section.settings.free_badge_text }}
+                            </span>
+                          </div>
+                        {%- elsif item.original_line_price != item.final_line_price -%}
+                          <div class="cart-item__discounted-prices">
+                            <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
+                            <s class="cart-item__old-price price--end compare-price" style="color: {{ section.settings.item_compare_price_color }}; font-size: {{ section.settings.compare_price_font_size }}px; letter-spacing: 0; margin-right: 5px;">
+                              {{ item.original_line_price | money }}
+                            </s>
+                            <span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
+                            <span class="price--end regular-price" style="color: {{ section.settings.item_price_color }}; font-size: {{ section.settings.price_font_size }}px; letter-spacing: 0;">
+                              {{ item.final_line_price | money }}
+                            </span>
+                          </div>
+                        {% else %}
+                          <span class="price--end regular-price" style="color: {{ section.settings.item_price_color }}; font-size: {{ section.settings.price_font_size }}px; letter-spacing: 0;">
+                            {{ item.original_line_price | money }}
+                          </span>
+                        {% endif %}
+
+                        {%- if item.variant.available and item.unit_price_measurement -%}
+                          <div class="unit-price caption">
+                            <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
+                            {{ item.variant.unit_price | money }}
+                            <span aria-hidden="true">/</span>
+                            <span class="visually-hidden"
+                              >&nbsp;{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span
+                            >
+                            {%- if item.variant.unit_price_measurement.reference_value != 1 -%}
+                              {{- item.variant.unit_price_measurement.reference_value -}}
+                            {%- endif -%}
+                            {{ item.variant.unit_price_measurement.reference_unit }}
+                          </div>
+                        {%- endif -%}
+
+                        {%- if section.settings.show_subscription_badge and item.selling_plan_allocation != null -%}
+                          <span class="cart-item__subscription-badge" style="
+                            background-color: {{ section.settings.subscription_badge_bg }};
+                            color: {{ section.settings.subscription_badge_text_color }};
+                            font-size: {{ section.settings.subscription_badge_font_size }}px;
+                            display: inline-block;
+                            padding: {{ section.settings.subscription_badge_padding_vertical }}px {{ section.settings.subscription_badge_padding_horizontal }}px;
+                            border-radius: {{ section.settings.subscription_badge_border_radius }}px;
+                            border: {{ section.settings.subscription_badge_border_width }}px solid {{ section.settings.subscription_badge_border_color }};
+                            margin-top: 6px;
+                            font-weight: 600;
+                            line-height: 1;
+                            text-transform: uppercase;
+                          ">
+                            {{ section.settings.subscription_badge_text }}
+                          </span>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {%- comment -%} Subscription upgrade button - inside cart item at bottom {%- endcomment -%}
+                {%- if section.settings.show_subscription_upgrade and item.selling_plan_allocation == null -%}
+                  {%- liquid
+                    assign has_subscription = false
+                    assign subscription_plan_id = ''
+                    assign subscription_discount = 0
+
+                    for i in (1..10)
+                      assign product_key = 'subscription_product_' | append: i
+                      assign plan_id_key = 'subscription_product_' | append: i | append: '_id'
+                      assign discount_key = 'subscription_product_' | append: i | append: '_discount'
+                      assign setting_product = settings[product_key]
+                      assign setting_plan_id = settings[plan_id_key]
+                      assign setting_discount = settings[discount_key]
+
+                      if setting_product.id == item.product.id and setting_plan_id != blank
+                        assign has_subscription = true
+                        assign subscription_plan_id = setting_plan_id
+                        assign subscription_discount = setting_discount
+                        break
+                      endif
+                    endfor
+                  -%}
+
+                  {%- if has_subscription -%}
+                    {%- liquid
+                      assign discount_text_template = section.settings.subscription_upgrade_discount_text | default: 'Subscribe and save <strong>[discount]%</strong>'
+
+                      if subscription_discount > 0
+                        assign button_text = discount_text_template | replace: '[discount]', subscription_discount
+                      else
+                        assign text_parts = discount_text_template | split: '[discount]'
+                        assign button_text = text_parts[0] | strip
+                      endif
+                    -%}
+
+                    {%- if section.settings.subscription_upgrade_toggle_style -%}
+                      {%- comment -%} Toggle button style {%- endcomment -%}
+                      <div class="cart-item__subscription-upgrade cart-item__subscription-upgrade--toggle{% if section.settings.subscription_upgrade_toggle_grouped %} cart-item__subscription-upgrade--grouped{% endif %}" style="
+                        --toggle-width: {{ section.settings.subscription_upgrade_toggle_width }}px;
+                        --toggle-height: {{ section.settings.subscription_upgrade_toggle_height }}px;
+                        --toggle-active-color: {{ section.settings.subscription_upgrade_toggle_active_color }};
+                        --toggle-inactive-color: {{ section.settings.subscription_upgrade_toggle_inactive_color }};{% if section.settings.override_subscription_upgrade_button %}
+                        --btn-font-size: {{ section.settings.subscription_upgrade_font_size }}px;
+                        --btn-font-weight: {{ section.settings.subscription_upgrade_font_weight }};
+                        --btn-text-color: {{ section.settings.subscription_upgrade_text_color }};
+                        --btn-bg-color: {{ section.settings.subscription_upgrade_bg_color }};{% endif %}
+                        --btn-spacing-top: {{ section.settings.subscription_upgrade_spacing_top }}px;
+                      ">
+                        <div class="subscription-upgrade__text">{{ button_text }}</div>
+                        <label class="subscription-upgrade__toggle">
+                          <input
+                            type="checkbox"
+                            class="subscription-upgrade__toggle-input"
+                            data-variant-id="{{ item.variant.id }}"
+                            data-quantity="{{ item.quantity }}"
+                            data-line-index="{{ item.index | plus: 1 }}"
+                            data-selling-plan-id="{{ subscription_plan_id }}"
+                          >
+                          <span class="subscription-upgrade__toggle-slider"></span>
+                        </label>
+                      </div>
+                    {%- else -%}
+                      {%- comment -%} Regular button style {%- endcomment -%}
+                      <div class="cart-item__subscription-upgrade{% if section.settings.override_subscription_upgrade_button %} cart-item__subscription-upgrade--custom{% endif %}" {% if section.settings.override_subscription_upgrade_button %}style="
+                        --btn-font-size: {{ section.settings.subscription_upgrade_font_size }}px;
+                        --btn-font-weight: {{ section.settings.subscription_upgrade_font_weight }};
+                        --btn-text-color: {{ section.settings.subscription_upgrade_text_color }};
+                        --btn-bg-color: {{ section.settings.subscription_upgrade_bg_color }};
+                        --btn-border-color: {{ section.settings.subscription_upgrade_border_color }};
+                        --btn-border-width: {{ section.settings.subscription_upgrade_border_width }}px;
+                        --btn-border-radius: {{ section.settings.subscription_upgrade_border_radius }}px;
+                        --btn-padding-vertical: {{ section.settings.subscription_upgrade_padding_vertical }}px;
+                        --btn-padding-horizontal: {{ section.settings.subscription_upgrade_padding_horizontal }}px;
+                        --btn-hover-text-color: {{ section.settings.subscription_upgrade_hover_text_color }};
+                        --btn-hover-bg-color: {{ section.settings.subscription_upgrade_hover_bg_color }};
+                        --btn-spacing-top: {{ section.settings.subscription_upgrade_spacing_top }}px;
+                      "{% endif %}>
+                        <button
+                          type="button"
+                          class="cart-item__upgrade-button{% if section.settings.override_subscription_upgrade_button %} cart-item__upgrade-button--custom{% else %} button button--tertiary{% endif %}"
+                          data-variant-id="{{ item.variant.id }}"
+                          data-quantity="{{ item.quantity }}"
+                          data-line-index="{{ item.index | plus: 1 }}"
+                          data-selling-plan-id="{{ subscription_plan_id }}"
+                        >
+                          <span class="upgrade-button__text">{{ button_text }}</span>
+                          <span class="upgrade-button__spinner" style="display: none;">
+                            <svg width="20" height="20" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" class="spinner-svg">
+                              <circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="5" stroke-dasharray="80" stroke-dashoffset="60" stroke-linecap="round"/>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <p class="visually-hidden" id="cart-live-region-text" aria-live="polite" role="status"></p>
+    <p class="visually-hidden" id="shopping-cart-line-item-status" aria-live="polite" aria-hidden="true" role="status">
+      {{ 'accessibility.loading' | t }}
+    </p>
+  </form>
+</cart-items>
+
+<script>
+(function() {
+  'use strict';
+
+  // Suppress any console errors related to this feature
+  window.addEventListener('error', function(e) {
+    if (e.message && (e.message.includes('cart') || e.message.includes('subscription'))) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+  }, true);
+
+  async function upgradeToSubscription(variantId, quantity, lineIndex, sellingPlanId) {
+    try {
+      // Step 1: Remove the current item - don't wait for full response
+      const removeResponse = await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ line: lineIndex, quantity: 0 })
+      });
+
+      if (!removeResponse.ok) {
+        console.error('[Cart Page] Failed to remove item:', await removeResponse.text());
+        return false;
+      }
+
+      // Step 2: Add with subscription immediately (small delay to ensure remove processed)
+      await new Promise(resolve => setTimeout(resolve, 150));
+      const addResponse = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: [{ id: variantId, quantity: quantity, selling_plan: sellingPlanId }]
+        })
+      });
+
+      if (!addResponse || !addResponse.ok) {
+        const errorText = await addResponse.text();
+        console.error('[Cart Page] Failed to add subscription item:', errorText);
+        return false;
+      }
+
+      // Step 3: Refresh the cart page
+      window.location.reload();
+      return true;
+
+    } catch (error) {
+      console.error('[Cart Page] Error in upgradeToSubscription:', error);
+      return false;
+    }
+  }
+
+  function initSubscriptionUpgrade() {
+    // Handle regular buttons
+    const upgradeButtons = document.querySelectorAll('.cart__items .cart-item__upgrade-button');
+
+    upgradeButtons.forEach((button, index) => {
+      // Remove existing listeners by cloning
+      const newButton = button.cloneNode(true);
+      button.parentNode.replaceChild(newButton, button);
+
+      newButton.addEventListener('click', async function(e) {
+        try {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const variantId = this.dataset.variantId;
+          const quantity = parseInt(this.dataset.quantity);
+          const lineIndex = parseInt(this.dataset.lineIndex);
+          const sellingPlanId = this.dataset.sellingPlanId;
+
+          // Validate data
+          if (!variantId || !quantity || !lineIndex || !sellingPlanId) {
+            console.error('[Cart Page] Missing required data attributes');
+            return;
+          }
+
+          // Show loading overlay on cart item
+          const cartItem = this.closest('.cart-drawer-item');
+          const loadingOverlay = cartItem ? cartItem.querySelector('.loading-overlay') : null;
+          if (loadingOverlay) {
+            loadingOverlay.classList.remove('hidden');
+          }
+
+          // Disable button during processing
+          this.disabled = true;
+
+          // Show spinner in button
+          const buttonText = this.querySelector('.upgrade-button__text');
+          const buttonSpinner = this.querySelector('.upgrade-button__spinner');
+          if (buttonText) buttonText.style.display = 'none';
+          if (buttonSpinner) buttonSpinner.style.display = 'inline-flex';
+
+          const success = await upgradeToSubscription(variantId, quantity, lineIndex, sellingPlanId);
+
+          if (!success) {
+            console.error('[Cart Page] Upgrade failed, re-enabling button');
+            // Re-enable button if failed
+            this.disabled = false;
+            if (buttonText) buttonText.style.display = 'inline';
+            if (buttonSpinner) buttonSpinner.style.display = 'none';
+            if (loadingOverlay) loadingOverlay.classList.add('hidden');
+          }
+          // If success, the page will reload, so we keep the overlay visible
+        } catch (err) {
+          console.error('[Cart Page] Error in button click handler:', err);
+          // Silently handle any errors
+          this.disabled = false;
+          const buttonText = this.querySelector('.upgrade-button__text');
+          const buttonSpinner = this.querySelector('.upgrade-button__spinner');
+          if (buttonText) buttonText.style.display = 'inline';
+          if (buttonSpinner) buttonSpinner.style.display = 'none';
+
+          const cartItem = this.closest('.cart-drawer-item');
+          const loadingOverlay = cartItem ? cartItem.querySelector('.loading-overlay') : null;
+          if (loadingOverlay) {
+            loadingOverlay.classList.add('hidden');
+          }
+        }
+      });
+    });
+
+    // Handle toggle switches
+    const toggleInputs = document.querySelectorAll('.cart__items .subscription-upgrade__toggle-input');
+
+    toggleInputs.forEach((toggle, index) => {
+      // Remove existing listeners by cloning
+      const newToggle = toggle.cloneNode(true);
+      toggle.parentNode.replaceChild(newToggle, toggle);
+
+      newToggle.addEventListener('change', async function(e) {
+        try {
+          // Make sure it's checked
+          if (!this.checked) {
+            return;
+          }
+
+          const variantId = this.dataset.variantId;
+          const quantity = parseInt(this.dataset.quantity);
+          const lineIndex = parseInt(this.dataset.lineIndex);
+          const sellingPlanId = this.dataset.sellingPlanId;
+
+          // Validate data
+          if (!variantId || !quantity || !lineIndex || !sellingPlanId) {
+            console.error('[Cart Page] Missing required data attributes');
+            this.checked = false;
+            return;
+          }
+
+          // Show loading overlay on cart item
+          const cartItem = this.closest('.cart-drawer-item');
+          const loadingOverlay = cartItem ? cartItem.querySelector('.loading-overlay') : null;
+          if (loadingOverlay) {
+            loadingOverlay.classList.remove('hidden');
+          }
+
+          // Add loading animation to toggle slider
+          const toggleSlider = this.nextElementSibling;
+          if (toggleSlider && toggleSlider.classList.contains('subscription-upgrade__toggle-slider')) {
+            toggleSlider.classList.add('loading');
+          }
+
+          // Disable toggle during processing
+          this.disabled = true;
+
+          const success = await upgradeToSubscription(variantId, quantity, lineIndex, sellingPlanId);
+
+          if (!success) {
+            console.error('[Cart Page] Upgrade failed, resetting toggle');
+            if (loadingOverlay) loadingOverlay.classList.add('hidden');
+            if (toggleSlider) toggleSlider.classList.remove('loading');
+            this.disabled = false;
+            this.checked = false;
+          }
+        } catch (err) {
+          console.error('[Cart Page] Error in toggle change handler:', err);
+          // Silently handle any errors
+          const toggleSlider = this.nextElementSibling;
+          if (toggleSlider && toggleSlider.classList.contains('subscription-upgrade__toggle-slider')) {
+            toggleSlider.classList.remove('loading');
+          }
+
+          const cartItem = this.closest('.cart-drawer-item');
+          const loadingOverlay = cartItem ? cartItem.querySelector('.loading-overlay') : null;
+          if (loadingOverlay) {
+            loadingOverlay.classList.add('hidden');
+          }
+
+          this.disabled = false;
+          this.checked = false;
+        }
+      });
+    });
+  }
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      initSubscriptionUpgrade();
+    });
+  } else {
+    initSubscriptionUpgrade();
+  }
+
+  // Re-initialize after cart updates (in case cart is dynamically updated)
+  document.addEventListener('cart:refresh', function() {
+    setTimeout(function() {
+      initSubscriptionUpgrade();
+    }, 100);
+  });
+})();
+
+// Dynamic savings badge update
+(function() {
+  'use strict';
+
+  function updateSavingsBadge(cartItem, item, badgeTextTemplate) {
+    const savingsBadge = cartItem.querySelector('.cart-item__savings-badge');
+    if (!savingsBadge) {
+      return;
+    }
+
+    // Determine compare price (use variant compare_at_price or original_price)
+    let comparePrice = 0;
+    const actualPrice = item.final_price;
+
+    if (item.variant && item.variant.compare_at_price && item.variant.compare_at_price > actualPrice) {
+      comparePrice = item.variant.compare_at_price;
+    } else if (item.original_price > actualPrice) {
+      comparePrice = item.original_price;
+    }
+
+    // If no savings, hide badge
+    if (comparePrice === 0 || comparePrice <= actualPrice) {
+      savingsBadge.style.display = 'none';
+      return;
+    }
+
+    savingsBadge.style.display = 'inline-flex';
+
+    // Calculate savings
+    const perUnitSavings = comparePrice - actualPrice;
+    const totalSavings = perUnitSavings * item.quantity;
+    const savingsPercent = Math.round((perUnitSavings * 100) / comparePrice);
+
+    // Format price savings
+    const formattedSavings = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: window.Shopify?.currency?.active || 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+    }).format(totalSavings / 100);
+
+    // Replace placeholders in badge text
+    const badgeDisplayText = badgeTextTemplate
+      .replace('[percentage]', savingsPercent)
+      .replace('[price]', formattedSavings);
+
+    // Update badge text
+    savingsBadge.textContent = badgeDisplayText;
+  }
+
+  function initSavingsBadgeUpdates() {
+    const cartItems = document.querySelectorAll('.cart__items .cart-item');
+
+    cartItems.forEach(function(cartItem) {
+      const quantityInput = cartItem.querySelector('.quantity__input');
+      if (!quantityInput) return;
+
+      const savingsBadge = cartItem.querySelector('.cart-item__savings-badge');
+      if (!savingsBadge) return;
+
+      // Get initial data
+      const variantId = quantityInput.dataset.quantityVariantId;
+      if (!variantId) return;
+
+      // Store badge template in data attribute for later use
+      const badgeText = savingsBadge.textContent.trim();
+      savingsBadge.dataset.badgeTemplate = badgeText;
+
+      // Listen for quantity changes
+      quantityInput.addEventListener('change', function() {
+        const newQuantity = parseInt(this.value) || 1;
+
+        // Fetch updated cart to get accurate pricing
+        fetch('/cart.js')
+          .then(response => response.json())
+          .then(cart => {
+            const item = cart.items.find(i => i.variant_id == variantId);
+            if (item) {
+              const badgeTemplate = savingsBadge.dataset.badgeTemplate || '{{ section.settings.savings_badge_use_theme_colors }}' === 'true' ? '{{ settings.badge_text | default: "Save [percentage]%" }}' : '{{ section.settings.savings_badge_text | default: "Save [percentage]%" }}';
+              updateSavingsBadge(cartItem, item, badgeTemplate);
+            }
+          })
+          .catch(error => {
+            console.error('Error updating savings badge:', error);
+          });
+      });
+
+      // Also listen for cart updates from other sources
+      quantityInput.addEventListener('input', function() {
+        const newQuantity = parseInt(this.value) || 1;
+
+        // Fetch cart data
+        fetch('/cart.js')
+          .then(response => response.json())
+          .then(cart => {
+            const item = cart.items.find(i => i.variant_id == variantId);
+            if (item) {
+              const badgeTemplate = savingsBadge.dataset.badgeTemplate || '{{ section.settings.savings_badge_use_theme_colors }}' === 'true' ? '{{ settings.badge_text | default: "Save [percentage]%" }}' : '{{ section.settings.savings_badge_text | default: "Save [percentage]%" }}';
+              updateSavingsBadge(cartItem, item, badgeTemplate);
+            }
+          })
+          .catch(error => {
+            console.error('Error updating savings badge:', error);
+          });
+      });
+    });
+  }
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSavingsBadgeUpdates);
+  } else {
+    initSavingsBadgeUpdates();
+  }
+
+  // Re-initialize after cart updates
+  document.addEventListener('cart:refresh', function() {
+    setTimeout(initSavingsBadgeUpdates, 100);
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.main-cart-items.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product images"
+    },
+    {
+      "type": "range",
+      "id": "image_size_desktop",
+      "min": 80,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Image size (Desktop)",
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "image_size_mobile",
+      "min": 60,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "label": "Image size (Mobile)",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "image_link",
+      "label": "Display images as product links",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Image Border Radius",
+      "default": 4,
+      "info": "Rounded corners for cart item images"
+    },
+    {
+      "type": "header",
+      "content": "Product titles"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size_desktop",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size (Desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "title_font_size_mobile",
+      "min": 11,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size (Mobile)",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "checkbox",
+      "id": "title_link",
+      "label": "Display titles as product page links",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Product variants"
+    },
+    {
+      "type": "select",
+      "id": "displayed_variants",
+      "label": "Displayed variants style",
+      "options": [
+        {
+          "value": "compact",
+          "label": "Compact"
+        },
+        {
+          "value": "classic",
+          "label": "Classic"
+        }
+      ],
+      "default": "classic",
+      "info": "Example for Classic: Color: Green, Size: S. Example for compact: Green / S"
+    },
+    {
+      "type": "header",
+      "content": "Prices"
+    },
+    {
+      "type": "select",
+      "id": "prices_position",
+      "label": "Position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "select",
+      "id": "displayed_compare_prices",
+      "label": "Display compare prices based on",
+      "options": [
+        {
+          "value": "discounts",
+          "label": "Cart discounts"
+        },
+        {
+          "value": "product",
+          "label": "Real product compare price"
+        },
+        {
+          "value": "automatic",
+          "label": "Automatic"
+        }
+      ],
+      "default": "product",
+      "info": "Determines how the displayed compare prices of the items are caluclated. If \"Cart discounts\" is selected, compare prices won't be displayed unless there is a Product discount for the item. \"Real product compare price\" displays the compare price as item quantity * real product compare price. \"Automatic\" is the combination of the first two options. If an automatic discount is active, that's going to be displayed. Otherwise, the real compare price of the product will be taken into calculation."
+    },
+    {
+      "type": "color",
+      "id": "item_price_color",
+      "label": "Price color",
+      "default": "#dd1d1d"
+    },
+    {
+      "type": "range",
+      "id": "price_font_size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Price font size",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "item_compare_price_color",
+      "label": "Compare-at price color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "compare_price_font_size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Compare-at price font size",
+      "default": 16
+    },
+    {
+      "type": "checkbox",
+      "id": "display_discount_badge",
+      "label": "Display discount badge above price",
+      "default": true,
+      "info": "Shows discount badge above the line total price when product has discounts applied."
+    },
+    {
+      "type": "header",
+      "content": "Discount badge styling"
+    },
+    {
+      "type": "select",
+      "id": "discount_badge_icon_type",
+      "label": "Icon type",
+      "options": [
+        {
+          "value": "none",
+          "label": "No icon"
+        },
+        {
+          "value": "default",
+          "label": "Default icon"
+        },
+        {
+          "value": "custom",
+          "label": "Custom SVG"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "html",
+      "id": "discount_badge_custom_svg",
+      "label": "Custom SVG code",
+      "info": "Paste your SVG code here. Used when Icon type is set to Custom SVG."
+    },
+    {
+      "type": "color",
+      "id": "discount_badge_icon_color",
+      "label": "Icon color",
+      "default": "#DC2626",
+      "info": "Applies to SVG icons that use currentColor in fill or stroke"
+    },
+    {
+      "type": "range",
+      "id": "discount_badge_icon_size",
+      "min": 8,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "discount_badge_text_color",
+      "label": "Text color",
+      "default": "#DC2626"
+    },
+    {
+      "type": "range",
+      "id": "discount_badge_font_size",
+      "min": 8,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "discount_badge_font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "color",
+      "id": "discount_badge_bg_color",
+      "label": "Background color",
+      "default": "#FEE2E2"
+    },
+    {
+      "type": "color",
+      "id": "discount_badge_border_color",
+      "label": "Border color",
+      "default": "#DC2626"
+    },
+    {
+      "type": "range",
+      "id": "discount_badge_border_width",
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "discount_badge_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "discount_badge_padding_vertical",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding vertical",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "discount_badge_padding_horizontal",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding horizontal",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Savings badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "display_savings_badge",
+      "label": "Display savings badge",
+      "default": true,
+      "info": "Shows savings amount when product has compare-at price"
+    },
+    {
+      "type": "checkbox",
+      "id": "savings_badge_use_theme_colors",
+      "label": "Use theme badge colors & format",
+      "default": true,
+      "info": "Use global badge settings from theme settings"
+    },
+    {
+      "type": "text",
+      "id": "savings_badge_text",
+      "label": "Badge text",
+      "default": "Save [percentage]%",
+      "info": "Only applies when theme settings OFF. Use [price] for discount amount or [percentage] for discount percentage. Examples: 'Save [percentage]%', '[price] OFF', 'Save [price]'"
+    },
+    {
+      "type": "color",
+      "id": "savings_badge_text_color",
+      "label": "Text color",
+      "default": "#DC2626",
+      "info": "Only applies when 'Use theme highlight colors' is OFF"
+    },
+    {
+      "type": "range",
+      "id": "savings_badge_font_size",
+      "min": 8,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "savings_badge_font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "savings_badge_bg_color",
+      "label": "Background color",
+      "default": "#FEE2E2",
+      "info": "Only applies when 'Use theme highlight colors' is OFF"
+    },
+    {
+      "type": "color",
+      "id": "savings_badge_border_color",
+      "label": "Border color",
+      "default": "#DC2626",
+      "info": "Only applies when 'Use theme highlight colors' is OFF"
+    },
+    {
+      "type": "range",
+      "id": "savings_badge_border_width",
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "savings_badge_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "savings_badge_padding_vertical",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding vertical",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "savings_badge_padding_horizontal",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding horizontal",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Subscription badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subscription_badge",
+      "label": "Show subscription badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "subscription_badge_text",
+      "label": "Badge text",
+      "default": "Monthly Subscription",
+      "info": "Text to display on subscription items"
+    },
+    {
+      "type": "color",
+      "id": "subscription_badge_bg",
+      "label": "Badge background color",
+      "default": "#1b9999"
+    },
+    {
+      "type": "color",
+      "id": "subscription_badge_text_color",
+      "label": "Badge text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "subscription_badge_font_size",
+      "min": 8,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge font size",
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "subscription_badge_padding_vertical",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge padding vertical",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "subscription_badge_padding_horizontal",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge padding horizontal",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "subscription_badge_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge border radius",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "subscription_badge_border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge border width",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "subscription_badge_border_color",
+      "label": "Badge border color",
+      "default": "#1b9999"
+    },
+    {
+      "type": "header",
+      "content": "Free badge"
+    },
+    {
+      "type": "text",
+      "id": "free_badge_text",
+      "label": "Free badge text",
+      "default": "FREE",
+      "info": "Text to display when item price is 0"
+    },
+    {
+      "type": "color",
+      "id": "free_badge_bg_color",
+      "label": "Badge background color",
+      "default": "#22c55e"
+    },
+    {
+      "type": "color",
+      "id": "free_badge_text_color",
+      "label": "Badge text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "free_badge_font_size",
+      "min": 8,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge font size",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "free_badge_font_weight",
+      "label": "Badge font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "free_badge_padding_vertical",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge padding vertical",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "free_badge_padding_horizontal",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge padding horizontal",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "free_badge_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge border radius",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "free_badge_border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge border width",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "free_badge_border_color",
+      "label": "Badge border color",
+      "default": "#22c55e"
+    },
+    {
+      "type": "header",
+      "content": "Text labels"
+    },
+    {
+      "type": "text",
+      "id": "remove_button_text",
+      "label": "Remove button text",
+      "default": "Remove",
+      "info": "Text for the remove item button"
+    },
+    {
+      "type": "text",
+      "id": "quantity_label",
+      "label": "Quantity label",
+      "default": "Quantity",
+      "info": "Label for quantity selector"
+    },
+    {
+      "type": "header",
+      "content": "Quantity selector"
+    },
+    {
+      "type": "range",
+      "id": "quantity_font_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Font & icons size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "quantity_container_padding",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Container padding",
+      "default": 0,
+      "info": "Relative to font size"
+    },
+    {
+      "type": "range",
+      "id": "quantity_corner_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "t:settings_schema.global.settings.corner_radius.label",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "quantity_border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Container border width",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "quantity_border_color",
+      "label": "Container border color",
+      "default": "#414141"
+    },
+    {
+      "type": "color",
+      "id": "quantity_input_background",
+      "label": "Input background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "quantity_input_padding",
+      "min": 0,
+      "max": 2,
+      "step": 0.1,
+      "label": "Input side padding",
+      "default": 0.5,
+      "info": "Relative to font size"
+    },
+    {
+      "type": "range",
+      "id": "quantity_separators_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Separators opacity",
+      "default": 50,
+      "info": "Separator lines between the input and the buttons"
+    },
+    {
+      "type": "range",
+      "id": "quantity_padding",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Buttons padding",
+      "default": 0.4,
+      "info": "Relative to font size"
+    },
+    {
+      "type": "color",
+      "id": "quantity_buttons_background",
+      "label": "Buttons background color",
+      "default": "#F3F4F6"
+    },
+    {
+      "type": "color",
+      "id": "quantity_buttons_icon_color",
+      "label": "Buttons icon color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "quantity_buttons_border_color",
+      "label": "Buttons border color",
+      "default": "#E5E7EB"
+    },
+    {
+      "type": "range",
+      "id": "quantity_buttons_border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Buttons border width",
+      "default": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "quantity_round_btns",
+      "label": "Round inner side corners of buttons",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "quantity_outline_btns",
+      "label": "Outline style buttons",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "quantity_btns_icon_size",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Buttons icon size",
+      "default": 70,
+      "info": "Relative to font size"
+    },
+    {
+      "type": "header",
+      "content": "Block margin"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 45,
+      "step": 3,
+      "unit": "px",
+      "label": "Top margin",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 45,
+      "step": 3,
+      "unit": "px",
+      "label": "Bottom margin",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Subscription upgrade button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subscription_upgrade",
+      "label": "Show subscription upgrade button",
+      "default": true,
+      "info": "Shows upgrade button for products with subscription plans configured in theme settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_subscription_upgrade_button",
+      "label": "Override button settings",
+      "default": false,
+      "info": "When enabled, all button styling settings below will be applied to override default styles"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subscription_upgrade_discount_text",
+      "label": "Button text",
+      "default": "Subscribe and save <strong>[discount]%</strong>",
+      "info": "Use [discount] placeholder for the discount percentage. When discount is 0%, only text before [discount] will be shown."
+    },
+    {
+      "type": "range",
+      "id": "subscription_upgrade_font_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Button font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "subscription_upgrade_font_weight",
+      "min": 400,
+      "max": 900,
+      "step": 100,
+      "label": "Button font weight",
+      "default": 500
+    },
+    {
+      "type": "color",
+      "id": "subscription_upgrade_text_color",
+      "label": "Button text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "subscription_upgrade_bg_color",
+      "label": "Button background color",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "subscription_upgrade_border_color",
+      "label": "Button border color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "subscription_upgrade_border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Button border width",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "subscription_upgrade_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "subscription_upgrade_padding_vertical",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Button padding vertical",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "subscription_upgrade_padding_horizontal",
+      "min": 10,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Button padding horizontal",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "subscription_upgrade_hover_text_color",
+      "label": "Button hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "subscription_upgrade_hover_bg_color",
+      "label": "Button hover background color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "subscription_upgrade_spacing_top",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Spacing from item (top)",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Toggle button style"
+    },
+    {
+      "type": "checkbox",
+      "id": "subscription_upgrade_toggle_style",
+      "label": "Enable toggle button style",
+      "default": false,
+      "info": "Shows a toggle button on the right with text on the left"
+    },
+    {
+      "type": "checkbox",
+      "id": "subscription_upgrade_toggle_grouped",
+      "label": "Group toggle button and text together",
+      "default": true,
+      "info": "When enabled, text and toggle will be grouped together on the right side. When disabled, text appears on left and toggle on right."
+    },
+    {
+      "type": "range",
+      "id": "subscription_upgrade_toggle_width",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Toggle width",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "subscription_upgrade_toggle_height",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Toggle height",
+      "default": 28
+    },
+    {
+      "type": "color",
+      "id": "subscription_upgrade_toggle_active_color",
+      "label": "Toggle active color",
+      "default": "#000000",
+      "info": "Background color when toggle is turned on"
+    },
+    {
+      "type": "color",
+      "id": "subscription_upgrade_toggle_inactive_color",
+      "label": "Toggle inactive color",
+      "default": "#cccccc",
+      "info": "Background color when toggle is turned off"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ]
+}
+{% endschema %}

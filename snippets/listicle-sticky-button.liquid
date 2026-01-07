@@ -1,0 +1,147 @@
+{% comment %}
+  Snippet: Sticky CTA Button for Listicle
+  - Fixed position button at bottom of screen
+  - Arrow icon
+  - Smooth scroll behavior
+  - Mobile optimized
+{% endcomment %}
+
+<div class="eelist-sticky-cta-{{ block.id }}" id="eelist-sticky-{{ block.id }}">
+  <div class="eelist-sticky-cta-container-{{ block.id }}">
+    {% if block.settings.button_text != blank %}
+      <a href="{{ block.settings.button_link | default: '#' }}" class="eelist-sticky-cta-button-{{ block.id }}">
+        <span class="eelist-sticky-cta-text">{{ block.settings.button_text }}</span>
+        <svg class="eelist-sticky-cta-arrow" width="{{ block.settings.arrow_size }}" height="{{ block.settings.arrow_size }}" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 6L8 2L10 2L16 8L10 14L8 14L8 10L-1.74845e-07 10L-3.01991e-07 6L8 6Z" fill="currentColor"/>
+        </svg>
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .eelist-sticky-cta-{{ block.id }} {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: {{ block.settings.z_index | default: 9900 }};
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding: {{ block.settings.container_padding }}px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .eelist-sticky-cta-{{ block.id }}.show {
+    transform: translateY(0);
+  }
+
+  .eelist-sticky-cta-container-{{ block.id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.gap }}px;
+  }
+
+  .eelist-sticky-cta-button-{{ block.id }} {
+    background: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_font_size }}px;
+    font-weight: var(--font-weight-bold);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: {{ block.settings.button_width_desktop }}px;
+    margin: 0 auto;
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  .eelist-sticky-cta-button-{{ block.id }}:hover {
+    background: {{ block.settings.button_bg_color | color_darken: 10 }};
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .eelist-sticky-cta-text {
+    flex: 1;
+    text-align: center;
+  }
+
+  .eelist-sticky-cta-arrow {
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .eelist-sticky-cta-button-{{ block.id }}:hover .eelist-sticky-cta-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 768px) {
+    .eelist-sticky-cta-{{ block.id }} {
+      padding: {{ block.settings.mobile_container_padding }}px;
+    }
+
+    .eelist-sticky-cta-button-{{ block.id }} {
+      font-size: {{ block.settings.mobile_button_font_size }}px;
+      padding: {{ block.settings.mobile_button_padding_vertical }}px {{ block.settings.mobile_button_padding_horizontal }}px;
+      max-width: 100%;
+    }
+
+    .eelist-sticky-cta-arrow {
+      width: {{ block.settings.mobile_arrow_size }}px;
+      height: {{ block.settings.mobile_arrow_size }}px;
+    }
+  }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const stickyBar = document.getElementById('eelist-sticky-{{ block.id }}');
+  if (!stickyBar) return;
+
+  let isVisible = false;
+
+  function toggleSticky() {
+    const scrollY = window.scrollY;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+
+    // Show after scrolling 300px or when near bottom
+    const shouldShow = scrollY > 300 || (scrollY + windowHeight >= documentHeight - 100);
+
+    if (shouldShow && !isVisible) {
+      stickyBar.classList.add('show');
+      isVisible = true;
+    } else if (!shouldShow && isVisible) {
+      stickyBar.classList.remove('show');
+      isVisible = false;
+    }
+  }
+
+  // Throttled scroll listener
+  let ticking = false;
+  function handleScroll() {
+    if (!ticking) {
+      requestAnimationFrame(function() {
+        toggleSticky();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', handleScroll);
+  toggleSticky(); // Check initial state
+});
+</script>

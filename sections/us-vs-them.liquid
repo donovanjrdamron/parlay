@@ -1,0 +1,1540 @@
+{% comment %}
+  Us vs Them Comparison Section
+  Follows established section patterns with heading scaffold and comparison blocks
+{% endcomment %}
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<section class="us-vs-them section-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="container page-width">
+    <div class="uvt-content-wrapper">
+
+      {% comment %} Heading {% endcomment %}
+      {% if section.settings.heading_before != blank or section.settings.highlighted_text != blank or section.settings.heading_after != blank %}
+        <div class="uvt-header-wrapper uvt-align-{{ section.settings.heading_text_align }}">
+          {% case section.settings.highlight_position %}
+            {% when 'above' %}
+              {% if section.settings.highlighted_text != blank %}
+                <span class="uvt-highlighted-text uvt-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+              <{{ section.settings.heading_tag }} class="uvt-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+
+            {% when 'below' %}
+              <{{ section.settings.heading_tag }} class="uvt-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+              {% if section.settings.highlighted_text != blank %}
+                <span class="uvt-highlighted-text uvt-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+
+            {% when 'inline' %}
+              <{{ section.settings.heading_tag }} class="uvt-heading">
+                {{ section.settings.heading_before }}
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="uvt-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+
+            {% else %}
+              <{{ section.settings.heading_tag }} class="uvt-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+          {% endcase %}
+        </div>
+      {% endif %}
+
+      {% comment %} Intro Text {% endcomment %}
+      {% if section.settings.intro_text != blank %}
+        <div class="uvt-intro-text rte">
+          {{ section.settings.intro_text }}
+        </div>
+      {% endif %}
+
+      {% comment %} Prepare comparison blocks {% endcomment %}
+      {% assign comparison_blocks = section.blocks | where: 'type', 'comparison_row' %}
+      {% assign feature_count = comparison_blocks | size %}
+
+      {% comment %} Ensure at least one feature for grid sizing {% endcomment %}
+      {% assign desktop_feature_count = feature_count %}
+      {% if desktop_feature_count == 0 %}
+        {% assign desktop_feature_count = 1 %}
+      {% endif %}
+
+      {% comment %} Comparison Table {% endcomment %}
+      <div class="uvt-comparison-wrapper">
+
+        {% comment %} Desktop Side Image {% endcomment %}
+        {% if section.settings.show_desktop_image %}
+          <div class="uvt-desktop-image-wrapper{% if section.settings.hide_desktop_image_on_mobile %} uvt-hide-mobile{% endif %}">
+            {% if section.settings.desktop_image != blank %}
+              <img
+                src="{{ section.settings.desktop_image | image_url: width: 600 }}"
+                alt="{{ section.settings.desktop_image.alt | escape }}"
+                loading="lazy"
+                class="uvt-desktop-image"
+              >
+            {% else %}
+              <div class="uvt-desktop-image-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21 15 16 10 5 21"/>
+                </svg>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% comment %} Desktop Layout (Hidden) {% endcomment %}
+        <div class="uvt-comparison-desktop">
+          <div class="uvt-grid-desktop">
+            {%- comment -%} Row 1: Empty corner then feature headers {%- endcomment -%}
+            <div class="uvt-cell uvt-cell-corner"></div>
+            {% for block in comparison_blocks %}
+              <div class="uvt-cell uvt-cell-feature-header">
+                {{ block.settings.benefit_text }}
+              </div>
+            {% endfor %}
+
+            {%- comment -%} Row 2: Our Product label + values {%- endcomment -%}
+            <div class="uvt-cell uvt-cell-row-label uvt-cell-us-label uvt-cell-first-in-row">
+              {% comment %} Show decorative image above if enabled (default true if not set) {% endcomment %}
+              {% assign us_enabled = section.settings.us_image_enabled %}
+              {% if us_enabled == nil %}
+                {% assign us_enabled = true %}
+              {% endif %}
+              {% if us_enabled and section.settings.us_image_position == 'above' %}
+                {% if section.settings.us_image != blank %}
+                  {% case section.settings.us_image_visibility %}
+                    {% when 'always' %}
+                      <img src="{{ section.settings.us_image | image_url: width: 300 }}" alt="{{ section.settings.us_image.alt | escape }}" class="uvt-label-image uvt-label-image-us uvt-label-image-above" loading="lazy">
+                    {% when 'mobile_only' %}
+                      <img src="{{ section.settings.us_image | image_url: width: 300 }}" alt="{{ section.settings.us_image.alt | escape }}" class="uvt-label-image uvt-label-image-us uvt-label-image-above uvt-mobile-only" loading="lazy">
+                    {% when 'desktop_only' %}
+                      <img src="{{ section.settings.us_image | image_url: width: 300 }}" alt="{{ section.settings.us_image.alt | escape }}" class="uvt-label-image uvt-label-image-us uvt-label-image-above uvt-desktop-only" loading="lazy">
+                  {% endcase %}
+                {% else %}
+                  <div class="uvt-label-image-placeholder uvt-label-image-placeholder-us uvt-label-image-above" style="display: flex !important; visibility: visible !important;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                  </div>
+                {% endif %}
+              {% endif %}
+
+              {% comment %} Show main logo or text label {% endcomment %}
+              {% if section.settings.us_use_image_as_label and section.settings.us_main_image != blank %}
+                <img src="{{ section.settings.us_main_image | image_url: width: 300 }}" alt="{{ section.settings.us_column_label | escape }}" class="uvt-label-main-image" loading="lazy">
+              {% else %}
+                <span class="uvt-label-text">{{ section.settings.us_column_label }}</span>
+              {% endif %}
+
+              {% comment %} Show decorative image below if enabled {% endcomment %}
+              {% if us_enabled and section.settings.us_image_position == 'below' %}
+                {% if section.settings.us_image != blank %}
+                  {% case section.settings.us_image_visibility %}
+                    {% when 'always' %}
+                      <img src="{{ section.settings.us_image | image_url: width: 300 }}" alt="{{ section.settings.us_image.alt | escape }}" class="uvt-label-image uvt-label-image-us uvt-label-image-below" loading="lazy">
+                    {% when 'mobile_only' %}
+                      <img src="{{ section.settings.us_image | image_url: width: 300 }}" alt="{{ section.settings.us_image.alt | escape }}" class="uvt-label-image uvt-label-image-us uvt-label-image-below uvt-mobile-only" loading="lazy">
+                    {% when 'desktop_only' %}
+                      <img src="{{ section.settings.us_image | image_url: width: 300 }}" alt="{{ section.settings.us_image.alt | escape }}" class="uvt-label-image uvt-label-image-us uvt-label-image-below uvt-desktop-only" loading="lazy">
+                  {% endcase %}
+                {% else %}
+                  <div class="uvt-label-image-placeholder uvt-label-image-placeholder-us uvt-label-image-below" style="display: flex !important; visibility: visible !important;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                  </div>
+                {% endif %}
+              {% endif %}
+            </div>
+            {% for block in comparison_blocks %}
+              {%- liquid
+                assign us_color = block.settings.us_icon_color | default: section.settings.us_icon_color
+                assign us_size = block.settings.us_icon_size | default: section.settings.us_icon_size
+              -%}
+              <div class="uvt-cell uvt-cell-us uvt-cell-us-{{ block.id }}{% if forloop.last %} uvt-cell-last-in-row{% endif %}">
+                {% if block.settings.us_value == 'check' %}
+                  <svg class="uvt-icon uvt-icon-us-{{ block.id }}" viewBox="0 0 24 24" fill="none" style="width: {{ us_size }}px; height: {{ us_size }}px; color: {{ us_color }};">
+                    <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                {% elsif block.settings.us_value == 'cross' %}
+                  <svg class="uvt-icon uvt-icon-us-{{ block.id }}" viewBox="0 0 24 24" fill="none" style="width: {{ us_size }}px; height: {{ us_size }}px; color: {{ us_color }};">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                {% elsif block.settings.us_value == 'custom_svg' %}
+                  <div class="uvt-custom-icon uvt-custom-icon-us-{{ block.id }}" style="width: {{ us_size }}px; height: {{ us_size }}px; color: {{ us_color }};">
+                    {{ block.settings.us_custom_svg }}
+                  </div>
+                {% elsif block.settings.us_value == 'google_icon' %}
+                  <span class="material-icons uvt-google-icon uvt-google-icon-us-{{ block.id }}" style="font-size: {{ us_size }}px; color: {{ us_color }};">
+                    {{ block.settings.us_google_icon }}
+                  </span>
+                {% elsif block.settings.us_value == 'text' %}
+                  {{ block.settings.us_custom_text }}
+                {% endif %}
+              </div>
+            {% endfor %}
+
+            {%- comment -%} Row 3: Other Products label + values {%- endcomment -%}
+            <div class="uvt-cell uvt-cell-row-label uvt-cell-them-label uvt-cell-first-in-row">
+              {% comment %} Show decorative image above if enabled (default true if not set) {% endcomment %}
+              {% assign them_enabled = section.settings.them_image_enabled %}
+              {% if them_enabled == nil %}
+                {% assign them_enabled = true %}
+              {% endif %}
+              {% if them_enabled and section.settings.them_image_position == 'above' %}
+                {% if section.settings.them_image != blank %}
+                  {% case section.settings.them_image_visibility %}
+                    {% when 'always' %}
+                      <img src="{{ section.settings.them_image | image_url: width: 300 }}" alt="{{ section.settings.them_image.alt | escape }}" class="uvt-label-image uvt-label-image-them uvt-label-image-above" loading="lazy">
+                    {% when 'mobile_only' %}
+                      <img src="{{ section.settings.them_image | image_url: width: 300 }}" alt="{{ section.settings.them_image.alt | escape }}" class="uvt-label-image uvt-label-image-them uvt-label-image-above uvt-mobile-only" loading="lazy">
+                    {% when 'desktop_only' %}
+                      <img src="{{ section.settings.them_image | image_url: width: 300 }}" alt="{{ section.settings.them_image.alt | escape }}" class="uvt-label-image uvt-label-image-them uvt-label-image-above uvt-desktop-only" loading="lazy">
+                  {% endcase %}
+                {% else %}
+                  <div class="uvt-label-image-placeholder uvt-label-image-placeholder-them uvt-label-image-above" style="display: flex !important; visibility: visible !important;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                  </div>
+                {% endif %}
+              {% endif %}
+
+              {% comment %} Show main logo or text label {% endcomment %}
+              {% if section.settings.them_use_image_as_label and section.settings.them_main_image != blank %}
+                <img src="{{ section.settings.them_main_image | image_url: width: 300 }}" alt="{{ section.settings.them_column_label | escape }}" class="uvt-label-main-image" loading="lazy">
+              {% else %}
+                <span class="uvt-label-text">{{ section.settings.them_column_label }}</span>
+              {% endif %}
+
+              {% comment %} Show decorative image below if enabled {% endcomment %}
+              {% if them_enabled and section.settings.them_image_position == 'below' %}
+                {% if section.settings.them_image != blank %}
+                  {% case section.settings.them_image_visibility %}
+                    {% when 'always' %}
+                      <img src="{{ section.settings.them_image | image_url: width: 300 }}" alt="{{ section.settings.them_image.alt | escape }}" class="uvt-label-image uvt-label-image-them uvt-label-image-below" loading="lazy">
+                    {% when 'mobile_only' %}
+                      <img src="{{ section.settings.them_image | image_url: width: 300 }}" alt="{{ section.settings.them_image.alt | escape }}" class="uvt-label-image uvt-label-image-them uvt-label-image-below uvt-mobile-only" loading="lazy">
+                    {% when 'desktop_only' %}
+                      <img src="{{ section.settings.them_image | image_url: width: 300 }}" alt="{{ section.settings.them_image.alt | escape }}" class="uvt-label-image uvt-label-image-them uvt-label-image-below uvt-desktop-only" loading="lazy">
+                  {% endcase %}
+                {% else %}
+                  <div class="uvt-label-image-placeholder uvt-label-image-placeholder-them uvt-label-image-below" style="display: flex !important; visibility: visible !important;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                  </div>
+                {% endif %}
+              {% endif %}
+            </div>
+            {% for block in comparison_blocks %}
+              {%- liquid
+                assign them_color = block.settings.them_icon_color | default: section.settings.them_icon_color
+                assign them_size = block.settings.them_icon_size | default: section.settings.them_icon_size
+              -%}
+              <div class="uvt-cell uvt-cell-them uvt-cell-them-{{ block.id }}{% if forloop.last %} uvt-cell-last-in-row{% endif %}">
+                {% if block.settings.them_value == 'check' %}
+                  <svg class="uvt-icon uvt-icon-them-{{ block.id }}" viewBox="0 0 24 24" fill="none" style="width: {{ them_size }}px; height: {{ them_size }}px; color: {{ them_color }};">
+                    <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                {% elsif block.settings.them_value == 'cross' %}
+                  <svg class="uvt-icon uvt-icon-them-{{ block.id }}" viewBox="0 0 24 24" fill="none" style="width: {{ them_size }}px; height: {{ them_size }}px; color: {{ them_color }};">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                {% elsif block.settings.them_value == 'custom_svg' %}
+                  <div class="uvt-custom-icon uvt-custom-icon-them-{{ block.id }}" style="width: {{ them_size }}px; height: {{ them_size }}px; color: {{ them_color }};">
+                    {{ block.settings.them_custom_svg }}
+                  </div>
+                {% elsif block.settings.them_value == 'google_icon' %}
+                  <span class="material-icons uvt-google-icon uvt-google-icon-them-{{ block.id }}" style="font-size: {{ them_size }}px; color: {{ them_color }};">
+                    {{ block.settings.them_google_icon }}
+                  </span>
+                {% elsif block.settings.them_value == 'text' %}
+                  {{ block.settings.them_custom_text }}
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        {% comment %} Mobile Layout: Features as left column {% endcomment %}
+        <div class="uvt-comparison-mobile">
+          <div class="uvt-grid-mobile">
+            {%- comment -%} Header Row {%- endcomment -%}
+            <div class="uvt-cell uvt-cell-column-header">
+              {{ section.settings.benefit_column_label }}
+            </div>
+            <div class="uvt-cell uvt-cell-column-header uvt-cell-us-label uvt-cell-row-label">
+              {% comment %} Show decorative image above if enabled {% endcomment %}
+              {% assign us_enabled_mobile = section.settings.us_image_enabled %}
+              {% if us_enabled_mobile == nil %}
+                {% assign us_enabled_mobile = true %}
+              {% endif %}
+              {% if us_enabled_mobile and section.settings.us_image_position == 'above' %}
+                {% if section.settings.us_image != blank %}
+                  {% case section.settings.us_image_visibility %}
+                    {% when 'always' %}
+                      <img src="{{ section.settings.us_image | image_url: width: 300 }}" alt="{{ section.settings.us_image.alt | escape }}" class="uvt-label-image uvt-label-image-us uvt-label-image-above" loading="lazy">
+                    {% when 'mobile_only' %}
+                      <img src="{{ section.settings.us_image | image_url: width: 300 }}" alt="{{ section.settings.us_image.alt | escape }}" class="uvt-label-image uvt-label-image-us uvt-label-image-above uvt-mobile-only" loading="lazy">
+                    {% when 'desktop_only' %}
+                      <img src="{{ section.settings.us_image | image_url: width: 300 }}" alt="{{ section.settings.us_image.alt | escape }}" class="uvt-label-image uvt-label-image-us uvt-label-image-above uvt-desktop-only" loading="lazy">
+                  {% endcase %}
+                {% else %}
+                  <div class="uvt-label-image-placeholder uvt-label-image-placeholder-us uvt-label-image-above" style="display: flex !important; visibility: visible !important;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                  </div>
+                {% endif %}
+              {% endif %}
+
+              {% comment %} Show main logo or text label {% endcomment %}
+              {% if section.settings.us_use_image_as_label and section.settings.us_main_image != blank %}
+                <img src="{{ section.settings.us_main_image | image_url: width: 300 }}" alt="{{ section.settings.us_column_label | escape }}" class="uvt-label-main-image" loading="lazy">
+              {% else %}
+                <span class="uvt-label-text">{{ section.settings.us_column_label }}</span>
+              {% endif %}
+
+              {% comment %} Show decorative image below if enabled {% endcomment %}
+              {% if us_enabled_mobile and section.settings.us_image_position == 'below' %}
+                {% if section.settings.us_image != blank %}
+                  {% case section.settings.us_image_visibility %}
+                    {% when 'always' %}
+                      <img src="{{ section.settings.us_image | image_url: width: 300 }}" alt="{{ section.settings.us_image.alt | escape }}" class="uvt-label-image uvt-label-image-us uvt-label-image-below" loading="lazy">
+                    {% when 'mobile_only' %}
+                      <img src="{{ section.settings.us_image | image_url: width: 300 }}" alt="{{ section.settings.us_image.alt | escape }}" class="uvt-label-image uvt-label-image-us uvt-label-image-below uvt-mobile-only" loading="lazy">
+                    {% when 'desktop_only' %}
+                      <img src="{{ section.settings.us_image | image_url: width: 300 }}" alt="{{ section.settings.us_image.alt | escape }}" class="uvt-label-image uvt-label-image-us uvt-label-image-below uvt-desktop-only" loading="lazy">
+                  {% endcase %}
+                {% else %}
+                  <div class="uvt-label-image-placeholder uvt-label-image-placeholder-us uvt-label-image-below" style="display: flex !important; visibility: visible !important;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                  </div>
+                {% endif %}
+              {% endif %}
+            </div>
+            <div class="uvt-cell uvt-cell-column-header uvt-cell-them-label uvt-cell-row-label">
+              {% comment %} Show decorative image above if enabled {% endcomment %}
+              {% assign them_enabled_mobile = section.settings.them_image_enabled %}
+              {% if them_enabled_mobile == nil %}
+                {% assign them_enabled_mobile = true %}
+              {% endif %}
+              {% if them_enabled_mobile and section.settings.them_image_position == 'above' %}
+                {% if section.settings.them_image != blank %}
+                  {% case section.settings.them_image_visibility %}
+                    {% when 'always' %}
+                      <img src="{{ section.settings.them_image | image_url: width: 300 }}" alt="{{ section.settings.them_image.alt | escape }}" class="uvt-label-image uvt-label-image-them uvt-label-image-above" loading="lazy">
+                    {% when 'mobile_only' %}
+                      <img src="{{ section.settings.them_image | image_url: width: 300 }}" alt="{{ section.settings.them_image.alt | escape }}" class="uvt-label-image uvt-label-image-them uvt-label-image-above uvt-mobile-only" loading="lazy">
+                    {% when 'desktop_only' %}
+                      <img src="{{ section.settings.them_image | image_url: width: 300 }}" alt="{{ section.settings.them_image.alt | escape }}" class="uvt-label-image uvt-label-image-them uvt-label-image-above uvt-desktop-only" loading="lazy">
+                  {% endcase %}
+                {% else %}
+                  <div class="uvt-label-image-placeholder uvt-label-image-placeholder-them uvt-label-image-above" style="display: flex !important; visibility: visible !important;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                  </div>
+                {% endif %}
+              {% endif %}
+
+              {% comment %} Show main logo or text label {% endcomment %}
+              {% if section.settings.them_use_image_as_label and section.settings.them_main_image != blank %}
+                <img src="{{ section.settings.them_main_image | image_url: width: 300 }}" alt="{{ section.settings.them_column_label | escape }}" class="uvt-label-main-image" loading="lazy">
+              {% else %}
+                <span class="uvt-label-text">{{ section.settings.them_column_label }}</span>
+              {% endif %}
+
+              {% comment %} Show decorative image below if enabled {% endcomment %}
+              {% if them_enabled_mobile and section.settings.them_image_position == 'below' %}
+                {% if section.settings.them_image != blank %}
+                  {% case section.settings.them_image_visibility %}
+                    {% when 'always' %}
+                      <img src="{{ section.settings.them_image | image_url: width: 300 }}" alt="{{ section.settings.them_image.alt | escape }}" class="uvt-label-image uvt-label-image-them uvt-label-image-below" loading="lazy">
+                    {% when 'mobile_only' %}
+                      <img src="{{ section.settings.them_image | image_url: width: 300 }}" alt="{{ section.settings.them_image.alt | escape }}" class="uvt-label-image uvt-label-image-them uvt-label-image-below uvt-mobile-only" loading="lazy">
+                    {% when 'desktop_only' %}
+                      <img src="{{ section.settings.them_image | image_url: width: 300 }}" alt="{{ section.settings.them_image.alt | escape }}" class="uvt-label-image uvt-label-image-them uvt-label-image-below uvt-desktop-only" loading="lazy">
+                  {% endcase %}
+                {% else %}
+                  <div class="uvt-label-image-placeholder uvt-label-image-placeholder-them uvt-label-image-below" style="display: flex !important; visibility: visible !important;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                  </div>
+                {% endif %}
+              {% endif %}
+            </div>
+
+            {%- comment -%} Feature Rows {%- endcomment -%}
+            {% for block in comparison_blocks %}
+              {%- liquid
+                assign us_color = block.settings.us_icon_color | default: section.settings.us_icon_color
+                assign us_size = block.settings.us_icon_size | default: section.settings.us_icon_size
+                assign them_color = block.settings.them_icon_color | default: section.settings.them_icon_color
+                assign them_size = block.settings.them_icon_size | default: section.settings.them_icon_size
+                assign is_last_row = forloop.last
+              -%}
+              <div class="uvt-cell uvt-cell-feature-label{% if is_last_row %} uvt-cell-last-row{% endif %}">
+                {{ block.settings.benefit_text }}
+              </div>
+              <div class="uvt-cell uvt-cell-us uvt-cell-us-{{ block.id }}{% if is_last_row %} uvt-cell-last-row{% endif %}">
+                {% if block.settings.us_value == 'check' %}
+                  <svg class="uvt-icon uvt-icon-us-{{ block.id }}" viewBox="0 0 24 24" fill="none" style="width: {{ us_size }}px; height: {{ us_size }}px; color: {{ us_color }};">
+                    <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                {% elsif block.settings.us_value == 'cross' %}
+                  <svg class="uvt-icon uvt-icon-us-{{ block.id }}" viewBox="0 0 24 24" fill="none" style="width: {{ us_size }}px; height: {{ us_size }}px; color: {{ us_color }};">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                {% elsif block.settings.us_value == 'custom_svg' %}
+                  <div class="uvt-custom-icon uvt-custom-icon-us-{{ block.id }}" style="width: {{ us_size }}px; height: {{ us_size }}px; color: {{ us_color }};">
+                    {{ block.settings.us_custom_svg }}
+                  </div>
+                {% elsif block.settings.us_value == 'google_icon' %}
+                  <span class="material-icons uvt-google-icon uvt-google-icon-us-{{ block.id }}" style="font-size: {{ us_size }}px; color: {{ us_color }};">
+                    {{ block.settings.us_google_icon }}
+                  </span>
+                {% elsif block.settings.us_value == 'text' %}
+                  {{ block.settings.us_custom_text }}
+                {% endif %}
+              </div>
+              <div class="uvt-cell uvt-cell-them uvt-cell-them-{{ block.id }}{% if is_last_row %} uvt-cell-last-row{% endif %}">
+                {% if block.settings.them_value == 'check' %}
+                  <svg class="uvt-icon uvt-icon-them-{{ block.id }}" viewBox="0 0 24 24" fill="none" style="width: {{ them_size }}px; height: {{ them_size }}px; color: {{ them_color }};">
+                    <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                {% elsif block.settings.them_value == 'cross' %}
+                  <svg class="uvt-icon uvt-icon-them-{{ block.id }}" viewBox="0 0 24 24" fill="none" style="width: {{ them_size }}px; height: {{ them_size }}px; color: {{ them_color }};">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                {% elsif block.settings.them_value == 'custom_svg' %}
+                  <div class="uvt-custom-icon uvt-custom-icon-them-{{ block.id }}" style="width: {{ them_size }}px; height: {{ them_size }}px; color: {{ them_color }};">
+                    {{ block.settings.them_custom_svg }}
+                  </div>
+                {% elsif block.settings.them_value == 'google_icon' %}
+                  <span class="material-icons uvt-google-icon uvt-google-icon-them-{{ block.id }}" style="font-size: {{ them_size }}px; color: {{ them_color }};">
+                    {{ block.settings.them_google_icon }}
+                  </span>
+                {% elsif block.settings.them_value == 'text' %}
+                  {{ block.settings.them_custom_text }}
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+
+      {% comment %} Custom HTML Blocks {% endcomment %}
+      {% for block in section.blocks %}
+        {% if block.type == 'custom_html' %}
+          <div class="uvt-custom-html-block" {{ block.shopify_attributes }}>
+            {{ block.settings.html_content }}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+
+<style>
+/* ===========================
+   Section Background & Container
+   =========================== */
+
+.section-{{ section.id }} {
+  padding: {{ section.settings.section_padding_top }}px 0 {{ section.settings.section_padding_bottom }}px;
+  {% if section.settings.use_theme_colors %}
+    {% if section.settings.use_section_gradient %}
+      background: {{ settings.section_gradient_background }};
+    {% else %}
+      background: {{ settings.background_color }};
+    {% endif %}
+  {% else %}
+    {% if section.settings.enable_section_gradient %}
+      background: {{ section.settings.section_gradient_bg }};
+    {% else %}
+      background: {{ section.settings.background_color }};
+    {% endif %}
+  {% endif %}
+}
+
+.section-{{ section.id }} .uvt-content-wrapper {
+  max-width: 100%;
+}
+
+/* ===========================
+   Heading Styles
+   =========================== */
+
+.section-{{ section.id }} .uvt-header-wrapper {
+  margin-bottom: {{ section.settings.heading_margin_bottom }}px;
+}
+
+.section-{{ section.id }} .uvt-align-left {
+  text-align: left;
+}
+
+.section-{{ section.id }} .uvt-align-center {
+  text-align: center;
+}
+
+.section-{{ section.id }} .uvt-align-right {
+  text-align: right;
+}
+
+.section-{{ section.id }} .uvt-heading {
+  font-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+  letter-spacing: {{ settings.heading_letter_spacing | divided_by: 1000.0 }}em;
+  {% if settings.enable_global_typography %}
+    font-size: {{ settings.heading_font_size_desktop }}px;
+    font-weight: {{ settings.heading_font_weight }};
+  {% else %}
+    font-size: {{ section.settings.heading_font_size_desktop }}px;
+    font-weight: {{ section.settings.heading_font_weight }};
+  {% endif %}
+  {% if section.settings.use_theme_colors %}
+    color: {{ settings.heading_color }};
+  {% else %}
+    color: {{ section.settings.heading_color }};
+  {% endif %}
+  margin: 0 0 {{ section.settings.heading_margin_bottom }}px 0;
+  line-height: 1.2;
+}
+
+.section-{{ section.id }} .uvt-highlighted-text {
+  font-family: {{ settings.highlighted_text_font.family }}, {{ settings.highlighted_text_font.fallback_families }};
+  text-transform: {{ settings.highlighted_text_transform }};
+  {% if section.settings.use_theme_colors %}
+    {% if settings.highlighted_text_gradient_enabled %}
+      background: {{ settings.highlighted_text_gradient }};
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+    {% else %}
+      color: {{ settings.highlighted_text_solid_color }};
+    {% endif %}
+  {% else %}
+    {% if section.settings.highlighted_gradient_enabled %}
+      background: {{ section.settings.highlighted_gradient }};
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+    {% else %}
+      color: {{ section.settings.highlighted_color }};
+    {% endif %}
+  {% endif %}
+  {% if settings.enable_global_typography %}
+    font-size: {{ settings.highlighted_text_font_size_desktop }}px;
+    font-weight: {{ settings.highlighted_text_font_weight }};
+      letter-spacing: {{ settings.highlighted_text_letter_spacing | divided_by: 1000.0 }}em;
+      font-style: {{ settings.highlighted_text_font_style }};
+  {% else %}
+    font-size: {{ section.settings.highlighted_font_size_desktop }}px;
+    font-weight: {{ section.settings.highlighted_font_weight }};
+      letter-spacing: {{ settings.highlighted_text_letter_spacing | divided_by: 1000.0 }}em;
+      font-style: {{ settings.highlighted_text_font_style }};
+  {% endif %}
+}
+
+.section-{{ section.id }} .uvt-highlighted-separate {
+  display: inline-block;
+  margin-bottom: {{ section.settings.highlighted_spacing }}px;
+}
+
+.section-{{ section.id }} .uvt-intro-text {
+  font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+  font-size: {{ section.settings.intro_font_size }}px;
+  line-height: 1.6;
+  {% if section.settings.use_theme_colors %}
+    color: {{ settings.body_color }};
+  {% else %}
+    color: {{ section.settings.intro_text_color }};
+  {% endif %}
+  margin-bottom: {{ section.settings.intro_text_spacing }}px;
+  text-align: {{ section.settings.heading_text_align }};
+}
+
+@media screen and (max-width: 749px) {
+  .section-{{ section.id }} .uvt-heading {
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.heading_font_size_mobile }}px;
+    {% else %}
+      font-size: {{ section.settings.heading_font_size_mobile }}px;
+    {% endif %}
+  }
+
+  .section-{{ section.id }} .uvt-highlighted-text {
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.highlighted_text_font_size_mobile }}px;
+    {% else %}
+      font-size: {{ section.settings.highlighted_font_size_mobile }}px;
+    {% endif %}
+  }
+}
+
+/* ===========================
+   Comparison Table Styles
+   =========================== */
+
+.section-{{ section.id }} .uvt-comparison-wrapper {
+  width: 100%;
+  max-width: {{ section.settings.table_max_width }}px;
+  margin: 0 auto;
+}
+
+/* Desktop and Mobile Toggle */
+.section-{{ section.id }} .uvt-comparison-desktop {
+  display: none;
+}
+
+.section-{{ section.id }} .uvt-comparison-mobile {
+  display: block;
+}
+
+/* Hide desktop grid layout - we use mobile layout for both */
+.section-{{ section.id }} .uvt-comparison-desktop {
+  display: none;
+}
+
+/* Desktop: Show mobile layout with optional side image */
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }} .uvt-comparison-wrapper {
+    {% if section.settings.show_desktop_image %}
+      display: flex;
+      gap: {{ section.settings.desktop_image_gap }}px;
+      align-items: {{ section.settings.desktop_image_alignment }};
+      {% if section.settings.desktop_image_position == 'right' %}
+        flex-direction: row-reverse;
+      {% else %}
+        flex-direction: row;
+      {% endif %}
+    {% endif %}
+  }
+
+  .section-{{ section.id }} .uvt-comparison-mobile {
+    flex: 1;
+  }
+}
+
+/* Desktop Side Image */
+.section-{{ section.id }} .uvt-desktop-image-wrapper {
+  flex-shrink: 0;
+  width: 100%;
+}
+
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }} .uvt-desktop-image-wrapper {
+    width: {{ section.settings.desktop_image_width }}%;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .section-{{ section.id }} .uvt-desktop-image-wrapper.uvt-hide-mobile {
+    display: none;
+  }
+
+  .section-{{ section.id }} .uvt-comparison-wrapper {
+    {% if section.settings.show_desktop_image %}
+      display: flex;
+      flex-direction: column;
+      gap: {{ section.settings.desktop_image_gap }}px;
+    {% endif %}
+  }
+}
+
+.section-{{ section.id }} .uvt-desktop-image {
+  width: 100%;
+  height: auto;
+  border-radius: {{ section.settings.desktop_image_border_radius }}px;
+  object-fit: cover;
+}
+
+/* Desktop Image Placeholder */
+.section-{{ section.id }} .uvt-desktop-image-placeholder {
+  width: 100%;
+  min-height: 400px;
+  background: #f5f5f5;
+  border-radius: {{ section.settings.desktop_image_border_radius }}px;
+  border: 2px dashed #dddddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #999999;
+}
+
+.section-{{ section.id }} .uvt-desktop-image-placeholder svg {
+  width: 48px;
+  height: 48px;
+  opacity: 0.5;
+}
+
+.section-{{ section.id }} .uvt-desktop-image-placeholder span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Label Images */
+.section-{{ section.id }} .uvt-label-image {
+  height: auto;
+  border-radius: {{ section.settings.label_image_border_radius }}px;
+}
+
+/* Our Product Label Images */
+.section-{{ section.id }} .uvt-label-image-us {
+  max-width: {{ section.settings.us_image_width }}px;
+}
+
+@media screen and (max-width: 749px) {
+  .section-{{ section.id }} .uvt-label-image-us {
+    max-width: {{ section.settings.us_image_width_mobile }}px;
+  }
+}
+
+/* Other Product Label Images */
+.section-{{ section.id }} .uvt-label-image-them {
+  max-width: {{ section.settings.them_image_width }}px;
+}
+
+@media screen and (max-width: 749px) {
+  .section-{{ section.id }} .uvt-label-image-them {
+    max-width: {{ section.settings.them_image_width_mobile }}px;
+  }
+}
+
+.section-{{ section.id }} .uvt-label-image-above {
+  margin-bottom: {{ section.settings.label_image_spacing }}px;
+}
+
+.section-{{ section.id }} .uvt-label-image-below {
+  margin-top: {{ section.settings.label_image_spacing }}px;
+}
+
+/* Label Image Placeholders */
+.section-{{ section.id }} .uvt-label-image-placeholder {
+  width: 100%;
+  background: #f5f5f5;
+  border-radius: {{ section.settings.label_image_border_radius }}px;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #999999;
+  padding: 16px;
+  min-height: 80px;
+  box-sizing: border-box;
+}
+
+.section-{{ section.id }} .uvt-label-image-placeholder-us {
+  max-width: {{ section.settings.us_image_width }}px;
+}
+
+@media screen and (max-width: 749px) {
+  .section-{{ section.id }} .uvt-label-image-placeholder-us {
+    max-width: {{ section.settings.us_image_width_mobile }}px;
+  }
+}
+
+.section-{{ section.id }} .uvt-label-image-placeholder-them {
+  max-width: {{ section.settings.them_image_width }}px;
+}
+
+@media screen and (max-width: 749px) {
+  .section-{{ section.id }} .uvt-label-image-placeholder-them {
+    max-width: {{ section.settings.them_image_width_mobile }}px;
+  }
+}
+
+.section-{{ section.id }} .uvt-label-image-placeholder svg {
+  width: 48px;
+  height: 48px;
+  opacity: 0.5;
+}
+
+.section-{{ section.id }} .uvt-label-image-placeholder span {
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.section-{{ section.id }} .uvt-cell-row-label {
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Mobile: Us label styling */
+.section-{{ section.id }} .uvt-grid-mobile .uvt-cell-us-label .uvt-label-text {
+  font-size: {{ section.settings.us_label_font_size }}px;
+  font-weight: {{ section.settings.us_label_font_weight }};
+  color: {{ section.settings.us_label_color }};
+}
+
+/* Mobile: Them label styling */
+.section-{{ section.id }} .uvt-grid-mobile .uvt-cell-them-label .uvt-label-text {
+  font-size: {{ section.settings.them_label_font_size }}px;
+  font-weight: {{ section.settings.them_label_font_weight }};
+  color: {{ section.settings.them_label_color }};
+}
+
+/* Mobile: Align "Them" label to bottom when "Us" has image but "Them" doesn't */
+{% if section.settings.us_image != blank and section.settings.them_image == blank and section.settings.them_main_image == blank %}
+.section-{{ section.id }} .uvt-grid-mobile .uvt-cell-them-label {
+  align-items: flex-end;
+}
+{% endif %}
+
+/* Mobile: Align "Us" label to bottom when "Them" has image but "Us" doesn't */
+{% if section.settings.them_image != blank and section.settings.us_image == blank and section.settings.us_main_image == blank %}
+.section-{{ section.id }} .uvt-grid-mobile .uvt-cell-us-label {
+  align-items: flex-end;
+}
+{% endif %}
+
+/* Mobile: Justify "Other Products" text to the end */
+.section-{{ section.id }} .uvt-grid-mobile .uvt-cell-them-label {
+  justify-content: flex-end;
+}
+
+/* Image Visibility Controls */
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }} .uvt-mobile-only {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .section-{{ section.id }} .uvt-desktop-only {
+    display: none !important;
+  }
+}
+
+/* Common Cell Styles */
+.section-{{ section.id }} .uvt-cell {
+  padding: {{ section.settings.cell_padding }}px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+  font-size: {{ section.settings.cell_font_size }}px;
+  color: {{ section.settings.cell_text_color }};
+  border: {{ section.settings.row_border_width }}px solid {{ section.settings.row_border_color }};
+  min-height: 60px;
+}
+
+/* Top borders for value cells (not headers) */
+.section-{{ section.id }} .uvt-cell-us:not(.uvt-cell-column-header):not(.uvt-cell-us-label):not(.uvt-cell-row-label) {
+  border-top: {{ section.settings.us_top_border_width }}px solid {{ section.settings.us_top_border_color }};
+}
+
+.section-{{ section.id }} .uvt-cell-them:not(.uvt-cell-column-header):not(.uvt-cell-them-label):not(.uvt-cell-row-label) {
+  border-top: {{ section.settings.them_top_border_width }}px solid {{ section.settings.them_top_border_color }};
+}
+
+.section-{{ section.id }} .uvt-cell-feature-label {
+  border-top: {{ section.settings.them_top_border_width }}px solid {{ section.settings.them_top_border_color }};
+}
+
+/* ===========================
+   DESKTOP LAYOUT (Features as TOP ROW)
+   =========================== */
+
+.section-{{ section.id }} .uvt-grid-desktop {
+  display: grid;
+  grid-template-columns: 220px repeat({{ desktop_feature_count }}, minmax(0, 1fr));
+  grid-template-rows: auto auto auto;
+  border-radius: {{ section.settings.table_border_radius }}px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Gradient solution: Absolute positioned pseudo-elements */
+{% if section.settings.us_gradient_enabled %}
+.section-{{ section.id }} .uvt-grid-desktop::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: {{ section.settings.us_gradient }};
+  z-index: 0;
+  pointer-events: none;
+  border-top-left-radius: {{ section.settings.highlight_corner_radius }}px;
+  border-top-right-radius: {{ section.settings.highlight_corner_radius }}px;
+  border-bottom-left-radius: {{ section.settings.highlight_corner_radius }}px;
+  border-bottom-right-radius: {{ section.settings.highlight_corner_radius }}px;
+}
+{% endif %}
+
+{% if section.settings.them_gradient_enabled %}
+.section-{{ section.id }} .uvt-grid-desktop::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: {{ section.settings.them_gradient }};
+  z-index: 0;
+  pointer-events: none;
+  border-top-left-radius: {{ section.settings.highlight_corner_radius }}px;
+  border-top-right-radius: {{ section.settings.highlight_corner_radius }}px;
+  border-bottom-left-radius: {{ section.settings.highlight_corner_radius }}px;
+  border-bottom-right-radius: {{ section.settings.highlight_corner_radius }}px;
+}
+{% endif %}
+
+.section-{{ section.id }} .uvt-grid-desktop .uvt-cell-feature-header {
+  background: {{ section.settings.header_background }};
+  color: {{ section.settings.header_text_color }};
+  font-weight: {{ section.settings.header_font_weight }};
+  font-size: {{ section.settings.header_font_size }}px;
+  font-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+  text-align: center;
+  {% if section.settings.override_row_height %}
+  min-height: {{ section.settings.header_row_height }}px;
+  {% endif %}
+}
+
+.section-{{ section.id }} .uvt-grid-desktop .uvt-cell-corner {
+  {% if section.settings.override_row_height %}
+  min-height: {{ section.settings.header_row_height }}px;
+  {% endif %}
+}
+
+.section-{{ section.id }} .uvt-grid-desktop .uvt-cell-corner {
+  background: {{ section.settings.header_background }};
+}
+
+.section-{{ section.id }} .uvt-grid-desktop .uvt-cell-row-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+  text-align: center;
+}
+
+
+/* Us label styling */
+.section-{{ section.id }} .uvt-grid-desktop .uvt-cell-us-label .uvt-label-text {
+  font-size: {{ section.settings.us_label_font_size }}px;
+  font-weight: {{ section.settings.us_label_font_weight }};
+  color: {{ section.settings.us_label_color }};
+}
+
+/* Them label styling */
+.section-{{ section.id }} .uvt-grid-desktop .uvt-cell-them-label .uvt-label-text {
+  font-size: {{ section.settings.them_label_font_size }}px;
+  font-weight: {{ section.settings.them_label_font_weight }};
+  color: {{ section.settings.them_label_color }};
+}
+
+/* Main label image (when used instead of text) */
+.section-{{ section.id }} .uvt-label-main-image {
+  max-width: 100%;
+  height: auto;
+  max-height: 80px;
+}
+
+.section-{{ section.id }} .uvt-grid-desktop .uvt-cell-us-label {
+  {% if section.settings.us_gradient_enabled %}
+    background: transparent;
+  {% else %}
+    background: {{ section.settings.us_background }};
+  {% endif %}
+  color: {{ section.settings.us_text_color }};
+  position: relative;
+  z-index: auto;
+  {% if section.settings.override_row_height %}
+  min-height: {{ section.settings.us_row_height }}px;
+  {% endif %}
+}
+
+.section-{{ section.id }} .uvt-grid-desktop .uvt-cell-them-label {
+  {% if section.settings.them_gradient_enabled %}
+    background: transparent;
+  {% else %}
+    background: {{ section.settings.them_background }};
+  {% endif %}
+  color: {{ section.settings.them_text_color }};
+  position: relative;
+  z-index: auto;
+  {% if section.settings.override_row_height %}
+  min-height: {{ section.settings.them_row_height }}px;
+  {% endif %}
+}
+
+.section-{{ section.id }} .uvt-grid-desktop .uvt-cell-us {
+  {% if section.settings.us_gradient_enabled %}
+    background: transparent;
+  {% else %}
+    background: {{ section.settings.us_background }};
+  {% endif %}
+  color: {{ section.settings.us_text_color }};
+  position: relative;
+  z-index: auto;
+  {% if section.settings.override_row_height %}
+  min-height: {{ section.settings.us_row_height }}px;
+  {% endif %}
+}
+
+.section-{{ section.id }} .uvt-grid-desktop .uvt-cell-them {
+  {% if section.settings.them_gradient_enabled %}
+    background: transparent;
+  {% else %}
+    background: {{ section.settings.them_background }};
+  {% endif %}
+  color: {{ section.settings.them_text_color }};
+  position: relative;
+  z-index: auto;
+  {% if section.settings.override_row_height %}
+  min-height: {{ section.settings.them_row_height }}px;
+  {% endif %}
+}
+
+/* Desktop: Corner radius for Us row - ALL FOUR corners on the row */
+.section-{{ section.id }} .uvt-grid-desktop .uvt-cell-us-label.uvt-cell-first-in-row {
+  border-top-left-radius: {{ section.settings.highlight_corner_radius }}px;
+  border-bottom-left-radius: {{ section.settings.highlight_corner_radius }}px;
+}
+
+.section-{{ section.id }} .uvt-grid-desktop .uvt-cell-us.uvt-cell-last-in-row {
+  border-top-right-radius: {{ section.settings.highlight_corner_radius }}px;
+  border-bottom-right-radius: {{ section.settings.highlight_corner_radius }}px;
+}
+
+/* Desktop: Corner radius for Them row - ALL FOUR corners on the row */
+.section-{{ section.id }} .uvt-grid-desktop .uvt-cell-them-label.uvt-cell-first-in-row {
+  border-top-left-radius: {{ section.settings.highlight_corner_radius }}px;
+  border-bottom-left-radius: {{ section.settings.highlight_corner_radius }}px;
+}
+
+.section-{{ section.id }} .uvt-grid-desktop .uvt-cell-them.uvt-cell-last-in-row {
+  border-top-right-radius: {{ section.settings.highlight_corner_radius }}px;
+  border-bottom-right-radius: {{ section.settings.highlight_corner_radius }}px;
+}
+
+/* ===========================
+   MOBILE LAYOUT (Features as LEFT COLUMN)
+   =========================== */
+
+.section-{{ section.id }} .uvt-grid-mobile {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  border-radius: {{ section.settings.table_border_radius }}px;
+  overflow: hidden;
+}
+
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }} .uvt-grid-mobile {
+    grid-template-columns: minmax(180px, 2fr) minmax(120px, 1fr) minmax(120px, 1fr);
+  }
+}
+
+.section-{{ section.id }} .uvt-grid-mobile .uvt-cell-column-header {
+  background: {{ section.settings.header_background }};
+  color: {{ section.settings.header_text_color }};
+  font-weight: {{ section.settings.header_font_weight }};
+  font-size: {{ section.settings.header_font_size }}px;
+  font-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+  text-align: center;
+  min-width: 110px;
+  {% if section.settings.override_row_height %}
+  min-height: {{ section.settings.header_row_height }}px;
+  {% endif %}
+}
+
+.section-{{ section.id }} .uvt-grid-mobile .uvt-cell-us-label {
+  {% if section.settings.us_gradient_enabled %}
+    background: {{ section.settings.us_gradient }};
+  {% else %}
+    background: {{ section.settings.us_background }};
+  {% endif %}
+  color: {{ section.settings.us_text_color }};
+  border-top-left-radius: {{ section.settings.highlight_corner_radius }}px;
+  border-top-right-radius: {{ section.settings.highlight_corner_radius }}px;
+  text-align: center;
+  {% if section.settings.override_row_height %}
+  min-height: {{ section.settings.us_row_height }}px;
+  {% endif %}
+}
+
+.section-{{ section.id }} .uvt-grid-mobile .uvt-cell-them-label {
+  {% if section.settings.them_gradient_enabled %}
+    background: {{ section.settings.them_gradient }};
+  {% else %}
+    background: {{ section.settings.them_background }};
+  {% endif %}
+  color: {{ section.settings.them_text_color }};
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  text-align: center;
+  {% if section.settings.override_row_height %}
+  min-height: {{ section.settings.them_row_height }}px;
+  {% endif %}
+}
+
+.section-{{ section.id }} .uvt-grid-mobile .uvt-cell-feature-label {
+  font-weight: {{ section.settings.benefit_font_weight }};
+  justify-content: flex-start;
+  padding-left: {{ section.settings.cell_padding }}px;
+  text-align: left;
+}
+
+.section-{{ section.id }} .uvt-grid-mobile .uvt-cell-us {
+  {% if section.settings.us_gradient_enabled %}
+    background: {{ section.settings.us_gradient }};
+  {% else %}
+    background: {{ section.settings.us_background }};
+  {% endif %}
+  color: {{ section.settings.us_text_color }};
+  {% if section.settings.override_row_height %}
+  min-height: {{ section.settings.us_row_height }}px;
+  {% endif %}
+}
+
+.section-{{ section.id }} .uvt-grid-mobile .uvt-cell-them {
+  {% if section.settings.them_gradient_enabled %}
+    background: {{ section.settings.them_gradient }};
+  {% else %}
+    background: {{ section.settings.them_background }};
+  {% endif %}
+  color: {{ section.settings.them_text_color }};
+  {% if section.settings.override_row_height %}
+  min-height: {{ section.settings.them_row_height }}px;
+  {% endif %}
+}
+
+/* Mobile: Last row corner radius - "Us" is middle column, "Them" is right column */
+.section-{{ section.id }} .uvt-grid-mobile .uvt-cell-us.uvt-cell-last-row {
+  border-bottom-left-radius: {{ section.settings.highlight_corner_radius }}px !important;
+  border-bottom-right-radius: {{ section.settings.highlight_corner_radius }}px !important;
+  overflow: hidden;
+}
+
+.section-{{ section.id }} .uvt-grid-mobile .uvt-cell-them.uvt-cell-last-row {
+  border-bottom-left-radius: {{ section.settings.highlight_corner_radius }}px !important;
+  border-bottom-right-radius: {{ section.settings.highlight_corner_radius }}px !important;
+  overflow: hidden;
+}
+
+/* Icons */
+.section-{{ section.id }} .uvt-icon {
+  width: {{ section.settings.icon_size }}px;
+  height: {{ section.settings.icon_size }}px;
+}
+
+.section-{{ section.id }} .uvt-icon-check {
+  color: {{ section.settings.check_icon_color }};
+}
+
+.section-{{ section.id }} .uvt-icon-cross {
+  color: {{ section.settings.cross_icon_color }};
+}
+
+/* Custom SVG Icons */
+.section-{{ section.id }} .uvt-custom-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-{{ section.id }} .uvt-custom-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Google Material Icons */
+.section-{{ section.id }} .uvt-google-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom HTML */
+.section-{{ section.id }} .uvt-custom-html-block {
+  margin-top: {{ section.settings.intro_text_spacing }}px;
+}
+</style>
+
+<script>
+(function() {
+  const sectionId = 'section-{{ section.id }}';
+  const grid = document.querySelector(`.${sectionId.replace(/--/g, '--')} .uvt-grid-desktop`);
+  
+  if (!grid) return;
+
+  function positionGradients() {
+    const cells = grid.children;
+    let headerHeight = 0;
+    let usRowTop = 0;
+    let usRowHeight = 0;
+    let themRowTop = 0;
+    let themRowHeight = 0;
+    
+    // Calculate row heights and positions
+    const cellsArray = Array.from(cells);
+    const firstRowCells = cellsArray.filter(cell => 
+      cell.classList.contains('uvt-cell-corner') || 
+      cell.classList.contains('uvt-cell-feature-header')
+    );
+    const secondRowCells = cellsArray.filter(cell => 
+      cell.classList.contains('uvt-cell-us-label') || 
+      cell.classList.contains('uvt-cell-us')
+    );
+    const thirdRowCells = cellsArray.filter(cell => 
+      cell.classList.contains('uvt-cell-them-label') || 
+      cell.classList.contains('uvt-cell-them')
+    );
+    
+    if (firstRowCells.length > 0) {
+      headerHeight = firstRowCells[0].offsetHeight;
+    }
+    
+    if (secondRowCells.length > 0) {
+      usRowTop = headerHeight;
+      usRowHeight = secondRowCells[0].offsetHeight;
+    }
+    
+    if (thirdRowCells.length > 0) {
+      themRowTop = headerHeight + usRowHeight;
+      themRowHeight = thirdRowCells[0].offsetHeight;
+    }
+    
+    // Position ::before (Us row)
+    const beforeStyle = document.querySelector('style[data-uvt-before]') || document.createElement('style');
+    beforeStyle.setAttribute('data-uvt-before', '');
+    beforeStyle.textContent = `.section-{{ section.id }} .uvt-grid-desktop::before { top: ${usRowTop}px; height: ${usRowHeight}px; }`;
+    if (!beforeStyle.parentNode) document.head.appendChild(beforeStyle);
+    
+    // Position ::after (Them row)
+    const afterStyle = document.querySelector('style[data-uvt-after]') || document.createElement('style');
+    afterStyle.setAttribute('data-uvt-after', '');
+    afterStyle.textContent = `.section-{{ section.id }} .uvt-grid-desktop::after { top: ${themRowTop}px; height: ${themRowHeight}px; }`;
+    if (!afterStyle.parentNode) document.head.appendChild(afterStyle);
+  }
+  
+  // Run on load and resize
+  positionGradients();
+  window.addEventListener('resize', positionGradients);
+  
+  // Run in Shopify theme editor
+  if (window.Shopify && Shopify.designMode) {
+    document.addEventListener('shopify:section:load', positionGradients);
+    document.addEventListener('shopify:section:reorder', positionGradients);
+  }
+})();
+</script>
+
+{% schema %}
+{"name":"Us vs Them Comparison","tag":"section","class":"section","settings": [
+ {"type":"header","content":"️ Theme Settings Override"},
+ {"type":"checkbox","id":"use_theme_colors","label":"Use Theme Colors","default": true,"info":"Toggle to override theme colors with custom colors below"},
+ {"type":"checkbox","id":"use_section_gradient","label":"Use Theme Section Gradient","default": false
+ },
+ {"type":"header","content":"Section Background"},
+ {"type":"color","id":"background_color","label":"Background Color","default":"#ffffff"},
+ {"type":"checkbox","id":"enable_section_gradient","label":"Enable Gradient Background","default":false},
+ {"type":"color_background","id":"section_gradient_bg","label":"Gradient Background","info":"Applied when gradient is enabled"},
+ {"type":"range","id":"section_padding_top","min": 0,"max": 150,"step": 5,"unit":"px","label":"Section Padding Top","default": 50
+ },
+ {"type":"range","id":"section_padding_bottom","min": 0,"max": 150,"step": 5,"unit":"px","label":"Section Padding Bottom","default": 50
+ },
+ {"type":"header","content":"Heading"},
+ {"type":"text","id":"heading_before","label":"Heading (Before Highlight)","default":"add your"},
+ {"type":"text","id":"heading_after","label":"Heading (After Highlight)"},
+ {"type":"select","id":"heading_tag","label":"Heading Tag","options": [
+ {"value":"h1","label":"H1"},
+ {"value":"h2","label":"H2"},
+ {"value":"h3","label":"H3"},
+ {"value":"h4","label":"H4"},
+ {"value":"h5","label":"H5"},
+ {"value":"h6","label":"H6"}
+ ],"default":"h2"},
+ {"type":"select","id":"heading_text_align","label":"Heading Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"range","id":"heading_font_size_desktop","min": 20,"max": 100,"step": 2,"unit":"px","label":"Heading Font Size (Desktop)","default": 48
+ },
+ {"type":"range","id":"heading_font_size_mobile","min": 16,"max": 60,"step": 2,"unit":"px","label":"Heading Font Size (Mobile)","default": 32
+ },
+ {"type":"range","id":"heading_font_weight","min": 100,"max": 900,"step": 100,"label":"Heading Font Weight","default": 500
+ },
+ {"type":"color","id":"heading_color","label":"Heading Color","default":"#000000"},
+ {"type":"range","id":"heading_margin_bottom","min": 0,"max": 100,"step": 5,"unit":"px","label":"Heading Margin Bottom","default": 15
+ },
+ {"type":"header","content":"Highlighted Text"},
+ {"type":"text","id":"highlighted_text","label":"Highlighted Text","default":"title here"},
+ {"type":"select","id":"highlight_position","label":"Highlight Position","options": [
+ {"value":"above","label":"Above Heading"},
+ {"value":"inline","label":"Inline"},
+ {"value":"below","label":"Below Heading"}
+ ],"default":"inline"},
+ {"type":"checkbox","id":"highlighted_gradient_enabled","label":"Enable Gradient","default": true
+ },
+ {"type":"color_background","id":"highlighted_gradient","label":"Highlighted Gradient","default":"linear-gradient(135deg, rgba(102, 126, 234, 1), rgba(118, 75, 162, 1) 100%)"},
+ {"type":"color","id":"highlighted_color","label":"Highlighted Color (if gradient disabled)","default":"#667eea"},
+ {"type":"range","id":"highlighted_font_size_desktop","min": 20,"max": 100,"step": 2,"unit":"px","label":"Highlighted Font Size (Desktop)","default": 48
+ },
+ {"type":"range","id":"highlighted_font_size_mobile","min": 16,"max": 60,"step": 2,"unit":"px","label":"Highlighted Font Size (Mobile)","default": 32
+ },
+ {"type":"range","id":"highlighted_font_weight","min": 100,"max": 900,"step": 100,"label":"Highlighted Font Weight","default": 500
+ },
+ {"type":"range","id":"highlighted_spacing","min": 0,"max": 50,"step": 5,"unit":"px","label":"Highlighted Text Spacing (when separate)","default": 10
+ },
+ {"type":"header","content":"Intro Text"},
+ {"type":"richtext","id":"intro_text","label":"Intro Text","default":"<p>Add your into text here</p>"},
+ {"type":"range","id":"intro_font_size","min": 12,"max": 32,"step": 1,"unit":"px","label":"Intro Font Size","default": 16
+ },
+ {"type":"color","id":"intro_text_color","label":"Intro Text Color","default":"#666666"},
+ {"type":"range","id":"intro_text_spacing","min": 0,"max": 100,"step": 5,"unit":"px","label":"Intro Text Spacing","default": 25
+ },
+ {"type":"header","content":"Table Settings"},
+ {"type":"range","id":"table_max_width","min": 600,"max": 1400,"step": 50,"unit":"px","label":"Table Max Width","default": 1000
+ },
+ {"type":"range","id":"table_border_radius","min": 0,"max": 50,"step": 1,"unit":"px","label":"Table Border Radius","default": 5
+ },
+ {"type":"header","content":"️ Desktop Side Image"},
+ {"type":"checkbox","id":"show_desktop_image","label":"Show Desktop Side Image","default": true
+ },
+ {"type":"image_picker","id":"desktop_image","label":"Desktop Side Image"},
+ {"type":"checkbox","id":"hide_desktop_image_on_mobile","label":"Hide on Mobile","default": true,"info":"Hide the desktop side image on mobile devices"},
+ {"type":"select","id":"desktop_image_position","label":"Desktop Image Position","options": [
+ {"value":"left","label":"Left"},
+ {"value":"right","label":"Right"}
+ ],"default":"right","info":"Horizontal position of image on desktop"},
+ {"type":"select","id":"desktop_image_alignment","label":"Desktop Image Vertical Alignment","options": [
+ {"value":"flex-start","label":"Top"},
+ {"value":"center","label":"Center"},
+ {"value":"flex-end","label":"Bottom"}
+ ],"default":"center","info":"Vertical alignment of image relative to content"},
+ {"type":"range","id":"desktop_image_width","min": 20,"max": 60,"step": 5,"unit":"%","label":"Desktop Image Width","default": 45,"info":"Width of image as percentage of section width"},
+ {"type":"range","id":"desktop_image_gap","min": 0,"max": 100,"step": 5,"unit":"px","label":"Gap Between Image and Table","default": 30
+ },
+ {"type":"range","id":"desktop_image_border_radius","min": 0,"max": 50,"step": 1,"unit":"px","label":"Desktop Image Border Radius","default": 12
+ },
+ {"type":"header","content":"Column/Row Labels"},
+ {"type":"text","id":"benefit_column_label","label":"Benefit Column Label"},
+ {"type":"text","id":"us_column_label","label":"Us Column Label","default":"Our Product"},
+ {"type":"text","id":"them_column_label","label":"Them Column Label","default":"Other Products"},
+ {"type":"header","content":"Shared Label Image Settings"},
+ {"type":"range","id":"label_image_spacing","min": 0,"max": 30,"step": 2,"unit":"px","label":"Label Image Spacing","default": 8,"info":"Space between decorative image and label text"},
+ {"type":"range","id":"label_image_border_radius","min": 0,"max": 50,"step": 1,"unit":"px","label":"Label Image Border Radius","default": 8
+ },
+ {"type":"header","content":"Header Row Styling"},
+ {"type":"color","id":"header_background","label":"Header Background","default":"rgba(0,0,0,0)"},
+ {"type":"color","id":"header_text_color","label":"Header Text Color","default":"#000000"},
+ {"type":"range","id":"header_font_size","min": 12,"max": 32,"step": 1,"unit":"px","label":"Header Font Size","default": 16
+ },
+ {"type":"range","id":"header_font_weight","min": 100,"max": 900,"step": 100,"label":"Header Font Weight","default": 700
+ },
+ {"type":"range","id":"header_padding","min": 10,"max": 50,"step": 2,"unit":"px","label":"Header Padding","default": 20
+ },
+ {"type":"header","content":"Cell Styling"},
+ {"type":"range","id":"cell_padding","min": 10,"max": 50,"step": 2,"unit":"px","label":"Cell Padding","default": 10
+ },
+ {"type":"range","id":"cell_font_size","min": 12,"max": 24,"step": 1,"unit":"px","label":"Cell Font Size","default": 13
+ },
+ {"type":"color","id":"cell_text_color","label":"Cell Text Color","default":"#333333"},
+ {"type":"range","id":"benefit_font_weight","min": 100,"max": 900,"step": 100,"label":"Benefit Font Weight","default": 400
+ },
+ {"type":"header","content":"Us Column Styling"},
+ {"type":"checkbox","id":"us_gradient_enabled","label":"Enable Gradient Background","default": false
+ },
+ {"type":"color_background","id":"us_gradient","label":"Us Gradient","default":"linear-gradient(270deg, rgba(255, 239, 180, 1) 11%, rgba(255, 209, 241, 1) 81%)"},
+ {"type":"color","id":"us_background","label":"Us Background (if gradient disabled)","default":"#000000"},
+ {"type":"color","id":"us_text_color","label":"Us Text Color","default":"#1e3a5f"},
+ {"type":"header","content":"️ Our Product Label Settings"},
+ {"type":"range","id":"us_label_font_size","min": 12,"max": 48,"step": 1,"unit":"px","label":"Label Font Size","default": 15
+ },
+ {"type":"range","id":"us_label_font_weight","min": 100,"max": 900,"step": 100,"label":"Label Font Weight","default": 700
+ },
+ {"type":"color","id":"us_label_color","label":"Label Text Color","default":"#ffffff"},
+ {"type":"header","content":"️ Our Product - Decorative Image (with text)"},
+ {"type":"checkbox","id":"us_image_enabled","label":"Enable Decorative Image","default": true,"info":"Show a decorative image with the label"},
+ {"type":"image_picker","id":"us_image","label":"Decorative Image"},
+ {"type":"range","id":"us_image_width","min": 50,"max": 300,"step": 10,"unit":"px","label":"Image Max Width (Desktop)","default": 120
+ },
+ {"type":"range","id":"us_image_width_mobile","min": 30,"max": 200,"step": 5,"unit":"px","label":"Image Max Width (Mobile)","default": 80
+ },
+ {"type":"select","id":"us_image_position","label":"Image Position","options": [
+ {"value":"above","label":"Above Label Text"},
+ {"value":"below","label":"Below Label Text"}
+ ],"default":"above"},
+ {"type":"select","id":"us_image_visibility","label":"Show Image On","options": [
+ {"value":"always","label":"Always"},
+ {"value":"mobile_only","label":"Mobile Only"},
+ {"value":"desktop_only","label":"Desktop Only"}
+ ],"default":"always"},
+ {"type":"header","content":"️ Our Product - Image Instead of Text"},
+ {"type":"checkbox","id":"us_use_image_as_label","label":"Use Image Instead of Text","default": false,"info":"Replace the text label entirely with an image"},
+ {"type":"image_picker","id":"us_main_image","label":"Main Label Image (Instead of Text)"},
+ {"type":"header","content":"Them Column Styling"},
+ {"type":"checkbox","id":"them_gradient_enabled","label":"Enable Gradient Background","default": false
+ },
+ {"type":"color_background","id":"them_gradient","label":"Them Gradient","default":"linear-gradient(135deg, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1) 100%)"},
+ {"type":"color","id":"them_background","label":"Them Background (if gradient disabled)","default":"#ffffff"},
+ {"type":"color","id":"them_text_color","label":"Them Text Color","default":"#666666"},
+ {"type":"header","content":"️ Other Products Label Settings"},
+ {"type":"range","id":"them_label_font_size","min": 12,"max": 48,"step": 1,"unit":"px","label":"Label Font Size","default": 14
+ },
+ {"type":"range","id":"them_label_font_weight","min": 100,"max": 900,"step": 100,"label":"Label Font Weight","default": 400
+ },
+ {"type":"color","id":"them_label_color","label":"Label Text Color","default":"#000000"},
+ {"type":"header","content":"️ Other Products - Decorative Image (with text)"},
+ {"type":"checkbox","id":"them_image_enabled","label":"Enable Decorative Image","default": false,"info":"Show a decorative image with the label"},
+ {"type":"image_picker","id":"them_image","label":"Decorative Image"},
+ {"type":"range","id":"them_image_width","min": 50,"max": 300,"step": 10,"unit":"px","label":"Image Max Width (Desktop)","default": 120
+ },
+ {"type":"range","id":"them_image_width_mobile","min": 30,"max": 200,"step": 5,"unit":"px","label":"Image Max Width (Mobile)","default": 80
+ },
+ {"type":"select","id":"them_image_position","label":"Image Position","options": [
+ {"value":"above","label":"Above Label Text"},
+ {"value":"below","label":"Below Label Text"}
+ ],"default":"above"},
+ {"type":"select","id":"them_image_visibility","label":"Show Image On","options": [
+ {"value":"always","label":"Always"},
+ {"value":"mobile_only","label":"Mobile Only"},
+ {"value":"desktop_only","label":"Desktop Only"}
+ ],"default":"always"},
+ {"type":"header","content":"️ Other Products - Image Instead of Text"},
+ {"type":"checkbox","id":"them_use_image_as_label","label":"Use Image Instead of Text","default": false,"info":"Replace the text label entirely with an image"},
+ {"type":"image_picker","id":"them_main_image","label":"Main Label Image (Instead of Text)"},
+ {"type":"header","content":"Row Height Settings"},
+ {"type":"checkbox","id":"override_row_height","label":"Override Row Height","default": false,"info":"Enable to set custom height for all rows"},
+ {"type":"range","id":"header_row_height","min": 40,"max": 200,"step": 5,"unit":"px","label":"Header Row Height","default": 60
+ },
+ {"type":"range","id":"us_row_height","min": 40,"max": 200,"step": 5,"unit":"px","label":"Our Product Row Height","default": 70
+ },
+ {"type":"range","id":"them_row_height","min": 40,"max": 200,"step": 5,"unit":"px","label":"Other Products Row Height","default": 70
+ },
+ {"type":"header","content":"Highlight Corner Radius"},
+ {"type":"range","id":"highlight_corner_radius","min": 0,"max": 50,"step": 1,"unit":"px","label":"Highlight Corner Radius","default": 10,"info":"Rounds the corners of the highlighted rows/columns"},
+ {"type":"header","content":"Borders"},
+ {"type":"range","id":"row_border_width","min": 0,"max": 5,"step": 1,"unit":"px","label":"Row Border Width","default": 0
+ },
+ {"type":"color","id":"row_border_color","label":"Row Border Color","default":"#e5e7eb"},
+ {"type":"header","content":"Top Borders for Value Cells"},
+ {"type":"paragraph","content":"These borders appear on top of value cells (not headers). Feature cells and 'Them' cells share the same border color."},
+ {"type":"range","id":"us_top_border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Our Product Top Border Width","default": 1
+ },
+ {"type":"color","id":"us_top_border_color","label":"Our Product Top Border Color","default":"#676767"},
+ {"type":"range","id":"them_top_border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Other Products & Feature Top Border Width","default": 1,"info":"Applies to both 'Other Products' cells and feature label cells"},
+ {"type":"color","id":"them_top_border_color","label":"Other Products & Feature Top Border Color","default":"#e5e7eb","info":"Applies to both 'Other Products' cells and feature label cells"},
+ {"type":"header","content":"Global Icon Settings"},
+ {"type":"paragraph","content":"These settings apply to all comparison rows by default. Individual rows can override these settings."},
+ {"type":"range","id":"icon_size","min": 16,"max": 64,"step": 2,"unit":"px","label":"Default Icon Size","default": 24
+ },
+ {"type":"color","id":"check_icon_color","label":"Check Icon Color","default":"#ffffff"},
+ {"type":"color","id":"cross_icon_color","label":"Cross Icon Color","default":"#ef4444"},
+ {"type":"header","content":"Our Product Global Icon Settings"},
+ {"type":"color","id":"us_icon_color","label":"Our Product Icon Color","default":"#ffffff"},
+ {"type":"range","id":"us_icon_size","min": 16,"max": 64,"step": 2,"unit":"px","label":"Our Product Icon Size","default": 24},
+ {"type":"select","id":"us_icon_fill","label":"Our Product Icon Fill","options": [
+ {"value":"filled","label":"Filled"},
+ {"value":"outlined","label":"Outlined"}
+ ],"default":"filled","info":"Style for icons (works with custom SVGs that support fill/stroke)"},
+ {"type":"header","content":"Other Products Global Icon Settings"},
+ {"type":"color","id":"them_icon_color","label":"Other Products Icon Color","default":"#ef4444"},
+ {"type":"range","id":"them_icon_size","min": 16,"max": 64,"step": 2,"unit":"px","label":"Other Products Icon Size","default": 24},
+ {"type":"select","id":"them_icon_fill","label":"Other Products Icon Fill","options": [
+ {"value":"filled","label":"Filled"},
+ {"value":"outlined","label":"Outlined"}
+ ],"default":"filled","info":"Style for icons (works with custom SVGs that support fill/stroke)"}
+ ],"blocks": [
+ {"type":"comparison_row","name":"Comparison Row","settings": [
+ {"type":"text","id":"benefit_text","label":"Benefit/Feature Text","default":"Feature name"},
+ {"type":"header","content":"Our Product Icon"},
+ {"type":"select","id":"us_value","label":"Us Value","options": [
+ {"value":"check","label":"Check Mark"},
+ {"value":"cross","label":"Cross Mark"},
+ {"value":"text","label":"Custom Text"},
+ {"value":"custom_svg","label":"Custom SVG"},
+ {"value":"google_icon","label":"Google Icon"}
+ ],"default":"check"},
+ {"type":"text","id":"us_custom_text","label":"Us Custom Text (if 'Custom Text' selected)","info":"Only shows if 'Custom Text' is selected above"},
+ {"type":"html","id":"us_custom_svg","label":"Us Custom SVG Code","info":"Paste your custom SVG code here (only shows if 'Custom SVG' selected)"},
+ {"type":"text","id":"us_google_icon","label":"Us Google Icon Name","info":"Enter Material Icon name (e.g., 'check_circle', 'star'). See https://fonts.google.com/icons","default":"check_circle"},
+ {"type":"color","id":"us_icon_color","label":"Our Product Icon Color","default":"#ffffff"},
+ {"type":"range","id":"us_icon_size","min":16,"max":64,"step":2,"unit":"px","label":"Our Product Icon Size","default":24},
+ {"type":"header","content":"Other Products Icon"},
+ {"type":"select","id":"them_value","label":"Them Value","options": [
+ {"value":"check","label":"Check Mark"},
+ {"value":"cross","label":"Cross Mark"},
+ {"value":"text","label":"Custom Text"},
+ {"value":"custom_svg","label":"Custom SVG"},
+ {"value":"google_icon","label":"Google Icon"}
+ ],"default":"cross"},
+ {"type":"text","id":"them_custom_text","label":"Them Custom Text (if 'Custom Text' selected)","info":"Only shows if 'Custom Text' is selected above"},
+ {"type":"html","id":"them_custom_svg","label":"Them Custom SVG Code","info":"Paste your custom SVG code here (only shows if 'Custom SVG' selected)"},
+ {"type":"text","id":"them_google_icon","label":"Them Google Icon Name","info":"Enter Material Icon name (e.g., 'cancel', 'close'). See https://fonts.google.com/icons","default":"cancel"},
+ {"type":"color","id":"them_icon_color","label":"Other Products Icon Color","default":"#ef4444"},
+ {"type":"range","id":"them_icon_size","min":16,"max":64,"step":2,"unit":"px","label":"Other Products Icon Size","default":24}
+ ]
+ },
+ {"type":"custom_html","name":"Custom HTML","settings": [
+ {"type":"html","id":"html_content","label":"HTML Content","default":"<div style=\"padding: 1rem; text-align: center;\"><p>Add your custom HTML here</p></div>"}
+ ]
+ }
+ ],"presets": [
+ {"name":"Us vs Them Comparison","blocks": [
+ {"type":"comparison_row","settings": {"benefit_text":"Multi-Targeted","us_value":"google_icon","us_google_icon":"check_circle","us_icon_color":"#ffffff","us_icon_size":24,"them_value":"google_icon","them_google_icon":"arrow_right_alt","them_icon_color":"#ef4444","them_icon_size":24}
+ },
+ {"type":"comparison_row","settings": {"benefit_text":"Drug-Free","us_value":"check","us_google_icon":"check_circle","us_icon_color":"#10b981","us_icon_size":24,"them_value":"text","them_custom_text":"FEW","them_google_icon":"cancel","them_icon_color":"#ef4444","them_icon_size":24}
+ },
+ {"type":"comparison_row","settings": {"benefit_text":"Bio-Optimized","us_value":"check","us_google_icon":"check_circle","us_icon_color":"#10b981","us_icon_size":24,"them_value":"cross","them_google_icon":"cancel","them_icon_color":"#ef4444","them_icon_size":24}
+ },
+ {"type":"comparison_row","settings": {"benefit_text":"Clinically Proven","us_value":"check","us_google_icon":"check_circle","us_icon_color":"#10b981","us_icon_size":24,"them_value":"text","them_custom_text":"FEW","them_google_icon":"cancel","them_icon_color":"#ef4444","them_icon_size":24}
+ },
+ {"type":"comparison_row","settings": {"benefit_text":"Doesn't Impact","us_value":"check","us_google_icon":"check_circle","us_icon_color":"#10b981","us_icon_size":24,"them_value":"text","them_custom_text":"FEW","them_google_icon":"cancel","them_icon_color":"#ef4444","them_icon_size":24}
+ }
+ ],"category":"Content"}
+ ]
+}
+{% endschema %}
+

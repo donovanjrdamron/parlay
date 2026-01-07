@@ -1,0 +1,24 @@
+{% comment %}
+  Header Icon Snippet for Image Stack Section
+  Renders icon (SVG, image, or Google icon) for the section header
+{% endcomment %}
+
+{% if section.settings.icon_svg != blank %}
+  <div class="iss-header-icon">
+    {{ section.settings.icon_svg }}
+  </div>
+{% elsif section.settings.icon_image != blank %}
+  <div class="iss-header-icon">
+    <img
+      src="{{ section.settings.icon_image | image_url: width: 200 }}"
+      alt=""
+      width="{{ section.settings.icon_image.width }}"
+      height="{{ section.settings.icon_image.height }}"
+      loading="lazy"
+    >
+  </div>
+{% elsif section.settings.icon_name != blank %}
+  <div class="iss-header-icon">
+    <span class="{{ section.settings.icon_style }}">{{ section.settings.icon_name }}</span>
+  </div>
+{% endif %}

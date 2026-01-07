@@ -1,0 +1,1484 @@
+{% comment %}
+  Stats Counter Section
+  Animated stats with climbing numbers, subheadings, and descriptions
+{% endcomment %}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
+<section class="stats-counter section-{{ section.id }}" data-section-id="{{ section.id }}">
+  {% comment %} Hidden SVG for Section-level Gradient Definition {% endcomment %}
+  {% if section.settings.number_gradient_enabled %}
+    <div style="position: absolute; width: 0; height: 0; overflow: hidden;">
+      <svg>
+        <defs>
+          <linearGradient id="sc-gradient-{{ section.id }}" x1="0%" y1="0%" x2="100%" y2="0%">
+            {% comment %} Section gradient for regular numbers {% endcomment %}
+            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  {% endif %}
+  
+  <div class="container page-width">
+    <style>
+      /* ===========================
+         Section Background & Padding
+         =========================== */
+      .section-{{ section.id }} {
+        {% if section.settings.override_section_settings %}
+          {% if section.settings.section_gradient_enabled %}
+            background: {{ section.settings.section_gradient_background }};
+          {% else %}
+            background-color: {{ section.settings.section_background_color }};
+          {% endif %}
+          padding-top: {{ section.settings.section_padding_top_desktop }}px;
+          padding-bottom: {{ section.settings.section_padding_bottom_desktop }}px;
+          padding-left: {{ section.settings.section_padding_horizontal_desktop }}px;
+          padding-right: {{ section.settings.section_padding_horizontal_desktop }}px;
+        {% else %}
+          {% if settings.section_gradient_enabled %}
+            background: {{ settings.section_gradient_background }};
+          {% else %}
+            background-color: {{ settings.section_background_color }};
+          {% endif %}
+          padding-top: {{ settings.section_padding_top_desktop }}px;
+          padding-bottom: {{ settings.section_padding_bottom_desktop }}px;
+          padding-left: {{ section.settings.section_padding_horizontal_desktop }}px;
+          padding-right: {{ section.settings.section_padding_horizontal_desktop }}px;
+        {% endif %}
+      }
+
+      @media screen and (max-width: 749px) {
+        .section-{{ section.id }} {
+          {% if section.settings.override_section_settings %}
+            padding-top: {{ section.settings.section_padding_top_mobile }}px;
+            padding-bottom: {{ section.settings.section_padding_bottom_mobile }}px;
+            padding-left: {{ section.settings.section_padding_horizontal_mobile }}px;
+            padding-right: {{ section.settings.section_padding_horizontal_mobile }}px;
+          {% else %}
+            padding-top: {{ settings.section_padding_top_mobile }}px;
+            padding-bottom: {{ settings.section_padding_bottom_mobile }}px;
+            padding-left: {{ section.settings.section_padding_horizontal_mobile }}px;
+            padding-right: {{ section.settings.section_padding_horizontal_mobile }}px;
+          {% endif %}
+        }
+      }
+
+      /* ===========================
+         Heading Styles
+         =========================== */
+      .section-{{ section.id }} .sc-header-wrapper {
+        margin-bottom: {{ section.settings.header_spacing_mobile }}px;
+        text-align: {{ section.settings.heading_text_align }};
+      }
+
+      @media screen and (min-width: 750px) {
+        .section-{{ section.id }} .sc-header-wrapper {
+          margin-bottom: {{ section.settings.header_spacing_desktop }}px;
+          text-align: {{ section.settings.heading_text_align_desktop }};
+        }
+      }
+
+      .section-{{ section.id }} .sc-heading-text {
+        margin-top: 12px;
+        margin-bottom: 0;
+        font-size: {{ section.settings.heading_text_font_size_mobile }}px;
+        font-weight: {{ section.settings.heading_text_font_weight }};
+        line-height: 1.6;
+        color: {{ section.settings.heading_text_color }};
+      }
+
+      @media screen and (min-width: 750px) {
+        .section-{{ section.id }} .sc-heading-text {
+          font-size: {{ section.settings.heading_text_font_size_desktop }}px;
+        }
+      }
+
+      .section-{{ section.id }} .sc-heading {
+        font-family: {{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }};
+        letter-spacing: {{ settings.heading_letter_spacing | divided_by: 1000.0 }}em;
+        text-transform: {{ settings.heading_text_transform }};
+        {% if settings.enable_global_typography %}
+          font-size: {{ settings.heading_font_size_desktop }}px;
+          font-weight: {{ settings.heading_font_weight }};
+        {% else %}
+          font-size: {{ section.settings.heading_font_size_desktop }}px;
+          font-weight: {{ section.settings.heading_font_weight }};
+        {% endif %}
+        {% if section.settings.use_theme_colors %}
+          color: {{ settings.heading_color }};
+        {% else %}
+          color: {{ section.settings.heading_color }};
+        {% endif %}
+        margin: 0 0 {{ section.settings.heading_margin_bottom }}px 0;
+        line-height: 1.2;
+      }
+
+      @media screen and (max-width: 749px) {
+        .section-{{ section.id }} .sc-heading {
+          {% if settings.enable_global_typography %}
+            font-size: {{ settings.heading_font_size_mobile }}px;
+          {% else %}
+            font-size: {{ section.settings.heading_font_size_mobile }}px;
+          {% endif %}
+        }
+      }
+
+      /* Highlighted Text in Heading */
+      .section-{{ section.id }} .sc-highlighted-text {
+        font-family: {{ settings.highlighted_text_font.family }}, {{ settings.highlighted_text_font.fallback_families }};
+        font-weight: {{ section.settings.highlighted_font_weight }};
+        letter-spacing: {{ settings.highlighted_text_letter_spacing | divided_by: 1000.0 }}em;
+        text-transform: {{ settings.highlighted_text_transform }};
+        display: inline-block;
+        {% if settings.enable_global_typography %}
+          font-size: {{ settings.highlighted_text_font_size_desktop }}px;
+        {% else %}
+          font-size: {{ section.settings.highlighted_font_size_desktop }}px;
+        {% endif %}
+      }
+
+      @media screen and (max-width: 749px) {
+        .section-{{ section.id }} .sc-highlighted-text {
+          {% if settings.enable_global_typography %}
+            font-size: {{ settings.highlighted_text_font_size_mobile }}px;
+          {% else %}
+            font-size: {{ section.settings.highlighted_font_size_mobile }}px;
+          {% endif %}
+        }
+      }
+
+      {% if section.settings.use_theme_colors %}
+        {% if settings.highlighted_text_gradient_enabled %}
+          .section-{{ section.id }} .sc-highlighted-text {
+            background: {{ settings.highlighted_text_gradient }};
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+          }
+        {% else %}
+          .section-{{ section.id }} .sc-highlighted-text {
+            color: {{ settings.highlighted_text_solid_color }};
+          }
+        {% endif %}
+      {% else %}
+        {% if section.settings.highlighted_gradient_enabled %}
+          .section-{{ section.id }} .sc-highlighted-text {
+            background: {{ section.settings.highlighted_gradient }};
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+          }
+        {% else %}
+          .section-{{ section.id }} .sc-highlighted-text {
+            color: {{ section.settings.highlighted_color }};
+          }
+        {% endif %}
+      {% endif %}
+
+      .section-{{ section.id }} .sc-highlighted-text.sc-highlighted-separate {
+        display: block !important;
+        margin-bottom: {{ section.settings.highlighted_spacing }}px;
+        width: 100%;
+      }
+
+      /* ===========================
+         Stats Grid Layout
+         =========================== */
+      .section-{{ section.id }} .sc-stats-grid {
+        display: grid;
+        {% if section.settings.columns_mobile == "1" %}
+          grid-template-columns: 1fr;
+        {% elsif section.settings.columns_mobile == "2" %}
+          grid-template-columns: repeat(2, 1fr);
+        {% else %}
+          grid-template-columns: repeat(3, 1fr);
+        {% endif %}
+        gap: {{ section.settings.stats_gap_mobile }}px;
+        {% if section.settings.center_items_mobile %}
+          justify-items: center;
+        {% endif %}
+      }
+
+      @media screen and (min-width: 750px) {
+        .section-{{ section.id }} .sc-stats-grid {
+          {% if section.settings.columns_desktop == "1" %}
+            grid-template-columns: 1fr;
+          {% elsif section.settings.columns_desktop == "2" %}
+            grid-template-columns: repeat(2, 1fr);
+          {% elsif section.settings.columns_desktop == "4" %}
+            grid-template-columns: repeat(4, 1fr);
+          {% else %}
+            grid-template-columns: repeat(3, 1fr);
+          {% endif %}
+          gap: {{ section.settings.stats_gap_desktop }}px;
+        }
+      }
+
+      /* ===========================
+         Stat Item Styles
+         =========================== */
+      .section-{{ section.id }} .sc-stat-item {
+        padding: {{ section.settings.stat_padding_vertical_mobile }}px {{ section.settings.stat_padding_horizontal_mobile }}px !important;
+        {% if section.settings.stat_gradient_bg_enabled %}
+          background: {{ section.settings.stat_gradient_background }};
+        {% else %}
+          background-color: {{ section.settings.stat_background_color }};
+        {% endif %}
+        border: {{ section.settings.stat_border_width }}px {{ section.settings.stat_border_style }} {{ section.settings.stat_border_color }};
+        border-radius: {{ section.settings.stat_border_radius }}px;
+        
+        /* Mobile Layout */
+        {% if section.settings.stat_layout_mobile == 'horizontal' %}
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          gap: {{ section.settings.stat_gap_mobile_horizontal }}px;
+          {% if section.settings.stat_number_position_mobile == 'right' %}
+            flex-direction: row-reverse;
+          {% else %}
+            flex-direction: row;
+          {% endif %}
+          text-align: left;
+        {% else %}
+          display: flex;
+          flex-direction: column;
+          {% if section.settings.stat_alignment_mobile == 'left' %}
+            align-items: flex-start;
+            text-align: left;
+          {% elsif section.settings.stat_alignment_mobile == 'right' %}
+            align-items: flex-end;
+            text-align: right;
+          {% else %}
+            align-items: center;
+            text-align: center;
+          {% endif %}
+          gap: {{ section.settings.stat_gap_mobile_horizontal }}px;
+        {% endif %}
+      }
+
+      @media screen and (min-width: 750px) {
+        .section-{{ section.id }} .sc-stat-item {
+          padding: {{ section.settings.stat_padding_vertical_desktop }}px {{ section.settings.stat_padding_horizontal_desktop }}px !important;
+          gap: {{ section.settings.stat_gap_desktop_horizontal }}px !important;
+
+          /* Desktop Layout */
+          {% if section.settings.stat_layout_desktop == 'horizontal' %}
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            {% if section.settings.stat_number_position_desktop == 'right' %}
+              flex-direction: row-reverse;
+            {% else %}
+              flex-direction: row;
+            {% endif %}
+            text-align: left;
+          {% else %}
+            display: flex;
+            flex-direction: column;
+            {% if section.settings.stat_alignment_desktop == 'left' %}
+              align-items: flex-start;
+              text-align: left;
+            {% elsif section.settings.stat_alignment_desktop == 'right' %}
+              align-items: flex-end;
+              text-align: right;
+            {% else %}
+              align-items: center;
+              text-align: center;
+            {% endif %}
+          {% endif %}
+        }
+      }
+
+      /* Border Bottom for all stats except the last one */
+      .section-{{ section.id }} .sc-stat-item:not(:last-child) {
+        border-bottom: {{ section.settings.stat_border_bottom_width }}px {{ section.settings.stat_border_bottom_style }} {{ section.settings.stat_border_bottom_color }};
+      }
+      
+      /* Content wrapper for horizontal layout */
+      .section-{{ section.id }} .sc-stat-content {
+        {% if section.settings.stat_layout_mobile == 'horizontal' %}
+          flex: 1;
+        {% endif %}
+      }
+      
+      @media screen and (min-width: 750px) {
+        .section-{{ section.id }} .sc-stat-content {
+          {% if section.settings.stat_layout_desktop == 'horizontal' %}
+            flex: 1;
+          {% endif %}
+        }
+      }
+
+      /* ===========================
+         Stat Number Styles
+         =========================== */
+      .section-{{ section.id }} .sc-stat-number {
+        font-size: {{ section.settings.number_font_size_mobile }}px;
+        font-weight: {{ section.settings.number_font_weight }};
+        line-height: 1.2;
+        margin-bottom: 0;
+        {% if section.settings.number_italic %}
+          font-style: italic;
+        {% else %}
+          font-style: normal;
+        {% endif %}
+      }
+
+      {% if section.settings.number_font_family == 'highlight' %}
+        .section-{{ section.id }} .sc-stat-number {
+          font-family: {{ settings.highlighted_text_font.family }}, {{ settings.highlighted_text_font.fallback_families }};
+        }
+      {% elsif section.settings.number_font_family == 'heading' %}
+        .section-{{ section.id }} .sc-stat-number {
+          font-family: {{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }};
+        }
+      {% else %}
+        .section-{{ section.id }} .sc-stat-number {
+          font-family: {{ settings.body_font.family }}, {{ settings.body_font.fallback_families }};
+        }
+      {% endif %}
+
+      {% if section.settings.number_gradient_enabled %}
+        .section-{{ section.id }} .sc-stat-number {
+          background: {{ section.settings.number_gradient_color }};
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-fill-color: transparent;
+          display: inline-block;
+        }
+      {% else %}
+        .section-{{ section.id }} .sc-stat-number {
+          color: {{ section.settings.number_color }};
+        }
+      {% endif %}
+
+      @media screen and (min-width: 750px) {
+        .section-{{ section.id }} .sc-stat-number {
+          font-size: {{ section.settings.number_font_size_desktop }}px;
+          margin-bottom: 0;
+        }
+      }
+
+      /* ===========================
+         Circular Progress Ring Styles
+         =========================== */
+      .section-{{ section.id }} .sc-circular-progress-wrapper {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        max-width: {{ section.settings.circle_width_mobile }}px;
+        width: 100%;
+        margin-bottom: 0;
+      }
+
+      @media screen and (min-width: 750px) {
+        .section-{{ section.id }} .sc-circular-progress-wrapper {
+          max-width: {{ section.settings.circle_width_desktop }}px;
+          margin-bottom: 0;
+        }
+      }
+
+      .section-{{ section.id }} .sc-circular-progress {
+        transform: rotate(-90deg);
+        display: block;
+        width: {{ section.settings.circle_width_mobile }}px;
+        height: {{ section.settings.circle_height_mobile }}px;
+      }
+
+      @media screen and (min-width: 750px) {
+        .section-{{ section.id }} .sc-circular-progress {
+          width: {{ section.settings.circle_width_desktop }}px;
+          height: {{ section.settings.circle_height_desktop }}px;
+        }
+      }
+
+      .section-{{ section.id }} .sc-progress-bg {
+        transition: all 0.3s ease;
+      }
+
+      .section-{{ section.id }} .sc-progress-ring {
+        stroke-dasharray: 339.292; /* 2 * PI * 54 */
+        stroke-dashoffset: 339.292;
+        transition: stroke-dashoffset 0.3s ease;
+      }
+
+      .section-{{ section.id }} .sc-progress-text {
+        font-weight: {{ section.settings.number_font_weight }};
+        {% if section.settings.number_italic %}
+          font-style: italic;
+        {% else %}
+          font-style: normal;
+        {% endif %}
+      }
+
+      {% if section.settings.number_font_family == 'highlight' %}
+        .section-{{ section.id }} .sc-progress-text {
+          font-family: {{ settings.highlighted_text_font.family }}, {{ settings.highlighted_text_font.fallback_families }};
+        }
+      {% elsif section.settings.number_font_family == 'heading' %}
+        .section-{{ section.id }} .sc-progress-text {
+          font-family: {{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }};
+        }
+      {% else %}
+        .section-{{ section.id }} .sc-progress-text {
+          font-family: {{ settings.body_font.family }}, {{ settings.body_font.fallback_families }};
+        }
+      {% endif %}
+
+      {% comment %} Circular progress text size from section settings {% endcomment %}
+      .section-{{ section.id }} .sc-progress-text {
+        font-size: {{ section.settings.circle_text_size_mobile }}px;
+      }
+
+      @media screen and (min-width: 750px) {
+        .section-{{ section.id }} .sc-progress-text {
+          font-size: {{ section.settings.circle_text_size_desktop }}px;
+        }
+      }
+
+      /* ===========================
+         Stat Subheading Styles
+         =========================== */
+      .section-{{ section.id }} .sc-stat-subheading {
+        font-size: {{ section.settings.subheading_font_size_mobile }}px;
+        font-weight: {{ section.settings.subheading_font_weight }};
+        color: {{ section.settings.subheading_color }};
+        margin-bottom: {{ section.settings.subheading_margin_bottom }}px;
+        line-height: 1.4;
+      }
+
+      @media screen and (min-width: 750px) {
+        .section-{{ section.id }} .sc-stat-subheading {
+          font-size: {{ section.settings.subheading_font_size_desktop }}px;
+        }
+      }
+
+      /* ===========================
+         Stat Description Styles
+         =========================== */
+      .section-{{ section.id }} .sc-stat-description {
+        font-size: {{ section.settings.description_font_size_mobile }}px;
+        font-weight: {{ section.settings.description_font_weight }};
+        color: {{ section.settings.description_color }};
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      @media screen and (min-width: 750px) {
+        .section-{{ section.id }} .sc-stat-description {
+          font-size: {{ section.settings.description_font_size_desktop }}px;
+        }
+      }
+
+      /* ===========================
+         Main Content Wrapper (Image + Stats)
+         =========================== */
+      .section-{{ section.id }} .sc-main-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      /* Desktop Layout: Side by Side */
+      @media screen and (min-width: 750px) {
+        .section-{{ section.id }} .sc-main-content {
+          display: flex;
+          flex-direction: row;
+          align-items: {{ section.settings.image_alignment_desktop }};
+          gap: {{ section.settings.desktop_gap }}px;
+        }
+        
+        .section-{{ section.id }} .sc-image-column {
+          flex: 0 0 {{ section.settings.image_width_desktop }}%;
+          {% if section.settings.image_position_desktop == 'right' %}
+          order: 2;
+          {% else %}
+          order: 1;
+          {% endif %}
+        }
+        
+        .section-{{ section.id }} .sc-stats-column {
+          flex: 1;
+          {% if section.settings.image_position_desktop == 'right' %}
+          order: 1;
+          {% else %}
+          order: 2;
+          {% endif %}
+        }
+      }
+
+      /* ===========================
+         Image Block Styles
+         =========================== */
+      .section-{{ section.id }} .sc-image-block {
+        width: 100%;
+      }
+
+      /* Mobile: Add spacing below image */
+      @media screen and (max-width: 749px) {
+        .section-{{ section.id }} .sc-image-block {
+          margin-bottom: {{ section.settings.image_spacing }}px;
+        }
+      }
+
+      .section-{{ section.id }} .sc-feature-image {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .section-{{ section.id }} .sc-hide-mobile {
+        display: block;
+      }
+
+      @media screen and (max-width: 749px) {
+        .section-{{ section.id }} .sc-hide-mobile {
+          display: none !important;
+        }
+      }
+
+      /* ===========================
+         Custom HTML Block Styles
+         =========================== */
+      .section-{{ section.id }} .sc-custom-html {
+        width: 100%;
+      }
+
+      .section-{{ section.id }} .sc-custom-html > *:first-child {
+        margin-top: 0;
+      }
+
+      .section-{{ section.id }} .sc-custom-html > *:last-child {
+        margin-bottom: 0;
+      }
+
+      /* ===========================
+         Button Block Styles
+         =========================== */
+      {% for block in section.blocks %}
+        {% if block.type == 'button' %}
+          #shopify-section-{{ section.id }} .sc-button-wrapper[data-block-id="{{ block.id }}"] {
+            margin-top: {{ block.settings.margin_top | default: 0 }}px;
+            margin-bottom: {{ block.settings.margin_bottom | default: 24 }}px;
+            text-align: {{ block.settings.alignment_desktop | default: 'left' }};
+            {% if block.settings.hide_on_desktop %}
+              display: none;
+            {% endif %}
+          }
+
+          @media screen and (max-width: 768px) {
+            #shopify-section-{{ section.id }} .sc-button-wrapper[data-block-id="{{ block.id }}"] {
+              text-align: {{ block.settings.alignment_mobile | default: 'center' }};
+              {% if block.settings.hide_on_desktop %}
+                display: block;
+              {% endif %}
+            }
+          }
+
+          #shopify-section-{{ section.id }} .sc-button-wrapper[data-block-id="{{ block.id }}"] .sc-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            {% if block.settings.full_width %}
+              width: 100%;
+            {% elsif block.settings.use_custom_width %}
+              width: {{ block.settings.custom_width_desktop | default: 300 }}px;
+            {% endif %}
+          }
+
+          @media screen and (max-width: 768px) {
+            #shopify-section-{{ section.id }} .sc-button-wrapper[data-block-id="{{ block.id }}"] .sc-button {
+              {% if block.settings.full_width_mobile_only %}
+                width: 100%;
+              {% elsif block.settings.use_custom_width %}
+                width: {{ block.settings.custom_width_mobile | default: 280 }}px;
+              {% endif %}
+            }
+          }
+
+          #shopify-section-{{ section.id }} .sc-button-wrapper[data-block-id="{{ block.id }}"] .sc-button--custom-styles {
+            {% if block.settings.use_gradient %}
+              background: {{ block.settings.button_gradient }};
+            {% else %}
+              background-color: {{ block.settings.button_bg_color | default: '#000000' }};
+            {% endif %}
+            color: {{ block.settings.button_text_color | default: '#FFFFFF' }};
+            border: {{ block.settings.border_width | default: 0 }}px solid {{ block.settings.border_color | default: '#000000' }};
+            border-radius: {{ block.settings.border_radius | default: 4 }}px;
+            padding: {{ block.settings.padding_vertical | default: 16 }}px {{ block.settings.padding_horizontal | default: 24 }}px;
+            font-size: {{ block.settings.font_size_desktop | default: 16 }}px;
+            font-weight: {{ block.settings.font_weight | default: '600' }};
+            text-transform: {{ block.settings.text_transform | default: 'uppercase' }};
+            letter-spacing: {{ block.settings.letter_spacing | default: 1 }}px;
+          }
+
+          @media screen and (max-width: 768px) {
+            #shopify-section-{{ section.id }} .sc-button-wrapper[data-block-id="{{ block.id }}"] .sc-button--custom-styles {
+              font-size: {{ block.settings.font_size_mobile | default: 14 }}px;
+            }
+          }
+
+          #shopify-section-{{ section.id }} .sc-button-wrapper[data-block-id="{{ block.id }}"] .sc-button--custom-styles:hover {
+            background-color: {{ block.settings.button_bg_color_hover | default: '#333333' }};
+            color: {{ block.settings.button_text_color_hover | default: '#FFFFFF' }};
+            transform: translateY(-2px);
+          }
+
+          #shopify-section-{{ section.id }} .sc-button-wrapper[data-block-id="{{ block.id }}"] .sc-button-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: {{ block.settings.button_icon_size | default: 20 }}px;
+            color: {{ block.settings.button_icon_color | default: '#FFFFFF' }};
+          }
+
+          #shopify-section-{{ section.id }} .sc-button-wrapper[data-block-id="{{ block.id }}"] .sc-button-icon--left {
+            margin-right: {{ block.settings.button_icon_gap | default: 8 }}px;
+          }
+
+          #shopify-section-{{ section.id }} .sc-button-wrapper[data-block-id="{{ block.id }}"] .sc-button-icon--right {
+            margin-left: {{ block.settings.button_icon_gap | default: 8 }}px;
+          }
+
+          #shopify-section-{{ section.id }} .sc-button-wrapper[data-block-id="{{ block.id }}"] .sc-button-icon--custom {
+            width: {{ block.settings.button_icon_size | default: 20 }}px;
+            height: {{ block.settings.button_icon_size | default: 20 }}px;
+          }
+
+          #shopify-section-{{ section.id }} .sc-button-wrapper[data-block-id="{{ block.id }}"] .sc-button-icon--custom svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+          }
+
+          #shopify-section-{{ section.id }} .sc-button-wrapper[data-block-id="{{ block.id }}"] .sc-button-text {
+            display: inline-block;
+          }
+        {% endif %}
+      {% endfor %}
+    </style>
+
+    {% comment %} Build heading HTML {% endcomment %}
+    {% assign heading_html = '' %}
+    {% if section.settings.heading_before != blank or section.settings.highlighted_text != blank or section.settings.heading_after != blank %}
+      {% capture heading_html %}
+        <div class="sc-header-wrapper">
+          {% case section.settings.highlight_position %}
+            {% when 'above' %}
+              {% if section.settings.highlighted_text != blank %}
+                <span class="sc-highlighted-text sc-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+              <{{ section.settings.heading_tag }} class="sc-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+            {% when 'below' %}
+              <{{ section.settings.heading_tag }} class="sc-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+              {% if section.settings.highlighted_text != blank %}
+                <span class="sc-highlighted-text sc-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+            {% when 'inline_first' %}
+              <{{ section.settings.heading_tag }} class="sc-heading">
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="sc-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_before != blank %}{{ " " }}{{ section.settings.heading_before }}{% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+            {% when 'inline_second' %}
+              <{{ section.settings.heading_tag }} class="sc-heading">
+                {% if section.settings.heading_before != blank %}{{ section.settings.heading_before }}{{ " " }}{% endif %}
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="sc-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+          {% endcase %}
+          {% if section.settings.heading_text != blank %}
+            <p class="sc-heading-text">{{ section.settings.heading_text }}</p>
+          {% endif %}
+        </div>
+      {% endcapture %}
+    {% endif %}
+
+    {% comment %} Assign block types {% endcomment %}
+    {% assign stat_blocks = section.blocks | where: 'type', 'stat' %}
+    {% assign html_blocks = section.blocks | where: 'type', 'custom_html' %}
+    {% assign image_blocks = section.blocks | where: 'type', 'image' %}
+
+    {% comment %} Render heading based on position {% endcomment %}
+    {% if section.settings.heading_position == 'above_section' %}
+      {{ heading_html }}
+    {% endif %}
+
+    {% comment %} Main Content Wrapper {% endcomment %}
+    <div class="sc-main-content">
+      
+      {% comment %} Image Column {% endcomment %}
+      {% if image_blocks.size > 0 %}
+        <div class="sc-image-column">
+          {% for block in image_blocks %}
+            {% if section.settings.heading_position == 'above_image' and forloop.first %}
+              {{ heading_html }}
+            {% endif %}
+            
+            <div class="sc-image-block{% if section.settings.hide_image_mobile %} sc-hide-mobile{% endif %}" {{ block.shopify_attributes }}>
+              <div
+                class="sc-image-wrapper{% if block.settings.image == blank %} placeholder{% endif %}"
+                style="border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }}; border-radius: {{ block.settings.border_radius }}px; overflow: hidden;"
+              >
+                {% if block.settings.image != blank %}
+                  <img
+                    src="{{ block.settings.image | image_url: width: 1500 }}"
+                    srcset="{{ block.settings.image | image_url: width: 400 }} 400w,
+                            {{ block.settings.image | image_url: width: 800 }} 800w,
+                            {{ block.settings.image | image_url: width: 1200 }} 1200w,
+                            {{ block.settings.image | image_url: width: 1500 }} 1500w"
+                    sizes="(max-width: 749px) 100vw, {{ section.settings.image_width_desktop }}%"
+                    alt="{{ block.settings.image.alt | escape }}"
+                    width="{{ block.settings.image.width }}"
+                    height="{{ block.settings.image.height }}"
+                    loading="lazy"
+                    class="sc-feature-image"
+                    style="aspect-ratio: {{ block.settings.aspect_ratio }}; object-fit: cover; width: 100%; height: auto; display: block;"
+                  >
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% comment %} Stats Column {% endcomment %}
+      <div class="sc-stats-column">
+        {% if section.settings.heading_position == 'above_stats' %}
+          {{ heading_html }}
+        {% endif %}
+
+        {% comment %} Stats Grid {% endcomment %}
+        {% if stat_blocks.size > 0 %}
+          <div class="sc-stats-grid">
+        {% for block in stat_blocks %}
+          <div class="sc-stat-item" {{ block.shopify_attributes }}>
+            {% comment %} Animated Number {% endcomment %}
+            {% if block.settings.stat_number != blank %}
+              {% if block.settings.enable_percentage_display %}
+                {% comment %} Circular Percentage Display {% endcomment %}
+                <div class="sc-circular-progress-wrapper">
+                  <svg class="sc-circular-progress sc-circular-{{ block.id }}" viewBox="0 0 120 120">
+                    {% comment %} Gradient Definitions {% endcomment %}
+                    <defs>
+                      {% if section.settings.circle_gradient_enabled %}
+                        <linearGradient id="ring-gradient-{{ section.id }}-{{ block.id }}" gradientTransform="rotate({{ section.settings.circle_gradient_angle }} 0.5 0.5)">
+                          <stop offset="0%" style="stop-color:{{ section.settings.circle_gradient_start }}"/>
+                          <stop offset="100%" style="stop-color:{{ section.settings.circle_gradient_stop }}"/>
+                        </linearGradient>
+                      {% endif %}
+                      {% if section.settings.circle_text_gradient_enabled %}
+                        <linearGradient id="text-gradient-{{ section.id }}-{{ block.id }}" gradientTransform="rotate({{ section.settings.circle_text_gradient_angle }} 0.5 0.5)">
+                          <stop offset="0%" style="stop-color:{{ section.settings.circle_text_gradient_start }}"/>
+                          <stop offset="100%" style="stop-color:{{ section.settings.circle_text_gradient_stop }}"/>
+                        </linearGradient>
+                      {% endif %}
+                    </defs>
+                    {% comment %} Background Circle {% endcomment %}
+                    <circle
+                      class="sc-progress-bg"
+                      cx="60"
+                      cy="60"
+                      r="54"
+                      fill="{{ section.settings.circle_bg_color }}"
+                      stroke="{{ section.settings.circle_track_color }}"
+                      stroke-width="{{ section.settings.circle_stroke_width }}"
+                      stroke-linecap="{{ section.settings.circle_stroke_linecap }}"
+                    />
+                    {% comment %} Progress Circle {% endcomment %}
+                    <circle
+                      class="sc-progress-ring sc-progress-ring-{{ block.id }}"
+                      cx="60"
+                      cy="60"
+                      r="54"
+                      fill="none"
+                      {% if section.settings.circle_gradient_enabled %}
+                        stroke="url(#ring-gradient-{{ section.id }}-{{ block.id }})"
+                      {% else %}
+                        stroke="{{ section.settings.circle_progress_color }}"
+                      {% endif %}
+                      stroke-width="{{ section.settings.circle_stroke_width }}"
+                      stroke-linecap="{{ section.settings.circle_stroke_linecap }}"
+                      data-count-to="{{ block.settings.stat_number }}"
+                      data-duration="{{ section.settings.animation_duration }}"
+                      data-override-progress="{% if block.settings.override_progress %}{{ block.settings.manual_progress }}{% else %}false{% endif %}"
+                    />
+                    {% comment %} Text in Center {% endcomment %}
+                    <text
+                      class="sc-progress-text sc-progress-text-{{ block.id }}"
+                      x="60"
+                      y="60"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      transform="rotate(90 60 60)"
+                      {% if section.settings.circle_text_gradient_enabled %}
+                        fill="url(#text-gradient-{{ section.id }}-{{ block.id }})"
+                      {% else %}
+                        fill="{{ section.settings.circle_text_color }}"
+                      {% endif %}
+                      data-count-to="{{ block.settings.stat_number }}"
+                      data-duration="{{ section.settings.animation_duration }}"
+                      data-prefix="{{ block.settings.number_prefix }}"
+                      data-suffix="{{ block.settings.number_suffix }}"
+                    >
+                      {{ block.settings.number_prefix }}0{{ block.settings.number_suffix }}
+                    </text>
+                  </svg>
+                </div>
+              {% else %}
+                {% comment %} Regular Number Display {% endcomment %}
+                <div 
+                  class="sc-stat-number" 
+                  data-count-to="{{ block.settings.stat_number }}"
+                  data-duration="{{ section.settings.animation_duration }}"
+                  data-prefix="{{ block.settings.number_prefix }}"
+                  data-suffix="{{ block.settings.number_suffix }}"
+                >
+                  {{ block.settings.number_prefix }}0{{ block.settings.number_suffix }}
+                </div>
+              {% endif %}
+            {% endif %}
+
+            {% comment %} Content Wrapper {% endcomment %}
+            <div class="sc-stat-content">
+              {% comment %} Subheading {% endcomment %}
+              {% if block.settings.stat_subheading != blank %}
+                <div class="sc-stat-subheading">{{ block.settings.stat_subheading }}</div>
+              {% endif %}
+
+              {% comment %} Description {% endcomment %}
+              {% if block.settings.stat_description != blank %}
+                <p class="sc-stat-description">{{ block.settings.stat_description }}</p>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+      </div>
+      {% comment %} End Stats Column {% endcomment %}
+      
+    </div>
+    {% comment %} End Main Content Wrapper {% endcomment %}
+
+    {% comment %} Custom HTML Blocks {% endcomment %}
+    {% if html_blocks.size > 0 %}
+      {% for block in html_blocks %}
+        <div class="sc-custom-html" {{ block.shopify_attributes }} style="margin-top: {{ section.settings.html_spacing }}px;">
+          {{ block.settings.html_content }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% comment %} Render button blocks {% endcomment %}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'button' -%}
+        {%- if block.settings.button_text != blank -%}
+          <div class="sc-button-wrapper" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+            <a
+              href="{% if block.settings.scroll_to_section != blank %}#{% elsif block.settings.button_link != blank %}{{ block.settings.button_link }}{% else %}#{% endif %}"
+              class="sc-button {% if block.settings.use_custom_styles %}sc-button--custom-styles{% endif %}{% if block.settings.scroll_to_section != blank %} scroll-to-section{% endif %}"
+              {% if block.settings.scroll_to_section != blank %}data-scroll-target="{{ block.settings.scroll_to_section }}"{% endif %}
+            >
+              {%- if block.settings.icon_position == 'left' -%}
+                {%- if block.settings.button_custom_icon != blank -%}
+                  <span class="sc-button-icon sc-button-icon--left sc-button-icon--custom">
+                    {{ block.settings.button_custom_icon }}
+                  </span>
+                {%- elsif block.settings.button_icon != blank -%}
+                  <span class="material-symbols-outlined sc-button-icon sc-button-icon--left{% if block.settings.button_icon_filled %} material-symbols-filled{% endif %}">
+                    {{ block.settings.button_icon }}
+                  </span>
+                {%- endif -%}
+              {%- endif -%}
+
+              <span class="sc-button-text">{{- block.settings.button_text -}}</span>
+
+              {%- if block.settings.icon_position == 'right' -%}
+                {%- if block.settings.button_custom_icon != blank -%}
+                  <span class="sc-button-icon sc-button-icon--right sc-button-icon--custom">
+                    {{ block.settings.button_custom_icon }}
+                  </span>
+                {%- elsif block.settings.button_icon != blank -%}
+                  <span class="material-symbols-outlined sc-button-icon sc-button-icon--right{% if block.settings.button_icon_filled %} material-symbols-filled{% endif %}">
+                    {{ block.settings.button_icon }}
+                  </span>
+                {%- endif -%}
+              {%- endif -%}
+            </a>
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+  </div>
+</section>
+
+<script>
+(function() {
+  const section = document.querySelector('.section-{{ section.id }}');
+  if (!section) return;
+
+  const statNumbers = section.querySelectorAll('.sc-stat-number[data-count-to]');
+  const progressTexts = section.querySelectorAll('.sc-progress-text[data-count-to]');
+  const progressRings = section.querySelectorAll('.sc-progress-ring[data-count-to]');
+  
+  if (statNumbers.length === 0 && progressTexts.length === 0) return;
+
+  let hasAnimated = false;
+
+  function easeOutQuad(t) {
+    return t * (2 - t);
+  }
+
+  function animateCount(element) {
+    const target = parseFloat(element.getAttribute('data-count-to'));
+    const duration = parseInt(element.getAttribute('data-duration')) || 2000;
+    const prefix = element.getAttribute('data-prefix') || '';
+    const suffix = element.getAttribute('data-suffix') || '';
+    
+    const startTime = performance.now();
+    const hasDecimal = target % 1 !== 0;
+    
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutQuad(progress);
+      const current = easedProgress * target;
+      
+      // Format number with proper decimals
+      const formattedNumber = hasDecimal ? current.toFixed(1) : Math.floor(current);
+      element.textContent = prefix + formattedNumber + suffix;
+      
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        // Ensure we end on exact target
+        const finalNumber = hasDecimal ? target.toFixed(1) : target;
+        element.textContent = prefix + finalNumber + suffix;
+      }
+    }
+    
+    requestAnimationFrame(update);
+  }
+
+  function animateCircularProgress(textElement, ringElement) {
+    const target = parseFloat(textElement.getAttribute('data-count-to'));
+    const duration = parseInt(textElement.getAttribute('data-duration')) || 2000;
+    const prefix = textElement.getAttribute('data-prefix') || '';
+    const suffix = textElement.getAttribute('data-suffix') || '';
+    
+    // Check if progress is overridden
+    const overrideProgress = ringElement.getAttribute('data-override-progress');
+    const manualProgress = overrideProgress !== 'false' ? parseFloat(overrideProgress) : null;
+    
+    const radius = 54;
+    const circumference = 2 * Math.PI * radius;
+    const startTime = performance.now();
+    const hasDecimal = target % 1 !== 0;
+    
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutQuad(progress);
+      const current = easedProgress * target;
+      
+      // Update text
+      const formattedNumber = hasDecimal ? current.toFixed(1) : Math.floor(current);
+      textElement.textContent = prefix + formattedNumber + suffix;
+      
+      // Update ring progress
+      let percentage;
+      if (manualProgress !== null) {
+        // Use manual override for ring progress
+        percentage = Math.min(manualProgress * easedProgress, 100);
+      } else {
+        // Use current number value (assuming percentage out of 100)
+        percentage = Math.min(current, 100);
+      }
+      
+      const offset = circumference - (percentage / 100) * circumference;
+      ringElement.style.strokeDashoffset = offset;
+      
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        // Ensure we end on exact target
+        const finalNumber = hasDecimal ? target.toFixed(1) : target;
+        textElement.textContent = prefix + finalNumber + suffix;
+        
+        const finalPercentage = manualProgress !== null ? Math.min(manualProgress, 100) : Math.min(target, 100);
+        const finalOffset = circumference - (finalPercentage / 100) * circumference;
+        ringElement.style.strokeDashoffset = finalOffset;
+      }
+    }
+    
+    requestAnimationFrame(update);
+  }
+
+  function handleIntersection(entries, observer) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !hasAnimated) {
+        hasAnimated = true;
+        
+        // Animate regular numbers
+        statNumbers.forEach(stat => {
+          animateCount(stat);
+        });
+        
+        // Animate circular progress
+        progressTexts.forEach((text, index) => {
+          if (progressRings[index]) {
+            animateCircularProgress(text, progressRings[index]);
+          }
+        });
+        
+        observer.disconnect();
+      }
+    });
+  }
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.3
+  };
+
+  const observer = new IntersectionObserver(handleIntersection, observerOptions);
+  observer.observe(section);
+})();
+</script>
+
+{% schema %}
+{"name":"Stats Counter","class":"stats-counter-section","settings": [
+ {"type":"header","content":"Theme Colors"},
+ {"type":"checkbox","id":"use_theme_colors","label":"Use Theme Colors","default": true,"info":"Automatically use global theme colors for headings and highlights"},
+ {"type":"header","content":"Heading"},
+ {"type":"text","id":"heading_before","label":"Heading (Before Highlight)","default":"add your"},
+ {"type":"text","id":"highlighted_text","label":"Highlight","default":"title here"},
+ {"type":"text","id":"heading_after","label":"Heading (After Highlight)"},
+ {"type":"textarea","id":"heading_text","label":"Text Content (Below Heading)","default":"add your info text here","info":"Optional text displayed below the heading"},
+ {"type":"select","id":"highlight_position","label":"Highlight Position","options": [
+ {"value":"inline_second","label":"Inline (Middle)"},
+ {"value":"inline_first","label":"Inline (First)"},
+ {"value":"above","label":"Above Heading"},
+ {"value":"below","label":"Below Heading"}
+ ],"default":"inline_second"},
+ {"type":"select","id":"heading_tag","label":"Heading Tag","options": [
+ {"value":"h1","label":"H1"},
+ {"value":"h2","label":"H2"},
+ {"value":"h3","label":"H3"},
+ {"value":"h4","label":"H4"},
+ {"value":"p","label":"Paragraph"}
+ ],"default":"h2"},
+ {"type":"select","id":"heading_position","label":"Heading Position","options": [
+ {"value":"above_section","label":"Above Section"},
+ {"value":"above_image","label":"Above Image"},
+ {"value":"above_stats","label":"Above Stats"}
+ ],"default":"above_section","info":"Choose where the heading should appear in the section"},
+ {"type":"select","id":"heading_text_align","label":"Heading Alignment (Mobile)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"select","id":"heading_text_align_desktop","label":"Heading Alignment (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"color","id":"heading_color","label":"Heading Color","default":"#0f172a"},
+ {"type":"range","id":"heading_font_size_desktop","min": 12,"max": 96,"step": 2,"unit":"px","label":"Heading Font Size (Desktop)","default": 48
+ },
+ {"type":"range","id":"heading_font_size_mobile","min": 10,"max": 60,"step": 2,"unit":"px","label":"Heading Font Size (Mobile)","default": 32
+ },
+ {"type":"select","id":"heading_font_weight","label":"Heading Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Regular"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"500"},
+ {"type":"range","id":"heading_margin_bottom","min": 0,"max": 60,"step": 2,"unit":"px","label":"Heading Margin Bottom","default": 16
+ },
+ {"type":"range","id":"header_spacing_mobile","min": 0,"max": 100,"step": 4,"unit":"px","label":"Spacing Below Header (Mobile)","default": 24
+ },
+ {"type":"range","id":"header_spacing_desktop","min": 0,"max": 100,"step": 4,"unit":"px","label":"Spacing Below Header (Desktop)","default": 28
+ },
+ {"type":"header","content":"Text Content (Below Heading)"},
+ {"type":"range","id":"heading_text_font_size_desktop","min": 8,"max": 32,"step": 1,"unit":"px","label":"Text Font Size (Desktop)","default": 18
+ },
+ {"type":"range","id":"heading_text_font_size_mobile","min": 8,"max": 28,"step": 1,"unit":"px","label":"Text Font Size (Mobile)","default": 16
+ },
+ {"type":"range","id":"heading_text_font_weight","min": 100,"max": 900,"step": 100,"label":"Text Font Weight","default": 400
+ },
+ {"type":"color","id":"heading_text_color","label":"Text Color","default":"#000000b3"},
+ {"type":"header","content":"Highlight"},
+ {"type":"checkbox","id":"highlighted_gradient_enabled","label":"Enable Highlight Gradient","default": false
+ },
+ {"type":"color","id":"highlighted_color","label":"Highlight Color","default":"#000000"},
+ {"type":"color_background","id":"highlighted_gradient","label":"Highlight Gradient","default":"linear-gradient(90deg, rgba(239, 68, 68, 1), rgba(249, 115, 22, 1) 100%)"},
+ {"type":"range","id":"highlighted_font_size_desktop","min": 12,"max": 96,"step": 2,"unit":"px","label":"Highlight Font Size (Desktop)","default": 48
+ },
+ {"type":"range","id":"highlighted_font_size_mobile","min": 10,"max": 60,"step": 2,"unit":"px","label":"Highlight Font Size (Mobile)","default": 32
+ },
+ {"type":"select","id":"highlighted_font_weight","label":"Highlight Weight","options": [
+ {"value":"400","label":"Regular"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"500"},
+ {"type":"range","id":"highlighted_spacing","min": 0,"max": 40,"step": 2,"unit":"px","label":"Highlight Spacing (When Above/Below)","default": 12
+ },
+ {"type":"header","content":"Stats Layout"},
+ {"type":"select","id":"columns_desktop","label":"Columns (Desktop)","options": [
+ {"value":"1","label":"1 Column (Stacked)"},
+ {"value":"2","label":"2 Columns"},
+ {"value":"3","label":"3 Columns"},
+ {"value":"4","label":"4 Columns"}
+ ],"default":"2","info":"Number of stats displayed side by side on desktop"},
+ {"type":"select","id":"columns_mobile","label":"Columns (Mobile)","options": [
+ {"value":"1","label":"1 Column (Stacked)"},
+ {"value":"2","label":"2 Columns"},
+ {"value":"3","label":"3 Columns"}
+ ],"default":"2","info":"Number of stats displayed side by side on mobile"},
+ {"type":"range","id":"stats_gap_desktop","label":"Gap Between Stats (Desktop)","min": 0,"max": 100,"step": 4,"unit":"px","default": 0
+ },
+ {"type":"range","id":"stats_gap_mobile","label":"Gap Between Stats (Mobile)","min": 0,"max": 60,"step": 4,"unit":"px","default": 0
+ },
+ {"type":"checkbox","id":"center_items_mobile","label":"Center Items on Mobile","default": false,"info":"Center stat items within the grid on mobile devices"},
+ {"type":"select","id":"stat_layout_desktop","label":"Stat Layout (Desktop)","options": [
+ {"value":"vertical","label":"Vertical (Number on Top)"},
+ {"value":"horizontal","label":"Horizontal (Side by Side)"}
+ ],"default":"vertical","info":"Choose between vertical stacking or horizontal side-by-side layout"},
+ {"type":"select","id":"stat_number_position_desktop","label":"Number Position (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"right","label":"Right"}
+ ],"default":"left","info":"Only applies when horizontal layout is selected"},
+ {"type":"range","id":"stat_gap_desktop_horizontal","label":"Gap Between Number & Content (Desktop)","min": 0,"max": 80,"step": 4,"unit":"px","default": 20,"info":"Gap between number and content (works for both vertical and horizontal layouts)"},
+ {"type":"select","id":"stat_layout_mobile","label":"Stat Layout (Mobile)","options": [
+ {"value":"vertical","label":"Vertical (Number on Top)"},
+ {"value":"horizontal","label":"Horizontal (Side by Side)"}
+ ],"default":"vertical","info":"Choose between vertical stacking or horizontal side-by-side layout"},
+ {"type":"select","id":"stat_number_position_mobile","label":"Number Position (Mobile)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"right","label":"Right"}
+ ],"default":"left","info":"Only applies when horizontal layout is selected"},
+ {"type":"range","id":"stat_gap_mobile_horizontal","label":"Gap Between Number & Content (Mobile)","min": 0,"max": 60,"step": 4,"unit":"px","default": 8,"info":"Gap between number and content (works for both vertical and horizontal layouts)"},
+ {"type":"header","content":"Stat Item Border"},
+ {"type":"range","id":"stat_border_bottom_width","label":"Border Bottom Width","min": 0,"max": 10,"step": 1,"unit":"px","default": 0,"info":"Applies to all stats except the last one"},
+ {"type":"select","id":"stat_border_bottom_style","label":"Border Bottom Style","options": [
+ {"value":"solid","label":"Solid"},
+ {"value":"dashed","label":"Dashed"},
+ {"value":"dotted","label":"Dotted"}
+ ],"default":"solid"},
+ {"type":"color","id":"stat_border_bottom_color","label":"Border Bottom Color","default":"#e0e0e0"},
+ {"type":"header","content":"Image Settings"},
+ {"type":"select","id":"image_position_desktop","label":"Image Position (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"right","label":"Right"}
+ ],"default":"right","info":"Position of image relative to stats on desktop"},
+ {"type":"range","id":"image_width_desktop","label":"Image Width (Desktop)","min": 20,"max": 60,"step": 5,"unit":"%","default": 45,"info":"Width of image column on desktop (stats take remaining space)"},
+ {"type":"select","id":"image_alignment_desktop","label":"Image Vertical Alignment (Desktop)","options": [
+ {"value":"flex-start","label":"Top"},
+ {"value":"center","label":"Middle"},
+ {"value":"flex-end","label":"Bottom"}
+ ],"default":"center","info":"Vertical alignment of image relative to stats"},
+ {"type":"range","id":"desktop_gap","label":"Gap Between Image & Stats (Desktop)","min": 0,"max": 100,"step": 4,"unit":"px","default": 24
+ },
+ {"type":"checkbox","id":"hide_image_mobile","label":"Hide Image on Mobile","default": false
+ },
+ {"type":"range","id":"image_spacing","label":"Image Bottom Spacing (Mobile)","min": 0,"max": 100,"step": 4,"unit":"px","default": 12,"info":"Space below image on mobile only"},
+ {"type":"header","content":"Stat Item Styling"},
+ {"type":"select","id":"stat_alignment_desktop","label":"Alignment (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left","info":"For vertical stacked layout - aligns both content and items"},
+ {"type":"select","id":"stat_alignment_mobile","label":"Alignment (Mobile)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left","info":"For vertical stacked layout - aligns both content and items"},
+ {"type":"checkbox","id":"stat_gradient_bg_enabled","label":"Enable Gradient Background","default": false
+ },
+ {"type":"color_background","id":"stat_gradient_background","label":"Stat Gradient Background","default":"linear-gradient(135deg, rgba(102, 126, 234, 1), rgba(118, 75, 162, 1) 100%)"},
+ {"type":"color","id":"stat_background_color","label":"Stat Background Color","default":"rgba(0,0,0,0)"},
+ {"type":"range","id":"stat_padding_vertical_desktop","label":"Vertical Padding (Desktop)","min": 0,"max": 100,"step": 4,"unit":"px","default": 32,"info":"Top and bottom padding for stat items"},
+ {"type":"range","id":"stat_padding_horizontal_desktop","label":"Horizontal Padding (Desktop)","min": 0,"max": 100,"step": 4,"unit":"px","default": 0,"info":"Left and right padding for stat items"},
+ {"type":"range","id":"stat_padding_vertical_mobile","label":"Vertical Padding (Mobile)","min": 0,"max": 60,"step": 4,"unit":"px","default": 16,"info":"Top and bottom padding for stat items"},
+ {"type":"range","id":"stat_padding_horizontal_mobile","label":"Horizontal Padding (Mobile)","min": 0,"max": 60,"step": 4,"unit":"px","default": 8,"info":"Left and right padding for stat items"},
+ {"type":"range","id":"stat_border_width","label":"Border Width","min": 0,"max": 10,"step": 1,"unit":"px","default": 0
+ },
+ {"type":"select","id":"stat_border_style","label":"Border Style","options": [
+ {"value":"solid","label":"Solid"},
+ {"value":"dashed","label":"Dashed"},
+ {"value":"dotted","label":"Dotted"}
+ ],"default":"solid"},
+ {"type":"color","id":"stat_border_color","label":"Border Color","default":"#e0e0e0"},
+ {"type":"range","id":"stat_border_radius","label":"Border Radius","min": 0,"max": 50,"step": 2,"unit":"px","default": 0
+ },
+ {"type":"header","content":"Number Styling"},
+ {"type":"select","id":"number_font_family","label":"Number Font Family","options": [
+ {"value":"body","label":"Body Font"},
+ {"value":"heading","label":"Heading Font"},
+ {"value":"highlight","label":"Highlight Text Font"}
+ ],"default":"highlight","info":"Choose which theme font to use for numbers"},
+ {"type":"range","id":"number_font_size_desktop","label":"Number Size (Desktop)","min": 10,"max": 150,"step": 2,"unit":"px","default": 58
+ },
+ {"type":"range","id":"number_font_size_mobile","label":"Number Size (Mobile)","min": 8,"max": 100,"step": 2,"unit":"px","default": 42
+ },
+ {"type":"range","id":"number_font_weight","label":"Number Font Weight","min": 100,"max": 900,"step": 100,"default": 500
+ },
+ {"type":"checkbox","id":"number_italic","label":"Italic Numbers","default": true
+ },
+ {"type":"checkbox","id":"number_gradient_enabled","label":"Enable Gradient for Numbers","default": true
+ },
+ {"type":"color_background","id":"number_gradient_color","label":"Number Gradient","default":"linear-gradient(135deg, rgba(0, 0, 0, 1), rgba(197, 197, 197, 1) 100%)"},
+ {"type":"color","id":"number_color","label":"Number Color","default":"#000000"},
+ {"type":"range","id":"number_margin_bottom","label":"Number Bottom Margin","min": 0,"max": 60,"step": 4,"unit":"px","default": 16
+ },
+ {"type":"range","id":"animation_duration","label":"Animation Duration","min": 500,"max": 5000,"step": 100,"unit":"ms","default": 2000,"info":"How long the counting animation takes"},
+ {"type":"header","content":"Circular Progress Styling"},
+ {"type":"range","id":"circle_width_desktop","label":"Circle Width (Desktop)","min": 60,"max": 300,"step": 5,"unit":"px","default": 120,"info":"Width of the circular progress ring on desktop"},
+ {"type":"range","id":"circle_width_mobile","label":"Circle Width (Mobile)","min": 60,"max": 300,"step": 5,"unit":"px","default": 100,"info":"Width of the circular progress ring on mobile"},
+ {"type":"range","id":"circle_height_desktop","label":"Circle Height (Desktop)","min": 60,"max": 300,"step": 5,"unit":"px","default": 120,"info":"Height of the circular progress ring on desktop"},
+ {"type":"range","id":"circle_height_mobile","label":"Circle Height (Mobile)","min": 60,"max": 300,"step": 5,"unit":"px","default": 100,"info":"Height of the circular progress ring on mobile"},
+ {"type":"range","id":"circle_stroke_width","label":"Ring Thickness","min": 2,"max": 20,"step": 1,"unit":"px","default": 8,"info":"Thickness of the progress ring"},
+ {"type":"select","id":"circle_stroke_linecap","label":"Ring End Style","options": [
+ {"value":"butt","label":"Square"},
+ {"value":"round","label":"Rounded"},
+ {"value":"square","label":"Extended Square"}
+ ],"default":"round","info":"Style of the circle track and progress ring tips"},
+ {"type":"color","id":"circle_bg_color","label":"Background Color","default":"#ffffff","info":"Fill color of the circle"},
+ {"type":"color","id":"circle_track_color","label":"Track Color","default":"#e5e7eb","info":"Color of the empty track"},
+ {"type":"range","id":"circle_text_size_desktop","label":"Number Text Size (Desktop)","min": 8,"max": 60,"step": 2,"unit":"px","default": 24,"info":"Font size of the number inside the circle on desktop"},
+ {"type":"range","id":"circle_text_size_mobile","label":"Number Text Size (Mobile)","min": 8,"max": 60,"step": 2,"unit":"px","default": 20,"info":"Font size of the number inside the circle on mobile"},
+ {"type":"header","content":"Circular Progress Ring Color"},
+ {"type":"checkbox","id":"circle_gradient_enabled","label":"Enable Ring Gradient","default": false,"info":"Apply gradient to progress ring"},
+ {"type":"color","id":"circle_gradient_start","label":"Ring Gradient Start Color","default":"#667eea","info":"Starting color for ring gradient"},
+ {"type":"color","id":"circle_gradient_stop","label":"Ring Gradient Stop Color","default":"#764ba2","info":"Ending color for ring gradient"},
+ {"type":"range","id":"circle_gradient_angle","label":"Ring Gradient Angle","min": 0,"max": 360,"step": 15,"unit":"deg","default": 135,"info":"Direction of the gradient (0 = right, 90 = bottom, 180 = left, 270 = top)"},
+ {"type":"color","id":"circle_progress_color","label":"Solid Ring Color","default":"#10b981","info":"Used when ring gradient is disabled"},
+ {"type":"header","content":"Circular Progress Text Color"},
+ {"type":"checkbox","id":"circle_text_gradient_enabled","label":"Enable Text Gradient","default": false,"info":"Apply gradient to the number text (separate from ring)"},
+ {"type":"color","id":"circle_text_gradient_start","label":"Text Gradient Start Color","default":"#667eea","info":"Starting color for text gradient"},
+ {"type":"color","id":"circle_text_gradient_stop","label":"Text Gradient Stop Color","default":"#764ba2","info":"Ending color for text gradient"},
+ {"type":"range","id":"circle_text_gradient_angle","label":"Text Gradient Angle","min": 0,"max": 360,"step": 15,"unit":"deg","default": 90,"info":"Direction of the gradient (0 = right, 90 = bottom, 180 = left, 270 = top)"},
+ {"type":"color","id":"circle_text_color","label":"Solid Text Color","default":"#000000","info":"Used when text gradient is disabled"},
+ {"type":"header","content":"Subheading Styling"},
+ {"type":"range","id":"subheading_font_size_desktop","label":"Subheading Size (Desktop)","min": 8,"max": 40,"step": 1,"unit":"px","default": 17
+ },
+ {"type":"range","id":"subheading_font_size_mobile","label":"Subheading Size (Mobile)","min": 8,"max": 32,"step": 1,"unit":"px","default": 15
+ },
+ {"type":"range","id":"subheading_font_weight","label":"Subheading Font Weight","min": 100,"max": 900,"step": 100,"default": 600
+ },
+ {"type":"color","id":"subheading_color","label":"Subheading Color","default":"#333333"},
+ {"type":"range","id":"subheading_margin_bottom","label":"Subheading Bottom Margin","min": 0,"max": 40,"step": 4,"unit":"px","default": 8
+ },
+ {"type":"header","content":"Description Styling"},
+ {"type":"range","id":"description_font_size_desktop","label":"Description Size (Desktop)","min": 8,"max": 28,"step": 1,"unit":"px","default": 15
+ },
+ {"type":"range","id":"description_font_size_mobile","label":"Description Size (Mobile)","min": 8,"max": 24,"step": 1,"unit":"px","default": 13
+ },
+ {"type":"range","id":"description_font_weight","label":"Description Font Weight","min": 100,"max": 900,"step": 100,"default": 400
+ },
+ {"type":"color","id":"description_color","label":"Description Color","default":"#666666"},
+ {"type":"header","content":"Custom HTML Settings"},
+ {"type":"range","id":"html_spacing","label":"Custom HTML Top Spacing","min": 0,"max": 100,"step": 4,"unit":"px","default": 48,"info":"Space above custom HTML blocks"},
+ {"type":"header","content":"Section Background"},
+ {"type":"checkbox","id":"override_section_settings","label":"Override Theme Section Settings","default": false,"info":"Enable to use custom background and padding for this section"},
+ {"type":"checkbox","id":"section_gradient_enabled","label":"Enable Gradient Background","default": false
+ },
+ {"type":"color_background","id":"section_gradient_background","label":"Section Gradient","default":"linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(245, 245, 245, 1) 100%)"},
+ {"type":"color","id":"section_background_color","label":"Section Background Color","default":"#ffffff"},
+ {"type":"range","id":"section_padding_top_desktop","label":"Padding Top (Desktop)","min": 0,"max": 200,"step": 4,"unit":"px","default": 80
+ },
+ {"type":"range","id":"section_padding_bottom_desktop","label":"Padding Bottom (Desktop)","min": 0,"max": 200,"step": 4,"unit":"px","default": 80
+ },
+ {"type":"range","id":"section_padding_top_mobile","label":"Padding Top (Mobile)","min": 0,"max": 152,"step": 4,"unit":"px","default": 48
+ },
+ {"type":"range","id":"section_padding_bottom_mobile","label":"Padding Bottom (Mobile)","min": 0,"max": 152,"step": 4,"unit":"px","default": 48
+ },
+ {"type":"range","id":"section_padding_horizontal_desktop","label":"Horizontal Padding (Desktop)","min": 0,"max": 200,"step": 4,"unit":"px","default": 0,"info":"Left and right padding on desktop"},
+ {"type":"range","id":"section_padding_horizontal_mobile","label":"Horizontal Padding (Mobile)","min": 0,"max": 100,"step": 4,"unit":"px","default": 0,"info":"Left and right padding on mobile"}
+ ],"blocks": [
+ {"type":"stat","name":"Stat Item","settings": [
+ {"type":"header","content":"Number"},
+ {"type":"text","id":"stat_number","label":"Target Number","default":"100","info":"The number to count up to (supports decimals like 4.9)"},
+ {"type":"text","id":"number_prefix","label":"Prefix","placeholder":"$","info":"Text before the number (e.g., $, #)"},
+ {"type":"text","id":"number_suffix","label":"Suffix","placeholder":"+","info":"Text after the number (e.g., +, %, K, M)"},
+ {"type":"header","content":"Circular Progress Display"},
+ {"type":"checkbox","id":"enable_percentage_display","label":"Enable Circular Progress","default": false,"info":"Show number inside a circular progress ring (styling in section settings)"},
+ {"type":"header","content":"Manual Progress Override"},
+ {"type":"checkbox","id":"override_progress","label":"Override Progress","default": false,"info":"Manually set the ring end position (independent of number)"},
+ {"type":"range","id":"manual_progress","label":"Manual Progress Value","min": 0,"max": 100,"step": 1,"unit":"%","default": 90,"info":"Ring fill percentage (0-100%)"},
+ {"type":"header","content":"Content"},
+ {"type":"text","id":"stat_subheading","label":"Subheading","default":"Happy Customers"},
+ {"type":"textarea","id":"stat_description","label":"Description","default":"Join thousands of satisfied customers worldwide"}
+ ]
+ },
+ {"type":"image","name":"️ Image","settings": [
+ {"type":"image_picker","id":"image","label":"Image"},
+ {"type":"select","id":"aspect_ratio","label":"Image Aspect Ratio","options": [
+ {"value":"1/1","label":"Square (1:1)"},
+ {"value":"4/3","label":"Standard (4:3)"},
+ {"value":"16/9","label":"Widescreen (16:9)"},
+ {"value":"21/9","label":"Ultrawide (21:9)"},
+ {"value":"3/2","label":"Classic (3:2)"},
+ {"value":"2/3","label":"Portrait (2:3)"},
+ {"value":"9/16","label":"Vertical (9:16)"},
+ {"value":"auto","label":"Auto (Original)"}
+ ],"default":"16/9"},
+ {"type":"range","id":"border_width","label":"Border Width","min": 0,"max": 20,"step": 1,"unit":"px","default": 0
+ },
+ {"type":"select","id":"border_style","label":"Border Style","options": [
+ {"value":"solid","label":"Solid"},
+ {"value":"dashed","label":"Dashed"},
+ {"value":"dotted","label":"Dotted"}
+ ],"default":"solid"},
+ {"type":"color","id":"border_color","label":"Border Color","default":"#000000"},
+ {"type":"range","id":"border_radius","label":"Border Radius","min": 0,"max": 100,"step": 2,"unit":"px","default": 0
+ }
+ ]
+ },
+ {"type":"custom_html","name":"Custom HTML","settings": [
+ {"type":"html","id":"html_content","label":"HTML Content","default":"<p>Add your custom HTML here</p>"}
+ ]
+ },
+ {"type":"button","name":"Button","settings": [
+ {"type":"paragraph","content":"**Call-to-Action Button**"},
+ {"type":"text","id":"button_text","label":"Button Text","default":"SHOP NOW"},
+ {"type":"url","id":"button_link","label":"Button Link"},
+ {"type":"text","id":"scroll_to_section","label":"Scroll to Section Class","info":"Enter class name WITHOUT the dot (e.g., 'product-info' NOT '.product-info'). Leave button link empty when using this."},
+ {"type":"checkbox","id":"hide_on_desktop","label":"Hide on Desktop","default": false,"info":"Hide this button on desktop devices"},
+ {"type":"header","content":"Icon Settings"},
+ {"type":"text","id":"button_icon","label":"Google Icon Name","info":"Enter icon name like: shopping_cart, local_shipping, favorite. Use underscores between words. [View all icons](https://fonts.google.com/icons?icon.set=Material+Symbols&icon.platform=web)","default":"arrow_right_alt"},
+ {"type":"checkbox","id":"button_icon_filled","label":"Filled icon","default": false},
+ {"type":"html","id":"button_custom_icon","label":"Custom SVG Icon Code","info":"If provided, this custom SVG will be used instead of the Google Material Icon. Paste your SVG code here."},
+ {"type":"select","id":"icon_position","label":"Icon Position","options": [
+ {"value":"left","label":"Left of text"},
+ {"value":"right","label":"Right of text"}
+ ],"default":"right"},
+ {"type":"range","id":"button_icon_size","min": 12,"max": 48,"step": 2,"unit":"px","label":"Icon Size","default": 20},
+ {"type":"range","id":"button_icon_gap","min": 0,"max": 30,"step": 2,"unit":"px","label":"Gap Between Icon & Text","default": 8},
+ {"type":"color","id":"button_icon_color","label":"Icon Color","default":"#FFFFFF","info":"Leave as white if using custom styles, or match your theme button color"},
+ {"type":"header","content":"Alignment"},
+ {"type":"select","id":"alignment_desktop","label":"Alignment (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left"},
+ {"type":"select","id":"alignment_mobile","label":"Alignment (Mobile)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"header","content":"Style Settings"},
+ {"type":"checkbox","id":"use_custom_styles","label":"Use Custom Styles","default": true,"info":"Enable to override theme button styles with custom settings below"},
+ {"type":"header","content":"Colors"},
+ {"type":"color","id":"button_text_color","label":"Text Color","default":"#FFFFFF"},
+ {"type":"color","id":"button_bg_color","label":"Background Color","default":"#000000"},
+ {"type":"checkbox","id":"use_gradient","label":"Use Gradient Background","default": false},
+ {"type":"color_background","id":"button_gradient","label":"Gradient Background"},
+ {"type":"color","id":"button_text_color_hover","label":"Text Color (Hover)","default":"#FFFFFF"},
+ {"type":"color","id":"button_bg_color_hover","label":"Background Color (Hover)","default":"#333333"},
+ {"type":"header","content":"Border"},
+ {"type":"range","id":"border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Border Width","default": 0},
+ {"type":"color","id":"border_color","label":"Border Color","default":"#000000"},
+ {"type":"range","id":"border_radius","min": 0,"max": 50,"step": 1,"unit":"px","label":"Border Radius","default": 4},
+ {"type":"header","content":"Typography"},
+ {"type":"range","id":"font_size_desktop","min": 12,"max": 32,"step": 1,"unit":"px","label":"Font Size (Desktop)","default": 16},
+ {"type":"range","id":"font_size_mobile","min": 12,"max": 28,"step": 1,"unit":"px","label":"Font Size (Mobile)","default": 14},
+ {"type":"select","id":"font_weight","label":"Font Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"},
+ {"value":"800","label":"Extra Bold"}
+ ],"default":"600"},
+ {"type":"select","id":"text_transform","label":"Text Transform","options": [
+ {"value":"none","label":"None"},
+ {"value":"uppercase","label":"Uppercase"},
+ {"value":"lowercase","label":"Lowercase"},
+ {"value":"capitalize","label":"Capitalize"}
+ ],"default":"uppercase"},
+ {"type":"range","id":"letter_spacing","min": -2,"max": 10,"step": 0.5,"unit":"px","label":"Letter Spacing","default": 1},
+ {"type":"header","content":"Padding"},
+ {"type":"range","id":"padding_vertical","min": 0,"max": 40,"step": 2,"unit":"px","label":"Vertical Padding","default": 16},
+ {"type":"range","id":"padding_horizontal","min": 0,"max": 80,"step": 2,"unit":"px","label":"Horizontal Padding","default": 24},
+ {"type":"header","content":"Layout"},
+ {"type":"checkbox","id":"full_width","label":"Full Width Button","default": false},
+ {"type":"checkbox","id":"full_width_mobile_only","label":"Full Width on Mobile Only","default": true},
+ {"type":"checkbox","id":"use_custom_width","label":"Use Custom Width","default": false,"info":"Enable to set custom button width instead of auto"},
+ {"type":"range","id":"custom_width_desktop","min": 100,"max": 800,"step": 10,"unit":"px","label":"Custom Width (Desktop)","default": 300},
+ {"type":"range","id":"custom_width_mobile","min": 100,"max": 500,"step": 10,"unit":"px","label":"Custom Width (Mobile)","default": 280},
+ {"type":"range","id":"margin_top","min": -20,"max": 40,"step": 2,"unit":"px","label":"Top Margin","default": 0},
+ {"type":"range","id":"margin_bottom","min": -20,"max": 40,"step": 2,"unit":"px","label":"Bottom Margin","default": 24}
+ ]
+ }
+ ],"presets": [
+ {"name":"Stats Counter","blocks": [
+ {"type":"image","settings": {"aspect_ratio":"1/1","border_width": 0,"border_style":"solid","border_color":"#000000","border_radius": 0}
+ },
+ {"type":"stat","settings": {"stat_number":"89","number_prefix":"","number_suffix":"%","enable_percentage_display": false,"override_progress": false,"manual_progress": 90,"stat_subheading":"Average Rating","stat_description":"Based on 10,000+ reviews"}
+ },
+ {"type":"stat","settings": {"stat_number":"97","number_prefix":"","number_suffix":"%","enable_percentage_display": false,"override_progress": false,"manual_progress": 90,"stat_subheading":"Happy Customers","stat_description":"Worldwide satisfaction"}
+ },
+ {"type":"stat","settings": {"stat_number":"99","number_prefix":"","number_suffix":"%","enable_percentage_display": false,"override_progress": false,"manual_progress": 90,"stat_subheading":"Success Rate","stat_description":"Proven results"}
+ },
+ {"type":"stat","settings": {"stat_number":"100","number_prefix":"","number_suffix":"%","enable_percentage_display": false,"override_progress": false,"manual_progress": 90,"stat_subheading":"Happy Customers","stat_description":"Join thousands of customers"}
+ },
+ {"type":"button","settings": {"button_text":"SHOP NOW","button_link":"","scroll_to_section":"","hide_on_desktop": false,"button_icon":"arrow_right_alt","button_icon_filled": false,"button_custom_icon":"","icon_position":"right","button_icon_size": 20,"button_icon_gap": 8,"button_icon_color":"#ffffff","alignment_desktop":"left","alignment_mobile":"center","use_custom_styles": true,"button_text_color":"#ffffff","button_bg_color":"#000000","use_gradient": false,"button_gradient":"","button_text_color_hover":"#ffffff","button_bg_color_hover":"#333333","border_width": 0,"border_color":"#000000","border_radius": 4,"font_size_desktop": 16,"font_size_mobile": 14,"font_weight":"600","text_transform":"uppercase","letter_spacing": 1,"padding_vertical": 16,"padding_horizontal": 24,"full_width": false,"full_width_mobile_only": true,"use_custom_width": false,"custom_width_desktop": 300,"custom_width_mobile": 280,"margin_top": 0,"margin_bottom": 24}
+ }
+ ],"category":"Stats"}
+ ]
+}
+{% endschema %}
+
+<script>
+(function() {
+  const buttons = document.querySelectorAll('#shopify-section-{{ section.id }} .scroll-to-section');
+
+  buttons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      const targetClass = this.getAttribute('data-scroll-target');
+
+      if (targetClass) {
+        e.preventDefault();
+
+        const targetElement = document.querySelector('.' + targetClass);
+
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }
+    });
+  });
+})();
+</script>
+

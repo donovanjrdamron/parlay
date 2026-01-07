@@ -1,0 +1,2199 @@
+{% comment %}
+  Featured Collection Slider - Same style as Testimonial Reviews
+{% endcomment %}
+
+<style>
+  /* Section Styling */
+  .section-{{ section.id }} {
+    background: {{ section.settings.section_background }};
+    padding-top: {{ section.settings.section_padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.section_padding_bottom_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }} {
+      padding-top: {{ section.settings.section_padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.section_padding_bottom_desktop }}px;
+    }
+  }
+
+  /* Container */
+  .section-{{ section.id }} .fc-container {
+    max-width: {{ settings.page_width }}px;
+    margin: 0 auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }} .fc-container {
+      padding-left: 5rem;
+      padding-right: 5rem;
+    }
+  }
+
+  /* Heading Section */
+  .section-{{ section.id }} .fc-header-wrapper {
+    margin-bottom: {{ section.settings.header_spacing }}px;
+    text-align: {{ section.settings.heading_text_align }};
+  }
+
+  .section-{{ section.id }} .fc-heading {
+    color: {{ section.settings.heading_color }};
+    font-size: {{ section.settings.heading_font_size_mobile }}px;
+    font-weight: {{ section.settings.heading_font_weight }};
+    line-height: 1.2;
+    margin: 0 0 {{ section.settings.heading_margin_bottom }}px 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }} .fc-heading {
+      font-size: {{ section.settings.heading_font_size_desktop }}px;
+    }
+  }
+
+  /* Highlighted Text */
+  .section-{{ section.id }} .fc-highlighted-text {
+    display: inline-block;
+    {% if section.settings.highlighted_gradient_enabled %}
+      background: {{ section.settings.highlighted_gradient }};
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    {% else %}
+      color: {{ section.settings.highlighted_color }};
+    {% endif %}
+    font-size: {{ section.settings.highlighted_font_size_mobile }}px;
+    font-weight: {{ section.settings.highlighted_font_weight }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }} .fc-highlighted-text {
+      font-size: {{ section.settings.highlighted_font_size_desktop }}px;
+    }
+  }
+
+  /* Layout Container */
+  .section-{{ section.id }} .fc-products-wrapper {
+    position: relative;
+  }
+
+  {% if section.settings.layout_mode == 'slider' %}
+    /* Slider Layout */
+    .section-{{ section.id }} .fc-slider-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section-{{ section.id }} .fc-slider-container {
+      overflow-x: scroll;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: {{ section.settings.scrollbar_thumb_color }} {{ section.settings.scrollbar_track_color }};
+      padding-bottom: 2rem;
+    }
+
+    .section-{{ section.id }} .fc-slider-container::-webkit-scrollbar {
+      height: {{ section.settings.scrollbar_height }}px;
+      background-color: {{ section.settings.scrollbar_track_color }};
+      border-radius: {{ section.settings.scrollbar_border_radius }}px;
+    }
+
+    .section-{{ section.id }} .fc-slider-container::-webkit-scrollbar-thumb {
+      background-color: {{ section.settings.scrollbar_thumb_color }};
+      border-radius: {{ section.settings.scrollbar_border_radius }}px;
+    }
+
+    .section-{{ section.id }} .fc-slider-track {
+      display: flex;
+      gap: {{ section.settings.cards_gap }}px;
+      width: max-content;
+    }
+  {% else %}
+    /* Grid Layout */
+    .section-{{ section.id }} .fc-grid-container {
+      display: grid;
+      grid-template-columns: repeat({{ section.settings.grid_columns_mobile }}, 1fr);
+      gap: {{ section.settings.cards_gap }}px;
+    }
+
+    @media screen and (min-width: 750px) and (max-width: 989px) {
+      .section-{{ section.id }} .fc-grid-container {
+        grid-template-columns: repeat({{ section.settings.grid_columns_tablet }}, 1fr);
+      }
+    }
+
+    @media screen and (min-width: 990px) {
+      .section-{{ section.id }} .fc-grid-container {
+        grid-template-columns: repeat({{ section.settings.grid_columns_desktop }}, 1fr);
+      }
+    }
+  {% endif %}
+
+  /* Product Image */
+  .section-{{ section.id }} .fc-product-image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* 1:1 aspect ratio */
+    background: {{ section.settings.image_background }};
+    overflow: hidden;
+  }
+
+  .section-{{ section.id }} .fc-product-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: {{ section.settings.image_fit }};
+  }
+
+  /* Product Info */
+  .section-{{ section.id }} .fc-product-info {
+    padding: {{ section.settings.card_padding }}px;
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.product_info_gap }}px;
+  }
+
+  .section-{{ section.id }} .fc-product-title {
+    color: {{ section.settings.title_color }};
+    font-size: {{ section.settings.title_font_size }}px;
+    font-weight: {{ section.settings.title_font_weight }};
+    line-height: 1.3;
+    margin: 0 0 {{ section.settings.title_margin_bottom }}px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Rating Stars */
+  .section-{{ section.id }} .fc-rating-stars {
+    margin-bottom: {{ section.settings.rating_margin_bottom }}px;
+    display: block;
+  }
+
+  .section-{{ section.id }} .fc-rating-stars__container {
+    position: relative;
+    display: inline-flex;
+    flex-direction: row;
+    gap: 2px;
+    font-size: {{ section.settings.rating_stars_size }}px;
+    line-height: 1;
+  }
+
+  .section-{{ section.id }} .fc-rating-stars__container--underlay {
+    color: {{ section.settings.rating_bg_star_color }};
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+  }
+
+  .section-{{ section.id }} .fc-rating-stars__container--overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    color: {{ section.settings.rating_star_color }};
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+    white-space: nowrap;
+  }
+
+  .section-{{ section.id }} .fc-rating-stars svg {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .section-{{ section.id }} .fc-product-price {
+    color: {{ section.settings.price_color }};
+    font-size: {{ section.settings.price_font_size }}px;
+    font-weight: {{ section.settings.price_font_weight }};
+    margin: 0 0 {{ section.settings.price_margin_bottom }}px 0;
+  }
+
+  .section-{{ section.id }} .fc-compare-price {
+    color: {{ section.settings.compare_price_color }};
+    font-size: {{ section.settings.compare_price_font_size }}px;
+    text-decoration: line-through;
+    margin-left: 8px;
+  }
+
+  /* Badge Styling */
+  .section-{{ section.id }} .fc-sale-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    {% if section.settings.use_theme_badge_colors %}
+      {% if settings.enable_badge_gradient %}
+        background: {{ settings.badge_gradient }};
+      {% else %}
+        background: {{ settings.badge_bg_color }};
+      {% endif %}
+      color: {{ settings.badge_text_color }};
+    {% else %}
+      background: {{ section.settings.sale_badge_background }};
+      color: {{ section.settings.sale_badge_color }};
+    {% endif %}
+    font-size: {{ section.settings.sale_badge_font_size }}px;
+    font-weight: {{ section.settings.sale_badge_font_weight }};
+    padding: {{ section.settings.sale_badge_padding_y }}px {{ section.settings.sale_badge_padding_x }}px;
+    border-radius: {{ section.settings.sale_badge_border_radius }}px;
+    line-height: 1;
+  }
+
+  /* Custom Badges */
+  .section-{{ section.id }} .fc-custom-badge {
+    position: absolute;
+    {% case section.settings.badge_position %}
+      {% when 'top-left' %}
+        top: {{ section.settings.badge_offset_y }}px;
+        left: {{ section.settings.badge_offset_x }}px;
+      {% when 'top-right' %}
+        top: {{ section.settings.badge_offset_y }}px;
+        right: {{ section.settings.badge_offset_x }}px;
+      {% when 'bottom-left' %}
+        bottom: {{ section.settings.badge_offset_y }}px;
+        left: {{ section.settings.badge_offset_x }}px;
+      {% when 'bottom-right' %}
+        bottom: {{ section.settings.badge_offset_y }}px;
+        right: {{ section.settings.badge_offset_x }}px;
+    {% endcase %}
+    padding: {{ section.settings.badge_padding_y }}px {{ section.settings.badge_padding_x }}px;
+    border-radius: {{ section.settings.badge_border_radius }}px;
+    font-size: {{ section.settings.badge_font_size }}px;
+    font-weight: {{ section.settings.badge_font_weight }};
+    line-height: 1;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: {{ section.settings.badge_icon_gap }}px;
+  }
+
+  .section-{{ section.id }} .fc-badge-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: {{ section.settings.custom_badge_icon_size }}px;
+    width: {{ section.settings.custom_badge_icon_size }}px;
+    height: {{ section.settings.custom_badge_icon_size }}px;
+    flex-shrink: 0;
+  }
+
+  .section-{{ section.id }} .fc-badge-icon .material-icon {
+    font-size: {{ section.settings.custom_badge_icon_size }}px;
+    width: {{ section.settings.custom_badge_icon_size }}px;
+    height: {{ section.settings.custom_badge_icon_size }}px;
+  }
+
+  .section-{{ section.id }} .fc-badge-icon svg,
+  .section-{{ section.id }} .fc-badge-icon-svg svg {
+    width: {{ section.settings.custom_badge_icon_size }}px;
+    height: {{ section.settings.custom_badge_icon_size }}px;
+    fill: currentColor;
+  }
+
+  .section-{{ section.id }} .fc-badge-text {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.2;
+  }
+
+  .section-{{ section.id }} .fc-custom-badge-1 {
+    background: {{ section.settings.badge_1_bg }};
+    color: {{ section.settings.badge_1_color }};
+  }
+
+  .section-{{ section.id }} .fc-custom-badge-2 {
+    background: {{ section.settings.badge_2_bg }};
+    color: {{ section.settings.badge_2_color }};
+  }
+
+  .section-{{ section.id }} .fc-custom-badge-3 {
+    background: {{ section.settings.badge_3_bg }};
+    color: {{ section.settings.badge_3_color }};
+  }
+
+  /* View All Button */
+  .section-{{ section.id }} .fc-view-all {
+    margin-top: {{ section.settings.view_all_margin_top }}px;
+    text-align: center;
+  }
+
+  .section-{{ section.id }} .fc-view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: {{ section.settings.view_all_icon_gap }}px;
+    padding: {{ section.settings.view_all_button_padding_y }}px {{ section.settings.view_all_button_padding_x }}px;
+    {% if section.settings.use_theme_view_all_colors %}
+      background: {{ settings.button_background_color }};
+      color: {{ settings.button_text_color }};
+    {% else %}
+      {% if section.settings.view_all_gradient_enabled %}
+        background: {{ section.settings.view_all_button_gradient }};
+      {% else %}
+        background: {{ section.settings.view_all_button_bg }};
+      {% endif %}
+      color: {{ section.settings.view_all_button_color }};
+    {% endif %}
+    text-decoration: none;
+    border-radius: {{ section.settings.view_all_button_radius }}px;
+    font-size: {{ section.settings.view_all_button_font_size }}px;
+    font-weight: {{ section.settings.view_all_button_font_weight }};
+    transition: all 0.3s ease;
+  }
+
+  .section-{{ section.id }} .fc-view-all-btn:hover {
+    {% if section.settings.use_theme_view_all_colors %}
+      opacity: 0.85;
+    {% else %}
+      {% if section.settings.view_all_gradient_enabled and section.settings.view_all_hover_gradient_enabled %}
+        background: {{ section.settings.view_all_button_hover_gradient }};
+      {% elsif section.settings.view_all_gradient_enabled == false %}
+        background: {{ section.settings.view_all_button_bg_hover }};
+      {% else %}
+        opacity: 0.85;
+      {% endif %}
+    {% endif %}
+    transform: translateY(-2px);
+  }
+
+  .section-{{ section.id }} .fc-view-all-btn .material-icon {
+    font-size: {{ section.settings.view_all_icon_size }}px;
+    color: {{ section.settings.view_all_icon_color }};
+    width: {{ section.settings.view_all_icon_size }}px;
+    height: {{ section.settings.view_all_icon_size }}px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .section-{{ section.id }} .fc-view-all-btn .fc-view-all__icon-svg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: {{ section.settings.view_all_icon_size }}px;
+    height: {{ section.settings.view_all_icon_size }}px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .section-{{ section.id }} .fc-view-all-btn .fc-view-all__icon-svg svg {
+    width: {{ section.settings.view_all_icon_size }}px;
+    height: {{ section.settings.view_all_icon_size }}px;
+    fill: {{ section.settings.view_all_icon_color }};
+    color: {{ section.settings.view_all_icon_color }};
+    display: block;
+  }
+
+  .section-{{ section.id }} .fc-view-all-btn .fc-view-all__label {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.2;
+  }
+
+  /* Product Card */
+  .section-{{ section.id }} .fc-product-card {
+    {% if section.settings.layout_mode == 'slider' %}
+      width: {{ section.settings.card_width_mobile }}px;
+    {% else %}
+      width: 100%;
+    {% endif %}
+    display: flex;
+    flex-direction: column;
+    background-color: {{ section.settings.card_background }};
+    border-radius: {{ section.settings.card_border_radius }}px;
+    overflow: hidden;
+    border: 1px solid {{ section.settings.card_border_color }};
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  {% if section.settings.layout_mode == 'slider' %}
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }} .fc-product-card {
+        width: {{ section.settings.card_width_desktop }}px;
+      }
+    }
+  {% endif %}
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }} .fc-product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .section-{{ section.id }} .fc-product-link {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* View Product Button */
+  .section-{{ section.id }} .fc-button-wrapper {
+    padding: 0 {{ section.settings.card_padding }}px {{ section.settings.card_padding }}px;
+  }
+
+  .section-{{ section.id }} .fc-view-product-btn {
+    width: 100%;
+    padding: {{ section.settings.button_padding_y }}px {{ section.settings.button_padding_x }}px;
+    {% if section.settings.use_theme_button_colors %}
+      background: {{ settings.button_background_color }};
+      color: {{ settings.button_text_color }};
+    {% else %}
+      {% if section.settings.button_gradient_enabled %}
+        background: {{ section.settings.button_gradient }};
+      {% else %}
+        background: {{ section.settings.button_background }};
+      {% endif %}
+      color: {{ section.settings.button_text_color }};
+    {% endif %}
+    border: none;
+    border-radius: {{ section.settings.button_border_radius }}px;
+    font-size: {{ section.settings.button_font_size }}px;
+    font-weight: {{ section.settings.button_font_weight }};
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: {{ section.settings.button_icon_gap }}px;
+  }
+
+  .section-{{ section.id }} .fc-view-product-btn:hover {
+    {% if section.settings.use_theme_button_colors %}
+      opacity: 0.85;
+    {% else %}
+      {% if section.settings.button_gradient_enabled and section.settings.button_hover_gradient_enabled %}
+        background: {{ section.settings.button_hover_gradient }};
+      {% elsif section.settings.button_gradient_enabled == false %}
+        background: {{ section.settings.button_background_hover }};
+      {% else %}
+        opacity: 0.85;
+      {% endif %}
+    {% endif %}
+    transform: translateY(-2px);
+  }
+
+  .section-{{ section.id }} .fc-view-product-btn .material-icon {
+    font-size: {{ section.settings.button_icon_size }}px;
+    color: {{ section.settings.button_icon_color }};
+    width: {{ section.settings.button_icon_size }}px;
+    height: {{ section.settings.button_icon_size }}px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .section-{{ section.id }} .fc-view-product-btn .fc-button__icon-svg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: {{ section.settings.button_icon_size }}px;
+    height: {{ section.settings.button_icon_size }}px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .section-{{ section.id }} .fc-view-product-btn .fc-button__icon-svg svg {
+    width: {{ section.settings.button_icon_size }}px;
+    height: {{ section.settings.button_icon_size }}px;
+    fill: {{ section.settings.button_icon_color }};
+    color: {{ section.settings.button_icon_color }};
+    display: block;
+  }
+
+  .section-{{ section.id }} .fc-view-product-btn .fc-button__label {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.2;
+  }
+
+  /* Mobile Overlay - Position Info on Top of Image */
+  {% if section.settings.overlay_info_on_image_mobile %}
+    @media screen and (max-width: 749px) {
+      .section-{{ section.id }} .fc-product-card--overlay-mobile .fc-product-link {
+        position: relative;
+      }
+
+      .section-{{ section.id }} .fc-product-card--overlay-mobile .fc-product-image-wrapper {
+        position: relative;
+      }
+
+      .section-{{ section.id }} .fc-product-card--overlay-mobile .fc-product-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 50%, transparent 100%);
+        padding: 20px {{ section.settings.card_padding }}px {{ section.settings.card_padding }}px;
+        z-index: 2;
+      }
+
+      .section-{{ section.id }} .fc-product-card--overlay-mobile .fc-product-title {
+        color: #ffffff;
+      }
+
+      .section-{{ section.id }} .fc-product-card--overlay-mobile .fc-product-price {
+        color: #ffffff;
+      }
+
+      .section-{{ section.id }} .fc-product-card--overlay-mobile .fc-compare-price {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .section-{{ section.id }} .fc-product-card--overlay-mobile .fc-rating-stars__container--underlay {
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      .section-{{ section.id }} .fc-product-card--overlay-mobile .fc-rating-stars__container--overlay {
+        color: #ffffff;
+      }
+    }
+  {% endif %}
+</style>
+
+<section class="section-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="fc-container">
+
+    {% comment %} Header {% endcomment %}
+    {% if section.settings.show_heading %}
+      <div class="fc-header-wrapper">
+        <{{ section.settings.heading_tag }} class="fc-heading">
+          {% case section.settings.highlight_position %}
+            {% when 'inline_first' %}
+              <span class="fc-highlighted-text">{{ section.settings.highlighted_text }}</span>
+              {{ section.settings.heading_before }}
+              {{ section.settings.heading_after }}
+            {% when 'inline_second' %}
+              {{ section.settings.heading_before }}
+              <span class="fc-highlighted-text">{{ section.settings.highlighted_text }}</span>
+              {{ section.settings.heading_after }}
+            {% when 'above' %}
+              <span class="fc-highlighted-text" style="display: block; margin-bottom: 8px;">{{ section.settings.highlighted_text }}</span>
+              {{ section.settings.heading_before }} {{ section.settings.heading_after }}
+            {% when 'below' %}
+              {{ section.settings.heading_before }} {{ section.settings.heading_after }}
+              <span class="fc-highlighted-text" style="display: block; margin-top: 8px;">{{ section.settings.highlighted_text }}</span>
+          {% endcase %}
+        </{{ section.settings.heading_tag }}>
+      </div>
+    {% endif %}
+
+    {% comment %} Products - Slider or Grid {% endcomment %}
+    {% if section.settings.collection != blank %}
+      {% assign collection = collections[section.settings.collection] %}
+      {% if collection.products_count > 0 %}
+
+        {% comment %} Capture current page product ID if on product page {% endcomment %}
+        {% assign page_product_id = nil %}
+        {% if section.settings.hide_current_product and template.name == 'product' %}
+          {% assign page_product_id = product.id %}
+        {% endif %}
+
+        <div class="fc-products-wrapper">
+
+          {% if section.settings.layout_mode == 'slider' %}
+            {% comment %} Slider Layout {% endcomment %}
+            <div class="fc-slider-wrapper">
+              <div class="fc-slider-container">
+                <div class="fc-slider-track">
+                  {% for product in collection.products limit: section.settings.products_to_show %}
+                    {% assign should_hide = false %}
+                    {% if page_product_id and product.id == page_product_id %}
+                      {% assign should_hide = true %}
+                    {% endif %}
+
+                    {% unless should_hide %}
+                      {% render 'featured-collection-card', product: product, section: section, product_index: forloop.index0 %}
+                    {% endunless %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% else %}
+            {% comment %} Grid Layout {% endcomment %}
+            <div class="fc-grid-container">
+              {% for product in collection.products limit: section.settings.products_to_show %}
+                {% assign should_hide = false %}
+                {% if page_product_id and product.id == page_product_id %}
+                  {% assign should_hide = true %}
+                {% endif %}
+
+                {% unless should_hide %}
+                  {% render 'featured-collection-card', product: product, section: section, product_index: forloop.index0 %}
+                {% endunless %}
+              {% endfor %}
+            </div>
+          {% endif %}
+
+        </div>
+      {% endif %}
+    {% endif %}
+
+    {% comment %} View All Button {% endcomment %}
+    {% if section.settings.show_view_all and section.settings.collection != blank %}
+      <div class="fc-view-all">
+        <a href="{{ collections[section.settings.collection].url }}" class="fc-view-all-btn">
+          {% if section.settings.view_all_icon_position == 'before' %}
+            {% if section.settings.view_all_custom_icon != blank %}
+              <span class="fc-view-all__icon-svg">
+                {{ section.settings.view_all_custom_icon }}
+              </span>
+            {% elsif section.settings.view_all_icon != blank %}
+              {% render 'material-icon', icon: section.settings.view_all_icon, filled: section.settings.view_all_icon_filled %}
+            {% endif %}
+          {% endif %}
+
+          <span class="fc-view-all__label">{{ section.settings.view_all_text }}</span>
+
+          {% if section.settings.view_all_icon_position == 'after' %}
+            {% if section.settings.view_all_custom_icon != blank %}
+              <span class="fc-view-all__icon-svg">
+                {{ section.settings.view_all_custom_icon }}
+              </span>
+            {% elsif section.settings.view_all_icon != blank %}
+              {% render 'material-icon', icon: section.settings.view_all_icon, filled: section.settings.view_all_icon_filled %}
+            {% endif %}
+          {% endif %}
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection Grid (Simple)",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Collection"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 50,
+      "step": 1,
+      "default": 8,
+      "label": "Products to show"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_current_product",
+      "label": "Hide Current Product on Product Pages",
+      "default": false,
+      "info": "When enabled, the product being viewed will be hidden from this collection"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout_mode",
+      "label": "Layout Mode",
+      "options": [
+        {
+          "value": "slider",
+          "label": "Slider"
+        },
+        {
+          "value": "grid",
+          "label": "Grid"
+        }
+      ],
+      "default": "slider"
+    },
+    {
+      "type": "range",
+      "id": "grid_columns_mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Grid Columns (Mobile)",
+      "default": 2,
+      "info": "Only applies to Grid layout"
+    },
+    {
+      "type": "range",
+      "id": "grid_columns_tablet",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Grid Columns (Tablet)",
+      "default": 3,
+      "info": "Only applies to Grid layout"
+    },
+    {
+      "type": "range",
+      "id": "grid_columns_desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Grid Columns (Desktop)",
+      "default": 4,
+      "info": "Only applies to Grid layout"
+    },
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_mobile",
+      "min": 0,
+      "max": 148,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding (Mobile)",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_mobile",
+      "min": 0,
+      "max": 148,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding (Mobile)",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show Heading",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading_before",
+      "label": "Heading Before",
+      "default": "Featured"
+    },
+    {
+      "type": "text",
+      "id": "heading_after",
+      "label": "Heading After"
+    },
+    {
+      "type": "text",
+      "id": "highlighted_text",
+      "label": "Highlighted Text",
+      "default": "Collection"
+    },
+    {
+      "type": "select",
+      "id": "highlight_position",
+      "label": "Highlight Position",
+      "options": [
+        {
+          "value": "inline_first",
+          "label": "Inline (First)"
+        },
+        {
+          "value": "inline_second",
+          "label": "Inline (Second)"
+        },
+        {
+          "value": "above",
+          "label": "Above Heading"
+        },
+        {
+          "value": "below",
+          "label": "Below Heading"
+        }
+      ],
+      "default": "inline_second"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading Tag",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "heading_text_align",
+      "label": "Text Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_desktop",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Font Size - Desktop",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_mobile",
+      "min": 16,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Font Size - Mobile",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "heading_font_weight",
+      "label": "Font Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Spacing Below Header",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Highlighted Text"
+    },
+    {
+      "type": "checkbox",
+      "id": "highlighted_gradient_enabled",
+      "label": "Enable Gradient",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "highlighted_color",
+      "label": "Solid Color",
+      "default": "#ed122d"
+    },
+    {
+      "type": "color_background",
+      "id": "highlighted_gradient",
+      "label": "Gradient",
+      "default": "linear-gradient(90deg, rgba(0, 0, 0, 1), rgba(153, 153, 153, 1) 100%)"
+    },
+    {
+      "type": "range",
+      "id": "highlighted_font_size_desktop",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Font Size - Desktop",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "highlighted_font_size_mobile",
+      "min": 16,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Font Size - Mobile",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "highlighted_font_weight",
+      "label": "Font Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "header",
+      "content": "Slider Settings"
+    },
+    {
+      "type": "range",
+      "id": "card_width_mobile",
+      "min": 200,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "label": "Card Width (Mobile)",
+      "default": 200,
+      "info": "Only applies to Slider mode"
+    },
+    {
+      "type": "range",
+      "id": "card_width_desktop",
+      "min": 200,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "label": "Card Width (Desktop)",
+      "default": 250,
+      "info": "Only applies to Slider mode"
+    },
+    {
+      "type": "range",
+      "id": "cards_gap",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap Between Cards",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "scrollbar_height",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "unit": "px",
+      "label": "Scrollbar Height",
+      "default": 6,
+      "info": "Only applies to Slider mode"
+    },
+    {
+      "type": "range",
+      "id": "scrollbar_border_radius",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Scrollbar Border Radius",
+      "default": 3,
+      "info": "Only applies to Slider mode"
+    },
+    {
+      "type": "color",
+      "id": "scrollbar_track_color",
+      "label": "Scrollbar Track Color",
+      "default": "#e0e0e0",
+      "info": "Only applies to Slider mode"
+    },
+    {
+      "type": "color",
+      "id": "scrollbar_thumb_color",
+      "label": "Scrollbar Thumb Color",
+      "default": "#999999",
+      "info": "Only applies to Slider mode"
+    },
+    {
+      "type": "header",
+      "content": "Card Styling"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card Border Color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Border Radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Padding",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "product_info_gap",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Product Info Gap",
+      "default": 2,
+      "info": "Spacing between elements inside product card"
+    },
+    {
+      "type": "header",
+      "content": "Product Image"
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image Fit",
+      "options": [
+        {
+          "value": "contain",
+          "label": "Contain (Show Full Image)"
+        },
+        {
+          "value": "cover",
+          "label": "Cover (Fill Space)"
+        }
+      ],
+      "default": "contain"
+    },
+    {
+      "type": "color",
+      "id": "image_background",
+      "label": "Image Background",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "header",
+      "content": "Product Title"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show Title",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Font Size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Title Font Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Title Spacing Below",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Rating Stars"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating_stars",
+      "label": "Show Rating Stars",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "product_ratings",
+      "label": "Product Ratings",
+      "default": "1,2,3,4",
+      "info": "Enter comma-separated ratings for products in order (e.g., 5,4.7,4.3,5). First product gets first rating, etc."
+    },
+    {
+      "type": "range",
+      "id": "rating_stars_size",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Star Size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "rating_star_color",
+      "label": "Star Fill Color",
+      "default": "#ffd300"
+    },
+    {
+      "type": "color",
+      "id": "rating_bg_star_color",
+      "label": "Star Background Color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "select",
+      "id": "rating_bg_stars_style",
+      "label": "Background Stars Style",
+      "options": [
+        {
+          "value": "filled",
+          "label": "Filled"
+        },
+        {
+          "value": "outlined",
+          "label": "Outlined"
+        }
+      ],
+      "default": "outlined"
+    },
+    {
+      "type": "range",
+      "id": "rating_margin_bottom",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Rating Spacing Below",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Custom Badges"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_custom_badges",
+      "label": "Show Custom Badges",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_assignments",
+      "label": "Badge Assignments",
+      "default": "1,2,3,blank",
+      "info": "Enter comma-separated badge numbers (1, 2, 3) or 'blank' for products in order (e.g., 1,2,3,blank). First product gets first badge, etc."
+    },
+    {
+      "type": "select",
+      "id": "badge_position",
+      "label": "Badge Position",
+      "options": [
+        {
+          "value": "top-left",
+          "label": "Top Left"
+        },
+        {
+          "value": "top-right",
+          "label": "Top Right"
+        },
+        {
+          "value": "bottom-left",
+          "label": "Bottom Left"
+        },
+        {
+          "value": "bottom-right",
+          "label": "Bottom Right"
+        }
+      ],
+      "default": "top-right"
+    },
+    {
+      "type": "range",
+      "id": "badge_offset_x",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Badge Horizontal Offset",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "badge_offset_y",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Badge Vertical Offset",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "badge_padding_x",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Badge Horizontal Padding",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "badge_padding_y",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Badge Vertical Padding",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "badge_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Badge Border Radius",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "badge_font_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge Font Size",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "badge_font_weight",
+      "label": "Badge Font Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "custom_badge_icon_size",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Custom Badge Icon Size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "badge_icon_gap",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge Icon Gap",
+      "default": 9,
+      "info": "Space between icon and text"
+    },
+    {
+      "type": "paragraph",
+      "content": "Badge 1 Design"
+    },
+    {
+      "type": "text",
+      "id": "badge_1_text",
+      "label": "Badge 1 Text",
+      "default": "New"
+    },
+    {
+      "type": "text",
+      "id": "badge_1_icon",
+      "label": "Badge 1 Material Icon Name",
+      "default": "new_releases",
+      "info": "e.g., 'star', 'local_fire_department', 'new_releases'"
+    },
+    {
+      "type": "checkbox",
+      "id": "badge_1_icon_filled",
+      "label": "Badge 1 Filled Icon Style",
+      "default": true
+    },
+    {
+      "type": "html",
+      "id": "badge_1_custom_icon",
+      "label": "Badge 1 Custom Icon SVG",
+      "info": "Paste custom SVG code (overrides Material Icon)"
+    },
+    {
+      "type": "color_background",
+      "id": "badge_1_bg",
+      "label": "Badge 1 Background",
+      "default": "#ff4444"
+    },
+    {
+      "type": "color",
+      "id": "badge_1_color",
+      "label": "Badge 1 Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "paragraph",
+      "content": "Badge 2 Design"
+    },
+    {
+      "type": "text",
+      "id": "badge_2_text",
+      "label": "Badge 2 Text",
+      "default": "Hot"
+    },
+    {
+      "type": "text",
+      "id": "badge_2_icon",
+      "label": "Badge 2 Material Icon Name",
+      "info": "e.g., 'star', 'local_fire_department', 'new_releases'"
+    },
+    {
+      "type": "checkbox",
+      "id": "badge_2_icon_filled",
+      "label": "Badge 2 Filled Icon Style",
+      "default": true
+    },
+    {
+      "type": "html",
+      "id": "badge_2_custom_icon",
+      "label": "Badge 2 Custom Icon SVG",
+      "info": "Paste custom SVG code (overrides Material Icon)"
+    },
+    {
+      "type": "color_background",
+      "id": "badge_2_bg",
+      "label": "Badge 2 Background",
+      "default": "#ff9500"
+    },
+    {
+      "type": "color",
+      "id": "badge_2_color",
+      "label": "Badge 2 Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "paragraph",
+      "content": "Badge 3 Design"
+    },
+    {
+      "type": "text",
+      "id": "badge_3_text",
+      "label": "Badge 3 Text",
+      "default": "Sale"
+    },
+    {
+      "type": "text",
+      "id": "badge_3_icon",
+      "label": "Badge 3 Material Icon Name",
+      "info": "e.g., 'star', 'local_fire_department', 'new_releases'"
+    },
+    {
+      "type": "checkbox",
+      "id": "badge_3_icon_filled",
+      "label": "Badge 3 Filled Icon Style",
+      "default": true
+    },
+    {
+      "type": "html",
+      "id": "badge_3_custom_icon",
+      "label": "Badge 3 Custom Icon SVG",
+      "info": "Paste custom SVG code (overrides Material Icon)"
+    },
+    {
+      "type": "color_background",
+      "id": "badge_3_bg",
+      "label": "Badge 3 Background",
+      "default": "#4caf50"
+    },
+    {
+      "type": "color",
+      "id": "badge_3_color",
+      "label": "Badge 3 Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Product Price"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show Price",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "price_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Price Font Size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "price_font_weight",
+      "label": "Price Font Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "color",
+      "id": "compare_price_color",
+      "label": "Compare At Price Color",
+      "default": "#999999"
+    },
+    {
+      "type": "range",
+      "id": "compare_price_font_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Compare Price Font Size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "price_margin_bottom",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Price Spacing Below",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Mobile Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "overlay_info_on_image_mobile",
+      "label": "Overlay Rating, Title & Price on Image (Mobile Only)",
+      "default": false,
+      "info": "Position the product info on top of the image on mobile devices"
+    },
+    {
+      "type": "header",
+      "content": "Sale Badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sale_badge",
+      "label": "Show Sale Badge",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "use_theme_badge_colors",
+      "label": "Use Theme Badge Colors",
+      "default": true,
+      "info": "Override with global badge colors from Theme Settings"
+    },
+    {
+      "type": "select",
+      "id": "sale_badge_format",
+      "label": "Badge Format",
+      "options": [
+        {
+          "value": "percentage",
+          "label": "Percentage (e.g., -20%)"
+        },
+        {
+          "value": "amount",
+          "label": "Amount (e.g., -$10)"
+        },
+        {
+          "value": "custom",
+          "label": "Custom Text"
+        }
+      ],
+      "default": "percentage"
+    },
+    {
+      "type": "text",
+      "id": "sale_badge_text",
+      "label": "Custom Badge Text",
+      "info": "Only used when 'Custom Text' format is selected"
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_background",
+      "label": "Badge Background",
+      "default": "#ed122d",
+      "info": "Only used when 'Use Theme Badge Colors' is disabled"
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_color",
+      "label": "Badge Text Color",
+      "default": "#ffffff",
+      "info": "Only used when 'Use Theme Badge Colors' is disabled"
+    },
+    {
+      "type": "range",
+      "id": "sale_badge_font_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Sale Badge Font Size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "sale_badge_font_weight",
+      "min": 400,
+      "max": 900,
+      "step": 100,
+      "label": "Sale Badge Font Weight",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "sale_badge_padding_y",
+      "min": 2,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Sale Badge Vertical Padding",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "sale_badge_padding_x",
+      "min": 4,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Sale Badge Horizontal Padding",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "sale_badge_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Sale Badge Border Radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "View Product Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_button",
+      "label": "Show View Product Button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "View product"
+    },
+    {
+      "type": "header",
+      "content": "Button Styling"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_theme_button_colors",
+      "label": "Use Theme Button Colors",
+      "default": false,
+      "info": "Override with global button colors from Theme Settings"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_y",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Button Vertical Padding",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_padding_x",
+      "min": 16,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Button Horizontal Padding",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Button Border Radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Button Font Size",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "button_font_weight",
+      "label": "Button Font Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_gradient_enabled",
+      "label": "Enable Button Gradient",
+      "default": false,
+      "info": "Enable gradient background for the button"
+    },
+    {
+      "type": "color_background",
+      "id": "button_gradient",
+      "label": "Button Gradient Background",
+      "default": "linear-gradient(135deg, rgba(102, 126, 234, 1), rgba(118, 75, 162, 1) 100%)",
+      "info": "Gradient background for the button (only when gradient is enabled)"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button Background",
+      "default": "#000000",
+      "info": "Only used when gradient is disabled"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_hover_gradient_enabled",
+      "label": "Enable Hover Gradient",
+      "default": false,
+      "info": "Enable gradient background for button hover state"
+    },
+    {
+      "type": "color_background",
+      "id": "button_hover_gradient",
+      "label": "Button Hover Gradient",
+      "default": "linear-gradient(135deg, rgba(118, 75, 162, 1), rgba(102, 126, 234, 1) 100%)",
+      "info": "Gradient for hover state (only when hover gradient is enabled)"
+    },
+    {
+      "type": "color",
+      "id": "button_background_hover",
+      "label": "Button Background (Hover)",
+      "default": "#333333",
+      "info": "Only used when gradient is disabled"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff",
+      "info": "Only used when 'Use Theme Button Colors' is disabled"
+    },
+    {
+      "type": "header",
+      "content": "Button Icon"
+    },
+    {
+      "type": "text",
+      "id": "button_icon",
+      "label": "Material Icon Name",
+      "default": "arrow_forward",
+      "info": "Enter a Material Icon name (e.g., arrow_forward, visibility, shopping_bag)"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_icon_filled",
+      "label": "Use Filled Icon Style",
+      "default": false
+    },
+    {
+      "type": "html",
+      "id": "button_custom_icon",
+      "label": "Custom Icon SVG",
+      "info": "Paste custom SVG code here (overrides Material Icon)"
+    },
+    {
+      "type": "select",
+      "id": "button_icon_position",
+      "label": "Icon Position",
+      "options": [
+        {
+          "value": "before",
+          "label": "Before Text"
+        },
+        {
+          "value": "after",
+          "label": "After Text"
+        }
+      ],
+      "default": "after"
+    },
+    {
+      "type": "range",
+      "id": "button_icon_size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon Size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "button_icon_gap",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap Between Icon and Text",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "button_icon_color",
+      "label": "Icon Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "View All Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show View All Button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "Button Text",
+      "default": "View all products"
+    },
+    {
+      "type": "header",
+      "content": "Button Styling"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_theme_view_all_colors",
+      "label": "Use Theme Button Colors",
+      "default": false,
+      "info": "Override with global button colors from Theme Settings"
+    },
+    {
+      "type": "range",
+      "id": "view_all_margin_top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 40
+    },
+    {
+      "type": "checkbox",
+      "id": "view_all_gradient_enabled",
+      "label": "Enable Button Gradient",
+      "default": false,
+      "info": "Enable gradient background for the View All button"
+    },
+    {
+      "type": "color_background",
+      "id": "view_all_button_gradient",
+      "label": "Button Gradient Background",
+      "default": "linear-gradient(135deg, rgba(102, 126, 234, 1), rgba(118, 75, 162, 1) 100%)",
+      "info": "Gradient background for the View All button"
+    },
+    {
+      "type": "color",
+      "id": "view_all_button_bg",
+      "label": "Button Background",
+      "default": "#000000",
+      "info": "Only used when gradient is disabled"
+    },
+    {
+      "type": "checkbox",
+      "id": "view_all_hover_gradient_enabled",
+      "label": "Enable Hover Gradient",
+      "default": false,
+      "info": "Enable gradient for hover state"
+    },
+    {
+      "type": "color_background",
+      "id": "view_all_button_hover_gradient",
+      "label": "Button Hover Gradient",
+      "default": "linear-gradient(135deg, rgba(118, 75, 162, 1), rgba(102, 126, 234, 1) 100%)",
+      "info": "Gradient for hover state"
+    },
+    {
+      "type": "color",
+      "id": "view_all_button_bg_hover",
+      "label": "Button Background (Hover)",
+      "default": "#333333",
+      "info": "Only used when gradient is disabled"
+    },
+    {
+      "type": "color",
+      "id": "view_all_button_color",
+      "label": "Button Text Color",
+      "default": "#ffffff",
+      "info": "Only used when 'Use Theme Button Colors' is disabled"
+    },
+    {
+      "type": "range",
+      "id": "view_all_button_padding_y",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Button Vertical Padding",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "view_all_button_padding_x",
+      "min": 20,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Button Horizontal Padding",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "view_all_button_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Button Border Radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "view_all_button_font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Button Font Size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "view_all_button_font_weight",
+      "label": "Button Font Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "header",
+      "content": "Button Icon"
+    },
+    {
+      "type": "text",
+      "id": "view_all_icon",
+      "label": "Material Icon Name",
+      "default": "arrow_forward",
+      "info": "Enter a Material Icon name (e.g., arrow_forward, east, chevron_right)"
+    },
+    {
+      "type": "checkbox",
+      "id": "view_all_icon_filled",
+      "label": "Use Filled Icon Style",
+      "default": true
+    },
+    {
+      "type": "html",
+      "id": "view_all_custom_icon",
+      "label": "Custom Icon SVG",
+      "info": "Paste custom SVG code here (overrides Material Icon)"
+    },
+    {
+      "type": "select",
+      "id": "view_all_icon_position",
+      "label": "Icon Position",
+      "options": [
+        {
+          "value": "before",
+          "label": "Before Text"
+        },
+        {
+          "value": "after",
+          "label": "After Text"
+        }
+      ],
+      "default": "after"
+    },
+    {
+      "type": "range",
+      "id": "view_all_icon_size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon Size",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "view_all_icon_gap",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap Between Icon and Text",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "view_all_icon_color",
+      "label": "Icon Color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Grid (Simple)",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

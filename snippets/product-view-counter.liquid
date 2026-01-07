@@ -1,0 +1,107 @@
+{% comment %}
+  Product View Counter Snippet
+  Displays how many times a product has been viewed in the last 24 hours
+
+  Parameters:
+  - initial_view_count: Starting view count number
+  - badge_bg_color: Background color for the "Views" badge
+  - badge_text_color: Text color for the "Views" badge
+  - text_color: Color for the view count text
+  - badge_text: Text to display in the badge (default: "Views")
+  - message_text: Message template with {count} placeholder
+{% endcomment %}
+
+{%- liquid
+  assign initial_count = initial_view_count | default: 925
+  assign badge_bg = badge_bg_color | default: '#f3e6e2'
+  assign badge_color = badge_text_color | default: '#d74f33'
+  assign main_text_color = text_color | default: '#474747'
+  assign badge_label = badge_text | default: 'Views'
+  assign message = message_text | default: 'During the last 24 hours, this product has been viewed {count} times.'
+-%}
+
+<div class="product-view-counter" data-initial-count="{{ initial_count }}" data-product-id="{{ product.id }}">
+  <style>
+    .product-view-counter {
+      display: flex;
+      align-items: center;
+      font-family: var(--font-body-family), Arial, sans-serif;
+      margin: 12px 0;
+    }
+
+    .view-counter-badge {
+      background-color: {{ badge_bg }};
+      color: {{ badge_color }};
+      border-radius: 16px;
+      font-weight: bold;
+      margin-right: 10px;
+      padding: 0px 8px;
+      font-size: 11px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .view-counter-text {
+      font-size: 12px;
+      line-height: 19px;
+      font-weight: normal;
+      color: {{ main_text_color }};
+    }
+
+    .view-counter-number {
+      font-weight: 600;
+    }
+  </style>
+
+  <div class="view-counter-badge">{{ badge_label }}</div>
+  <div class="view-counter-text" data-message-template="{{ message }}">
+    {%- assign parts = message | split: '{count}' -%}
+    {{ parts[0] }}<span class="view-counter-number">{{ initial_count }}</span>{{ parts[1] }}
+  </div>
+</div>
+
+<script>
+  (function() {
+    const container = document.querySelector('.product-view-counter[data-product-id="{{ product.id }}"]');
+    if (!container) return;
+
+    const initialViewCount = parseInt(container.dataset.initialCount);
+    const productId = container.dataset.productId;
+    const storageKey = `productViews_${productId}`;
+    const timestampKey = `productViewsTimestamp_${productId}`;
+    const countElement = container.querySelector('.view-counter-number');
+    const textElement = container.querySelector('.view-counter-text');
+    const messageTemplate = textElement.dataset.messageTemplate;
+
+    // Calculate new view count with random variation (-20 to +20)
+    function calculateViewCount() {
+      const variation = Math.floor(Math.random() * 41) - 20;
+      return initialViewCount + variation;
+    }
+
+    // Update the display
+    function updateDisplay(count) {
+      const parts = messageTemplate.split('{count}');
+      textElement.innerHTML = parts[0] + '<span class="view-counter-number">' + count + '</span>' + parts[1];
+    }
+
+    // Check if 24 hours have passed
+    const lastUpdated = localStorage.getItem(timestampKey);
+    const now = Date.now();
+    const twentyFourHours = 86400000; // 24 hours in milliseconds
+
+    if (!lastUpdated || (now - parseInt(lastUpdated)) > twentyFourHours) {
+      // Generate new count and save it
+      const newViewCount = calculateViewCount();
+      localStorage.setItem(storageKey, newViewCount);
+      localStorage.setItem(timestampKey, now);
+      updateDisplay(newViewCount);
+    } else {
+      // Use stored count
+      const storedCount = localStorage.getItem(storageKey);
+      if (storedCount) {
+        updateDisplay(parseInt(storedCount));
+      }
+    }
+  })();
+</script>

@@ -1,0 +1,138 @@
+{% comment %}
+  Benefit Pills Snippet
+  Renders 3 pills with SVG icons and text in a horizontal row
+  
+  Usage:
+  {% render 'benefit-pills', block: block %}
+{% endcomment %}
+
+<div class="benefit-pills-wrapper" {{ block.shopify_attributes }} style="--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;">
+  <style>
+    /* ===========================
+       Benefit Pills Container
+       =========================== */
+    .benefit-pills-wrapper {
+      margin-top: var(--margin-top);
+      margin-bottom: var(--margin-bottom);
+    }
+
+    .benefit-pills-container {
+      display: flex;
+      gap: {{ block.settings.pills_gap }}px;
+      justify-content: {{ block.settings.pills_alignment }};
+      flex-wrap: wrap;
+    }
+
+    /* ===========================
+       Individual Pill
+       =========================== */
+    .benefit-pill {
+      display: flex;
+      align-items: center;
+      gap: {{ block.settings.pill_icon_gap }}px;
+      padding: {{ block.settings.pill_padding_vertical }}px {{ block.settings.pill_padding_horizontal }}px;
+      {% if block.settings.pill_gradient_enabled %}
+        background: {{ block.settings.pill_gradient }};
+      {% else %}
+        background-color: {{ block.settings.pill_background }};
+      {% endif %}
+      border: {{ block.settings.pill_border_width }}px {{ block.settings.pill_border_style }} {{ block.settings.pill_border_color }};
+      border-radius: {{ block.settings.pill_border_radius }}px;
+    }
+
+    /* ===========================
+       Icon Styling
+       =========================== */
+    .benefit-pill-icon {
+      width: {{ block.settings.icon_size }}px;
+      height: {{ block.settings.icon_size }}px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .benefit-pill-icon svg {
+      width: 100%;
+      height: 100%;
+      color: {{ block.settings.icon_color }};
+    }
+
+    /* ===========================
+       Text Styling
+       =========================== */
+    .benefit-pill-text {
+      margin: 0;
+      font-size: {{ block.settings.text_size }}px;
+      font-weight: {{ block.settings.text_weight }};
+      color: {{ block.settings.text_color }};
+      text-transform: {{ block.settings.text_transform }};
+      line-height: 1.2;
+    }
+
+    /* ===========================
+       Mobile Responsive
+       =========================== */
+    @media screen and (max-width: 749px) {
+      .benefit-pills-container {
+        gap: {{ block.settings.pills_gap_mobile }}px;
+        {% if block.settings.stack_on_mobile %}
+          flex-direction: column;
+        {% endif %}
+      }
+
+      .benefit-pill {
+        padding: {{ block.settings.pill_padding_vertical_mobile }}px {{ block.settings.pill_padding_horizontal_mobile }}px;
+        gap: {{ block.settings.pill_icon_gap_mobile }}px;
+      }
+
+      .benefit-pill-icon {
+        width: {{ block.settings.icon_size_mobile }}px;
+        height: {{ block.settings.icon_size_mobile }}px;
+      }
+
+      .benefit-pill-text {
+        font-size: {{ block.settings.text_size_mobile }}px;
+      }
+    }
+  </style>
+
+  <div class="benefit-pills-container">
+    {% comment %} Pill 1 {% endcomment %}
+    {% if block.settings.pill_1_text != blank %}
+      <div class="benefit-pill">
+        {% if block.settings.pill_1_icon != blank %}
+          <div class="benefit-pill-icon">
+            {{ block.settings.pill_1_icon }}
+          </div>
+        {% endif %}
+        <p class="benefit-pill-text">{{ block.settings.pill_1_text }}</p>
+      </div>
+    {% endif %}
+
+    {% comment %} Pill 2 {% endcomment %}
+    {% if block.settings.pill_2_text != blank %}
+      <div class="benefit-pill">
+        {% if block.settings.pill_2_icon != blank %}
+          <div class="benefit-pill-icon">
+            {{ block.settings.pill_2_icon }}
+          </div>
+        {% endif %}
+        <p class="benefit-pill-text">{{ block.settings.pill_2_text }}</p>
+      </div>
+    {% endif %}
+
+    {% comment %} Pill 3 {% endcomment %}
+    {% if block.settings.pill_3_text != blank %}
+      <div class="benefit-pill">
+        {% if block.settings.pill_3_icon != blank %}
+          <div class="benefit-pill-icon">
+            {{ block.settings.pill_3_icon }}
+          </div>
+        {% endif %}
+        <p class="benefit-pill-text">{{ block.settings.pill_3_text }}</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+

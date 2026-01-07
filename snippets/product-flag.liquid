@@ -1,0 +1,234 @@
+{% comment %}
+  Product Flag Snippet
+  Displays icons and text with customizable styling
+{% endcomment %}
+
+{%- liquid
+  assign show_two = block.settings.show_two_items
+  assign layout = block.settings.layout
+  assign gap = block.settings.gap
+  if section_alignment != blank
+    assign alignment = section_alignment
+  elsif block.settings.alignment != blank
+    assign alignment = block.settings.alignment
+  else
+    assign alignment = 'left'
+  endif
+
+  if section_mobile_alignment != blank
+    assign mobile_alignment = section_mobile_alignment
+  else
+    assign mobile_alignment = alignment
+  endif
+-%}
+
+<div id="product-flag-{{ block.id }}" class="product-flag product-flag--{{ layout }} product-flag--align-{{ alignment }}" style="gap: {{ gap }}px; margin-top: {{ block.settings.margin_top }}px; margin-bottom: {{ block.settings.margin_bottom }}px;" {{ block.shopify_attributes }}>
+  <style>
+    #product-flag-{{ block.id }}.product-flag {
+      display: flex;
+      align-items: center;
+    }
+
+    #product-flag-{{ block.id }}.product-flag--horizontal {
+      flex-direction: row;
+    }
+
+    #product-flag-{{ block.id }}.product-flag--stacked {
+      flex-direction: column;
+    }
+
+    /* Alignment */
+    #product-flag-{{ block.id }}.product-flag--align-left {
+      justify-content: flex-start;
+    }
+
+    #product-flag-{{ block.id }}.product-flag--align-center {
+      justify-content: center;
+    }
+
+    #product-flag-{{ block.id }}.product-flag--align-right {
+      justify-content: flex-end;
+    }
+
+    #product-flag-{{ block.id }}.product-flag--stacked.product-flag--align-left {
+      align-items: flex-start;
+    }
+
+    #product-flag-{{ block.id }}.product-flag--stacked.product-flag--align-center {
+      align-items: center;
+    }
+
+    #product-flag-{{ block.id }}.product-flag--stacked.product-flag--align-right {
+      align-items: flex-end;
+    }
+
+    .product-flag__item {
+      display: flex;
+      align-items: center;
+      gap: {{ block.settings.icon_text_gap }}px;
+    }
+
+    /* Item 1 Container */
+    #product-flag-{{ block.id }} .product-flag__item-1 {
+      background-color: {{ block.settings.item_1_bg_color }};
+      padding-top: {{ block.settings.item_padding_vertical }}px;
+      padding-bottom: {{ block.settings.item_padding_vertical }}px;
+      padding-left: {{ block.settings.item_padding_horizontal }}px;
+      padding-right: {{ block.settings.item_padding_horizontal }}px;
+      border-radius: {{ block.settings.item_border_radius }}px;
+    }
+
+    /* Icon 1 Styles */
+    #product-flag-{{ block.id }} .product-flag__icon-1 {
+      width: {{ block.settings.icon_1_size }}px;
+      height: {{ block.settings.icon_1_size }}px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    #product-flag-{{ block.id }} .product-flag__icon-1 .material-icon {
+      font-size: {{ block.settings.icon_1_size }}px;
+      color: {{ block.settings.icon_1_color }};
+    }
+
+    #product-flag-{{ block.id }} .product-flag__icon-1 svg {
+      width: 100%;
+      height: 100%;
+      /* Custom SVG colors take priority - no fill override */
+    }
+
+    /* Text 1 Styles - Font size and color for all elements */
+    #product-flag-{{ block.id }} .product-flag__text-1,
+    #product-flag-{{ block.id }} .product-flag__text-1 *,
+    #product-flag-{{ block.id }} .product-flag__text-1 p,
+    #product-flag-{{ block.id }} .product-flag__text-1 strong,
+    #product-flag-{{ block.id }} .product-flag__text-1 em,
+    #product-flag-{{ block.id }} .product-flag__text-1 b,
+    #product-flag-{{ block.id }} .product-flag__text-1 i {
+      font-size: {{ block.settings.text_1_size }}px !important;
+      color: {{ block.settings.text_1_color }} !important;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    /* Text 1 - Base font weight (not for bold elements) */
+    #product-flag-{{ block.id }} .product-flag__text-1,
+    #product-flag-{{ block.id }} .product-flag__text-1 p {
+      font-weight: {{ block.settings.text_1_weight }} !important;
+    }
+
+    /* Item 2 Container */
+    #product-flag-{{ block.id }} .product-flag__item-2 {
+      background-color: {{ block.settings.item_2_bg_color }};
+      padding-top: {{ block.settings.item_padding_vertical }}px;
+      padding-bottom: {{ block.settings.item_padding_vertical }}px;
+      padding-left: {{ block.settings.item_padding_horizontal }}px;
+      padding-right: {{ block.settings.item_padding_horizontal }}px;
+      border-radius: {{ block.settings.item_border_radius }}px;
+    }
+
+    /* Icon 2 Styles */
+    #product-flag-{{ block.id }} .product-flag__icon-2 {
+      width: {{ block.settings.icon_2_size }}px;
+      height: {{ block.settings.icon_2_size }}px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    #product-flag-{{ block.id }} .product-flag__icon-2 .material-icon {
+      font-size: {{ block.settings.icon_2_size }}px;
+      color: {{ block.settings.icon_2_color }};
+    }
+
+    #product-flag-{{ block.id }} .product-flag__icon-2 svg {
+      width: 100%;
+      height: 100%;
+      /* Custom SVG colors take priority - no fill override */
+    }
+
+    /* Text 2 Styles - Font size and color for all elements */
+    #product-flag-{{ block.id }} .product-flag__text-2,
+    #product-flag-{{ block.id }} .product-flag__text-2 *,
+    #product-flag-{{ block.id }} .product-flag__text-2 p,
+    #product-flag-{{ block.id }} .product-flag__text-2 strong,
+    #product-flag-{{ block.id }} .product-flag__text-2 em,
+    #product-flag-{{ block.id }} .product-flag__text-2 b,
+    #product-flag-{{ block.id }} .product-flag__text-2 i {
+      font-size: {{ block.settings.text_2_size }}px !important;
+      color: {{ block.settings.text_2_color }} !important;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    /* Text 2 - Base font weight (not for bold elements) */
+    #product-flag-{{ block.id }} .product-flag__text-2,
+    #product-flag-{{ block.id }} .product-flag__text-2 p {
+      font-weight: {{ block.settings.text_2_weight }} !important;
+    }
+
+    /* Separator (only for horizontal layout) */
+    #product-flag-{{ block.id }} .product-flag__separator {
+      display: block;
+      background-color: {{ block.settings.separator_color }};
+      flex-shrink: 0;
+      width: {{ block.settings.separator_width }}px;
+      height: {{ block.settings.separator_length }}px;
+    }
+
+    /* Mobile Alignment */
+    @media (max-width: 768px) {
+      #product-flag-{{ block.id }}.product-flag--horizontal.product-flag--align-{{ alignment }} {
+        justify-content: {% if mobile_alignment == 'center' %}center{% elsif mobile_alignment == 'right' %}flex-end{% else %}flex-start{% endif %};
+      }
+
+      #product-flag-{{ block.id }}.product-flag--stacked.product-flag--align-{{ alignment }} {
+        align-items: {% if mobile_alignment == 'center' %}center{% elsif mobile_alignment == 'right' %}flex-end{% else %}flex-start{% endif %};
+      }
+    }
+  </style>
+
+  {%- comment %} First Item {% endcomment -%}
+  <div class="product-flag__item product-flag__item-1">
+    {%- if block.settings.icon_1_svg != blank -%}
+      <div class="product-flag__icon-1">
+        {{ block.settings.icon_1_svg }}
+      </div>
+    {%- elsif block.settings.icon_1 != blank -%}
+      <div class="product-flag__icon-1">
+        {% render 'material-icon', icon: block.settings.icon_1, filled: block.settings.icon_1_filled %}
+      </div>
+    {%- endif -%}
+
+    {%- if block.settings.text_1 != blank -%}
+      <div class="product-flag__text-1">{{ block.settings.text_1 }}</div>
+    {%- endif -%}
+  </div>
+
+  {%- comment %} Separator (if two items enabled and horizontal layout) {% endcomment -%}
+  {%- if show_two and block.settings.show_separator and layout == 'horizontal' -%}
+    <div class="product-flag__separator"></div>
+  {%- endif -%}
+
+  {%- comment %} Second Item (if enabled) {% endcomment -%}
+  {%- if show_two -%}
+    <div class="product-flag__item product-flag__item-2">
+      {%- if block.settings.icon_2_svg != blank -%}
+        <div class="product-flag__icon-2">
+          {{ block.settings.icon_2_svg }}
+        </div>
+      {%- elsif block.settings.icon_2 != blank -%}
+        <div class="product-flag__icon-2">
+          {% render 'material-icon', icon: block.settings.icon_2, filled: block.settings.icon_2_filled %}
+        </div>
+      {%- endif -%}
+
+      {%- if block.settings.text_2 != blank -%}
+        <div class="product-flag__text-2">{{ block.settings.text_2 }}</div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</div>

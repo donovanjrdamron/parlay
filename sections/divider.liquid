@@ -1,0 +1,473 @@
+{{ 'section-divider.css' | asset_url | stylesheet_tag }}
+
+<style>
+  #divider-{{ section.id }} {
+    --divider-line-color: {{ section.settings.line_color }};
+    --divider-line-thickness: {{ section.settings.line_thickness }}px;
+    --divider-text-color: {{ section.settings.text_color | default: settings.body_color }};
+    --divider-highlight-text-color: {{ settings.button_background_color }};
+    --divider-highlight-bg-color: {{ settings.body_color }};
+  }
+
+  #divider-{{ section.id }} .divider-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: {{ section.settings.text_position }};
+    padding: {{ section.settings.spacing_top }}px 0 {{ section.settings.spacing_bottom }}px 0;
+  }
+
+  {% if section.settings.show_line %}
+  #divider-{{ section.id }} .divider-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: var(--divider-line-thickness);
+    background-color: var(--divider-line-color);
+    transform: translateY(-50%);
+    {% if section.settings.line_style == 'dashed' %}
+    background: repeating-linear-gradient(
+      to right,
+      var(--divider-line-color) 0,
+      var(--divider-line-color) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+    {% elsif section.settings.line_style == 'dotted' %}
+    background: repeating-linear-gradient(
+      to right,
+      var(--divider-line-color) 0,
+      var(--divider-line-color) 4px,
+      transparent 4px,
+      transparent 12px
+    );
+    {% endif %}
+  }
+  {% endif %}
+
+  #divider-{{ section.id }} .divider-text {
+    position: relative;
+    z-index: 1;
+    background-color: {{ section.settings.background_color }};
+    padding: {{ section.settings.text_padding_vertical }}px {{ section.settings.text_padding_horizontal }}px;
+    color: var(--divider-text-color);
+    font-size: {{ section.settings.text_size_mobile }}px;
+    font-weight: {{ section.settings.text_weight }};
+    {% if section.settings.text_transform != 'none' %}
+    text-transform: {{ section.settings.text_transform }};
+    {% endif %}
+    letter-spacing: {{ section.settings.letter_spacing }}px;
+    {% if section.settings.enable_border %}
+    border: {{ section.settings.border_width }}px {{ section.settings.border_style }} {{ section.settings.border_color }};
+    border-radius: {{ section.settings.text_border_radius }}px;
+    {% endif %}
+  }
+
+  @media screen and (min-width: 750px) {
+    #divider-{{ section.id }} .divider-text {
+      font-size: {{ section.settings.text_size_desktop }}px;
+    }
+  }
+
+  {% if section.settings.enable_highlight %}
+  #divider-{{ section.id }} .divider-text .highlight {
+    color: var(--divider-highlight-text-color);
+    background-color: var(--divider-highlight-bg-color);
+    padding: {{ section.settings.highlight_padding_vertical }}px {{ section.settings.highlight_padding_horizontal }}px;
+    {% if section.settings.highlight_position == 'underline' %}
+    background: linear-gradient(to top, var(--divider-highlight-bg-color) 0%, var(--divider-highlight-bg-color) 30%, transparent 30%);
+    {% elsif section.settings.highlight_position == 'full' %}
+    display: inline-block;
+    {% endif %}
+    border-radius: {{ section.settings.highlight_border_radius }}px;
+  }
+  {% endif %}
+</style>
+
+<div id="divider-{{ section.id }}" class="divider-section">
+  <div class="divider-container page-width">
+    {% if section.settings.show_line %}
+      <div class="divider-line"></div>
+    {% endif %}
+    {% if section.settings.text != blank %}
+      <div class="divider-text">
+        {% if section.settings.enable_highlight %}
+          {% assign text_parts = section.settings.text | split: section.settings.highlight_delimiter %}
+          {% for part in text_parts %}
+            {% assign mod = forloop.index | modulo: 2 %}
+            {% if mod == 0 %}
+              <span class="highlight">{{ part }}</span>
+            {% else %}
+              {{ part }}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {{ section.settings.text }}
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Divider",
+  "tag": "section",
+  "class": "section-divider",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text Settings"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Divider Text",
+      "default": "Section Divider"
+    },
+    {
+      "type": "select",
+      "id": "text_position",
+      "label": "Text Position",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "text_size_desktop",
+      "min": 12,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "label": "Text Size (Desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 12,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Text Size (Mobile)",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Font Weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light (300)"
+        },
+        {
+          "value": "400",
+          "label": "Normal (400)"
+        },
+        {
+          "value": "500",
+          "label": "Medium (500)"
+        },
+        {
+          "value": "600",
+          "label": "Semi-Bold (600)"
+        },
+        {
+          "value": "700",
+          "label": "Bold (700)"
+        },
+        {
+          "value": "800",
+          "label": "Extra Bold (800)"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "Text Transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "min": -2,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Letter Spacing",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "text_padding_horizontal",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Text Padding (Horizontal)",
+      "default": 16,
+      "info": "Space between text and line"
+    },
+    {
+      "type": "range",
+      "id": "text_padding_vertical",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Text Padding (Vertical)",
+      "default": 0,
+      "info": "Top and bottom padding"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff",
+      "info": "Background behind text to cover line"
+    },
+    {
+      "type": "header",
+      "content": "Border Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_border",
+      "label": "Enable Border",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Border Width",
+      "default": 1
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "Border Style",
+      "options": [
+        {
+          "value": "solid",
+          "label": "Solid"
+        },
+        {
+          "value": "dashed",
+          "label": "Dashed"
+        },
+        {
+          "value": "dotted",
+          "label": "Dotted"
+        }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "text_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Border Radius",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Line Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_line",
+      "label": "Show Line",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Line Color",
+      "default": "#cccccc"
+    },
+    {
+      "type": "range",
+      "id": "line_thickness",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Line Thickness",
+      "default": 1
+    },
+    {
+      "type": "select",
+      "id": "line_style",
+      "label": "Line Style",
+      "options": [
+        {
+          "value": "solid",
+          "label": "Solid"
+        },
+        {
+          "value": "dashed",
+          "label": "Dashed"
+        },
+        {
+          "value": "dotted",
+          "label": "Dotted"
+        }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "header",
+      "content": "Highlight Text Settings"
+    },
+    {
+      "type": "paragraph",
+      "content": "Highlight text uses accent colors from theme settings. Wrap text to highlight with your delimiter (default: *). Example: 'This is *highlighted* text'"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_highlight",
+      "label": "Enable Highlight Text",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "highlight_delimiter",
+      "label": "Highlight Delimiter",
+      "default": "*",
+      "info": "Character(s) to wrap highlighted text. Example: *text*"
+    },
+    {
+      "type": "select",
+      "id": "highlight_position",
+      "label": "Highlight Style",
+      "options": [
+        {
+          "value": "full",
+          "label": "Full Background"
+        },
+        {
+          "value": "underline",
+          "label": "Underline"
+        }
+      ],
+      "default": "full",
+      "info": "Connected to theme accent colors"
+    },
+    {
+      "type": "range",
+      "id": "highlight_padding_vertical",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Highlight Padding (Vertical)",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "highlight_padding_horizontal",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Highlight Padding (Horizontal)",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "highlight_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Highlight Border Radius",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "spacing_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Spacing Top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Spacing Bottom",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Divider",
+      "category": "Layout"
+    }
+  ]
+}
+{% endschema %}

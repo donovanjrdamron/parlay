@@ -1,0 +1,862 @@
+{% comment %}
+  Renders product buy-buttons.
+  Accepts:
+  - product: {Object} product object.
+  - block: {Object} passing the block information.
+  - product_form_id: {String} product form id.
+  - section_id: {String} id of section to which this snippet belongs.
+  - show_pickup_availability:: {Boolean} for the pickup availability. If true the pickup availability is rendered, false - not rendered (optional).
+
+  Usage:
+  {% render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, show_pickup_availability: true %}
+{% endcomment %}
+<style>
+  #ProductSubmitButton-{{ section_id }} {
+    --atc-icon-size: {{ block.settings.button_icon_size | default: 20 }}px;
+    --atc-icon-color: {{ block.settings.button_icon_color | default: '#ffffff' }};
+    --atc-icon-gap: {{ block.settings.button_icon_gap | default: 8 }}px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: var(--atc-icon-gap, 8px) !important;
+  }
+
+  #ProductSubmitButton-{{ section_id }} > * {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+  }
+
+  #ProductSubmitButton-{{ section_id }} .material-icon {
+    font-size: var(--atc-icon-size, 20px) !important;
+    color: var(--atc-icon-color, #ffffff) !important;
+    width: var(--atc-icon-size, 20px) !important;
+    height: var(--atc-icon-size, 20px) !important;
+    max-height: var(--atc-icon-size, 20px) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
+    vertical-align: middle !important;
+    margin: 0 !important;
+  }
+
+  #ProductSubmitButton-{{ section_id }} .atc-button__icon-svg {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: var(--atc-icon-size, 20px) !important;
+    height: var(--atc-icon-size, 20px) !important;
+    max-height: var(--atc-icon-size, 20px) !important;
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
+    vertical-align: middle !important;
+    margin: 0 !important;
+  }
+
+  #ProductSubmitButton-{{ section_id }} .atc-button__icon-svg svg {
+    width: var(--atc-icon-size, 20px) !important;
+    height: var(--atc-icon-size, 20px) !important;
+    max-height: var(--atc-icon-size, 20px) !important;
+    fill: var(--atc-icon-color, #ffffff) !important;
+    color: var(--atc-icon-color, #ffffff) !important;
+    display: block !important;
+    vertical-align: middle !important;
+  }
+
+  #ProductSubmitButton-{{ section_id }} .atc-button__icon-svg svg path,
+  #ProductSubmitButton-{{ section_id }} .atc-button__icon-svg svg circle,
+  #ProductSubmitButton-{{ section_id }} .atc-button__icon-svg svg rect,
+  #ProductSubmitButton-{{ section_id }} .atc-button__icon-svg svg polygon {
+    fill: inherit;
+  }
+
+  #ProductSubmitButton-{{ section_id }} .button__label {
+    display: inline-flex !important;
+    align-items: center !important;
+    line-height: 1.2 !important;
+    vertical-align: middle !important;
+    margin: 0 !important;
+  }
+
+  #ProductSubmitButton-{{ section_id }} .main-atc__label {
+    gap: {{ block.settings.button_text_price_gap | default: 8 }}px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+
+  #ProductSubmitButton-{{ section_id }} .main-atc__label__text {
+    {% if block.settings.use_theme_colors == false %}
+    font-weight: {{ block.settings.button_text_font_weight | default: 400 }} !important;
+    font-size: {{ block.settings.button_text_font_size | default: 16 }}px !important;
+    {% if block.settings.button_text_color != blank %}
+    color: {{ block.settings.button_text_color }} !important;
+    {% endif %}
+    {% endif %}
+  }
+
+  #ProductSubmitButton-{{ section_id }} .main-atc__separator {
+    display: inline-flex !important;
+  }
+
+  /* Hide empty cart when loading */
+  cart-drawer.is-loading .cart__empty-text,
+  cart-drawer.is-loading .cart-drawer__empty,
+  cart-drawer.is-loading .cart__empty {
+    display: none !important;
+  }
+
+  #ProductSubmitButton-{{ section_id }} .main-atc-price-wrapper {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: {{ block.settings.button_price_gap | default: 6 }}px !important;
+  }
+
+  /* Override inherit rule for button prices */
+  #ProductSubmitButton-{{ section_id }} .main-atc-price {
+    {% if block.settings.button_price_color != blank %}
+    color: {{ block.settings.button_price_color }} !important;
+    {% endif %}
+    font-size: {{ block.settings.button_price_font_size | default: 16 }}px !important;
+    font-weight: {{ block.settings.button_price_font_weight | default: 600 }} !important;
+  }
+
+  #ProductSubmitButton-{{ section_id }} .main-atc-compare-price {
+    {% if block.settings.button_compare_price_color != blank %}
+    color: {{ block.settings.button_compare_price_color }} !important;
+    {% endif %}
+    text-decoration: line-through !important;
+    font-size: {{ block.settings.button_compare_price_font_size | default: 14 }}px !important;
+    font-weight: {{ block.settings.button_compare_price_font_weight | default: 400 }} !important;
+  }
+
+  #ProductSubmitButton-{{ section_id }} {
+    padding: {{ block.settings.button_padding_top | default: 12 }}px {{ block.settings.button_padding_right | default: 20 }}px {{ block.settings.button_padding_bottom | default: 12 }}px {{ block.settings.button_padding_left | default: 20 }}px !important;
+    border-radius: {{ block.settings.button_border_radius | default: 4 }}px !important;
+    border: {{ block.settings.button_border_width | default: 0 }}px solid {{ block.settings.button_border_color | default: '#000000' }} !important;
+    {% if block.settings.button_text_color != blank %}
+    color: {{ block.settings.button_text_color }} !important;
+    {% endif %}
+  }
+
+  {% if block.settings.enable_button_gradient %}
+    #ProductSubmitButton-{{ section_id }} {
+      background: {{ block.settings.button_gradient }} !important;
+      --color-button-text: 255, 255, 255;
+    }
+    #ProductSubmitButton-{{ section_id }}:hover {
+      opacity: 0.9 !important;
+    }
+  {% elsif block.settings.enable_custom_color and block.settings.use_theme_colors == false %}
+    #ProductSubmitButton-{{ section_id }} {
+      background: {{ block.settings.custom_color }} !important;
+      background-color: {{ block.settings.custom_color }} !important;
+      --color-button: {{ block.settings.custom_color.red }}, {{ block.settings.custom_color.green }}, {{ block.settings.custom_color.blue }};
+      --color-button-text: 255, 255, 255;
+    }
+    #ProductSubmitButton-{{ section_id }}:hover {
+      background: {{ block.settings.custom_color }} !important;
+      background-color: {{ block.settings.custom_color }} !important;
+      opacity: 0.9 !important;
+    }
+  {% endif %}
+</style>
+<script>
+// Preserve original button label when variants change
+document.addEventListener('DOMContentLoaded', function() {
+  const buttonLabel = document.querySelector('#ProductSubmitButton-{{ section_id }} .main-atc__label__text');
+  if (buttonLabel) {
+    const originalLabel = buttonLabel.getAttribute('data-original-label');
+    const soldoutLabel = buttonLabel.getAttribute('data-soldout-label');
+
+    // Listen for variant change events
+    document.addEventListener('variant-change', function(event) {
+      if (event.detail && event.detail.variant) {
+        const variant = event.detail.variant;
+        if (variant.available) {
+          buttonLabel.textContent = originalLabel;
+        } else {
+          buttonLabel.textContent = soldoutLabel;
+        }
+      }
+    });
+
+    // Also listen for button updates from Shopify's system
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'characterData' || mutation.type === 'childList') {
+          const currentText = buttonLabel.textContent.trim();
+          const addToCartTranslations = ['Add to cart', 'Add to Cart', 'ADD TO CART'];
+          // If button text was changed to a generic "Add to cart" but we have a custom label
+          if (addToCartTranslations.includes(currentText) && originalLabel && originalLabel !== currentText) {
+            buttonLabel.textContent = originalLabel;
+          }
+        }
+      });
+    });
+
+    observer.observe(buttonLabel, { characterData: true, childList: true, subtree: true });
+  }
+});
+
+// Enhanced cart handling for all products (with or without QB/variants)
+(function() {
+  let isSubmitting = false;
+
+  // Intercept all form submissions
+  document.addEventListener('submit', function(e) {
+    const form = e.target;
+
+    // Check if this is a product form
+    if (!form.classList.contains('product-form') && !form.querySelector('[name="add"]')) {
+      return;
+    }
+
+    // Check if coordinator is already handling this
+    if (window.ProductCoordinator && window.ProductCoordinator.state.isProcessing) {
+      // Coordinator is handling it
+      return;
+    }
+
+    // Check if another handler already processed this
+    if (e.defaultPrevented) {
+      return;
+    }
+
+    // Check if QB is handling this
+    const qbWrapper = document.querySelector('.qb-wrapper');
+    if (qbWrapper && qbWrapper.dataset.formId === form.id) {
+      // Let QB handle it
+      return;
+    }
+
+    // Always prevent default for product forms we're handling
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Prevent double submission
+    if (isSubmitting) {
+      return;
+    }
+
+    // Handle regular add to cart
+    const submitButton = form.querySelector('[type="submit"]');
+    if (!submitButton || submitButton.disabled) {
+      return;
+    }
+
+    isSubmitting = true;
+
+    // Show loading state immediately
+    const cartDrawer = document.querySelector('cart-drawer');
+    if (cartDrawer) {
+      // Add loading state to prevent empty cart from showing
+      cartDrawer.classList.add('is-loading');
+      cartDrawer.classList.remove('is-empty');
+
+      // Hide empty cart message immediately
+      const emptyMessages = cartDrawer.querySelectorAll('.cart__empty-text, .cart-drawer__empty, .cart__empty');
+      emptyMessages.forEach(msg => {
+        msg.style.display = 'none';
+      });
+    }
+
+    // Add loading to button
+    submitButton.classList.add('loading');
+    submitButton.disabled = true;
+
+    // Prepare form data
+    const formData = new FormData(form);
+
+    // Submit to cart
+    fetch('/cart/add.js', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to add to cart');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Fetch updated sections first
+      return fetch(`?sections=cart-drawer,cart-icon-bubble&timestamp=${Date.now()}`)
+        .then(res => res.json())
+        .then(sections => ({ data, sections }));
+    })
+    .then(({ data, sections }) => {
+      // Update cart content BEFORE opening drawer
+      if (sections && sections['cart-drawer']) {
+        const cartDrawer = document.querySelector('cart-drawer');
+        if (cartDrawer) {
+          const parser = new DOMParser();
+          const newDoc = parser.parseFromString(sections['cart-drawer'], 'text/html');
+
+          // Update content immediately before opening
+          const cartItems = cartDrawer.querySelector('.cart-items, [id*="cart-items"], .drawer__inner');
+          const newCartItems = newDoc.querySelector('.cart-items, [id*="cart-items"], .drawer__inner');
+
+          if (cartItems && newCartItems) {
+            cartItems.innerHTML = newCartItems.innerHTML;
+          } else {
+            const drawerContent = cartDrawer.querySelector('.drawer__content, .cart-drawer__content');
+            const newDrawerContent = newDoc.querySelector('.drawer__content, .cart-drawer__content');
+
+            if (drawerContent && newDrawerContent) {
+              drawerContent.innerHTML = newDrawerContent.innerHTML;
+            }
+          }
+
+          // Remove loading state
+          cartDrawer.classList.remove('is-loading', 'is-empty');
+          cartDrawer.classList.add('is-loaded');
+
+          // Now open the drawer with updated content
+          setTimeout(() => {
+            // Add animation classes
+            cartDrawer.classList.add('animate', 'active');
+            cartDrawer.setAttribute('open', '');
+            document.body.classList.add('overflow-hidden');
+
+            // Try native open method if available
+            if (typeof cartDrawer.open === 'function') {
+              cartDrawer.open();
+            } else {
+              // Fallback: trigger cart icon click
+              const cartIcon = document.querySelector('.header__icon--cart');
+              if (cartIcon) {
+                cartIcon.click();
+              }
+            }
+          }, 50);
+
+          // Show empty messages again if needed (after a delay)
+          setTimeout(() => {
+            const emptyMessages = cartDrawer.querySelectorAll('.cart__empty-text, .cart-drawer__empty, .cart__empty');
+            emptyMessages.forEach(msg => {
+              msg.style.display = '';
+            });
+          }, 500);
+        }
+      }
+
+      // Update cart bubble
+      if (sections && sections['cart-icon-bubble']) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(sections['cart-icon-bubble'], 'text/html');
+        const newBubble = doc.querySelector('.cart-count-bubble');
+        const cartIconBubble = document.querySelector('#cart-icon-bubble');
+
+        if (cartIconBubble && newBubble) {
+          const existingBubble = cartIconBubble.querySelector('.cart-count-bubble');
+          if (existingBubble) {
+            existingBubble.innerHTML = newBubble.innerHTML;
+          } else {
+            cartIconBubble.appendChild(newBubble.cloneNode(true));
+          }
+        }
+      }
+    })
+    .catch(error => {
+      // Silent error
+      alert('Failed to add to cart. Please try again.');
+    })
+    .finally(() => {
+      // Reset button state
+      submitButton.classList.remove('loading');
+      submitButton.disabled = false;
+
+      setTimeout(() => {
+        isSubmitting = false;
+      }, 300);
+    });
+  }, true);
+})();
+
+// =================================================================
+// BUY BUTTON PRICE CALCULATOR
+// Centralized price calculation based on QB and subscription state
+// =================================================================
+(function() {
+  'use strict';
+
+
+  // State
+  let currentState = {
+    variantId: null,
+    variantPrice: 0,
+    variantComparePrice: 0,
+    qbQuantity: 1,
+    qbDiscount: 0,
+    subscriptionActive: false,
+    subscriptionDiscount: 0
+  };
+
+  // Get variant data
+  function getVariantData() {
+    try {
+      const variantScripts = document.querySelectorAll('script[type="application/json"]');
+      for (let script of variantScripts) {
+        try {
+          const data = JSON.parse(script.textContent);
+          if (Array.isArray(data) && data.length > 0 && data[0].id) {
+            return data;
+          }
+        } catch(e) {
+          continue;
+        }
+      }
+    } catch(e) {
+      // Silent error
+    }
+    return [];
+  }
+
+  const variantData = getVariantData();
+
+  // Format price
+  function formatMoney(cents) {
+    return new Intl.NumberFormat('{{ shop.locale }}', {
+      style: 'currency',
+      currency: '{{ shop.currency }}',
+      minimumFractionDigits: 2
+    }).format(cents / 100);
+  }
+
+  // Update main display prices (not button prices)
+  function updateMainDisplayPrices(price, comparePrice) {
+
+    const formattedPrice = formatMoney(price);
+    const formattedCompare = comparePrice ? formatMoney(comparePrice) : null;
+
+    // Update main price selectors
+    const mainPriceSelectors = [
+      '.price-item--sale.main-price',
+      '.price-item--regular.main-price'
+    ];
+
+    mainPriceSelectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(el => {
+        if (!el.closest('.price__compare-price') && !el.classList.contains('main-comapre-price')) {
+          el.textContent = formattedPrice;
+        }
+      });
+    });
+
+    // Update compare prices
+    if (formattedCompare && comparePrice > price) {
+      document.querySelectorAll('.price__compare-price .price-item').forEach(el => {
+        el.textContent = formattedCompare;
+        el.style.display = '';
+        if (el.closest('.price__compare-price')) {
+          el.closest('.price__compare-price').style.display = '';
+        }
+      });
+    } else {
+      document.querySelectorAll('.price__compare-price').forEach(el => {
+        el.style.display = 'none';
+      });
+    }
+  }
+
+  // Calculate final price based on all discounts
+  function calculatePrice() {
+    const variant = variantData.find(v => v.id == currentState.variantId);
+    if (!variant) {
+      return null;
+    }
+
+
+    // Start with variant base price
+    let perUnitPrice = variant.price;
+    let perUnitComparePrice = variant.compare_at_price || 0;
+
+    // Apply QB discount if active
+    if (currentState.qbDiscount > 0) {
+      const qbMultiplier = (100 - currentState.qbDiscount) / 100;
+      perUnitPrice = Math.round(perUnitPrice * qbMultiplier);
+      if (perUnitComparePrice > 0) {
+        perUnitComparePrice = Math.round(perUnitComparePrice * qbMultiplier);
+      }
+    }
+
+    // Multiply by quantity
+    let totalPrice = perUnitPrice * currentState.qbQuantity;
+    let totalComparePrice = perUnitComparePrice > 0 ? perUnitComparePrice * currentState.qbQuantity : 0;
+
+    // Apply subscription discount if active
+    let finalPrice = totalPrice;
+    if (currentState.subscriptionActive && currentState.subscriptionDiscount > 0) {
+      const subMultiplier = (100 - currentState.subscriptionDiscount) / 100;
+      finalPrice = Math.round(totalPrice * subMultiplier);
+    }
+
+    const result = {
+      finalPrice: finalPrice,
+      comparePrice: totalComparePrice > finalPrice ? totalComparePrice : 0,
+      savings: totalComparePrice > finalPrice ? totalComparePrice - finalPrice : 0
+    };
+
+
+    return result;
+  }
+
+  // Update buy button price display
+  function updateButtonPrice() {
+    const prices = calculatePrice();
+    if (!prices) return;
+
+    const formattedPrice = formatMoney(prices.finalPrice);
+    const formattedCompare = prices.comparePrice > 0 ? formatMoney(prices.comparePrice) : null;
+
+    // Update main ATC button price
+    const mainAtcPrice = document.getElementById('main-atc-price-{{ section.id }}');
+    if (mainAtcPrice) {
+      mainAtcPrice.textContent = formattedPrice;
+    }
+
+    // Update sticky ATC button price if exists
+    const stickyAtcPrice = document.getElementById('sticky-atc-price-{{ section.id }}');
+    if (stickyAtcPrice) {
+      stickyAtcPrice.textContent = formattedPrice;
+    }
+
+    // Update main display prices
+    updateMainDisplayPrices(prices.finalPrice, prices.comparePrice);
+
+    // Update compare price if shown in button
+    if (formattedCompare && prices.comparePrice > prices.finalPrice) {
+      const compareElements = document.querySelectorAll('.main-atc-compare-price');
+      compareElements.forEach(el => {
+        el.textContent = formattedCompare;
+        el.style.display = '';
+      });
+    } else {
+      const compareElements = document.querySelectorAll('.main-atc-compare-price');
+      compareElements.forEach(el => {
+        el.style.display = 'none';
+      });
+    }
+  }
+
+  // Get current variant ID
+  function getCurrentVariantId() {
+    const form = document.querySelector('form[action*="/cart/add"]');
+    const variantInput = form?.querySelector('input[name="id"]');
+    return variantInput?.value;
+  }
+
+  // Initialize current variant
+  function initVariant() {
+    const variantId = getCurrentVariantId();
+    if (variantId) {
+      currentState.variantId = variantId;
+      const variant = variantData.find(v => v.id == variantId);
+      if (variant) {
+        currentState.variantPrice = variant.price;
+        currentState.variantComparePrice = variant.compare_at_price || 0;
+      }
+    }
+  }
+
+  // Initialize subscription state from DOM
+  function initSubscription() {
+    // Check if a subscription plan is selected (has .selected class or checked radio)
+    const selectedPlan = document.querySelector('.plan-option.selected') ||
+                         document.querySelector('.plan-option input[type="radio"]:checked')?.closest('.plan-option');
+
+    if (selectedPlan) {
+      const planType = selectedPlan.getAttribute('data-plan');
+      const isSubscription = planType?.includes('subscription');
+
+      if (isSubscription) {
+        // Get subscription discount from block settings
+        {%- assign sub_discount = 10 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'subscription_widget_no_variant' -%}
+            {%- assign sub_discount = block.settings.sub_widget_subscription_discount | default: 10 -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        currentState.subscriptionActive = true;
+        currentState.subscriptionDiscount = {{ sub_discount }};
+
+      }
+    }
+  }
+
+  // Initialize QB state from DOM
+  function initQB() {
+    const qbActive = document.querySelector('.qb-wrapper .qb-option.qb-active');
+    if (qbActive) {
+      const quantity = parseInt(qbActive.dataset.qty) || 1;
+      const optionNum = parseInt(qbActive.dataset.option) || 1;
+
+      // Get QB discount settings
+      {%- assign qb2_discount = 10 -%}
+      {%- assign qb3_discount = 15 -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'qb_row_no_variant' -%}
+          {%- assign qb2_discount = block.settings.qb2_discount | default: 10 -%}
+          {%- assign qb3_discount = block.settings.qb3_discount | default: 15 -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      let discount = 0;
+      switch(optionNum) {
+        case 1: discount = 0; break;
+        case 2: discount = {{ qb2_discount }}; break;
+        case 3: discount = {{ qb3_discount }}; break;
+      }
+
+      currentState.qbQuantity = quantity;
+      currentState.qbDiscount = discount;
+    }
+  }
+
+  // Listen for QB state changes
+  document.addEventListener('qb:state-changed', function(e) {
+    if (e.detail.quantity) {
+      currentState.qbQuantity = e.detail.quantity;
+    }
+    if (e.detail.qbDiscount !== undefined) {
+      currentState.qbDiscount = e.detail.qbDiscount;
+    }
+    updateButtonPrice();
+  });
+
+  // Listen for subscription state changes
+  document.addEventListener('subscription:state-changed', function(e) {
+    if (e.detail.subscriptionActive !== undefined) {
+      currentState.subscriptionActive = e.detail.subscriptionActive;
+    }
+    if (e.detail.subscriptionDiscount !== undefined) {
+      currentState.subscriptionDiscount = e.detail.subscriptionDiscount;
+    }
+    updateButtonPrice();
+  });
+
+  // Listen for variant changes
+  const form = document.querySelector('form[action*="/cart/add"]');
+  const variantInput = form?.querySelector('input[name="id"]');
+  if (variantInput) {
+    const observer = new MutationObserver(() => {
+      const newVariantId = variantInput.value;
+      if (newVariantId && newVariantId !== currentState.variantId) {
+        currentState.variantId = newVariantId;
+        const variant = variantData.find(v => v.id == newVariantId);
+        if (variant) {
+          currentState.variantPrice = variant.price;
+          currentState.variantComparePrice = variant.compare_at_price || 0;
+        }
+
+        // Update prices immediately with current QB and subscription state
+        updateButtonPrice();
+      }
+    });
+    observer.observe(variantInput, { attributes: true, attributeFilter: ['value'] });
+  }
+
+  // Initialize all state
+  initVariant();
+  initSubscription();
+  initQB();
+
+  // Initial price update after a short delay to ensure all DOM elements are ready
+  setTimeout(() => {
+    updateButtonPrice();
+  }, 100);
+
+})();
+</script>
+<div
+  {{ block.shopify_attributes }}
+  style="--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;"
+>
+  {%- if product != blank -%}
+    <product-form
+      id="ProductForm-{{ section.id }}"
+      class="product-form main-product-form"
+      data-section="{{ section.id }}"
+      data-options="{{ product.options | join: ',' }}"
+      data-main="{{ main_product }}"
+    >
+      <div class="product-form__error-message-wrapper" role="alert" hidden>
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          class="icon icon-error"
+          viewBox="0 0 13 13"
+        >
+          <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+          <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+          <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+          <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+        </svg>
+        <span class="product-form__error-message"></span>
+      </div>
+
+      {%- form 'product',
+        product,
+        id: product_form_id,
+        class: 'form',
+        novalidate: 'novalidate',
+        data-type: 'add-to-cart-form'
+      -%}
+        <div class="hidden product-form__variants" id="product-form-{{ section.id }}__variants" data-values=""></div>
+        <input
+          type="hidden"
+          name="id"
+          value="{{ product.selected_or_first_available_variant.id }}"
+          class="product-variant-id"
+          {% if block.settings.skip_cart %}
+            data-skip-cart="true"
+          {% endif %}
+        >
+        <input
+          type="hidden"
+          name="quantity"
+          value="1"
+          min="1"
+          class="product-form__quantity-input"
+        >
+        <div class="product-form__buttons{% if block.settings.uppercase_text %} product-form__buttons--uppercase{% endif %}">
+          {%- liquid
+            assign check_against_inventory = true
+            if product.selected_or_first_available_variant.inventory_management != 'shopify' or product.selected_or_first_available_variant.inventory_policy == 'continue'
+              assign check_against_inventory = false
+            endif
+            if product.selected_or_first_available_variant.quantity_rule.min > product.selected_or_first_available_variant.inventory_quantity and check_against_inventory
+              assign quantity_rule_soldout = true
+            endif
+          -%}
+          <div class='product-form__quantity-and-btn product-form__quantity-and-btn--{{ quantity_atc_append }} product-form__quantity-and-btn--{{ quantity_atc_append_heights }}'>
+            {% if quantity_selector_html != blank and quantity_atc_append != 'none' %}
+              {{ quantity_selector_html }}
+            {% endif %}
+            <button
+              id="ProductSubmitButton-{{ section_id }}"
+              type="submit"
+              name="add"
+              class="atc-button product-form__submit button button--full-width button--margin-x{% if main_product %} main-product-atc{% else %} featured-product-atc-{{ section.id }}{% endif %}"
+              {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}
+                disabled
+                data-unavailable="true"
+              {% endif %}
+              {% if block.settings.skip_cart %}
+                data-skip-cart="true"
+              {% endif %}
+              data-required-fields="0"
+              data-valid-fields="0"
+            >
+              <span class="main-atc__error" style="display:none;"></span>
+              {% if block.settings.button_icon_position == 'before' %}
+                {% if block.settings.button_custom_icon != blank %}
+                  <span class="atc-button__icon-svg">
+                    {{ block.settings.button_custom_icon }}
+                  </span>
+                {% elsif block.settings.button_icon != blank %}
+                  {% render 'material-icon', icon: block.settings.button_icon, filled: block.settings.button_icon_filled %}
+                {% endif %}
+              {% endif %}
+              <span class="main-atc__label button__label">
+                <span class="main-atc__label__text" data-original-label="{%- if block.settings.button_label != blank -%}{{ block.settings.button_label }}{%- else -%}{{ 'products.product.add_to_cart' | t }}{%- endif -%}" data-soldout-label="{{ 'products.product.sold_out' | t }}">
+                  {%- if product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%}
+                    {{ 'products.product.sold_out' | t }}
+                  {%- else -%}
+                    {%- if block.settings.button_label != blank -%}
+                      {{ block.settings.button_label }}
+                    {%- else -%}
+                      {{ 'products.product.add_to_cart' | t }}
+                    {%- endif -%}
+                  {%- endif -%}
+                </span>
+                {% if block.settings.display_price %}
+                  {% if block.settings.button_price_separator != blank %}
+                    <span class="main-atc__separator{%- if product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%} hidden{% endif %}" style="margin: 0 {{ block.settings.button_price_separator_gap | default: 8 }}px;">{{ block.settings.button_price_separator }}</span>
+                  {% endif %}
+                  <span class="main-atc-price-wrapper{%- if product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%} hidden{% endif %}">
+                    {% if block.settings.show_compare_price_in_button and product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+                      <span class="main-atc-compare-price">{{ product.selected_or_first_available_variant.compare_at_price | money }}</span>
+                    {% endif %}
+                    <span id="main-atc-price-{{ section.id }}" class='main-atc-price'>{{ product.selected_or_first_available_variant.price | money }}</span>
+                  </span>
+                {% endif %}
+              </span>
+              {% if block.settings.button_icon_position == 'after' %}
+                {% if block.settings.button_custom_icon != blank %}
+                  <span class="atc-button__icon-svg">
+                    {{ block.settings.button_custom_icon }}
+                  </span>
+                {% elsif block.settings.button_icon != blank %}
+                  {% render 'material-icon', icon: block.settings.button_icon, filled: block.settings.button_icon_filled %}
+                {% endif %}
+              {% endif %}
+              <div class="loading-overlay__spinner hidden">
+                <svg
+                  aria-hidden="true"
+                  focusable="false"
+                  class="spinner"
+                  viewBox="0 0 66 66"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                </svg>
+              </div>
+            </button>
+          </div>
+          {%- if block.settings.show_dynamic_checkout -%}
+            {{ form | payment_button }}
+          {%- endif -%}
+        </div>
+      {%- endform -%}
+    </product-form>
+  {%- else -%}
+    <div class="product-form">
+      <div class="product-form__buttons form">
+        <button
+          type="submit"
+          name="add"
+          class="product-form__submit button button--full-width button--primary"
+          disabled
+        >
+          {{ 'products.product.sold_out' | t }}
+        </button>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if show_pickup_availability -%}
+    {{ 'component-pickup-availability.css' | asset_url | stylesheet_tag }}
+
+    {%- assign pick_up_availabilities = product.selected_or_first_available_variant.store_availabilities
+      | where: 'pick_up_enabled', true
+    -%}
+
+    <pickup-availability
+      class="product__pickup-availabilities no-js-hidden quick-add-hidden"
+      {% if product.selected_or_first_available_variant.available and pick_up_availabilities.size > 0 %}
+        available
+      {% endif %}
+      data-root-url="{{ routes.root_url }}"
+      data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+      data-has-only-default-variant="{{ product.has_only_default_variant }}"
+    >
+      <template>
+        <pickup-availability-preview class="pickup-availability-preview">
+          {% render 'icon-unavailable' %}
+          <div class="pickup-availability-info">
+            <p class="caption-large">{{ 'products.product.pickup_availability.unavailable' | t }}</p>
+            <button class="pickup-availability-button link link--text underlined-link">
+              {{ 'products.product.pickup_availability.refresh' | t }}
+            </button>
+          </div>
+        </pickup-availability-preview>
+      </template>
+    </pickup-availability>
+
+    <script src="{{ 'pickup-availability.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+</div>

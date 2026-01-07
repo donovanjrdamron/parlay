@@ -1,0 +1,160 @@
+{% comment %}
+  Social Subheading Snippet
+  Displays subheading text with optional social platform icon and border
+  Usage: {% render 'social-subheading', block: block %}
+{% endcomment %}
+
+{%- liquid
+  assign block_id = block.id | default: 'default'
+
+  # Content
+  assign text_before = block.settings.text_before
+  assign number_text = block.settings.number_text
+  assign text_after = block.settings.text_after
+
+  # Styling
+  assign subheading_color = block.settings.subheading_color
+  assign subheading_font_size_desktop = block.settings.subheading_font_size_desktop
+  assign subheading_font_size_mobile = block.settings.subheading_font_size_mobile
+  assign subheading_font_weight = block.settings.subheading_font_weight
+  assign number_font_weight = block.settings.number_font_weight
+  assign subheading_text_transform = block.settings.subheading_text_transform
+  assign icon_size_desktop = block.settings.icon_size_desktop
+  assign icon_size_mobile = block.settings.icon_size_mobile
+
+  # Social Platform & Border
+  assign social_platform = block.settings.social_platform
+  assign show_border = block.settings.show_border
+  assign border_width = block.settings.border_width
+  assign border_radius = block.settings.border_radius
+  assign subheading_bg_color = block.settings.subheading_bg_color
+  assign use_custom_border_color = block.settings.use_custom_border_color
+  assign custom_border_color = block.settings.custom_border_color
+  assign enable_gradient_border = block.settings.enable_gradient_border
+  assign custom_gradient_border = block.settings.custom_gradient_border
+
+  # Spacing
+  assign margin_top = block.settings.margin_top
+  assign margin_bottom = block.settings.margin_bottom
+
+  # Alignment
+  assign text_alignment = block.settings.text_alignment
+
+  # Padding
+  assign padding_vertical = block.settings.padding_vertical
+  assign padding_horizontal = block.settings.padding_horizontal
+  assign padding_vertical_mobile = block.settings.padding_vertical_mobile
+  assign padding_horizontal_mobile = block.settings.padding_horizontal_mobile
+-%}
+
+{% if text_before != blank or number_text != blank or text_after != blank %}
+  <div class="social-subheading-wrapper social-subheading-{{ block_id }}" {{ block.shopify_attributes }}>
+    <style>
+      /* Subheading Wrapper */
+      .social-subheading-{{ block_id }} {
+        display: flex;
+        justify-content: {{ text_alignment | default: 'center' }};
+        margin-top: {{ margin_top | default: 0 }}px;
+        margin-bottom: {{ margin_bottom | default: 20 }}px;
+      }
+
+      /* Subheading with Border */
+      .social-subheading-{{ block_id }} .sh-subheading {
+        color: {{ subheading_color | default: '#666666' }};
+        font-size: {{ subheading_font_size_desktop | default: 14 }}px;
+        font-weight: {{ subheading_font_weight | default: '500' }};
+        line-height: 1.5;
+        text-align: center;
+        text-transform: {{ subheading_text_transform | default: 'uppercase' }};
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        padding: {{ padding_vertical | default: 4 }}px {{ padding_horizontal | default: 20 }}px;
+        border-radius: {{ border_radius | default: 30 }}px;
+        {% if show_border %}
+          {% if use_custom_border_color %}
+            border: {{ border_width }}px solid {{ custom_border_color }};
+            background-color: {{ subheading_bg_color | default: 'transparent' }};
+          {% elsif enable_gradient_border %}
+            border: {{ border_width }}px solid transparent;
+            background: linear-gradient({{ subheading_bg_color | default: 'transparent' }}, {{ subheading_bg_color | default: 'transparent' }}) padding-box,
+                        {{ custom_gradient_border }} border-box;
+          {% else %}
+            border: {{ border_width }}px solid transparent;
+            background: linear-gradient({{ subheading_bg_color | default: 'transparent' }}, {{ subheading_bg_color | default: 'transparent' }}) padding-box,
+                        var(--border-gradient) border-box;
+          {% endif %}
+        {% else %}
+          background-color: {{ subheading_bg_color | default: 'transparent' }};
+        {% endif %}
+      }
+
+      /* Social Icon */
+      .social-subheading-{{ block_id }} .sh-social-icon {
+        flex-shrink: 0;
+        display: block;
+        width: {{ icon_size_desktop | default: 14 }}px;
+        height: {{ icon_size_desktop | default: 14 }}px;
+      }
+
+      /* Number Text (Bold) */
+      .social-subheading-{{ block_id }} .sh-number-text {
+        font-weight: {{ number_font_weight }};
+      }
+
+      /* Platform-specific border gradients */
+      .social-subheading-{{ block_id }} .sh-subheading[data-platform="instagram"] {
+        --border-gradient: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
+      }
+
+      .social-subheading-{{ block_id }} .sh-subheading[data-platform="facebook"] {
+        --border-gradient: linear-gradient(45deg, #1877F2, #1877F2);
+      }
+
+      .social-subheading-{{ block_id }} .sh-subheading[data-platform="tiktok"] {
+        --border-gradient: linear-gradient(45deg, #00f2ea, #ff0050);
+      }
+
+      /* Mobile Styles */
+      @media screen and (max-width: 749px) {
+        .social-subheading-{{ block_id }} .sh-subheading {
+          font-size: {{ subheading_font_size_mobile | default: 12 }}px;
+          padding: {{ padding_vertical_mobile | default: 4 }}px {{ padding_horizontal_mobile | default: 15 }}px;
+        }
+
+        .social-subheading-{{ block_id }} .sh-social-icon {
+          width: {{ icon_size_mobile | default: 12 }}px;
+          height: {{ icon_size_mobile | default: 12 }}px;
+        }
+      }
+    </style>
+
+    <div class="sh-subheading" data-platform="{{ social_platform }}">
+      {% unless social_platform == 'none' %}
+        {% case social_platform %}
+          {% when 'instagram' %}
+            <svg class="sh-social-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="instagramGradient-{{ block_id }}" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#833ab4"></stop>
+                  <stop offset="50%" stop-color="#fd1d1d"></stop>
+                  <stop offset="100%" stop-color="#fcb045"></stop>
+                </linearGradient>
+              </defs>
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" fill="url(#instagramGradient-{{ block_id }})"></path>
+            </svg>
+          {% when 'facebook' %}
+            <svg class="sh-social-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2"></path>
+            </svg>
+          {% when 'tiktok' %}
+            <img class="sh-social-icon" src="https://cdn4.iconfinder.com/data/icons/social-media-flat-7/64/Social-media_Tiktok-512.png" alt="TikTok" loading="lazy">
+        {% endcase %}
+      {% endunless %}
+      <span class="sh-subheading-text">
+        {% if text_before != blank %}{{ text_before }}{{ " " }}{% endif %}{% if number_text != blank %}<span class="sh-number-text">{{ number_text }}</span>{{ " " }}{% endif %}{% if text_after != blank %}{{ text_after }}{% endif %}
+      </span>
+    </div>
+  </div>
+{% endif %}

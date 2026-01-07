@@ -1,0 +1,48 @@
+/* ========================================
+   ACCENT COLOR COMPLETE OVERRIDE
+   Replaces ALL accent colors with custom settings
+   ======================================== */
+
+:root {
+  /* Override Accent 1 with button background color */
+  --color-base-accent-1: 0, 0, 0;
+
+  /* Override Accent 2 with button text color */
+  --color-base-accent-2: 255, 255, 255;
+
+  /* Override gradient accents */
+  
+    --gradient-base-accent-1: #000000;
+    --gradient-base-accent-2: #000000;
+  
+
+  /* Override all uses of accent color variables */
+  --accent-color: var(--color-base-accent-1);
+  --accent-2-color: var(--color-base-accent-2);
+}
+
+/* Remove accent colors from all elements that might use them */
+* {
+  --accent-color: 0, 0, 0;
+  --accent-2-color: 255, 255, 255;
+}
+
+/* Specific overrides for elements that use accent colors */
+.color-accent-1 {
+  background: #000000;
+  --color-foreground: 255, 255, 255;
+}
+
+.color-accent-2 {
+  background: #000000;
+  --color-foreground: 255, 255, 255;
+}
+
+/* Override select and pickers to not use accent colors */
+.select__select,
+select,
+.product-form__input select {
+  --accent-color: 0, 0, 0;
+  --accent-2-color: 0, 0, 0;
+  --pickers-overlay-opacity: 0;
+}

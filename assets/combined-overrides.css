@@ -1,0 +1,25 @@
+/* Combined overrides for faster loading */
+/* This combines accent-color, button, price, and select overrides */
+
+/* Add any critical override styles here that were in separate files */
+/* This reduces HTTP requests from 4 to 1 */
+
+.button {
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+.price {
+  font-weight: 600;
+}
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%23000' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 3rem;
+}

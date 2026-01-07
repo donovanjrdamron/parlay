@@ -1,0 +1,256 @@
+{% liquid
+  assign item_count = 0
+  if block.settings.top_text_1 != blank or block.settings.bottom_text_1 != blank
+    assign item_count = item_count  | plus: 1
+  endif
+  if block.settings.top_text_2 != blank or block.settings.bottom_text_2 != blank
+    assign item_count = item_count  | plus: 1
+  endif
+  if block.settings.top_text_3 != blank or block.settings.bottom_text_3 != blank
+    assign item_count = item_count  | plus: 1
+  endif
+  if block.settings.top_text_4 != blank or block.settings.bottom_text_4 != blank
+    assign item_count = item_count  | plus: 1
+  endif
+%}
+
+<dynamic-dates
+  data-date-format="{{ block.settings.date_format }}"
+  data-day-labels="{{ block.settings.days_labels }}"
+  data-month-labels="{{ block.settings.months_labels }}"
+  {{ block.shopify_attributes }}
+  style="--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;
+         --margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;
+         --item-count: {{ item_count }};"
+  class='shipping-checkpoints{% if item_count == 4 %} shipping-checkpoints--has-4{% endif %}'
+>
+  <div
+    class='shipping-checkpoints__bar'
+    style="--item-count-sub: {{ item_count | minus: 1 }};
+           --bar-height: {{ block.settings.bar_height | default: 4 }}px;
+           {% if block.settings.bar_style == 'gradient' %}
+             --bar-background: linear-gradient(to right, {{ block.settings.bar_gradient_start | default: '#FF6B6B' }}, {{ block.settings.bar_gradient_end | default: '#4ECDC4' }});
+           {% else %}
+             --bar-background: {{ block.settings.bar_color | default: '#000000' }};
+           {% endif %}"
+  >
+    &nbsp
+  </div>
+  {% unless block.settings.top_text_1 == blank and block.settings.bottom_text_1 == blank %}
+    <div class='shipping-checkpoint'>
+      {% if block.settings.icon_1_image != blank %}
+        <div class='shipping-checkpoint__icon flex-center' style="--icon-bg: {{ block.settings.icon_bg_color | default: '#000000' }}; --icon-color: {{ block.settings.icon_color | default: '#FFFFFF' }};">
+          {{ block.settings.icon_1_image | image_url: width: 500 | image_tag: loading: 'lazy' }}
+        </div>
+      {% elsif block.settings.icon_1 != blank %}
+        <div class='shipping-checkpoint__icon flex-center' style="--icon-bg: {{ block.settings.icon_bg_color | default: '#000000' }}; --icon-color: {{ block.settings.icon_color | default: '#FFFFFF' }};">
+          {% render 'material-icon', icon: block.settings.icon_1, filled: block.settings.filled_icon_1 %}
+        </div>
+      {% endif %}
+      <p 
+        class='shipping-checkpoint__top'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.top_text_1 }}"
+        data-min-days="{{ block.settings.min_days_1 }}"
+        data-max-days="{{ block.settings.max_days_1 }}"
+      >
+        {{ block.settings.top_text_1 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+      <p 
+        class='shipping-checkpoint__bottom'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.bottom_text_1 }}"
+        data-min-days="{{ block.settings.min_days_1 }}"
+        data-max-days="{{ block.settings.max_days_1 }}"
+      >
+        {{ block.settings.bottom_text_1 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+    </div>
+  {% endunless %}
+  {% unless block.settings.top_text_2 == blank and block.settings.bottom_text_2 == blank %}
+    <div class='shipping-checkpoint'>
+      {% if block.settings.icon_2_image != blank %}
+        <div class='shipping-checkpoint__icon flex-center' style="--icon-bg: {{ block.settings.icon_bg_color | default: '#000000' }}; --icon-color: {{ block.settings.icon_color | default: '#FFFFFF' }};">
+          {{ block.settings.icon_2_image | image_url: width: 500 | image_tag: loading: 'lazy' }}
+        </div>
+      {% elsif block.settings.icon_2 != blank %}
+        <div class='shipping-checkpoint__icon flex-center' style="--icon-bg: {{ block.settings.icon_bg_color | default: '#000000' }}; --icon-color: {{ block.settings.icon_color | default: '#FFFFFF' }};">
+          {% render 'material-icon', icon: block.settings.icon_2, filled: block.settings.filled_icon_2 %}
+        </div>
+      {% endif %}
+      <p 
+        class='shipping-checkpoint__top'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.top_text_2 }}"
+        data-min-days="{{ block.settings.min_days_2 }}"
+        data-max-days="{{ block.settings.max_days_2 }}"
+      >
+        {{ block.settings.top_text_2 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+      <p 
+        class='shipping-checkpoint__bottom'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.bottom_text_2 }}"
+        data-min-days="{{ block.settings.min_days_2 }}"
+        data-max-days="{{ block.settings.max_days_2 }}"
+      >
+        {{ block.settings.bottom_text_2 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+    </div>
+  {% endunless %}
+  {% unless block.settings.top_text_3 == blank and block.settings.bottom_text_3 == blank %}
+    <div class='shipping-checkpoint'>
+      {% if block.settings.icon_3_image != blank %}
+        <div class='shipping-checkpoint__icon flex-center' style="--icon-bg: {{ block.settings.icon_bg_color | default: '#000000' }}; --icon-color: {{ block.settings.icon_color | default: '#FFFFFF' }};">
+          {{ block.settings.icon_3_image | image_url: width: 500 | image_tag: loading: 'lazy' }}
+        </div>
+      {% elsif block.settings.icon_3 != blank %}
+        <div class='shipping-checkpoint__icon flex-center' style="--icon-bg: {{ block.settings.icon_bg_color | default: '#000000' }}; --icon-color: {{ block.settings.icon_color | default: '#FFFFFF' }};">
+          {% render 'material-icon', icon: block.settings.icon_3, filled: block.settings.filled_icon_3 %}
+        </div>
+      {% endif %}
+      <p 
+        class='shipping-checkpoint__top'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.top_text_3 }}"
+        data-min-days="{{ block.settings.min_days_3 }}"
+        data-max-days="{{ block.settings.max_days_3 }}"
+      >
+        {{ block.settings.top_text_3 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+      <p 
+        class='shipping-checkpoint__bottom'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.bottom_text_3 }}"
+        data-min-days="{{ block.settings.min_days_3 }}"
+        data-max-days="{{ block.settings.max_days_3 }}"
+      >
+        {{ block.settings.bottom_text_3 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+    </div>
+  {% endunless %}
+  {% unless block.settings.top_text_4 == blank and block.settings.bottom_text_4 == blank %}
+    <div class='shipping-checkpoint'>
+      {% if block.settings.icon_4 != blank %}
+        <div class='shipping-checkpoint__icon flex-center' style="--icon-bg: {{ block.settings.icon_bg_color | default: '#000000' }}; --icon-color: {{ block.settings.icon_color | default: '#FFFFFF' }};">
+          {% render 'material-icon', icon: block.settings.icon_4, filled: block.settings.filled_icon_4 %}
+        </div>
+      {% endif %}
+      <p 
+        class='shipping-checkpoint__top'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.top_text_4 }}"
+        data-min-days="{{ block.settings.min_days_4 }}"
+        data-max-days="{{ block.settings.max_days_4 }}"
+      >
+        {{ block.settings.top_text_4 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+      <p 
+        class='shipping-checkpoint__bottom'
+        data-dynamic-date='true'
+        data-text="{{ block.settings.bottom_text_4 }}"
+        data-min-days="{{ block.settings.min_days_4 }}"
+        data-max-days="{{ block.settings.max_days_4 }}"
+      >
+        {{ block.settings.bottom_text_4 | replace: '[start_date]', '-' | replace: '[end_date]', '-' }}
+      </p>
+    </div>
+  {% endunless %}
+</dynamic-dates>
+
+<style>
+  .shipping-checkpoints {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 2rem 1.5rem;
+    margin-top: var(--margin-top, 2.4rem);
+    margin-bottom: var(--margin-bottom, 2.4rem);
+  }
+
+  .shipping-checkpoints__bar {
+    position: absolute;
+    top: 2.5rem;
+    left: 1.5rem;
+    right: 1.5rem;
+    height: var(--bar-height, 4px);
+    background: var(--bar-background, #000000);
+    z-index: 0;
+  }
+
+  .shipping-checkpoint {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    flex: 1;
+    text-align: center;
+  }
+
+  .shipping-checkpoint__icon {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    background: var(--icon-bg, #000000);
+    color: var(--icon-color, #FFFFFF);
+    flex-shrink: 0;
+  }
+
+  .shipping-checkpoint__icon .material-icon {
+    font-size: 2.4rem;
+    color: var(--icon-color, #FFFFFF);
+  }
+
+  .shipping-checkpoint__icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .shipping-checkpoint__top {
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  .shipping-checkpoint__bottom {
+    font-size: 1.2rem;
+    line-height: 1.3;
+    margin: 0;
+    opacity: 0.8;
+  }
+
+  @media (max-width: 749px) {
+    .shipping-checkpoints {
+      padding: 1.5rem 1rem;
+    }
+
+    .shipping-checkpoints__bar {
+      top: 2rem;
+      left: 1rem;
+      right: 1rem;
+    }
+
+    .shipping-checkpoint__icon {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+
+    .shipping-checkpoint__icon .material-icon {
+      font-size: 1.8rem;
+    }
+
+    .shipping-checkpoint__top {
+      font-size: 1.2rem;
+    }
+
+    .shipping-checkpoint__bottom {
+      font-size: 1rem;
+    }
+  }
+</style>

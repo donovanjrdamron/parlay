@@ -1,0 +1,1136 @@
+{% comment %}
+  Tabs Section
+  Mobile: Horizontal tab buttons with content slider
+  Desktop: Vertical layout with tab buttons and scrollable content
+{% endcomment %}
+
+<section class="tabs section-{{ section.id }}" data-section-id="{{ section.id }}" data-show-only-current="{{ section.settings.show_only_current_active }}">
+  <div class="container page-width">
+    <div class="ss-content-wrapper">
+
+      {% comment %} Heading {% endcomment %}
+      {% if section.settings.heading_before != blank or section.settings.highlighted_text != blank or section.settings.heading_after != blank %}
+        <div class="ss-header-wrapper ss-align-{{ section.settings.heading_text_align }}">
+          {% case section.settings.highlight_position %}
+            {% when 'above' %}
+              {% if section.settings.highlighted_text != blank %}
+                <span class="ss-highlighted-text ss-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+              <{{ section.settings.heading_tag }} class="ss-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+            {% when 'below' %}
+              <{{ section.settings.heading_tag }} class="ss-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+              {% if section.settings.highlighted_text != blank %}
+                <span class="ss-highlighted-text ss-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+            {% when 'inline_first' %}
+              <{{ section.settings.heading_tag }} class="ss-heading">
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="ss-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_before != blank %}{{ " " }}{{ section.settings.heading_before }}{% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+            {% when 'inline_second' %}
+              <{{ section.settings.heading_tag }} class="ss-heading">
+                {% if section.settings.heading_before != blank %}{{ section.settings.heading_before }}{{ " " }}{% endif %}
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="ss-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+          {% endcase %}
+        </div>
+      {% endif %}
+
+      {% comment %} Subtext {% endcomment %}
+      {% if section.settings.subtext != blank %}
+        <div class="ss-subtext-wrapper ss-align-{{ section.settings.heading_text_align }}">
+          <p class="ss-subtext">{{ section.settings.subtext }}</p>
+        </div>
+      {% endif %}
+
+      {% if section.blocks.size > 0 %}
+
+        {% comment %} Mobile: Tabs Container {% endcomment %}
+        <div class="ss-mobile-container">
+
+          {% comment %} Mobile: Tab Buttons {% endcomment %}
+          <div class="ss-progress-mobile">
+          {% for block in section.blocks %}
+            {% if block.type == 'step' %}
+              <button class="ss-tab-button ss-button-position-{{ section.settings.button_text_position_mobile }} {% if forloop.first %}ss-active{% endif %}" data-step="{{ forloop.index }}">
+
+                {% comment %} Icon/Image {% endcomment %}
+                {% if block.settings.button_icon_type != 'none' %}
+                  <span class="ss-button-icon">
+                    {% if block.settings.button_icon_type == 'image' %}
+                      {% if block.settings.button_icon_image != blank %}
+                        <img src="{{ block.settings.button_icon_image | image_url: width: 100 }}" alt="{{ block.settings.tab_button_text }}" class="ss-button-icon-image">
+                      {% else %}
+                        <svg class="ss-button-icon-placeholder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                      {% endif %}
+                    {% elsif block.settings.button_icon_type == 'svg' %}
+                      <span class="ss-button-icon-svg">{{ block.settings.button_icon_svg }}</span>
+                    {% elsif block.settings.button_icon_type == 'icon' %}
+                      <span class="material-icons ss-button-material-icon">{{ block.settings.button_icon_name | default: 'star' }}</span>
+                    {% endif %}
+                  </span>
+                {% endif %}
+
+                {% comment %} Text {% endcomment %}
+                <span class="ss-button-text">{{ block.settings.tab_button_text | default: "Tab" }}</span>
+
+              </button>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        {% comment %} Mobile: Tab Content {% endcomment %}
+        <div class="ss-tab-content-container">
+          {% for block in section.blocks %}
+            {% if block.type == 'step' %}
+              <div class="ss-tab-content {% if forloop.first %}ss-active{% endif %}" data-tab-index="{{ forloop.index }}" {{ block.shopify_attributes }}>
+
+                {% comment %} Image {% endcomment %}
+                <div class="ss-step-image-wrapper">
+                  {% if block.settings.image != blank %}
+                    <img
+                      src="{{ block.settings.image | image_url: width: 800 }}"
+                      srcset="{{ block.settings.image | image_url: width: 400 }} 400w,
+                              {{ block.settings.image | image_url: width: 600 }} 600w,
+                              {{ block.settings.image | image_url: width: 800 }} 800w"
+                      sizes="(max-width: 768px) 90vw, 600px"
+                      alt="{{ block.settings.step_heading | escape }}"
+                      width="{{ block.settings.image.width }}"
+                      height="{{ block.settings.image.height }}"
+                      loading="lazy"
+                      class="ss-step-image"
+                    >
+                  {% else %}
+                    <div class="ss-image-placeholder">
+                      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                  {% endif %}
+                </div>
+
+                {% comment %} Content {% endcomment %}
+                <div class="ss-step-content">
+                  {% if block.settings.step_heading != blank %}
+                    <h3 class="ss-step-heading">{{ block.settings.step_heading }}</h3>
+                  {% endif %}
+                  {% if block.settings.step_text != blank %}
+                    <div class="ss-step-text rte">{{ block.settings.step_text }}</div>
+                  {% endif %}
+                </div>
+
+              </div>
+            {% elsif block.type == 'custom_html' %}
+              <div class="ss-tab-content ss-custom-html-tab {% if forloop.first %}ss-active{% endif %}" data-tab-index="{{ forloop.index }}" {{ block.shopify_attributes }}>
+                <div class="ss-custom-html">
+                  {{ block.settings.html_content }}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        </div>
+
+        {% comment %} Desktop: Vertical Tabs Container {% endcomment %}
+        <div class="ss-desktop-container">
+          
+          {% comment %} Desktop Tab Buttons {% endcomment %}
+          <div class="ss-desktop-progress">
+            {% for block in section.blocks %}
+              {% if block.type == 'step' %}
+                <button class="ss-desktop-tab-button ss-button-position-{{ section.settings.button_text_position_desktop }} {% if forloop.first %}ss-active{% endif %}" data-desktop-step="{{ forloop.index }}">
+
+                  {% comment %} Icon/Image {% endcomment %}
+                  {% if block.settings.button_icon_type != 'none' %}
+                    <span class="ss-button-icon">
+                      {% if block.settings.button_icon_type == 'image' %}
+                        {% if block.settings.button_icon_image != blank %}
+                          <img src="{{ block.settings.button_icon_image | image_url: width: 100 }}" alt="{{ block.settings.tab_button_text }}" class="ss-button-icon-image">
+                        {% else %}
+                          <svg class="ss-button-icon-placeholder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                        {% endif %}
+                      {% elsif block.settings.button_icon_type == 'svg' %}
+                        <span class="ss-button-icon-svg">{{ block.settings.button_icon_svg }}</span>
+                      {% elsif block.settings.button_icon_type == 'icon' %}
+                        <span class="material-icons ss-button-material-icon">{{ block.settings.button_icon_name | default: 'star' }}</span>
+                      {% endif %}
+                    </span>
+                  {% endif %}
+
+                  {% comment %} Text {% endcomment %}
+                  <span class="ss-button-text">{{ block.settings.tab_button_text | default: "Tab" }}</span>
+
+                </button>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          {% comment %} Desktop Tab Content {% endcomment %}
+          <div class="ss-desktop-tab-content-container">
+            {% for block in section.blocks %}
+              {% if block.type == 'step' %}
+                <div class="ss-desktop-tab-content {% if forloop.first %}ss-active{% endif %}" data-desktop-tab-index="{{ forloop.index }}" {{ block.shopify_attributes }}>
+
+                  {% comment %} Tab Content {% endcomment %}
+                  <div class="ss-step-main">
+
+                    {% comment %} Image {% endcomment %}
+                    <div class="ss-step-image-wrapper">
+                      {% if block.settings.image != blank %}
+                        <img
+                          src="{{ block.settings.image | image_url: width: 800 }}"
+                          srcset="{{ block.settings.image | image_url: width: 400 }} 400w,
+                                  {{ block.settings.image | image_url: width: 600 }} 600w,
+                                  {{ block.settings.image | image_url: width: 800 }} 800w"
+                          sizes="(max-width: 768px) 90vw, 600px"
+                          alt="{{ block.settings.step_heading | escape }}"
+                          width="{{ block.settings.image.width }}"
+                          height="{{ block.settings.image.height }}"
+                          loading="lazy"
+                          class="ss-step-image"
+                        >
+                      {% else %}
+                        <div class="ss-image-placeholder">
+                          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                        </div>
+                      {% endif %}
+                    </div>
+
+                    {% comment %} Text Content {% endcomment %}
+                    <div class="ss-step-content">
+                      {% if block.settings.step_heading != blank %}
+                        <h3 class="ss-step-heading">{{ block.settings.step_heading }}</h3>
+                      {% endif %}
+                      {% if block.settings.step_text != blank %}
+                        <div class="ss-step-text rte">{{ block.settings.step_text }}</div>
+                      {% endif %}
+                    </div>
+
+                  </div>
+                </div>
+              {% elsif block.type == 'custom_html' %}
+                <div class="ss-desktop-tab-content ss-custom-html-desktop {% if forloop.first %}ss-active{% endif %}" data-desktop-tab-index="{{ forloop.index }}" {{ block.shopify_attributes }}>
+                  <div class="ss-custom-html">
+                    {{ block.settings.html_content }}
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+{% comment %} Google Material Icons {% endcomment %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+<style>
+  /* ===========================
+     Section Base
+     =========================== */
+  .section-{{ section.id }} {
+    {% if section.settings.use_theme_colors %}
+      {% if settings.global_section_use_gradient_background %}
+        background: var(--gradient-background);
+      {% else %}
+        background-color: {{ settings.global_section_background_color }};
+      {% endif %}
+    {% else %}
+      {% if section.settings.enable_gradient_background %}
+        background: {{ section.settings.gradient_background }};
+      {% else %}
+        background-color: {{ section.settings.background_color }};
+      {% endif %}
+    {% endif %}
+    padding-top: {{ section.settings.section_padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.section_padding_bottom_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }} {
+      padding-top: {{ section.settings.section_padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.section_padding_bottom_desktop }}px;
+    }
+  }
+
+  /* ===========================
+     Alignment Utilities
+     =========================== */
+  .section-{{ section.id }} .ss-align-left {
+    text-align: left;
+  }
+
+  .section-{{ section.id }} .ss-align-center {
+    text-align: center;
+  }
+
+  .section-{{ section.id }} .ss-align-right {
+    text-align: right;
+  }
+
+  /* ===========================
+     Heading
+     =========================== */
+  .section-{{ section.id }} .ss-heading {
+    font-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+    letter-spacing: {{ settings.heading_letter_spacing | divided_by: 1000.0 }}em;
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.heading_color }};
+    {% else %}
+      color: {{ section.settings.heading_color }};
+    {% endif %}
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.heading_font_size_desktop }}px;
+      font-weight: {{ settings.heading_font_weight }};
+    {% else %}
+      font-size: {{ section.settings.heading_font_size_desktop }}px;
+      font-weight: {{ section.settings.heading_font_weight }};
+    {% endif %}
+    line-height: 1.2;
+    margin: 0 0 {{ section.settings.heading_margin_bottom }}px 0;
+  }
+
+  /* ===========================
+     Highlighted Text
+     =========================== */
+  .section-{{ section.id }} .ss-highlighted-text {
+    display: inline-block;
+    font-family: {{ settings.highlighted_text_font.family }}, {{ settings.highlighted_text_font.fallback_families }};
+    text-transform: {{ settings.highlighted_text_transform }};
+    {% if section.settings.use_theme_colors %}
+      {% if settings.highlighted_text_gradient_enabled %}
+        background: {{ settings.highlighted_text_gradient }};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      {% else %}
+        color: {{ settings.highlighted_text_solid_color }};
+      {% endif %}
+    {% else %}
+      {% if section.settings.highlighted_gradient_enabled %}
+        background: {{ section.settings.highlighted_gradient }};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      {% else %}
+        color: {{ section.settings.highlighted_color }};
+      {% endif %}
+    {% endif %}
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.highlighted_text_font_size_desktop }}px;
+      font-weight: {{ settings.highlighted_text_font_weight }};
+      letter-spacing: {{ settings.highlighted_text_letter_spacing | divided_by: 1000.0 }}em;
+      font-style: {{ settings.highlighted_text_font_style }};
+    {% else %}
+      font-size: {{ section.settings.highlighted_font_size_desktop }}px;
+      font-weight: {{ section.settings.highlighted_font_weight }};
+      letter-spacing: {{ settings.highlighted_text_letter_spacing | divided_by: 1000.0 }}em;
+      font-style: {{ settings.highlighted_text_font_style }};
+    {% endif %}
+  }
+
+  .section-{{ section.id }} .ss-highlighted-separate {
+    display: block;
+    width: 100%;
+    margin-bottom: {{ section.settings.highlighted_spacing }}px;
+  }
+
+  /* ===========================
+     Subtext
+     =========================== */
+  .section-{{ section.id }} .ss-subtext {
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.text_color }};
+    {% else %}
+      color: {{ section.settings.subtext_color }};
+    {% endif %}
+    font-size: {{ section.settings.subtext_font_size_mobile }}px;
+    line-height: 1.6;
+    margin: 0 0 {{ section.settings.subtext_margin_bottom }}px 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }} .ss-subtext {
+      font-size: {{ section.settings.subtext_font_size_desktop }}px;
+    }
+  }
+
+  /* ===========================
+     Mobile Container
+     =========================== */
+  .section-{{ section.id }} .ss-mobile-container {
+    display: block;
+  }
+
+  /* ===========================
+     Mobile Tab Buttons
+     =========================== */
+  .section-{{ section.id }} .ss-progress-mobile {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: {{ section.settings.progress_spacing_mobile }}px;
+    gap: {{ section.settings.button_gap_mobile }}px;
+    flex-wrap: wrap;
+    padding: {{ section.settings.button_wrap_padding }}px;
+    border-radius: {{ section.settings.button_wrap_border_radius }}px;
+    border: {{ section.settings.button_wrap_border_width }}px solid {{ section.settings.button_wrap_border_color }};
+  }
+
+  .section-{{ section.id }} .ss-tab-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: {{ section.settings.button_padding_vertical_mobile }}px {{ section.settings.button_padding_horizontal_mobile }}px;
+    background: {{ section.settings.progress_circle_inactive_bg }};
+    border: {{ section.settings.progress_circle_border_width }}px solid {{ section.settings.progress_circle_border_color }};
+    border-radius: 8px;
+    font-size: {{ section.settings.button_inactive_font_size_mobile }}px;
+    font-weight: {{ section.settings.button_inactive_font_weight }};
+    color: {{ section.settings.progress_circle_text_color }};
+    transition: all 0.3s ease;
+    cursor: pointer;
+    user-select: none;
+    text-align: {{ section.settings.button_text_align_mobile }};
+    font-family: inherit;
+    gap: {{ section.settings.button_icon_text_gap_mobile }}px;
+  }
+
+  /* Button position layouts - Mobile */
+  .section-{{ section.id }} .ss-tab-button.ss-button-position-top {
+    flex-direction: column-reverse;
+  }
+
+  .section-{{ section.id }} .ss-tab-button.ss-button-position-bottom {
+    flex-direction: column;
+  }
+
+  .section-{{ section.id }} .ss-tab-button.ss-button-position-left {
+    flex-direction: row-reverse;
+  }
+
+  .section-{{ section.id }} .ss-tab-button.ss-button-position-right {
+    flex-direction: row;
+  }
+
+  .section-{{ section.id }} .ss-tab-button:hover {
+    opacity: 0.8;
+  }
+
+  .section-{{ section.id }} .ss-tab-button.ss-active {
+    background: {{ section.settings.progress_circle_active_bg }};
+    color: {{ section.settings.progress_circle_active_text_color }};
+    border-color: {{ section.settings.progress_circle_active_border_color }};
+    font-size: {{ section.settings.button_active_font_size_mobile }}px;
+    font-weight: {{ section.settings.button_active_font_weight }};
+  }
+
+  /* Button icon styles */
+  .section-{{ section.id }} .ss-button-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ section.settings.button_icon_color_inactive }};
+  }
+
+  .section-{{ section.id }} .ss-tab-button.ss-active .ss-button-icon {
+    color: {{ section.settings.button_icon_color_active }};
+  }
+
+  .section-{{ section.id }} .ss-button-material-icon {
+    font-size: {{ section.settings.button_icon_size_mobile }}px;
+    width: {{ section.settings.button_icon_size_mobile }}px;
+    height: {{ section.settings.button_icon_size_mobile }}px;
+  }
+
+  .section-{{ section.id }} .ss-button-icon-svg {
+    font-size: {{ section.settings.button_icon_size_mobile }}px;
+    width: {{ section.settings.button_icon_size_mobile }}px;
+    height: {{ section.settings.button_icon_size_mobile }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .section-{{ section.id }} .ss-button-icon-svg svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+
+  .section-{{ section.id }} .ss-button-icon-image {
+    width: {{ section.settings.button_image_size_mobile }}px;
+    height: {{ section.settings.button_image_size_mobile }}px;
+    object-fit: contain;
+    border-radius: {{ section.settings.button_image_border_radius }}px;
+  }
+
+  .section-{{ section.id }} .ss-button-icon-placeholder {
+    width: {{ section.settings.button_image_size_mobile }}px;
+    height: {{ section.settings.button_image_size_mobile }}px;
+    opacity: 0.3;
+    border-radius: {{ section.settings.button_image_border_radius }}px;
+  }
+
+  /* Hide button text on mobile if disabled */
+  {% unless section.settings.button_enable_text_mobile %}
+  .section-{{ section.id }} .ss-tab-button .ss-button-text {
+    display: none;
+  }
+  {% endunless %}
+
+  /* ===========================
+     Mobile Tab Content
+     =========================== */
+  .section-{{ section.id }} .ss-tab-content-container {
+    margin-top: {{ section.settings.progress_spacing_mobile }}px;
+  }
+
+  .section-{{ section.id }} .ss-tab-content {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .section-{{ section.id }} .ss-tab-content.ss-active {
+    display: block;
+    opacity: 1;
+  }
+
+  /* ===========================
+     Desktop: Vertical Tabs (Hidden on Mobile)
+     =========================== */
+  .section-{{ section.id }} .ss-desktop-container {
+    display: none;
+  }
+
+  /* ===========================
+     Tab Image
+     =========================== */
+  .section-{{ section.id }} .ss-step-image-wrapper {
+    width: 100%;
+    aspect-ratio: {{ section.settings.image_aspect_ratio }};
+    overflow: hidden;
+    border-radius: {{ section.settings.image_border_radius }}px;
+    margin-bottom: {{ section.settings.image_spacing_mobile }}px;
+  }
+
+  .section-{{ section.id }} .ss-step-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .section-{{ section.id }} .ss-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .section-{{ section.id }} .ss-image-placeholder svg {
+    width: 50%;
+    height: 50%;
+    opacity: 0.3;
+  }
+
+  /* ===========================
+     Tab Content
+     =========================== */
+  .section-{{ section.id }} .ss-step-content {
+    padding: 12px;
+    background: transparent;
+    border-radius: 8px;
+  }
+
+  .section-{{ section.id }} .ss-step-heading {
+    font-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+    font-size: 20px;
+    font-weight: 600;
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.heading_color }};
+    {% else %}
+      color: #ffffff;
+    {% endif %}
+    margin: 0 0 12px 0;
+    line-height: 1.3;
+  }
+
+  .section-{{ section.id }} .ss-step-text {
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    font-size: 14px;
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.text_color }};
+    {% else %}
+      color: #ffffff;
+    {% endif %}
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ===========================
+     Custom HTML
+     =========================== */
+  .section-{{ section.id }} .ss-custom-html {
+    width: 100%;
+  }
+
+  .section-{{ section.id }} .ss-custom-html-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+  }
+
+  .section-{{ section.id }} .ss-custom-html-step {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ===========================
+     Desktop Responsive
+     =========================== */
+  @media screen and (min-width: 750px) {
+
+    /* Hide mobile container */
+    .section-{{ section.id }} .ss-mobile-container {
+      display: none;
+    }
+
+    /* Desktop Container - Vertical Stack */
+    .section-{{ section.id }} .ss-desktop-container {
+      display: flex;
+      flex-direction: column;
+      gap: {{ section.settings.progress_to_content_gap }}px;
+      align-items: center;
+    }
+
+    /* Desktop Tab Buttons (Horizontal, at top) */
+    .section-{{ section.id }} .ss-desktop-progress {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: {{ section.settings.button_gap_desktop }}px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: {{ section.settings.button_wrap_padding }}px;
+      border-radius: {{ section.settings.button_wrap_border_radius }}px;
+      border: {{ section.settings.button_wrap_border_width }}px solid {{ section.settings.button_wrap_border_color }};
+    }
+
+    .section-{{ section.id }} .ss-desktop-tab-button {
+      width: {{ section.settings.desktop_tab_button_width }}px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: {{ section.settings.button_padding_vertical_desktop }}px {{ section.settings.button_padding_horizontal_desktop }}px;
+      background: {{ section.settings.progress_circle_inactive_bg }};
+      border: {{ section.settings.progress_circle_border_width }}px solid {{ section.settings.progress_circle_border_color }};
+      border-radius: 8px;
+      font-size: {{ section.settings.button_inactive_font_size_desktop }}px;
+      font-weight: {{ section.settings.button_inactive_font_weight }};
+      color: {{ section.settings.progress_circle_text_color }};
+      transition: all 0.3s ease;
+      cursor: pointer;
+      user-select: none;
+      text-align: {{ section.settings.button_text_align_desktop }};
+      font-family: inherit;
+      gap: {{ section.settings.button_icon_text_gap_desktop }}px;
+    }
+
+    /* Desktop icon sizes */
+    .section-{{ section.id }} .ss-desktop-tab-button .ss-button-material-icon {
+      font-size: {{ section.settings.button_icon_size_desktop }}px;
+      width: {{ section.settings.button_icon_size_desktop }}px;
+      height: {{ section.settings.button_icon_size_desktop }}px;
+    }
+
+    .section-{{ section.id }} .ss-desktop-tab-button .ss-button-icon-svg {
+      font-size: {{ section.settings.button_icon_size_desktop }}px;
+      width: {{ section.settings.button_icon_size_desktop }}px;
+      height: {{ section.settings.button_icon_size_desktop }}px;
+    }
+
+    /* Desktop image sizes */
+    .section-{{ section.id }} .ss-desktop-tab-button .ss-button-icon-image {
+      width: {{ section.settings.button_image_size_desktop }}px;
+      height: {{ section.settings.button_image_size_desktop }}px;
+    }
+
+    .section-{{ section.id }} .ss-desktop-tab-button .ss-button-icon-placeholder {
+      width: {{ section.settings.button_image_size_desktop }}px;
+      height: {{ section.settings.button_image_size_desktop }}px;
+    }
+
+    /* Hide button text on desktop if disabled */
+    {% unless section.settings.button_enable_text_desktop %}
+    .section-{{ section.id }} .ss-desktop-tab-button .ss-button-text {
+      display: none;
+    }
+    {% endunless %}
+
+    /* Button position layouts - Desktop */
+    .section-{{ section.id }} .ss-desktop-tab-button.ss-button-position-top {
+      flex-direction: column-reverse;
+    }
+
+    .section-{{ section.id }} .ss-desktop-tab-button.ss-button-position-bottom {
+      flex-direction: column;
+    }
+
+    .section-{{ section.id }} .ss-desktop-tab-button.ss-button-position-left {
+      flex-direction: row-reverse;
+    }
+
+    .section-{{ section.id }} .ss-desktop-tab-button.ss-button-position-right {
+      flex-direction: row;
+    }
+
+    .section-{{ section.id }} .ss-desktop-tab-button:hover {
+      opacity: 0.9;
+    }
+
+    .section-{{ section.id }} .ss-desktop-tab-button.ss-active {
+      background: {{ section.settings.progress_circle_active_bg }};
+      color: {{ section.settings.progress_circle_active_text_color }};
+      border-color: {{ section.settings.progress_circle_active_border_color }};
+      font-size: {{ section.settings.button_active_font_size_desktop }}px;
+      font-weight: {{ section.settings.button_active_font_weight }};
+    }
+
+    /* Desktop Tab Content Container */
+    .section-{{ section.id }} .ss-desktop-tab-content-container {
+      flex: 1;
+      width: 100%;
+      max-width: {{ section.settings.desktop_content_container_max_width }}px;
+      border: {{ section.settings.desktop_container_border_width }}px solid {{ section.settings.desktop_container_border_color }};
+      border-radius: {{ section.settings.desktop_container_border_radius }}px;
+      padding: {{ section.settings.desktop_container_padding }}px;
+    }
+
+    .section-{{ section.id }} .ss-desktop-tab-content {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .section-{{ section.id }} .ss-desktop-tab-content.ss-active {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Tab Main Content */
+    .section-{{ section.id }} .ss-step-main {
+      display: flex;
+      gap: {{ section.settings.desktop_content_gap }}px;
+      align-items: {{ section.settings.desktop_content_alignment }};
+    }
+
+    .section-{{ section.id }} .ss-step-image-wrapper {
+      flex: 0 0 auto;
+      width: {{ section.settings.image_width_desktop }}%;
+      max-width: {{ section.settings.image_max_width_desktop }}px;
+      max-height: {{ section.settings.image_max_height_desktop }}px;
+      margin-bottom: 0;
+    }
+
+    .section-{{ section.id }} .ss-step-image-wrapper .ss-step-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      max-height: {{ section.settings.image_max_height_desktop }}px;
+    }
+
+    .section-{{ section.id }} .ss-step-content {
+      flex: 1;
+      padding: 16px;
+    }
+
+    .section-{{ section.id }} .ss-step-heading {
+      font-size: 24px;
+    }
+
+    .section-{{ section.id }} .ss-step-text {
+      font-size: 16px;
+    }
+
+  }
+
+  /* Mobile Responsive Typography */
+  @media screen and (max-width: 749px) {
+    .section-{{ section.id }} .ss-heading {
+      {% if settings.enable_global_typography %}
+        font-size: {{ settings.heading_font_size_mobile }}px;
+      {% else %}
+        font-size: {{ section.settings.heading_font_size_mobile }}px;
+      {% endif %}
+    }
+
+    .section-{{ section.id }} .ss-highlighted-text {
+      {% if settings.enable_global_typography %}
+        font-size: {{ settings.highlighted_text_font_size_mobile }}px;
+      {% else %}
+        font-size: {{ section.settings.highlighted_font_size_mobile }}px;
+      {% endif %}
+    }
+  }
+</style>
+
+<script>
+(function() {
+  const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+  if (!section) return;
+
+  const tabButtons = section.querySelectorAll('.ss-tab-button');
+  const tabContents = section.querySelectorAll('.ss-tab-content');
+  const desktopTabButtons = section.querySelectorAll('.ss-desktop-tab-button');
+  const desktopTabContents = section.querySelectorAll('.ss-desktop-tab-content');
+
+  const showOnlyCurrent = section.getAttribute('data-show-only-current') === 'true';
+
+  // Mobile: Tab button click handlers
+  tabButtons.forEach((button, index) => {
+    button.addEventListener('click', () => {
+      // Update button states
+      tabButtons.forEach((btn, btnIndex) => {
+        if (showOnlyCurrent) {
+          // Only highlight clicked button
+          if (btnIndex === index) {
+            btn.classList.add('ss-active');
+          } else {
+            btn.classList.remove('ss-active');
+          }
+        } else {
+          // Highlight all buttons up to clicked
+          if (btnIndex <= index) {
+            btn.classList.add('ss-active');
+          } else {
+            btn.classList.remove('ss-active');
+          }
+        }
+      });
+
+      // Show corresponding content
+      tabContents.forEach((content, contentIndex) => {
+        if (contentIndex === index) {
+          content.classList.add('ss-active');
+        } else {
+          content.classList.remove('ss-active');
+        }
+      });
+    });
+  });
+
+  // Desktop: Tab button click handlers
+  desktopTabButtons.forEach((button, index) => {
+    button.addEventListener('click', () => {
+      // Update button states
+      desktopTabButtons.forEach((btn, btnIndex) => {
+        if (showOnlyCurrent) {
+          // Only highlight clicked button
+          if (btnIndex === index) {
+            btn.classList.add('ss-active');
+          } else {
+            btn.classList.remove('ss-active');
+          }
+        } else {
+          // Highlight all buttons up to clicked
+          if (btnIndex <= index) {
+            btn.classList.add('ss-active');
+          } else {
+            btn.classList.remove('ss-active');
+          }
+        }
+      });
+
+      // Show corresponding content
+      desktopTabContents.forEach((content, contentIndex) => {
+        if (contentIndex === index) {
+          content.classList.add('ss-active');
+        } else {
+          content.classList.remove('ss-active');
+        }
+      });
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{"name":"Tabs","tag":"section","class":"section-tabs","settings": [
+ {"type":"checkbox","id":"use_theme_colors","label":"Use Theme Background Color","default": true
+ },
+ {"type":"header","content":"Section Heading"},
+ {"type":"text","id":"heading_before","label":"Heading Text (Before Highlight)","default":"add your"},
+ {"type":"text","id":"highlighted_text","label":"Highlighted Text","default":"title here"},
+ {"type":"text","id":"heading_after","label":"Heading Text (After Highlight)"},
+ {"type":"select","id":"highlight_position","label":"Highlight Position","options": [
+ {"value":"inline_first","label":"Inline (First)"},
+ {"value":"inline_second","label":"Inline (Second)"},
+ {"value":"above","label":"Above Heading"},
+ {"value":"below","label":"Below Heading"}
+ ],"default":"inline_second"},
+ {"type":"select","id":"heading_tag","label":"Heading Tag","options": [
+ {"value":"h1","label":"H1"},
+ {"value":"h2","label":"H2"},
+ {"value":"h3","label":"H3"},
+ {"value":"h4","label":"H4"},
+ {"value":"h5","label":"H5"},
+ {"value":"h6","label":"H6"}
+ ],"default":"h2"},
+ {"type":"select","id":"heading_text_align","label":"Heading Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"header","content":"Heading Typography"},
+ {"type":"color","id":"heading_color","label":"Heading Color","default":"#ffffff","info":"Used when 'Use Theme Background Color' is OFF. Falls back to global heading color when ON and global typography is enabled."},
+ {"type":"range","id":"heading_font_size_desktop","min": 24,"max": 96,"step": 2,"unit":"px","label":"Heading Font Size (Desktop)","default": 48,"info":"Used when global typography is OFF. Falls back to global setting when ON."},
+ {"type":"range","id":"heading_font_size_mobile","min": 20,"max": 60,"step": 2,"unit":"px","label":"Heading Font Size (Mobile)","default": 32,"info":"Used when global typography is OFF. Falls back to global setting when ON."},
+ {"type":"select","id":"heading_font_weight","label":"Heading Font Weight","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"},
+ {"value":"900","label":"Black"}
+ ],"default":"500","info":"Used when global typography is OFF. Falls back to global setting when ON."},
+ {"type":"range","id":"heading_margin_bottom","min": 0,"max": 60,"step": 4,"unit":"px","label":"Heading Bottom Margin","default": 16
+ },
+ {"type":"header","content":"Highlighted Text Settings"},
+ {"type":"checkbox","id":"highlighted_gradient_enabled","label":"Enable Highlight Gradient","default": false
+ },
+ {"type":"color","id":"highlighted_color","label":"Highlight Color","default":"#fdfdfd"},
+ {"type":"color_background","id":"highlighted_gradient","label":"Highlight Gradient","default":"linear-gradient(90deg,#ef4444,#f97316)"},
+ {"type":"range","id":"highlighted_font_size_desktop","min": 24,"max": 96,"step": 2,"unit":"px","label":"Highlight Font Size (Desktop)","default": 48,"info":"Used when global typography is OFF."},
+ {"type":"range","id":"highlighted_font_size_mobile","min": 20,"max": 60,"step": 2,"unit":"px","label":"Highlight Font Size (Mobile)","default": 32,"info":"Used when global typography is OFF."},
+ {"type":"select","id":"highlighted_font_weight","label":"Highlight Font Weight","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"},
+ {"value":"900","label":"Black"}
+ ],"default":"500","info":"Used when global typography is OFF."},
+ {"type":"range","id":"highlighted_spacing","min": 0,"max": 20,"step": 2,"unit":"px","label":"Highlight Spacing","default": 8
+ },
+ {"type":"header","content":"Subtext"},
+ {"type":"textarea","id":"subtext","label":"Subtext","default":"add your intro text here"},
+ {"type":"color","id":"subtext_color","label":"Subtext Color","default":"#ffffff"},
+ {"type":"range","id":"subtext_font_size_mobile","min": 12,"max": 24,"step": 1,"unit":"px","label":"Subtext Font Size (Mobile)","default": 14
+ },
+ {"type":"range","id":"subtext_font_size_desktop","min": 14,"max": 28,"step": 1,"unit":"px","label":"Subtext Font Size (Desktop)","default": 16
+ },
+ {"type":"range","id":"subtext_margin_bottom","min": 0,"max": 60,"step": 4,"unit":"px","label":"Subtext Bottom Margin","default": 32
+ },
+ {"type":"header","content":"Tab Buttons Styling"},
+ {"type":"range","id":"progress_spacing_mobile","min": 10,"max": 60,"step": 2,"unit":"px","label":"Tab Buttons Bottom Spacing (Mobile)","default": 30
+ },
+ {"type":"color","id":"progress_circle_inactive_bg","label":"Button Background (Inactive)","default":"#ffffff"},
+ {"type":"color","id":"progress_circle_active_bg","label":"Button Background (Active)","default":"#000000"},
+ {"type":"color","id":"progress_circle_text_color","label":"Button Text Color (Inactive)","default":"#666666"},
+ {"type":"color","id":"progress_circle_active_text_color","label":"Button Text Color (Active)","default":"#ffffff"},
+ {"type":"range","id":"progress_circle_border_width","min": 0,"max": 5,"step": 1,"unit":"px","label":"Button Border Width","default": 2
+ },
+ {"type":"color","id":"progress_circle_border_color","label":"Button Border Color (Inactive)","default":"#dddddd"},
+ {"type":"color","id":"progress_circle_active_border_color","label":"Button Border Color (Active)","default":"#000000"},
+ {"type":"checkbox","id":"show_only_current_active","label":"Show Only Current Tab as Active","default": true,"info":"When enabled, only the current tab is highlighted. When disabled, all tabs up to the current one are highlighted."},
+ {"type":"header","content":"Mobile Content Slider"},
+ {"type":"range","id":"slide_width_mobile","min": 70,"max": 100,"step": 5,"unit":"%","label":"Slide Width (Mobile)","default": 100
+ },
+ {"type":"range","id":"slide_gap_mobile","min": 0,"max": 40,"step": 4,"unit":"px","label":"Slide Gap (Mobile)","default": 16
+ },
+ {"type":"range","id":"scrollbar_spacing","min": 8,"max": 40,"step": 2,"unit":"px","label":"Scrollbar Top Spacing","default": 8
+ },
+ {"type":"range","id":"scrollbar_height","min": 2,"max": 12,"step": 1,"unit":"px","label":"Scrollbar Height","default": 2
+ },
+ {"type":"color","id":"scrollbar_track_color","label":"Scrollbar Track Color","default":"#e0e0e0"},
+ {"type":"color","id":"scrollbar_thumb_color","label":"Scrollbar Thumb Color","default":"#000000"},
+ {"type":"range","id":"scrollbar_border_radius","min": 0,"max": 100,"step": 1,"unit":"px","label":"Scrollbar Border Radius","default": 59
+ },
+ {"type":"header","content":"️ Desktop Vertical Slider"},
+ {"type":"range","id":"desktop_slider_height","min": 30,"max": 100,"step": 5,"unit":"vh","label":"Vertical Slider Height","default": 55,"info":"Height of the scrollable area"},
+ {"type":"range","id":"desktop_scrollbar_width","min": 4,"max": 16,"step": 2,"unit":"px","label":"Scrollbar Width","default": 8
+ },
+ {"type":"color","id":"desktop_scrollbar_track_color","label":"Scrollbar Track Color","default":"#e0e0e0"},
+ {"type":"color","id":"desktop_scrollbar_thumb_color","label":"Scrollbar Thumb Color","default":"#000000"},
+ {"type":"range","id":"desktop_scrollbar_border_radius","min": 0,"max": 10,"step": 1,"unit":"px","label":"Scrollbar Border Radius","default": 4
+ },
+ {"type":"range","id":"progress_to_content_gap","min": 10,"max": 80,"step": 5,"unit":"px","label":"Gap Between Tab Buttons and Content (Desktop)","default": 30,"info":"Space between tab buttons and content slider on desktop"},
+ {"type":"header","content":"Button Wrap Settings"},
+ {"type":"range","id":"button_wrap_padding","min": 0,"max": 40,"step": 2,"unit":"px","label":"Button Wrap Padding","default": 6,"info":"Padding around the button wrapper container"},
+ {"type":"range","id":"button_wrap_border_radius","min": 0,"max": 50,"step": 2,"unit":"px","label":"Button Wrap Border Radius","default": 14
+ },
+ {"type":"range","id":"button_wrap_border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Button Wrap Border Width","default": 1
+ },
+ {"type":"color","id":"button_wrap_border_color","label":"Button Wrap Border Color","default":"#000000"},
+ {"type":"range","id":"button_gap_mobile","min": 0,"max": 30,"step": 2,"unit":"px","label":"Gap Between Buttons (Mobile)","default": 4,"info":"Space between tab buttons on mobile"},
+ {"type":"range","id":"button_gap_desktop","min": 0,"max": 40,"step": 2,"unit":"px","label":"Gap Between Buttons (Desktop)","default": 12,"info":"Space between tab buttons on desktop"},
+ {"type":"header","content":"️ Button Typography - Inactive"},
+ {"type":"range","id":"button_inactive_font_size_mobile","min": 10,"max": 40,"step": 1,"unit":"px","label":"Inactive Button Font Size (Mobile)","default": 12,"info":"Font size for inactive tab buttons on mobile"},
+ {"type":"range","id":"button_inactive_font_size_desktop","min": 10,"max": 50,"step": 1,"unit":"px","label":"Inactive Button Font Size (Desktop)","default": 14,"info":"Font size for inactive tab buttons on desktop"},
+ {"type":"select","id":"button_inactive_font_weight","label":"Inactive Button Font Weight","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"500"},
+ {"type":"header","content":"️ Button Typography - Active"},
+ {"type":"range","id":"button_active_font_size_mobile","min": 10,"max": 40,"step": 1,"unit":"px","label":"Active Button Font Size (Mobile)","default": 12,"info":"Font size for active tab buttons on mobile"},
+ {"type":"range","id":"button_active_font_size_desktop","min": 10,"max": 50,"step": 1,"unit":"px","label":"Active Button Font Size (Desktop)","default": 14,"info":"Font size for active tab buttons on desktop"},
+ {"type":"select","id":"button_active_font_weight","label":"Active Button Font Weight","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"600"},
+ {"type":"header","content":"Button Padding"},
+ {"type":"range","id":"button_padding_vertical_mobile","min": 0,"max": 30,"step": 2,"unit":"px","label":"Mobile Button Padding (Vertical)","default": 10,"info":"Top and bottom padding for mobile buttons"},
+ {"type":"range","id":"button_padding_horizontal_mobile","min": 0,"max": 40,"step": 2,"unit":"px","label":"Mobile Button Padding (Horizontal)","default": 18,"info":"Left and right padding for mobile buttons"},
+ {"type":"range","id":"button_padding_vertical_desktop","min": 0,"max": 30,"step": 2,"unit":"px","label":"Desktop Button Padding (Vertical)","default": 6,"info":"Top and bottom padding for desktop buttons"},
+ {"type":"range","id":"button_padding_horizontal_desktop","min": 0,"max": 50,"step": 2,"unit":"px","label":"Desktop Button Padding (Horizontal)","default": 10,"info":"Left and right padding for desktop buttons"},
+ {"type":"select","id":"button_text_align_mobile","label":"Button Text Alignment (Mobile)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center","info":"Text alignment inside mobile buttons"},
+ {"type":"select","id":"button_text_align_desktop","label":"Button Text Alignment (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center","info":"Text alignment inside desktop buttons"},
+ {"type":"range","id":"desktop_tab_button_width","min": 100,"max": 400,"step": 10,"unit":"px","label":"Desktop Tab Button Width","default": 140,"info":"Width of tab buttons on desktop"},
+ {"type":"header","content":"Button Icon Settings"},
+ {"type":"checkbox","id":"button_enable_text_mobile","label":"Show Text (Mobile)","default": true,"info":"Show button text on mobile. When disabled, only icon/image is shown"},
+ {"type":"checkbox","id":"button_enable_text_desktop","label":"Show Text (Desktop)","default": true,"info":"Show button text on desktop. When disabled, only icon/image is shown"},
+ {"type":"select","id":"button_text_position_mobile","label":"Text Position (Mobile)","options": [
+ {"value":"top","label":"Top"},
+ {"value":"bottom","label":"Bottom"},
+ {"value":"left","label":"Left"},
+ {"value":"right","label":"Right"}
+ ],"default":"bottom"},
+ {"type":"select","id":"button_text_position_desktop","label":"Text Position (Desktop)","options": [
+ {"value":"top","label":"Top"},
+ {"value":"bottom","label":"Bottom"},
+ {"value":"left","label":"Left"},
+ {"value":"right","label":"Right"}
+ ],"default":"right"},
+ {"type":"color","id":"button_icon_color_inactive","label":"Icon Color (Inactive)","default":"#666666","info":"Color for inactive button icons"},
+ {"type":"color","id":"button_icon_color_active","label":"Icon Color (Active)","default":"#ffffff","info":"Color for active button icons"},
+ {"type":"range","id":"button_icon_size_mobile","min": 16,"max": 60,"step": 2,"unit":"px","label":"Icon Size (Mobile)","default": 36,"info":"Size for Google Material Icons and SVG icons on mobile"},
+ {"type":"range","id":"button_icon_size_desktop","min": 16,"max": 80,"step": 2,"unit":"px","label":"Icon Size (Desktop)","default": 30,"info":"Size for Google Material Icons and SVG icons on desktop"},
+ {"type":"range","id":"button_image_size_mobile","min": 20,"max": 80,"step": 5,"unit":"px","label":"Image Size (Mobile)","default": 30,"info":"Size for uploaded button images on mobile"},
+ {"type":"range","id":"button_image_size_desktop","min": 20,"max": 100,"step": 5,"unit":"px","label":"Image Size (Desktop)","default": 40,"info":"Size for uploaded button images on desktop"},
+ {"type":"range","id":"button_image_border_radius","min": 0,"max": 50,"step": 2,"unit":"px","label":"Image Border Radius","default": 4,"info":"Border radius for button images"},
+ {"type":"range","id":"button_icon_text_gap_mobile","min": 0,"max": 20,"step": 2,"unit":"px","label":"Spacing Between Icon and Text (Mobile)","default": 6,"info":"Gap between icon/image and button text on mobile"},
+ {"type":"range","id":"button_icon_text_gap_desktop","min": 0,"max": 30,"step": 2,"unit":"px","label":"Spacing Between Icon and Text (Desktop)","default": 14,"info":"Gap between icon/image and button text on desktop"},
+ {"type":"header","content":"️ Desktop Container"},
+ {"type":"range","id":"desktop_content_container_max_width","min": 600,"max": 1600,"step": 50,"unit":"px","label":"Container Max Width (Desktop)","default": 1200,"info":"Maximum width of the tab content container on desktop"},
+ {"type":"range","id":"desktop_container_padding","min": 0,"max": 60,"step": 4,"unit":"px","label":"Container Padding","default": 20
+ },
+ {"type":"range","id":"desktop_container_border_width","min": 0,"max": 5,"step": 1,"unit":"px","label":"Container Border Width","default": 1
+ },
+ {"type":"color","id":"desktop_container_border_color","label":"Container Border Color","default":"#000000"},
+ {"type":"range","id":"desktop_container_border_radius","min": 0,"max": 30,"step": 2,"unit":"px","label":"Container Border Radius","default": 12
+ },
+ {"type":"range","id":"step_spacing_desktop","min": 0,"max": 100,"step": 5,"unit":"px","label":"Spacing Between Tabs","default": 0
+ },
+ {"type":"header","content":"️ Desktop Content Layout"},
+ {"type":"range","id":"desktop_content_gap","min": 10,"max": 60,"step": 5,"unit":"px","label":"Gap Between Image and Text","default": 30
+ },
+ {"type":"select","id":"desktop_content_alignment","label":"Content Vertical Alignment","options": [
+ {"value":"flex-start","label":"Top"},
+ {"value":"center","label":"Center"},
+ {"value":"flex-end","label":"Bottom"}
+ ],"default":"center"},
+ {"type":"header","content":"️ Image Settings"},
+ {"type":"select","id":"image_aspect_ratio","label":"Image Aspect Ratio","options": [
+ {"value":"1/1","label":"Square (1:1)"},
+ {"value":"4/3","label":"Standard (4:3)"},
+ {"value":"16/9","label":"Widescreen (16:9)"},
+ {"value":"21/9","label":"Ultrawide (21:9)"},
+ {"value":"3/4","label":"Portrait (3:4)"},
+ {"value":"2/3","label":"Vertical (2:3)"},
+ {"value":"auto","label":"Auto (Original)"}
+ ],"default":"16/9"},
+ {"type":"range","id":"image_border_radius","min": 0,"max": 30,"step": 2,"unit":"px","label":"Image Border Radius","default": 8
+ },
+ {"type":"range","id":"image_spacing_mobile","min": 8,"max": 40,"step": 2,"unit":"px","label":"Image Bottom Spacing (Mobile)","default": 16
+ },
+ {"type":"range","id":"image_width_desktop","min": 30,"max": 60,"step": 5,"unit":"%","label":"Image Width (Desktop)","default": 40
+ },
+ {"type":"range","id":"image_max_width_desktop","min": 200,"max": 800,"step": 50,"unit":"px","label":"Image Max Width (Desktop)","default": 500,"info":"Maximum width for the image on desktop"},
+ {"type":"range","id":"image_max_height_desktop","min": 200,"max": 800,"step": 50,"unit":"px","label":"Image Max Height (Desktop)","default": 500,"info":"Maximum height for the image on desktop"},
+ {"type":"header","content":"Section Background"},
+ {"type":"color","id":"background_color","label":"Background Color","default":"#ffffff"},
+ {"type":"checkbox","id":"enable_gradient_background","label":"Enable Gradient Background","default": true
+ },
+ {"type":"color_background","id":"gradient_background","label":"Gradient Background","default":"linear-gradient(180deg, rgba(19, 72, 105, 1) 26%, rgba(19, 72, 105, 1) 100%)"},
+ {"type":"header","content":"Section Padding"},
+ {"type":"range","id":"section_padding_top_mobile","min": 0,"max": 100,"step": 4,"unit":"px","label":"Top Padding (Mobile)","default": 36
+ },
+ {"type":"range","id":"section_padding_bottom_mobile","min": 0,"max": 100,"step": 4,"unit":"px","label":"Bottom Padding (Mobile)","default": 36
+ },
+ {"type":"range","id":"section_padding_top_desktop","min": 0,"max": 150,"step": 5,"unit":"px","label":"Top Padding (Desktop)","default": 60
+ },
+ {"type":"range","id":"section_padding_bottom_desktop","min": 0,"max": 150,"step": 5,"unit":"px","label":"Bottom Padding (Desktop)","default": 60
+ }
+ ],"blocks": [
+ {"type":"step","name":"Tab","settings": [
+ {"type":"text","id":"tab_button_text","label":"Tab Button Text","default":"Tab","info":"Text to display on the tab button"},
+ {"type":"header","content":"Button Icon/Image"},
+ {"type":"select","id":"button_icon_type","label":"Button Icon Type","options": [
+ {"value":"none","label":"None"},
+ {"value":"image","label":"Image"},
+ {"value":"svg","label":"Custom SVG"},
+ {"value":"icon","label":"Google Material Icon"}
+ ],"default":"none"},
+ {"type":"image_picker","id":"button_icon_image","label":"Button Icon Image","info":"Upload an image to use as button icon"},
+ {"type":"html","id":"button_icon_svg","label":"Button Icon SVG Code","info":"Paste your custom SVG code here"},
+ {"type":"text","id":"button_icon_name","label":"Google Material Icon Name","default":"star","info":"Enter icon name from Google Material Icons (e.g., star, home, settings)"},
+ {"type":"header","content":"Tab Content"},
+ {"type":"image_picker","id":"image","label":"Tab Image"},
+ {"type":"text","id":"step_heading","label":"Tab Heading","default":"Tab Title"},
+ {"type":"richtext","id":"step_text","label":"Tab Content","default":"<p>Add your tab content here.</p>"}
+ ]
+ },
+ {"type":"custom_html","name":"Custom HTML","settings": [
+ {"type":"html","id":"html_content","label":"HTML Content","default":"<div style=\"padding: 20px; text-align: center;\"><p>Add your custom HTML here</p></div>"}
+ ]
+ }
+ ],"presets": [
+ {"name":"Tabs","blocks": [
+ {"type":"step","settings": {"tab_button_text":"Tab","button_icon_type":"none","button_icon_svg":"","button_icon_name":"star","step_heading":"Tab Title","step_text":"<p>Add your tab content here.</p>"}
+ },
+ {"type":"step","settings": {"tab_button_text":"Tab","button_icon_type":"none","button_icon_svg":"","button_icon_name":"star","step_heading":"Tab Title","step_text":"<p>Add your tab content here.</p>"}
+ },
+ {"type":"step","settings": {"tab_button_text":"Tab","button_icon_type":"none","button_icon_svg":"","button_icon_name":"star","step_heading":"Tab Title","step_text":"<p>Add your tab content here.</p>"}
+ },
+ {"type":"step","settings": {"tab_button_text":"Tab","button_icon_type":"none","button_icon_svg":"","button_icon_name":"star","step_heading":"Tab Title","step_text":"<p>Add your tab content here.</p>"}
+ }
+ ],"category":"Features"}
+ ]
+}
+{% endschema %}
+

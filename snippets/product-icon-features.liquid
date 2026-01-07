@@ -1,0 +1,187 @@
+{% comment %}
+  Renders icon features for product page
+  - Supports custom SVG or Google Material Icons
+  - Flexible layouts: row, grid, column
+  - Fully customizable styling
+
+  Usage:
+  {% render 'product-icon-features', block: block %}
+{% endcomment %}
+
+<div class="product-icons-{{ block.id }}" {{ block.shopify_attributes }}>
+  <div class="product-icons__container-{{ block.id }}">
+    {% for i in (1..4) %}
+      {% assign icon_text = 'icon_' | append: i | append: '_text' %}
+      {% assign icon_name = 'icon_' | append: i | append: '_name' %}
+      {% assign icon_svg = 'icon_' | append: i | append: '_svg' %}
+      {% assign icon_color_key = 'icon_' | append: i | append: '_color' %}
+      {% assign icon_bg_color_key = 'icon_' | append: i | append: '_bg_color' %}
+      {% assign icon_border_color_key = 'icon_' | append: i | append: '_border_color' %}
+
+      {% if block.settings[icon_text] != blank %}
+        {% liquid
+          assign custom_icon_color = block.settings[icon_color_key]
+          assign custom_icon_bg = block.settings[icon_bg_color_key]
+          assign custom_icon_border = block.settings[icon_border_color_key]
+          if custom_icon_color == blank
+            assign custom_icon_color = block.settings.icon_color
+          endif
+          if custom_icon_bg == blank
+            assign custom_icon_bg = block.settings.icon_bg_color
+          endif
+          if custom_icon_border == blank
+            assign custom_icon_border = block.settings.border_color
+          endif
+        %}
+        <div class="product-icon__item-{{ block.id }}">
+          <div class="product-icon__icon-wrapper-{{ block.id }}" style="background-color: {{ custom_icon_bg }}; border-color: {{ custom_icon_border }};">
+            {% if block.settings[icon_svg] != blank %}
+              {%- comment -%} Custom SVG overrides Google Icon {%- endcomment -%}
+              <div class="product-icon__svg-{{ block.id }}" style="color: {{ custom_icon_color }}; fill: {{ custom_icon_color }};">
+                {{ block.settings[icon_svg] }}
+              </div>
+            {% elsif block.settings[icon_name] != blank %}
+              {%- comment -%} Google Material Icon {%- endcomment -%}
+              <span class="material-symbols-outlined product-icon__material-{{ block.id }}" style="color: {{ custom_icon_color }};">
+                {{ block.settings[icon_name] }}
+              </span>
+            {% endif %}
+          </div>
+          {% if block.settings[icon_text] != blank %}
+            <div class="product-icon__text-{{ block.id }}">
+              {{ block.settings[icon_text] }}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .product-icons-{{ block.id }} {
+    width: 100%;
+    margin: {{ block.settings.margin_top }}px 0 {{ block.settings.margin_bottom }}px 0;
+  }
+
+  .product-icons__container-{{ block.id }} {
+    display: grid;
+    {% if block.settings.layout == 'row_3' %}
+      grid-template-columns: repeat(3, 1fr);
+    {% elsif block.settings.layout == 'row_4' %}
+      grid-template-columns: repeat(4, 1fr);
+    {% elsif block.settings.layout == 'grid_2x2' %}
+      grid-template-columns: repeat(2, 1fr);
+    {% elsif block.settings.layout == 'column' %}
+      grid-template-columns: 1fr;
+    {% endif %}
+    gap: {{ block.settings.gap_vertical }}px {{ block.settings.gap_horizontal }}px;
+    max-width: {% if block.settings.max_width %}{{ block.settings.max_width }}px{% else %}1200px{% endif %};
+  }
+
+  .product-icon__item-{{ block.id }} {
+    display: flex;
+    flex-direction: {{ block.settings.item_layout }};
+    align-items: {{ block.settings.alignment }};
+    text-align: {{ block.settings.text_alignment }};
+    gap: {{ block.settings.icon_text_gap }}px;
+  }
+
+  .product-icon__icon-wrapper-{{ block.id }} {
+    background-color: {{ block.settings.icon_bg_color }};
+    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    padding: {{ block.settings.icon_padding }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+  }
+
+  .product-icon__svg-{{ block.id }},
+  .product-icon__svg-{{ block.id }} svg {
+    width: {{ block.settings.svg_icon_size }}px;
+    height: {{ block.settings.svg_icon_size }}px;
+    color: {{ block.settings.icon_color }};
+    fill: {{ block.settings.icon_color }};
+  }
+
+  .product-icon__svg-{{ block.id }} svg path {
+    fill: {{ block.settings.icon_color }};
+  }
+
+  .product-icon__material-{{ block.id }} {
+    font-size: {{ block.settings.material_icon_size }}px;
+    color: {{ block.settings.icon_color }};
+    line-height: 1;
+    font-variation-settings:
+      'FILL' {% if block.settings.material_fill %}1{% else %}0{% endif %},
+      'wght' {{ block.settings.material_weight }},
+      'GRAD' 0,
+      'opsz' {{ block.settings.material_icon_size }};
+  }
+
+  .product-icon__text-{{ block.id }} {
+    font-size: {{ block.settings.text_font_size }}px;
+    font-weight: {{ block.settings.text_font_weight }};
+    color: {{ block.settings.text_color }};
+    line-height: {{ block.settings.text_line_height }};
+    max-width: {{ block.settings.text_max_width }}px;
+  }
+
+  @media (max-width: 768px) {
+    .product-icons__container-{{ block.id }} {
+      {% if block.settings.mobile_layout == 'row_2' %}
+        grid-template-columns: repeat(2, 1fr);
+      {% elsif block.settings.mobile_layout == 'row_3' %}
+        grid-template-columns: repeat(3, 1fr);
+      {% elsif block.settings.mobile_layout == 'column' %}
+        grid-template-columns: 1fr;
+      {% endif %}
+      gap: {{ block.settings.mobile_gap_vertical }}px {{ block.settings.mobile_gap_horizontal }}px;
+      max-width: {% if block.settings.mobile_max_width %}{{ block.settings.mobile_max_width }}px{% else %}600px{% endif %};
+    }
+
+    .product-icon__item-{{ block.id }} {
+      flex-direction: {{ block.settings.mobile_item_layout }};
+    }
+
+    .product-icon__icon-wrapper-{{ block.id }} {
+      width: {{ block.settings.mobile_icon_size }}px;
+      height: {{ block.settings.mobile_icon_size }}px;
+      padding: {{ block.settings.mobile_icon_padding }}px;
+      box-sizing: border-box;
+    }
+
+    .product-icon__svg-{{ block.id }},
+    .product-icon__svg-{{ block.id }} svg {
+      width: {{ block.settings.mobile_svg_icon_size }}px;
+      height: {{ block.settings.mobile_svg_icon_size }}px;
+    }
+
+    .product-icon__material-{{ block.id }} {
+      font-size: {{ block.settings.mobile_material_icon_size }}px;
+      font-variation-settings:
+        'FILL' {% if block.settings.material_fill %}1{% else %}0{% endif %},
+        'wght' {{ block.settings.material_weight }},
+        'GRAD' 0,
+        'opsz' {{ block.settings.mobile_material_icon_size }};
+    }
+
+    .product-icon__text-{{ block.id }} {
+      font-size: {{ block.settings.mobile_text_font_size }}px;
+    }
+  }
+</style>
+
+{%- comment -%}
+  Load Google Material Symbols font if any icon uses it
+  To use: Go to https://fonts.google.com/icons and find your icon name
+  Examples: local_shipping, verified, lock, star, favorite, eco, recycling
+{%- endcomment -%}
+{% unless block.settings.icon_1_svg != blank and block.settings.icon_2_svg != blank and block.settings.icon_3_svg != blank and block.settings.icon_4_svg != blank %}
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+{% endunless %}

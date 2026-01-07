@@ -1,0 +1,836 @@
+{% comment %}
+  Collection List Section
+  Displays collections in a grid layout with fade mask and collection names
+{% endcomment %}
+
+<section class="collection-list section-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="container page-width">
+    <div class="cl-content-wrapper">
+
+      {% comment %} Heading {% endcomment %}
+      {% if section.settings.heading_before != blank or section.settings.highlighted_text != blank or section.settings.heading_after != blank %}
+        <div class="cl-header-wrapper cl-align-{{ section.settings.heading_text_align }}">
+          {% case section.settings.highlight_position %}
+            {% when 'above' %}
+              {% if section.settings.highlighted_text != blank %}
+                <span class="cl-highlighted-text cl-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+              <{{ section.settings.heading_tag }} class="cl-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+            {% when 'below' %}
+              <{{ section.settings.heading_tag }} class="cl-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+              {% if section.settings.highlighted_text != blank %}
+                <span class="cl-highlighted-text cl-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+            {% when 'inline_first' %}
+              <{{ section.settings.heading_tag }} class="cl-heading">
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="cl-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_before != blank %}{{ " " }}{{ section.settings.heading_before }}{% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+            {% when 'inline_second' %}
+              <{{ section.settings.heading_tag }} class="cl-heading">
+                {% if section.settings.heading_before != blank %}{{ section.settings.heading_before }}{{ " " }}{% endif %}
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="cl-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+          {% endcase %}
+        </div>
+      {% endif %}
+
+      {% comment %} Subheading {% endcomment %}
+      {% if section.settings.subheading != blank %}
+        <div class="cl-subheading cl-align-{{ section.settings.heading_text_align }}">
+          {{ section.settings.subheading }}
+        </div>
+      {% endif %}
+
+      {% comment %} Collection Grid or Slider {% endcomment %}
+      {% if section.blocks.size > 0 %}
+        <div class="cl-layout-wrapper cl-layout-mobile-{{ section.settings.layout_mobile }} cl-layout-desktop-{{ section.settings.layout_desktop }}">
+          <div class="cl-slider" data-slider-container>
+            <div class="cl-slider-viewport" data-slider-viewport>
+              <div class="cl-slider-track" data-slider-track>
+
+          {% for block in section.blocks %}
+            {% if block.type == 'collection' %}
+              {% assign collection = collections[block.settings.collection] %}
+              {% assign collection_image = block.settings.collection_image %}
+
+              {% comment %} Use custom image if provided, otherwise use collection featured image {% endcomment %}
+              {% if collection_image == blank and collection and collection.featured_image %}
+                {% assign collection_image = collection.featured_image %}
+              {% endif %}
+
+              {% assign collection_title = block.settings.collection_title_override %}
+              {% if collection_title == blank and collection %}
+                {% assign collection_title = collection.title %}
+              {% endif %}
+
+              <div class="cl-item" data-slider-slide {{ block.shopify_attributes }}>
+                <a href="{{ collection.url | default: '#' }}" class="cl-card">
+                  <div class="cl-image-wrapper">
+                    {% if collection_image != blank %}
+                      <img
+                        srcset="
+                          {%- if collection_image.width >= 165 -%}{{ collection_image | image_url: width: 165 }} 165w,{%- endif -%}
+                          {%- if collection_image.width >= 360 -%}{{ collection_image | image_url: width: 360 }} 360w,{%- endif -%}
+                          {%- if collection_image.width >= 533 -%}{{ collection_image | image_url: width: 533 }} 533w,{%- endif -%}
+                          {%- if collection_image.width >= 720 -%}{{ collection_image | image_url: width: 720 }} 720w,{%- endif -%}
+                          {%- if collection_image.width >= 940 -%}{{ collection_image | image_url: width: 940 }} 940w,{%- endif -%}
+                          {%- if collection_image.width >= 1066 -%}{{ collection_image | image_url: width: 1066 }} 1066w,{%- endif -%}
+                          {{ collection_image | image_url }} {{ collection_image.width }}w
+                        "
+                        src="{{ collection_image | image_url: width: 533 }}"
+                        sizes="(min-width: 750px) calc((100vw - 10rem) / 2), calc(100vw - 3rem)"
+                        alt="{{ collection_image.alt | escape }}"
+                        loading="lazy"
+                        width="{{ collection_image.width }}"
+                        height="{{ collection_image.height }}"
+                        class="cl-image"
+                      >
+                    {% else %}
+                      <div class="cl-image-placeholder">
+                        {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                      </div>
+                    {% endif %}
+
+                    {% if section.settings.text_position == 'overlay' %}
+                      {% comment %} Fade Mask Bottom {% endcomment %}
+                      {% if section.settings.enable_fade_mask %}
+                        <div class="cl-fade-mask"></div>
+                      {% endif %}
+
+                      {% comment %} Collection Name and Arrow (Overlay) {% endcomment %}
+                      <div class="cl-info cl-info-overlay">
+                        <div class="cl-overlay-content">
+                          <div class="cl-name-arrow-wrapper">
+                            <span class="cl-collection-name">{{ collection_title }}</span>
+                            <svg class="cl-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </div>
+                          {% if block.settings.collection_description != blank %}
+                            <p class="cl-collection-description">{{ block.settings.collection_description }}</p>
+                          {% endif %}
+                        </div>
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  {% if section.settings.text_position == 'below' %}
+                    {% comment %} Collection Name and Arrow (Below Card) {% endcomment %}
+                    <div class="cl-info cl-info-below">
+                      <div class="cl-name-arrow-wrapper">
+                        <span class="cl-collection-name">{{ collection_title }}</span>
+                        <svg class="cl-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                      {% if block.settings.collection_description != blank %}
+                        <p class="cl-collection-description">{{ block.settings.collection_description }}</p>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </a>
+              </div>
+            {% endif %}
+          {% endfor %}
+
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .collection-list.section-{{ section.id }} {
+    {% if section.settings.use_theme_colors %}
+      background: {{ settings.section_background_color }};
+    {% else %}
+      {% if section.settings.use_section_gradient %}
+        background: {{ section.settings.section_gradient_background }};
+      {% else %}
+        background-color: {{ section.settings.section_background_color }};
+      {% endif %}
+    {% endif %}
+  }
+
+  .collection-list.section-{{ section.id }} .cl-heading,
+  .collection-list.section-{{ section.id }} .cl-subheading {
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.heading_color }};
+    {% else %}
+      color: {{ section.settings.section_text_color }};
+    {% endif %}
+  }
+
+  .collection-list.section-{{ section.id }} .container {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .collection-list.section-{{ section.id }} .container {
+      padding-top: {{ section.settings.padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    }
+  }
+
+  /* Heading Styles */
+  .collection-list.section-{{ section.id }} .cl-header-wrapper {
+    margin-bottom: 1.6rem;
+  }
+
+  .collection-list.section-{{ section.id }} .cl-heading {
+    font-family: var(--font-heading-family);
+    font-size: 3.2rem;
+    font-weight: var(--font-heading-weight);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .collection-list.section-{{ section.id }} .cl-heading {
+      font-size: 4.8rem;
+    }
+  }
+
+  .collection-list.section-{{ section.id }} .cl-highlighted-text {
+    {% if section.settings.use_theme_colors %}
+      {% if settings.highlighted_text_gradient_enabled %}
+        background: {{ settings.highlighted_text_gradient }};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: inline-block;
+      {% else %}
+        color: {{ settings.highlighted_text_solid_color }};
+      {% endif %}
+    {% else %}
+      {% if section.settings.use_highlight_gradient %}
+        background: {{ section.settings.highlight_gradient }};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: inline-block;
+      {% else %}
+        color: {{ section.settings.highlight_color }};
+      {% endif %}
+    {% endif %}
+  }
+
+  .collection-list.section-{{ section.id }} .cl-highlighted-separate {
+    display: block;
+    margin-bottom: 0.8rem;
+  }
+
+  .collection-list.section-{{ section.id }} .cl-subheading {
+    font-size: 1.6rem;
+    line-height: 1.5;
+    margin-top: 1.2rem;
+    margin-bottom: 3.2rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .collection-list.section-{{ section.id }} .cl-subheading {
+      font-size: 1.8rem;
+      margin-bottom: 4.8rem;
+    }
+  }
+
+  /* Alignment */
+  .collection-list.section-{{ section.id }} .cl-align-left {
+    text-align: left;
+  }
+
+  .collection-list.section-{{ section.id }} .cl-align-center {
+    text-align: center;
+  }
+
+  .collection-list.section-{{ section.id }} .cl-align-right {
+    text-align: right;
+  }
+
+  /* Layout Wrapper - Default as slider structure */
+  .collection-list.section-{{ section.id }} .cl-layout-wrapper {
+    /* Default structure is slider for both */
+  }
+
+  /* Mobile Grid Layout */
+  .collection-list.section-{{ section.id }} .cl-layout-mobile-grid .cl-slider {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
+    gap: {{ section.settings.grid_gap_mobile }}px;
+    {% if section.settings.equal_height_cards %}
+      align-items: stretch;
+    {% endif %}
+  }
+
+  .collection-list.section-{{ section.id }} .cl-layout-mobile-grid .cl-slider-viewport,
+  .collection-list.section-{{ section.id }} .cl-layout-mobile-grid .cl-slider-track {
+    display: contents;
+  }
+
+  /* Desktop Grid Layout */
+  @media screen and (min-width: 750px) {
+    .collection-list.section-{{ section.id }} .cl-layout-desktop-grid .cl-slider {
+      display: grid !important;
+      grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr) !important;
+      gap: {{ section.settings.grid_gap_desktop }}px !important;
+      {% if section.settings.equal_height_cards %}
+        align-items: stretch;
+      {% endif %}
+    }
+
+    .collection-list.section-{{ section.id }} .cl-layout-desktop-grid .cl-slider-viewport,
+    .collection-list.section-{{ section.id }} .cl-layout-desktop-grid .cl-slider-track {
+      display: contents !important;
+    }
+  }
+
+  /* Equal Height Cards for Grid Mode */
+  {% if section.settings.equal_height_cards %}
+    .collection-list.section-{{ section.id }} .cl-layout-mobile-grid .cl-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .collection-list.section-{{ section.id }} .cl-layout-mobile-grid .cl-card {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .collection-list.section-{{ section.id }} .cl-layout-mobile-grid .cl-image-wrapper {
+      flex-shrink: 0;
+    }
+
+    .collection-list.section-{{ section.id }} .cl-layout-mobile-grid .cl-info-below {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    @media screen and (min-width: 750px) {
+      .collection-list.section-{{ section.id }} .cl-layout-desktop-grid .cl-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .collection-list.section-{{ section.id }} .cl-layout-desktop-grid .cl-card {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .collection-list.section-{{ section.id }} .cl-layout-desktop-grid .cl-image-wrapper {
+        flex-shrink: 0;
+      }
+
+      .collection-list.section-{{ section.id }} .cl-layout-desktop-grid .cl-info-below {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+    }
+  {% endif %}
+
+  /* Collection Card */
+  .collection-list.section-{{ section.id }} .cl-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    border-radius: {{ section.settings.card_border_radius }}px;
+    {% if section.settings.card_border_width > 0 %}
+      border: {{ section.settings.card_border_width }}px solid {{ section.settings.card_border_color }};
+    {% endif %}
+  }
+
+  .collection-list.section-{{ section.id }} .cl-image-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    border-radius: {{ section.settings.card_border_radius }}px;
+    {% if section.settings.image_aspect_ratio == 'square' %}
+      aspect-ratio: 1 / 1;
+    {% elsif section.settings.image_aspect_ratio == 'portrait' %}
+      aspect-ratio: 3 / 4;
+    {% elsif section.settings.image_aspect_ratio == 'landscape' %}
+      aspect-ratio: 4 / 3;
+    {% elsif section.settings.image_aspect_ratio == 'wide' %}
+      aspect-ratio: 16 / 9;
+    {% elsif section.settings.image_aspect_ratio == 'custom' %}
+      padding-bottom: {{ section.settings.custom_aspect_ratio_mobile }}%;
+    {% endif %}
+    display: flex;
+  }
+
+  {% if section.settings.image_aspect_ratio == 'custom' %}
+    @media screen and (min-width: 750px) {
+      .collection-list.section-{{ section.id }} .cl-image-wrapper {
+        padding-bottom: {{ section.settings.custom_aspect_ratio_desktop }}%;
+      }
+    }
+  {% endif %}
+
+  .collection-list.section-{{ section.id }} .cl-image,
+  .collection-list.section-{{ section.id }} .cl-image-placeholder {
+    {% if section.settings.image_aspect_ratio == 'custom' %}
+      position: absolute;
+      top: 0;
+      left: 0;
+    {% else %}
+      position: relative;
+      z-index: 0;
+    {% endif %}
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .collection-list.section-{{ section.id }} .cl-card:hover .cl-image {
+    transform: scale(1.05);
+  }
+
+  .collection-list.section-{{ section.id }} .cl-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .collection-list.section-{{ section.id }} .cl-image-placeholder svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  /* Fade Mask */
+  .collection-list.section-{{ section.id }} .cl-fade-mask {
+    position: absolute !important;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: {{ 100 | minus: section.settings.fade_height_mobile }}%;
+    background: linear-gradient(to top, {{ section.settings.fade_color }} 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+    content: '';
+    display: block;
+  }
+
+  @media screen and (min-width: 750px) {
+    .collection-list.section-{{ section.id }} .cl-fade-mask {
+      top: {{ 100 | minus: section.settings.fade_height_desktop }}%;
+    }
+  }
+
+  /* Ensure image wrapper creates stacking context for absolute children */
+  .collection-list.section-{{ section.id }} .cl-image-wrapper {
+    transform: translateZ(0);
+  }
+
+  /* Collection Info - Overlay */
+  .collection-list.section-{{ section.id }} .cl-info-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: {{ section.settings.info_padding_mobile }}px;
+    z-index: 2;
+  }
+
+  @media screen and (min-width: 750px) {
+    .collection-list.section-{{ section.id }} .cl-info-overlay {
+      padding: {{ section.settings.info_padding_desktop }}px;
+    }
+  }
+
+  .collection-list.section-{{ section.id }} .cl-overlay-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .collection-list.section-{{ section.id }} .cl-info-overlay .cl-name-arrow-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+
+  /* Collection Info - Below Card */
+  .collection-list.section-{{ section.id }} .cl-info-below {
+    padding-top: {{ section.settings.info_padding_mobile }}px;
+    padding-left: {{ section.settings.info_padding_mobile }}px;
+    padding-right: {{ section.settings.info_padding_mobile }}px;
+    padding-bottom: {{ section.settings.info_padding_mobile }}px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .collection-list.section-{{ section.id }} .cl-info-below {
+      padding-top: {{ section.settings.info_padding_desktop }}px;
+      padding-left: {{ section.settings.info_padding_desktop }}px;
+      padding-right: {{ section.settings.info_padding_desktop }}px;
+      padding-bottom: {{ section.settings.info_padding_desktop }}px;
+    }
+  }
+
+  .collection-list.section-{{ section.id }} .cl-info-below .cl-name-arrow-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+  }
+
+  /* Collection Name Styling */
+  .collection-list.section-{{ section.id }} .cl-collection-name {
+    font-size: {{ section.settings.collection_name_size_mobile }}px;
+    font-weight: {{ section.settings.collection_name_weight }};
+    line-height: 1.2;
+  }
+
+  /* Collection Name Color for Overlay */
+  .collection-list.section-{{ section.id }} .cl-info-overlay .cl-collection-name {
+    color: {{ section.settings.collection_name_color }};
+  }
+
+  /* Collection Name and Arrow Color for Below Position */
+  .collection-list.section-{{ section.id }} .cl-info-below .cl-collection-name,
+  .collection-list.section-{{ section.id }} .cl-info-below .cl-arrow {
+    color: {{ section.settings.collection_name_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .collection-list.section-{{ section.id }} .cl-collection-name {
+      font-size: {{ section.settings.collection_name_size_desktop }}px;
+    }
+  }
+
+  /* Collection Description */
+  .collection-list.section-{{ section.id }} .cl-collection-description {
+    font-size: {{ section.settings.description_size_mobile }}px;
+    line-height: {{ section.settings.description_line_height_mobile }};
+    font-weight: {{ section.settings.description_font_weight }};
+    color: {{ section.settings.description_color }};
+    margin: 0 0 {{ section.settings.description_margin_bottom }}px 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .collection-list.section-{{ section.id }} .cl-collection-description {
+      font-size: {{ section.settings.description_size_desktop }}px;
+      line-height: {{ section.settings.description_line_height_desktop }};
+    }
+  }
+
+  .collection-list.section-{{ section.id }} .cl-info-overlay .cl-arrow {
+    color: {{ section.settings.arrow_color }};
+    width: {{ section.settings.arrow_size_mobile }}px;
+    height: {{ section.settings.arrow_size_mobile }}px;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .collection-list.section-{{ section.id }} .cl-info-below .cl-arrow {
+    width: {{ section.settings.arrow_size_mobile }}px;
+    height: {{ section.settings.arrow_size_mobile }}px;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  @media screen and (min-width: 750px) {
+    .collection-list.section-{{ section.id }} .cl-arrow {
+      width: {{ section.settings.arrow_size_desktop }}px;
+      height: {{ section.settings.arrow_size_desktop }}px;
+    }
+  }
+
+  .collection-list.section-{{ section.id }} .cl-card:hover .cl-arrow {
+    transform: translateX(4px);
+  }
+
+  /* Slider Styles */
+  .collection-list.section-{{ section.id }} .cl-slider {
+    position: relative;
+  }
+
+  /* Mobile Slider Specific Styles */
+  .collection-list.section-{{ section.id }} .cl-layout-mobile-slider .cl-slider-viewport {
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 1rem;
+  }
+
+  .collection-list.section-{{ section.id }} .cl-layout-mobile-slider .cl-slider-viewport::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .collection-list.section-{{ section.id }} .cl-layout-mobile-slider .cl-slider-viewport::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.08);
+    border-radius: 999px;
+  }
+
+  .collection-list.section-{{ section.id }} .cl-layout-mobile-slider .cl-slider-viewport::-webkit-scrollbar-thumb {
+    background: rgba(15, 23, 42, 0.3);
+    border-radius: 999px;
+  }
+
+  .collection-list.section-{{ section.id }} .cl-layout-mobile-slider .cl-slider-track {
+    display: flex;
+    gap: {{ section.settings.grid_gap_mobile }}px;
+    min-width: 100%;
+  }
+
+  .collection-list.section-{{ section.id }} .cl-layout-mobile-slider .cl-item {
+    flex: 0 0 calc({{ section.settings.slide_width_mobile }}% - {{ section.settings.grid_gap_mobile }}px);
+    min-width: calc({{ section.settings.slide_width_mobile }}% - {{ section.settings.grid_gap_mobile }}px);
+    scroll-snap-align: start;
+    box-sizing: border-box;
+  }
+
+  /* Desktop Slider Specific Styles */
+  @media screen and (min-width: 750px) {
+    .collection-list.section-{{ section.id }} .cl-layout-desktop-slider .cl-slider-viewport {
+      overflow-x: auto;
+      overflow-y: visible;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 1rem;
+    }
+
+    .collection-list.section-{{ section.id }} .cl-layout-desktop-slider .cl-slider-viewport::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .collection-list.section-{{ section.id }} .cl-layout-desktop-slider .cl-slider-viewport::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.08);
+      border-radius: 999px;
+    }
+
+    .collection-list.section-{{ section.id }} .cl-layout-desktop-slider .cl-slider-viewport::-webkit-scrollbar-thumb {
+      background: rgba(15, 23, 42, 0.3);
+      border-radius: 999px;
+    }
+
+    .collection-list.section-{{ section.id }} .cl-layout-desktop-slider .cl-slider-track {
+      display: flex;
+      gap: {{ section.settings.grid_gap_desktop }}px;
+      min-width: 100%;
+    }
+
+    .collection-list.section-{{ section.id }} .cl-layout-desktop-slider .cl-item {
+      flex: 0 0 calc({{ section.settings.slide_width_tablet }}% - {{ section.settings.grid_gap_desktop }}px);
+      min-width: calc({{ section.settings.slide_width_tablet }}% - {{ section.settings.grid_gap_desktop }}px);
+      scroll-snap-align: start;
+      box-sizing: border-box;
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+    .collection-list.section-{{ section.id }} .cl-layout-desktop-slider .cl-item {
+      flex: 0 0 calc({{ section.settings.slide_width_desktop }}% - {{ section.settings.grid_gap_desktop }}px);
+      min-width: calc({{ section.settings.slide_width_desktop }}% - {{ section.settings.grid_gap_desktop }}px);
+    }
+  }
+
+  /* Page Width Connection */
+  .collection-list.section-{{ section.id }} .page-width {
+    max-width: var(--page-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .collection-list.section-{{ section.id }} .page-width {
+      padding-left: 5rem;
+      padding-right: 5rem;
+    }
+  }
+</style>
+
+{% schema %}
+{"name":"Collection List","class":"section","settings": [
+ {"type":"header","content":"Use Theme Colors"},
+ {"type":"checkbox","id":"use_theme_colors","label":"Use theme colors","default": true,"info":"Enable to use theme default colors. Disable to customize section colors."},
+ {"type":"header","content":"Section Background"},
+ {"type":"color","id":"section_background_color","label":"Background Color","default":"#ffffff"},
+ {"type":"color","id":"section_text_color","label":"Text Color","default":"#000000"},
+ {"type":"checkbox","id":"use_section_gradient","label":"Use gradient background","default": false
+ },
+ {"type":"color_background","id":"section_gradient_background","label":"Gradient Background","info":"Applied when 'Use gradient background' is enabled"},
+ {"type":"header","content":"Section Padding"},
+ {"type":"range","id":"padding_top_mobile","min": 0,"max": 100,"step": 4,"unit":"px","label":"Top padding (mobile)","default": 36
+ },
+ {"type":"range","id":"padding_bottom_mobile","min": 0,"max": 100,"step": 4,"unit":"px","label":"Bottom padding (mobile)","default": 36
+ },
+ {"type":"range","id":"padding_top_desktop","min": 0,"max": 200,"step": 4,"unit":"px","label":"Top padding (desktop)","default": 52
+ },
+ {"type":"range","id":"padding_bottom_desktop","min": 0,"max": 200,"step": 4,"unit":"px","label":"Bottom padding (desktop)","default": 52
+ },
+ {"type":"header","content":"Heading"},
+ {"type":"text","id":"heading_before","label":"Heading text (before highlight)","default":"Shop by"},
+ {"type":"text","id":"highlighted_text","label":"Highlighted text","default":"Collection"},
+ {"type":"text","id":"heading_after","label":"Heading text (after highlight)"},
+ {"type":"select","id":"highlight_position","label":"Highlight position","options": [
+ {"value":"inline_first","label":"Inline (highlight first)"},
+ {"value":"inline_second","label":"Inline (highlight second)"},
+ {"value":"above","label":"Above heading"},
+ {"value":"below","label":"Below heading"}
+ ],"default":"inline_second"},
+ {"type":"select","id":"heading_tag","label":"Heading tag","options": [
+ {"value":"h1","label":"H1"},
+ {"value":"h2","label":"H2"},
+ {"value":"h3","label":"H3"},
+ {"value":"h4","label":"H4"}
+ ],"default":"h2"},
+ {"type":"select","id":"heading_text_align","label":"Heading alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"text","id":"subheading","label":"Subheading"},
+ {"type":"header","content":"Highlight Styling"},
+ {"type":"checkbox","id":"use_highlight_gradient","label":"Use gradient for highlight","default": false
+ },
+ {"type":"color","id":"highlight_color","label":"Highlight color","default":"#ff6b6b"},
+ {"type":"color_background","id":"highlight_gradient","label":"Highlight gradient","info":"Applied when 'Use gradient for highlight' is enabled"},
+ {"type":"header","content":"Layout Settings"},
+ {"type":"select","id":"layout_mobile","label":"Layout (mobile)","options": [
+ {"value":"grid","label":"Grid"},
+ {"value":"slider","label":"Slider"}
+ ],"default":"slider","info":"Choose layout for mobile devices"},
+ {"type":"select","id":"layout_desktop","label":"Layout (desktop)","options": [
+ {"value":"grid","label":"Grid"},
+ {"value":"slider","label":"Slider"}
+ ],"default":"grid","info":"Choose layout for desktop devices"},
+ {"type":"range","id":"columns_mobile","min": 1,"max": 3,"step": 1,"label":"Columns (mobile) - Grid mode","default": 2
+ },
+ {"type":"range","id":"columns_desktop","min": 2,"max": 6,"step": 1,"label":"Columns (desktop) - Grid mode","default": 3
+ },
+ {"type":"range","id":"slide_width_mobile","min": 60,"max": 100,"step": 1,"unit":"%","label":"Slide width (mobile) - Slider mode","default": 60
+ },
+ {"type":"range","id":"slide_width_tablet","min": 25,"max": 100,"step": 1,"unit":"%","label":"Slide width (tablet) - Slider mode","default": 45
+ },
+ {"type":"range","id":"slide_width_desktop","min": 20,"max": 100,"step": 1,"unit":"%","label":"Slide width (desktop) - Slider mode","default": 33
+ },
+ {"type":"range","id":"grid_gap_mobile","min": 0,"max": 50,"step": 2,"unit":"px","label":"Grid gap (mobile)","default": 8
+ },
+ {"type":"range","id":"grid_gap_desktop","min": 0,"max": 100,"step": 4,"unit":"px","label":"Grid gap (desktop)","default": 24
+ },
+ {"type":"checkbox","id":"equal_height_cards","label":"Make all cards equal height","default": false,"info":"Forces all cards to have the same height in grid mode"},
+ {"type":"header","content":"️ Image Settings"},
+ {"type":"select","id":"image_aspect_ratio","label":"Image aspect ratio","options": [
+ {"value":"square","label":"Square (1:1)"},
+ {"value":"portrait","label":"Portrait (3:4)"},
+ {"value":"landscape","label":"Landscape (4:3)"},
+ {"value":"wide","label":"Wide (16:9)"},
+ {"value":"custom","label":"Custom"}
+ ],"default":"portrait"},
+ {"type":"range","id":"custom_aspect_ratio_mobile","min": 50,"max": 200,"step": 5,"unit":"%","label":"Custom aspect ratio (mobile)","default": 100,"info":"Only applies when 'Custom' is selected. 100% = square, 75% = landscape, 133% = portrait"},
+ {"type":"range","id":"custom_aspect_ratio_desktop","min": 50,"max": 200,"step": 5,"unit":"%","label":"Custom aspect ratio (desktop)","default": 100,"info":"Only applies when 'Custom' is selected. 100% = square, 75% = landscape, 133% = portrait"},
+ {"type":"header","content":"Card Settings"},
+ {"type":"range","id":"card_border_radius","min": 0,"max": 40,"step": 2,"unit":"px","label":"Card border radius","default": 0
+ },
+ {"type":"range","id":"card_border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Card border width","default": 2
+ },
+ {"type":"color","id":"card_border_color","label":"Card border color","default":"#000000"},
+ {"type":"header","content":"Text Overlay Position"},
+ {"type":"select","id":"text_position","label":"Collection name position","options": [
+ {"value":"overlay","label":"On card (overlay)"},
+ {"value":"below","label":"Below card"}
+ ],"default":"below","info":"Choose whether text appears on top of the image or below it"},
+ {"type":"header","content":"Fade Mask Settings"},
+ {"type":"paragraph","content":"Fade mask only applies when text is positioned as overlay"},
+ {"type":"checkbox","id":"enable_fade_mask","label":"Enable fade mask","default": true,"info":"Show gradient overlay at bottom of collection images"},
+ {"type":"color","id":"fade_color","label":"Fade color","default":"#000000","info":"Color that fades from solid to transparent"},
+ {"type":"range","id":"fade_height_mobile","min": 10,"max": 80,"step": 5,"unit":"%","label":"Fade height (mobile)","default": 45
+ },
+ {"type":"range","id":"fade_height_desktop","min": 10,"max": 80,"step": 5,"unit":"%","label":"Fade height (desktop)","default": 35
+ },
+ {"type":"header","content":"Collection Name Settings"},
+ {"type":"color","id":"collection_name_color","label":"Collection name color","default":"#000000"},
+ {"type":"range","id":"collection_name_size_mobile","min": 14,"max": 32,"step": 2,"unit":"px","label":"Name size (mobile)","default": 18
+ },
+ {"type":"range","id":"collection_name_size_desktop","min": 16,"max": 48,"step": 2,"unit":"px","label":"Name size (desktop)","default": 24
+ },
+ {"type":"select","id":"collection_name_weight","label":"Name font weight","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"500"},
+ {"type":"header","content":"️ Arrow Settings"},
+ {"type":"color","id":"arrow_color","label":"Arrow color","default":"#000000"},
+ {"type":"range","id":"arrow_size_mobile","min": 16,"max": 40,"step": 2,"unit":"px","label":"Arrow size (mobile)","default": 20
+ },
+ {"type":"range","id":"arrow_size_desktop","min": 20,"max": 60,"step": 2,"unit":"px","label":"Arrow size (desktop)","default": 28
+ },
+ {"type":"header","content":"Description Settings"},
+ {"type":"color","id":"description_color","label":"Description color","default":"#000000"},
+ {"type":"range","id":"description_size_mobile","min": 10,"max": 24,"step": 1,"unit":"px","label":"Description size (mobile)","default": 12
+ },
+ {"type":"range","id":"description_size_desktop","min": 12,"max": 32,"step": 1,"unit":"px","label":"Description size (desktop)","default": 15
+ },
+ {"type":"range","id":"description_line_height_mobile","min": 1.0,"max": 2.5,"step": 0.1,"label":"Description line height (mobile)","default": 1.3
+ },
+ {"type":"range","id":"description_line_height_desktop","min": 1.0,"max": 2.5,"step": 0.1,"label":"Description line height (desktop)","default": 1.4
+ },
+ {"type":"select","id":"description_font_weight","label":"Description font weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"400"},
+ {"type":"range","id":"description_margin_bottom","min": 0,"max": 40,"step": 2,"unit":"px","label":"Description bottom margin","default": 2
+ },
+ {"type":"header","content":"Info Positioning"},
+ {"type":"range","id":"info_padding_mobile","min": 8,"max": 40,"step": 2,"unit":"px","label":"Info padding (mobile)","default": 14
+ },
+ {"type":"range","id":"info_padding_desktop","min": 12,"max": 60,"step": 2,"unit":"px","label":"Info padding (desktop)","default": 24
+ }
+ ],"blocks": [
+ {"type":"collection","name":"Collection","settings": [
+ {"type":"collection","id":"collection","label":"Collection"},
+ {"type":"image_picker","id":"collection_image","label":"Collection image","info":"Optional. Uses collection featured image if not set."},
+ {"type":"text","id":"collection_title_override","label":"Collection name override","info":"Optional. Uses collection title if not set."},
+ {"type":"textarea","id":"collection_description","label":"Collection description","default":"Add your description here","info":"Optional. Appears below collection name when text position is set to 'Below card'."}
+ ]
+ }
+ ],"presets": [
+ {"name":"Collection List","category":"Collection","settings": {"use_theme_colors": true,"section_background_color":"#ffffff","section_text_color":"#000000","use_section_gradient": false,"padding_top_mobile": 36,"padding_bottom_mobile": 36,"padding_top_desktop": 52,"padding_bottom_desktop": 52,"heading_before":"Shop by","highlighted_text":"Collection","highlight_position":"inline_second","heading_tag":"h2","heading_text_align":"center","use_highlight_gradient": false,"highlight_color":"#ff6b6b","layout_mobile":"slider","layout_desktop":"grid","columns_mobile": 2,"columns_desktop": 3,"slide_width_mobile": 60,"slide_width_tablet": 45,"slide_width_desktop": 33,"grid_gap_mobile": 8,"grid_gap_desktop": 24,"equal_height_cards": false,"image_aspect_ratio":"portrait","custom_aspect_ratio_mobile": 100,"custom_aspect_ratio_desktop": 100,"card_border_radius": 0,"card_border_width": 2,"card_border_color":"#000000","text_position":"below","enable_fade_mask": true,"fade_color":"#000000","fade_height_mobile": 45,"fade_height_desktop": 35,"collection_name_color":"#000000","collection_name_size_mobile": 18,"collection_name_size_desktop": 24,"collection_name_weight":"500","arrow_color":"#000000","arrow_size_mobile": 20,"arrow_size_desktop": 28,"description_color":"#000000","description_size_mobile": 12,"description_size_desktop": 15,"description_line_height_mobile": 1.3,"description_line_height_desktop": 1.4,"description_font_weight":"400","description_margin_bottom": 2,"info_padding_mobile": 14,"info_padding_desktop": 24},"blocks": [
+ {"type":"collection","settings": {"collection_description":"Add your description here"}},
+ {"type":"collection","settings": {"collection_description":"Add your description here"}},
+ {"type":"collection","settings": {"collection_description":"Add your description here"}},
+ {"type":"collection","settings": {"collection_description":"Add your description here"}}
+ ]
+ }
+ ]
+}
+{% endschema %}

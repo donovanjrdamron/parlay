@@ -1,0 +1,165 @@
+{% schema %}
+{
+  "name": "Infinity",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color_bar",
+      "label": "Background Color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#000"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border Width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 4,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "Text_bar_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "text-type1",
+      "label": "Point 1",
+      "default": "Point 1"
+    },
+    {
+      "type": "text",
+      "id": "text-type2",
+      "label": "Point 2",
+      "default": "Point 2"
+    },
+    {
+      "type": "text",
+      "id": "text-type3",
+      "label": "Point 3",
+      "default": "Point 3"
+    },
+    {
+      "type": "text",
+      "id": "text-type4",
+      "label": "Point 4",
+      "default": "Point 4"
+    },
+    {
+      "type": "text",
+      "id": "text-type5",
+      "label": "Point 5",
+      "default": "Point 5"
+    }
+  ],
+  "presets": [
+    {
+      "name": "announcement bar",
+      "category": "Announcement"
+    }
+  ]
+}
+{% endschema %}
+
+  <style>
+    #auto-scrolling-textv9 {
+        padding: 8px 0;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-color: {{ section.settings.background_color_bar }};
+      border-top: {{ section.settings.border_width}}px solid {{ section.settings.border_color }};
+      border-bottom: {{ section.settings.border_width}}px solid {{ section.settings.border_color }};
+    }
+
+    .text-wrapper {
+        align-items: center;
+        display: flex;
+        color: {{ section.settings.Text_bar_color}}; 
+        font-size: 16px;
+        font-weight: 700;
+        width: fit-content;
+        position: relative;
+        animation: auto-scroll 60s linear infinite;
+    }
+
+    .section_wrapper {
+        overflow: hidden;
+    }
+
+    .block-text {
+        white-space: nowrap;
+        margin: 0 16px;
+    }
+
+    @keyframes auto-scroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    @media screen and (max-width: 900px) {
+        #auto-scrolling-textv9 {
+            padding: 20px 0;
+        }
+    }
+  </style>
+  <div autoscrolling-text ="" id="auto-scrolling-textv9">
+    <div class="section_wrapper">
+      <div class="text-wrapper">
+        <div class="block-text">{{ section.settings['text-type1'] }}</div>
+        <div class="block-text">{{ section.settings['text-type2'] }}</div>
+        <div class="block-text">{{ section.settings['text-type3'] }}</div>
+        <div class="block-text">{{ section.settings['text-type4'] }}</div>
+        <div class="block-text">{{ section.settings['text-type5'] }}</div>
+        <div class="block-text">{{ section.settings['text-type1'] }}</div>
+        <div class="block-text">{{ section.settings['text-type2'] }}</div>
+        <div class="block-text">{{ section.settings['text-type3'] }}</div>
+        <div class="block-text">{{ section.settings['text-type4'] }}</div>
+        <div class="block-text">{{ section.settings['text-type5'] }}</div>
+        <div class="block-text">{{ section.settings['text-type1'] }}</div>
+        <div class="block-text">{{ section.settings['text-type2'] }}</div>
+        <div class="block-text">{{ section.settings['text-type3'] }}</div>
+        <div class="block-text">{{ section.settings['text-type4'] }}</div>
+        <div class="block-text">{{ section.settings['text-type5'] }}</div>
+        <div class="block-text">{{ section.settings['text-type1'] }}</div>
+        <div class="block-text">{{ section.settings['text-type2'] }}</div>
+        <div class="block-text">{{ section.settings['text-type3'] }}</div>
+        <div class="block-text">{{ section.settings['text-type4'] }}</div>
+        <div class="block-text">{{ section.settings['text-type5'] }}</div>
+        <div class="block-text">{{ section.settings['text-type1'] }}</div>
+        <div class="block-text">{{ section.settings['text-type2'] }}</div>
+        <div class="block-text">{{ section.settings['text-type3'] }}</div>
+        <div class="block-text">{{ section.settings['text-type4'] }}</div>
+        <div class="block-text">{{ section.settings['text-type5'] }}</div>
+        <div class="block-text">{{ section.settings['text-type1'] }}</div>
+        <div class="block-text">{{ section.settings['text-type2'] }}</div>
+        <div class="block-text">{{ section.settings['text-type3'] }}</div>
+        <div class="block-text">{{ section.settings['text-type4'] }}</div>
+        <div class="block-text">{{ section.settings['text-type5'] }}</div>
+        <div class="block-text">{{ section.settings['text-type1'] }}</div>
+        <div class="block-text">{{ section.settings['text-type2'] }}</div>
+        <div class="block-text">{{ section.settings['text-type3'] }}</div>
+        <div class="block-text">{{ section.settings['text-type4'] }}</div>
+        <div class="block-text">{{ section.settings['text-type5'] }}</div>
+        <div class="block-text">{{ section.settings['text-type1'] }}</div>
+        <div class="block-text">{{ section.settings['text-type2'] }}</div>
+        <div class="block-text">{{ section.settings['text-type3'] }}</div>
+        <div class="block-text">{{ section.settings['text-type4'] }}</div>
+        <div class="block-text">{{ section.settings['text-type5'] }}</div>
+      </div>
+    </div>
+  </div>
+

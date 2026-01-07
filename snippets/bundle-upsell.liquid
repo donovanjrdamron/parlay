@@ -1,0 +1,1366 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+{% comment %}
+  Bundle Upsell Block
+  Shows up to 3 bundle products with "Buy more & save" design
+  Only displays if at least one bundle product is NOT in cart
+{% endcomment %}
+
+{% liquid
+  assign product_1 = block.settings.product_1
+  assign product_2 = block.settings.product_2
+  assign product_3 = block.settings.product_3
+
+  assign product_1_free = block.settings.product_1_free
+  assign product_2_free = block.settings.product_2_free
+  assign product_3_free = block.settings.product_3_free
+
+  assign product_1_discount = block.settings.product_1_discount
+  assign product_2_discount = block.settings.product_2_discount
+  assign product_3_discount = block.settings.product_3_discount
+
+  assign product_1_use_custom_price = block.settings.product_1_use_custom_price
+  assign product_2_use_custom_price = block.settings.product_2_use_custom_price
+  assign product_3_use_custom_price = block.settings.product_3_use_custom_price
+
+  assign product_1_custom_price = block.settings.product_1_custom_price
+  assign product_2_custom_price = block.settings.product_2_custom_price
+  assign product_3_custom_price = block.settings.product_3_custom_price
+
+  assign hide_products_in_cart = block.settings.hide_products_in_cart
+
+  # Build array of products
+  assign products = ''
+  assign products_array = ''
+  if product_1 != blank
+    assign products_array = products_array | append: product_1.id | append: ','
+  endif
+  if product_2 != blank
+    assign products_array = products_array | append: product_2.id | append: ','
+  endif
+  if product_3 != blank
+    assign products_array = products_array | append: product_3.id | append: ','
+  endif
+
+  # Check if at least one bundle product is in cart
+  assign show_bundle = false
+  assign bundle_products_in_cart = 0
+  assign total_bundle_products = 0
+
+  # Count total bundle products
+  if product_1 != blank
+    assign total_bundle_products = total_bundle_products | plus: 1
+  endif
+  if product_2 != blank
+    assign total_bundle_products = total_bundle_products | plus: 1
+  endif
+  if product_3 != blank
+    assign total_bundle_products = total_bundle_products | plus: 1
+  endif
+
+  # Count how many bundle products are in cart and track which ones
+  assign product_1_in_cart = false
+  assign product_2_in_cart = false
+  assign product_3_in_cart = false
+
+  for item in cart.items
+    if products_array contains item.product.id
+      assign bundle_products_in_cart = bundle_products_in_cart | plus: 1
+
+      # Track which specific products are in cart
+      if product_1 != blank and item.product.id == product_1.id
+        assign product_1_in_cart = true
+      endif
+      if product_2 != blank and item.product.id == product_2.id
+        assign product_2_in_cart = true
+      endif
+      if product_3 != blank and item.product.id == product_3.id
+        assign product_3_in_cart = true
+      endif
+    endif
+  endfor
+
+  # Show bundle if cart is not empty AND at least one product is NOT in cart
+  if cart.item_count > 0 and bundle_products_in_cart < total_bundle_products
+    assign show_bundle = true
+  endif
+
+  # Determine which products to show based on settings
+  assign show_product_1 = false
+  assign show_product_2 = false
+  assign show_product_3 = false
+
+  if product_1 != blank
+    if hide_products_in_cart
+      # Only show if not in cart
+      if product_1_in_cart == false
+        assign show_product_1 = true
+      endif
+    else
+      # Always show
+      assign show_product_1 = true
+    endif
+  endif
+
+  if product_2 != blank
+    if hide_products_in_cart
+      # Only show if not in cart
+      if product_2_in_cart == false
+        assign show_product_2 = true
+      endif
+    else
+      # Always show
+      assign show_product_2 = true
+    endif
+  endif
+
+  if product_3 != blank
+    if hide_products_in_cart
+      # Only show if not in cart
+      if product_3_in_cart == false
+        assign show_product_3 = true
+      endif
+    else
+      # Always show
+      assign show_product_3 = true
+    endif
+  endif
+
+  # Calculate individual product prices (for display and total)
+  assign product_1_final_price = 0
+  assign product_1_original_price = 0
+  if product_1 != blank
+    assign product_1_original_price = product_1.price
+    if product_1_free
+      assign product_1_final_price = 0
+    elsif product_1_use_custom_price
+      assign product_1_final_price = 0
+    elsif product_1_discount > 0
+      assign discount_decimal = product_1_discount | times: 0.01
+      assign discount_amount = product_1.price | times: discount_decimal
+      assign product_1_final_price = product_1.price | minus: discount_amount
+    else
+      assign product_1_final_price = product_1.price
+    endif
+  endif
+
+  assign product_2_final_price = 0
+  assign product_2_original_price = 0
+  if product_2 != blank
+    assign product_2_original_price = product_2.price
+    if product_2_free
+      assign product_2_final_price = 0
+    elsif product_2_use_custom_price
+      assign product_2_final_price = 0
+    elsif product_2_discount > 0
+      assign discount_decimal = product_2_discount | times: 0.01
+      assign discount_amount = product_2.price | times: discount_decimal
+      assign product_2_final_price = product_2.price | minus: discount_amount
+    else
+      assign product_2_final_price = product_2.price
+    endif
+  endif
+
+  assign product_3_final_price = 0
+  assign product_3_original_price = 0
+  if product_3 != blank
+    assign product_3_original_price = product_3.price
+    if product_3_free
+      assign product_3_final_price = 0
+    elsif product_3_use_custom_price
+      assign product_3_final_price = 0
+    elsif product_3_discount > 0
+      assign discount_decimal = product_3_discount | times: 0.01
+      assign discount_amount = product_3.price | times: discount_decimal
+      assign product_3_final_price = product_3.price | minus: discount_amount
+    else
+      assign product_3_final_price = product_3.price
+    endif
+  endif
+
+  # Calculate totals
+  assign total_original_price = 0
+  assign total_final_price = 0
+
+  if product_1 != blank
+    assign total_original_price = total_original_price | plus: product_1_original_price
+    assign total_final_price = total_final_price | plus: product_1_final_price
+  endif
+  if product_2 != blank
+    assign total_original_price = total_original_price | plus: product_2_original_price
+    assign total_final_price = total_final_price | plus: product_2_final_price
+  endif
+  if product_3 != blank
+    assign total_original_price = total_original_price | plus: product_3_original_price
+    assign total_final_price = total_final_price | plus: product_3_final_price
+  endif
+
+  # Apply bundle discount if enabled
+  assign use_custom_price = block.settings.use_custom_price
+  if use_custom_price == false
+    assign discount_decimal = block.settings.discount_percentage | times: 0.01
+    assign discount_amount = total_final_price | times: discount_decimal
+    assign bundle_price_calculated = total_final_price | minus: discount_amount
+  else
+    assign bundle_price_calculated = total_final_price
+  endif
+
+  # Build variant IDs arrays
+  assign variant_ids = ''
+  assign free_variant_ids = ''
+
+  if product_1 != blank
+    assign variant_ids = variant_ids | append: product_1.variants.first.id
+    if product_1_free
+      assign free_variant_ids = free_variant_ids | append: product_1.variants.first.id
+    endif
+  endif
+
+  if product_2 != blank
+    if variant_ids != blank
+      assign variant_ids = variant_ids | append: ','
+    endif
+    assign variant_ids = variant_ids | append: product_2.variants.first.id
+    if product_2_free
+      if free_variant_ids != blank
+        assign free_variant_ids = free_variant_ids | append: ','
+      endif
+      assign free_variant_ids = free_variant_ids | append: product_2.variants.first.id
+    endif
+  endif
+
+  if product_3 != blank
+    if variant_ids != blank
+      assign variant_ids = variant_ids | append: ','
+    endif
+    assign variant_ids = variant_ids | append: product_3.variants.first.id
+    if product_3_free
+      if free_variant_ids != blank
+        assign free_variant_ids = free_variant_ids | append: ','
+      endif
+      assign free_variant_ids = free_variant_ids | append: product_3.variants.first.id
+    endif
+  endif
+
+  # Button style override logic
+  # Padding, border width, border radius, font size ALWAYS use BUNDLE settings (never theme)
+  assign button_border_width = block.settings.button_border_width
+  assign button_border_radius = block.settings.button_border_radius
+
+  # Colors controlled by override toggle
+  assign override_button = block.settings.override_button_settings
+  if override_button
+    # Use custom bundle colors
+    assign button_bg = block.settings.button_bg_color
+    assign button_text = block.settings.button_text_color
+    assign button_border_color = block.settings.button_border_color
+    assign button_gradient_enabled = block.settings.button_gradient_enabled
+    assign button_gradient = block.settings.button_gradient
+  else
+    # Use theme global colors
+    assign button_bg = settings.button_background_color
+    assign button_text = '#ffffff'
+    assign button_border_color = settings.colors_outline_button_labels
+    assign button_gradient_enabled = settings.button_gradient_enabled
+    assign button_gradient = settings.button_gradient
+  endif
+%}
+
+{% if show_bundle %}
+  <div class="bundle-upsell-v2 bundle-upsell-v2--{{ block.settings.layout_style | default: 'horizontal' }}"
+       style="--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;
+              --margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;
+              --image-size: {{ block.settings.image_size | default: 150 }}px;
+              --image-border-radius: {{ block.settings.image_border_radius | default: 8 }}px;
+              --bundle-title-alignment: {{ block.settings.title_text_align | default: 'center' }};
+              --bundle-title-font-size-mobile: {{ block.settings.bundle_title_font_size_mobile | default: 18 }}px;
+              --bundle-title-font-size-desktop: {{ block.settings.bundle_title_font_size | default: 24 }}px;
+              --bundle-title-font-weight: {{ block.settings.title_font_weight | default: '600' }};
+              --bundle-title-margin-bottom: {{ block.settings.bundle_title_margin_bottom | default: 8 }}px;
+              --product-title-size-desktop: {{ block.settings.title_font_size | default: 14 }}px;
+              --product-title-size-mobile: {{ block.settings.title_font_size_mobile | default: 14 }}px;
+              --product-title-align: {{ block.settings.product_title_text_align | default: 'left' }};
+              --product-title-weight: {{ block.settings.product_title_font_weight | default: '500' }};
+              --product-title-margin-bottom: {{ block.settings.product_title_margin_bottom | default: 0 }}px;
+              --price-size: {{ block.settings.price_font_size | default: 14 }}px;
+              --price-color: {{ block.settings.price_color | default: '#333333' }};
+              --price-weight: {{ block.settings.price_font_weight | default: '600' }};
+              --compare-price-size: {{ block.settings.compare_price_font_size | default: 12 }}px;
+              --compare-price-color: {{ block.settings.compare_price_color | default: '#999999' }};
+              --compare-price-weight: {{ block.settings.compare_price_font_weight | default: '400' }};
+              --price-layout: {{ block.settings.price_layout | default: 'column' }};
+              --price-order: {{ block.settings.price_order | default: 'compare-first' }};
+              --variant-text-color: {{ block.settings.variant_text_color | default: '#333333' }};
+              --variant-bg-color: {{ block.settings.variant_bg_color | default: '#ffffff' }};
+              --variant-border-color: {{ block.settings.variant_border_color | default: '#dddddd' }};
+              --bundle-padding-top: {{ block.settings.bundle_padding_top | default: 20 }}px;
+              --bundle-padding-bottom: {{ block.settings.bundle_padding_bottom | default: 20 }}px;
+              --bundle-padding-left: {{ block.settings.bundle_padding_left | default: 20 }}px;
+              --bundle-padding-right: {{ block.settings.bundle_padding_right | default: 20 }}px;
+              --bundle-divider-width: {{ block.settings.bundle_divider_width | default: 0 }}px;
+              --bundle-divider-color: {{ block.settings.bundle_divider_color | default: '#e5e5e5' }};
+              --product-bg-color: {{ block.settings.product_container_bg | default: 'transparent' }};
+              --product-padding: {{ block.settings.product_container_padding | default: 0 }}px;
+              --bg-color: {{ block.settings.background_color }};
+              --button-bg: {{ button_bg }};
+              --button-text: {{ button_text }};
+              --button-font-size: {{ block.settings.button_font_size | default: 14 }}px;
+              --button-font-weight: {{ block.settings.button_font_weight | default: '600' }};
+              --button-border-width: {{ button_border_width }}px;
+              --button-border-color: {{ button_border_color }};
+              --button-border-radius: {{ button_border_radius }}px;
+              --button-padding-top: {{ block.settings.button_padding_top | default: 12 }}px;
+              --button-padding-bottom: {{ block.settings.button_padding_bottom | default: 12 }}px;
+              --button-padding-left: {{ block.settings.button_padding_left | default: 20 }}px;
+              --button-padding-right: {{ block.settings.button_padding_right | default: 20 }}px;
+              --button-border-top: {{ block.settings.button_border_top | default: 0 }}px;
+              --button-gradient-enabled: {% if button_gradient_enabled %}1{% else %}0{% endif %};
+              --button-gradient: {{ button_gradient | default: 'linear-gradient(180deg, #000000, #000000)' }};
+              --button-icon: {{ block.settings.button_icon | default: 'shopping_cart' }};
+              --button-icon-size: {{ block.settings.button_icon_size | default: 20 }}px;
+              --button-icon-color: {{ block.settings.button_icon_color | default: '#ffffff' }};
+              --button-icon-position: {{ block.settings.button_icon_position | default: 'before' }};
+              --button-icon-gap: {{ block.settings.button_icon_gap | default: 8 }}px;
+              --button-icon-margin-bottom: {{ block.settings.button_icon_margin_bottom | default: 0 }}px;
+              --free-badge-size: {{ block.settings.free_badge_font_size | default: 12 }}px;
+              --free-badge-bg: {{ block.settings.free_badge_bg_color | default: '#4CAF50' }};
+              --free-badge-text: {{ block.settings.free_badge_text_color | default: '#ffffff' }};
+              --free-badge-weight: {{ block.settings.free_badge_font_weight | default: '700' }};"
+       {{ block.shopify_attributes }}>
+
+    {% if block.settings.title != blank %}
+      <h3 class="bundle-upsell-v2__title">{{ block.settings.title }}</h3>
+    {% endif %}
+
+    <div class="bundle-upsell-v2__products">
+      {% comment %} Product 1 {% endcomment %}
+      {% if show_product_1 %}
+        <div class="bundle-upsell-v2__product" data-product-index="1" data-variant-id="{{ product_1.variants.first.id }}" data-is-free="{% if product_1_free %}true{% else %}false{% endif %}" data-handle="{{ product_1.handle }}" data-discount="{{ product_1_discount }}" data-use-custom-price="{% if product_1_use_custom_price %}true{% else %}false{% endif %}" data-custom-price="{{ product_1_custom_price }}">
+          <div class="bundle-upsell-v2__image-wrapper">
+            {% if product_1.featured_image %}
+              <img src="{{ product_1.featured_image | image_url: width: 300 }}"
+                   alt="{{ product_1.title | escape }}"
+                   loading="lazy"
+                   class="bundle-upsell-v2__image">
+            {% endif %}
+          </div>
+          <div class="bundle-upsell-v2__info">
+            <h4 class="bundle-upsell-v2__product-title">{{ product_1.title }}</h4>
+            {% if product_1.variants.size > 1 %}
+              <select class="bundle-upsell-v2__variant-selector" data-product-id="{{ product_1.id }}">
+                {% for variant in product_1.variants %}
+                  <option value="{{ variant.id }}" {% if forloop.first %}selected{% endif %}>
+                    {{ variant.title }}
+                  </option>
+                {% endfor %}
+              </select>
+            {% else %}
+              {% unless product_1.variants.first.title == 'Default Title' %}
+                <p class="bundle-upsell-v2__variant">{{ product_1.variants.first.title }}</p>
+              {% endunless %}
+            {% endif %}
+          </div>
+          <div class="bundle-upsell-v2__price-wrapper">
+            {% if product_1_free %}
+              <span class="bundle-upsell-v2__free-badge">FREE</span>
+            {% elsif product_1_use_custom_price %}
+              <p class="bundle-upsell-v2__price">{{ product_1_custom_price }}</p>
+            {% else %}
+              {% if product_1_discount > 0 %}
+                <p class="bundle-upsell-v2__price-compare">{{ product_1_original_price | money_without_trailing_zeros }}</p>
+                <p class="bundle-upsell-v2__price">{{ product_1_final_price | money_without_trailing_zeros }}</p>
+              {% elsif product_1.compare_at_price > product_1.price %}
+                <p class="bundle-upsell-v2__price-compare">{{ product_1.compare_at_price | money_without_trailing_zeros }}</p>
+                <p class="bundle-upsell-v2__price">{{ product_1.price | money_without_trailing_zeros }}</p>
+              {% else %}
+                <p class="bundle-upsell-v2__price">{{ product_1.price | money_without_trailing_zeros }}</p>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if show_product_2 %}
+        {% if show_product_1 %}
+          <span class="bundle-upsell-v2__plus">+</span>
+        {% endif %}
+
+        {% comment %} Product 2 {% endcomment %}
+        <div class="bundle-upsell-v2__product" data-product-index="2" data-variant-id="{{ product_2.variants.first.id }}" data-is-free="{% if product_2_free %}true{% else %}false{% endif %}" data-handle="{{ product_2.handle }}" data-discount="{{ product_2_discount }}" data-use-custom-price="{% if product_2_use_custom_price %}true{% else %}false{% endif %}" data-custom-price="{{ product_2_custom_price }}">
+          <div class="bundle-upsell-v2__image-wrapper">
+            {% if product_2.featured_image %}
+              <img src="{{ product_2.featured_image | image_url: width: 300 }}"
+                   alt="{{ product_2.title | escape }}"
+                   loading="lazy"
+                   class="bundle-upsell-v2__image">
+            {% endif %}
+          </div>
+          <div class="bundle-upsell-v2__info">
+            <h4 class="bundle-upsell-v2__product-title">{{ product_2.title }}</h4>
+            {% if product_2.variants.size > 1 %}
+              <select class="bundle-upsell-v2__variant-selector" data-product-id="{{ product_2.id }}">
+                {% for variant in product_2.variants %}
+                  <option value="{{ variant.id }}" {% if forloop.first %}selected{% endif %}>
+                    {{ variant.title }}
+                  </option>
+                {% endfor %}
+              </select>
+            {% else %}
+              {% unless product_2.variants.first.title == 'Default Title' %}
+                <p class="bundle-upsell-v2__variant">{{ product_2.variants.first.title }}</p>
+              {% endunless %}
+            {% endif %}
+          </div>
+          <div class="bundle-upsell-v2__price-wrapper">
+            {% if product_2_free %}
+              <span class="bundle-upsell-v2__free-badge">FREE</span>
+            {% elsif product_2_use_custom_price %}
+              <p class="bundle-upsell-v2__price">{{ product_2_custom_price }}</p>
+            {% else %}
+              {% if product_2_discount > 0 %}
+                <p class="bundle-upsell-v2__price-compare">{{ product_2_original_price | money_without_trailing_zeros }}</p>
+                <p class="bundle-upsell-v2__price">{{ product_2_final_price | money_without_trailing_zeros }}</p>
+              {% elsif product_2.compare_at_price > product_2.price %}
+                <p class="bundle-upsell-v2__price-compare">{{ product_2.compare_at_price | money_without_trailing_zeros }}</p>
+                <p class="bundle-upsell-v2__price">{{ product_2.price | money_without_trailing_zeros }}</p>
+              {% else %}
+                <p class="bundle-upsell-v2__price">{{ product_2.price | money_without_trailing_zeros }}</p>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if show_product_3 %}
+        {% if show_product_1 or show_product_2 %}
+          <span class="bundle-upsell-v2__plus">+</span>
+        {% endif %}
+
+        {% comment %} Product 3 {% endcomment %}
+        <div class="bundle-upsell-v2__product" data-product-index="3" data-variant-id="{{ product_3.variants.first.id }}" data-is-free="{% if product_3_free %}true{% else %}false{% endif %}" data-handle="{{ product_3.handle }}" data-discount="{{ product_3_discount }}" data-use-custom-price="{% if product_3_use_custom_price %}true{% else %}false{% endif %}" data-custom-price="{{ product_3_custom_price }}">
+          <div class="bundle-upsell-v2__image-wrapper">
+            {% if product_3.featured_image %}
+              <img src="{{ product_3.featured_image | image_url: width: 300 }}"
+                   alt="{{ product_3.title | escape }}"
+                   loading="lazy"
+                   class="bundle-upsell-v2__image">
+            {% endif %}
+          </div>
+          <div class="bundle-upsell-v2__info">
+            <h4 class="bundle-upsell-v2__product-title">{{ product_3.title }}</h4>
+            {% if product_3.variants.size > 1 %}
+              <select class="bundle-upsell-v2__variant-selector" data-product-id="{{ product_3.id }}">
+                {% for variant in product_3.variants %}
+                  <option value="{{ variant.id }}" {% if forloop.first %}selected{% endif %}>
+                    {{ variant.title }}
+                  </option>
+                {% endfor %}
+              </select>
+            {% else %}
+              {% unless product_3.variants.first.title == 'Default Title' %}
+                <p class="bundle-upsell-v2__variant">{{ product_3.variants.first.title }}</p>
+              {% endunless %}
+            {% endif %}
+          </div>
+          <div class="bundle-upsell-v2__price-wrapper">
+            {% if product_3_free %}
+              <span class="bundle-upsell-v2__free-badge">FREE</span>
+            {% elsif product_3_use_custom_price %}
+              <p class="bundle-upsell-v2__price">{{ product_3_custom_price }}</p>
+            {% else %}
+              {% if product_3_discount > 0 %}
+                <p class="bundle-upsell-v2__price-compare">{{ product_3_original_price | money_without_trailing_zeros }}</p>
+                <p class="bundle-upsell-v2__price">{{ product_3_final_price | money_without_trailing_zeros }}</p>
+              {% elsif product_3.compare_at_price > product_3.price %}
+                <p class="bundle-upsell-v2__price-compare">{{ product_3.compare_at_price | money_without_trailing_zeros }}</p>
+                <p class="bundle-upsell-v2__price">{{ product_3.price | money_without_trailing_zeros }}</p>
+              {% else %}
+                <p class="bundle-upsell-v2__price">{{ product_3.price | money_without_trailing_zeros }}</p>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="bundle-upsell-v2__footer">
+      <button type="button"
+              class="bundle-upsell-v2__button"
+              data-bundle-products="{{ variant_ids }}"
+              data-free-products="{{ free_variant_ids }}"
+              data-bundle-action="upgrade"
+              data-is-bundle-button="true"
+              data-gradient="{% if button_gradient_enabled %}true{% else %}false{% endif %}"
+              data-icon="{{ block.settings.button_icon | default: 'shopping_cart' }}"
+              data-icon-position="{{ block.settings.button_icon_position | default: 'before' }}">
+        {% if block.settings.button_icon != blank %}
+          {% if block.settings.button_icon_position == 'before' or block.settings.button_icon_position == blank %}
+            <span class="{% if block.settings.button_icon_filled %}material-icons{% else %}material-icons-outlined{% endif %} bundle-button__icon" style="font-size: var(--button-icon-size, 20px); color: var(--button-icon-color, #ffffff);">{{ block.settings.button_icon }}</span>
+          {% endif %}
+        {% endif %}
+        <span class="bundle-button__text">{{ block.settings.button_text }}</span>
+        {% if block.settings.button_icon != blank and block.settings.button_icon_position == 'after' %}
+          <span class="{% if block.settings.button_icon_filled %}material-icons{% else %}material-icons-outlined{% endif %} bundle-button__icon" style="font-size: var(--button-icon-size, 20px); color: var(--button-icon-color, #ffffff);">{{ block.settings.button_icon }}</span>
+        {% endif %}
+        <span class="bundle-button__spinner" style="display: none;">
+          <svg width="20" height="20" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" class="spinner-svg">
+            <circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="5" stroke-dasharray="80" stroke-dashoffset="60" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <style>
+    .bundle-upsell-v2 {
+      margin-top: var(--margin-top, 1.5rem);
+      margin-bottom: var(--margin-bottom, 1.5rem);
+      padding: var(--bundle-padding-top, 20px) var(--bundle-padding-right, 20px) var(--bundle-padding-bottom, 20px) var(--bundle-padding-left, 20px);
+      background: var(--bg-color, #ffffff);
+      border-radius: 0;
+      border-top: var(--bundle-divider-width, 0px) solid var(--bundle-divider-color, #e5e5e5);
+    }
+
+    .bundle-upsell-v2__title {
+      text-align: var(--bundle-title-alignment, center);
+      font-size: var(--bundle-title-font-size-mobile, 18px);
+      font-weight: var(--bundle-title-font-weight, 600);
+      margin: 0 0 var(--bundle-title-margin-bottom, 8px);
+      color: #333;
+    }
+
+    @media (min-width: 769px) {
+      .bundle-upsell-v2__title {
+        font-size: var(--bundle-title-font-size-desktop, 24px);
+      }
+    }
+
+    /* Default Horizontal Layout - Same as Compact */
+    .bundle-upsell-v2--horizontal .bundle-upsell-v2__products {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .bundle-upsell-v2--horizontal .bundle-upsell-v2__product {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 0.5rem;
+      padding: var(--product-padding, 0.35rem);
+      background: var(--product-bg-color, #f9f9f9);
+      border-radius: 4px;
+    }
+
+    .bundle-upsell-v2--horizontal .bundle-upsell-v2__image-wrapper {
+      grid-column: 1;
+    }
+
+    .bundle-upsell-v2--horizontal .bundle-upsell-v2__info {
+      grid-column: 2;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.2rem;
+    }
+
+    .bundle-upsell-v2--horizontal .bundle-upsell-v2__price-wrapper {
+      grid-column: 3;
+      text-align: right;
+    }
+
+    .bundle-upsell-v2--horizontal .bundle-upsell-v2__plus {
+      display: none;
+    }
+
+    /* Compact Layout - Image Left, Title Middle, Price Right */
+    .bundle-upsell-v2--compact .bundle-upsell-v2__products {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .bundle-upsell-v2--compact .bundle-upsell-v2__product {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 0.5rem;
+      padding: var(--product-padding, 0.35rem);
+      background: var(--product-bg-color, #f9f9f9);
+      border-radius: 4px;
+    }
+
+    .bundle-upsell-v2--compact .bundle-upsell-v2__image-wrapper {
+      grid-column: 1;
+    }
+
+    .bundle-upsell-v2--compact .bundle-upsell-v2__info {
+      grid-column: 2;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.2rem;
+    }
+
+    .bundle-upsell-v2--compact .bundle-upsell-v2__price-wrapper {
+      grid-column: 3;
+      text-align: right;
+    }
+
+    .bundle-upsell-v2--compact .bundle-upsell-v2__plus {
+      display: none;
+    }
+
+    .bundle-upsell-v2__image-wrapper {
+      width: var(--image-size, 150px);
+      height: var(--image-size, 150px);
+      background: #f0f0f0;
+      border-radius: var(--image-border-radius, 8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .bundle-upsell-v2__image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .bundle-upsell-v2__product-title {
+      font-size: var(--product-title-size-mobile, 14px);
+      font-weight: var(--product-title-weight, 500);
+      text-align: var(--product-title-align, left);
+      margin: 0 0 var(--product-title-margin-bottom, 0px);
+      line-height: 1.3;
+      color: #333;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    @media (min-width: 769px) {
+      .bundle-upsell-v2__product-title {
+        font-size: var(--product-title-size-desktop, 14px);
+      }
+    }
+
+    .bundle-upsell-v2__variant {
+      font-size: calc(var(--product-title-size-mobile, 14px) * 0.85);
+      font-weight: 400;
+      margin: 0;
+      color: var(--variant-text-color, #666);
+      line-height: 1.2;
+    }
+
+    @media (min-width: 769px) {
+      .bundle-upsell-v2__variant {
+        font-size: calc(var(--product-title-size-desktop, 14px) * 0.85);
+      }
+    }
+
+    .bundle-upsell-v2__variant-selector {
+      font-size: calc(var(--product-title-size-mobile, 14px) * 0.85);
+      font-weight: 400;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid var(--variant-border-color, #ddd);
+      border-radius: 4px;
+      background: var(--variant-bg-color, #fff);
+      color: var(--variant-text-color, #333);
+      cursor: pointer;
+      width: max-content;
+      max-width: max-content;
+    }
+
+    .bundle-upsell-v2__variant-selector:focus {
+      outline: none;
+      border-color: var(--variant-border-color, #999);
+    }
+
+    @media (min-width: 769px) {
+      .bundle-upsell-v2__variant-selector {
+        font-size: calc(var(--product-title-size-desktop, 14px) * 0.85);
+      }
+    }
+
+    .bundle-upsell-v2__price-wrapper {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.125rem;
+    }
+
+    /* Column layout (default) */
+    .bundle-upsell-v2__price-wrapper {
+      flex-direction: column;
+    }
+
+    /* Row layout */
+    .bundle-upsell-v2[style*="--price-layout: row"] .bundle-upsell-v2__price-wrapper {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Price order - main first */
+    .bundle-upsell-v2[style*="--price-order: main-first"] .bundle-upsell-v2__price {
+      order: 1;
+    }
+
+    .bundle-upsell-v2[style*="--price-order: main-first"] .bundle-upsell-v2__price-compare {
+      order: 2;
+    }
+
+    /* Price order - compare first (default) */
+    .bundle-upsell-v2[style*="--price-order: compare-first"] .bundle-upsell-v2__price {
+      order: 2;
+    }
+
+    .bundle-upsell-v2[style*="--price-order: compare-first"] .bundle-upsell-v2__price-compare {
+      order: 1;
+    }
+
+    .bundle-upsell-v2__price {
+      font-size: var(--price-size, 14px);
+      font-weight: var(--price-weight, 600);
+      margin: 0;
+      color: var(--price-color, #333);
+    }
+
+    .bundle-upsell-v2__price-compare {
+      font-size: var(--compare-price-size, 12px);
+      font-weight: var(--compare-price-weight, 400);
+      margin: 0;
+      color: var(--compare-price-color, #999);
+      text-decoration: line-through;
+    }
+
+    .bundle-upsell-v2__free-badge {
+      display: inline-block;
+      background: var(--free-badge-bg, #4CAF50);
+      color: var(--free-badge-text, #ffffff);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: var(--free-badge-size, 12px);
+      font-weight: var(--free-badge-weight, 700);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .bundle-upsell-v2__plus {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .bundle-upsell-v2__footer {
+      padding-top: 0.5rem;
+      border-top: var(--button-border-top, 0px) solid var(--bundle-divider-color, #e5e5e5);
+    }
+
+    .bundle-upsell-v2__button {
+      padding: var(--button-padding-top, 12px) var(--button-padding-right, 24px) var(--button-padding-bottom, 12px) var(--button-padding-left, 24px);
+      background: var(--button-bg, #ff5722);
+      color: var(--button-text, #ffffff);
+      border: var(--button-border-width, 0px) solid var(--button-border-color, #000000);
+      border-radius: var(--button-border-radius, 4px);
+      font-size: var(--button-font-size, 14px);
+      font-weight: var(--button-font-weight, 600);
+      cursor: pointer;
+      transition: opacity 0.2s;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--button-icon-gap, 8px);
+      position: relative;
+    }
+
+    .bundle-upsell-v2__button[data-gradient="true"] {
+      background: var(--button-gradient, linear-gradient(180deg, #000000, #000000));
+    }
+
+    .bundle-button__icon {
+      display: inline-flex;
+      align-items: center;
+      line-height: 1;
+      margin-bottom: var(--button-icon-margin-bottom, 0px);
+    }
+
+    .bundle-button__spinner {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bundle-button__spinner .spinner-svg {
+      animation: button-spinner 0.8s linear infinite;
+      display: block;
+    }
+
+    @keyframes button-spinner {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Loading state styles */
+    .bundle-upsell-v2__button.is-loading .bundle-button__icon {
+      display: none !important;
+    }
+
+    .bundle-upsell-v2__button.is-loading {
+      position: relative;
+    }
+
+    .bundle-upsell-v2__button.is-loading::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    .bundle-upsell-v2__button:hover {
+      opacity: 0.9;
+    }
+
+    .bundle-upsell-v2__button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 768px) {
+      /* Mobile styles - all settings still apply from variables */
+      .bundle-upsell-v2__title {
+        /* Font size already set via --bundle-title-font-size-mobile */
+        /* Margin already set via --bundle-title-margin-bottom */
+      }
+
+      /* Horizontal layout on mobile */
+      .bundle-upsell-v2--horizontal .bundle-upsell-v2__products {
+        gap: 0.4rem;
+      }
+
+      .bundle-upsell-v2--horizontal .bundle-upsell-v2__plus {
+        display: none;
+      }
+
+      /* Compact layout on mobile */
+      .bundle-upsell-v2--compact .bundle-upsell-v2__products {
+        gap: 0.4rem;
+      }
+
+      .bundle-upsell-v2--compact .bundle-upsell-v2__product {
+        /* Padding and gap already set via variables */
+        gap: 0.4rem;
+      }
+
+      .bundle-upsell-v2__button {
+        width: 100%;
+        /* Padding already set via --button-padding-* variables */
+      }
+    }
+  </style>
+{% endif %}
+
+<script>
+  // Bundle Upsell Handler - Ultra-aggressive event blocking
+  (function() {
+    'use strict';
+
+    let isProcessing = false;
+
+    // Money formatting helper
+    const moneyFormat = {{ shop.money_format | json }};
+
+    function formatMoney(cents) {
+      if (typeof cents === 'string') {
+        cents = cents.replace('.', '');
+      }
+      let value = '';
+      const placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+      const formatString = moneyFormat;
+
+      function formatWithDelimiters(number, precision, thousands, decimal) {
+        precision = precision || 2;
+        thousands = thousands || ',';
+        decimal = decimal || '.';
+
+        if (isNaN(number) || number == null) {
+          return '0';
+        }
+
+        number = (number / 100.0);
+
+        // Remove trailing zeros
+        let fixed = number.toFixed(precision);
+        if (precision === 2 && fixed.endsWith('.00')) {
+          fixed = fixed.slice(0, -3);
+        } else if (precision === 2 && fixed.endsWith('0') && !fixed.endsWith('.00')) {
+          fixed = fixed.slice(0, -1);
+        }
+
+        const parts = fixed.split('.');
+        const dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + thousands);
+        const cents = parts[1] ? (decimal + parts[1]) : '';
+
+        return dollars + cents;
+      }
+
+      switch (formatString.match(placeholderRegex)[1]) {
+        case 'amount':
+          value = formatWithDelimiters(cents, 2);
+          break;
+        case 'amount_no_decimals':
+          value = formatWithDelimiters(cents, 0);
+          break;
+        case 'amount_with_comma_separator':
+          value = formatWithDelimiters(cents, 2, '.', ',');
+          break;
+        case 'amount_no_decimals_with_comma_separator':
+          value = formatWithDelimiters(cents, 0, '.', ',');
+          break;
+      }
+
+      return formatString.replace(placeholderRegex, value);
+    }
+
+    function handleBundleClick(e, button) {
+      // Stop ALL event propagation immediately
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        if (e.cancelable) {
+          e.returnValue = false;
+        }
+      }
+
+      if (isProcessing) {
+        return false;
+      }
+
+      // Get currently selected variants from all products in the bundle
+      const bundleContainer = button.closest('.bundle-upsell-v2');
+      const productElements = bundleContainer.querySelectorAll('.bundle-upsell-v2__product');
+      const variantIds = [];
+      const freeProductIds = [];
+
+      // For each product, get the current variant ID (either from selector or data attribute)
+      productElements.forEach(productEl => {
+        const variantSelector = productEl.querySelector('.bundle-upsell-v2__variant-selector');
+        let variantId;
+
+        if (variantSelector) {
+          // Product has multiple variants - use selected value from dropdown
+          variantId = parseInt(variantSelector.value);
+        } else {
+          // Product has single variant - use data attribute
+          variantId = parseInt(productEl.dataset.variantId);
+        }
+
+        if (variantId) {
+          variantIds.push(variantId);
+
+          // Check if this product is free
+          if (productEl.dataset.isFree === 'true') {
+            freeProductIds.push(variantId);
+          }
+        }
+      });
+
+      if (variantIds.length === 0) {
+        alert('No products selected for bundle');
+        return false;
+      }
+
+      isProcessing = true;
+      button.disabled = true;
+
+      // Show spinner, hide text, add loading class
+      const buttonText = button.querySelector('.bundle-button__text');
+      const buttonSpinner = button.querySelector('.bundle-button__spinner');
+      button.classList.add('is-loading');
+      if (buttonText) buttonText.style.display = 'none';
+      if (buttonSpinner) buttonSpinner.style.display = 'inline-flex';
+
+      // Get current cart to check what's already there
+      const getCart = new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '/cart.js', true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+        xhr.onload = function() {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(JSON.parse(xhr.responseText));
+          } else {
+            reject(new Error('Failed to get cart'));
+          }
+        };
+
+        xhr.onerror = function() {
+          reject(new Error('Network error'));
+        };
+
+        xhr.send();
+      });
+
+      getCart
+        .then(cart => {
+          // Find which bundle products are already in cart
+          const variantsInCart = cart.items.map(item => item.variant_id);
+
+          // Filter to only add missing variants
+          const missingVariants = variantIds.filter(id => !variantsInCart.includes(id));
+
+          if (missingVariants.length === 0) {
+            // Hide spinner, reset button, remove loading class
+            button.classList.remove('is-loading');
+            if (buttonSpinner) buttonSpinner.style.display = 'none';
+            if (buttonText) {
+              buttonText.style.display = 'inline';
+              buttonText.textContent = buttonText.getAttribute('data-original-text') || 'Upgrade Bundle';
+            }
+            button.disabled = false;
+            return;
+          }
+
+          // Build items array for AJAX add to cart
+          const itemsToAdd = missingVariants.map(variantId => {
+            const isFree = freeProductIds.includes(variantId);
+            const item = {
+              id: variantId,
+              quantity: 1
+            };
+
+            if (isFree) {
+              item.properties = { '_free': 'true' };
+            }
+
+            return item;
+          });
+
+          // Add items via AJAX without page reload
+          fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ items: itemsToAdd })
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to add bundle items');
+            }
+            return response.json();
+          })
+          .then(result => {
+            // Keep spinner showing while refreshing cart
+            // Fetch updated sections
+            return fetch(`?sections=cart-drawer,cart-icon-bubble&timestamp=${Date.now()}`)
+              .then(res => res.json())
+              .then(sections => {
+                // Update cart content
+                if (sections && sections['cart-drawer']) {
+                  const cartDrawer = document.querySelector('cart-drawer');
+                  if (cartDrawer) {
+                    // Remove is-empty class immediately
+                    cartDrawer.classList.remove('is-empty');
+                    cartDrawer.classList.add('is-loaded');
+
+                    const parser = new DOMParser();
+                    const newDoc = parser.parseFromString(sections['cart-drawer'], 'text/html');
+
+                    // Update drawer__inner content specifically
+                    const drawerInner = cartDrawer.querySelector('.drawer__inner');
+                    const newDrawerInner = newDoc.querySelector('.drawer__inner');
+
+                    if (drawerInner && newDrawerInner) {
+                      drawerInner.innerHTML = newDrawerInner.innerHTML;
+                    }
+                  }
+                }
+
+                // Update cart icon bubble
+                if (sections && sections['cart-icon-bubble']) {
+                  const bubbleContainer = document.querySelector('#cart-icon-bubble');
+                  if (bubbleContainer) {
+                    const parser = new DOMParser();
+                    const newDoc = parser.parseFromString(sections['cart-icon-bubble'], 'text/html');
+                    const newBubble = newDoc.querySelector('#cart-icon-bubble');
+                    if (newBubble) {
+                      bubbleContainer.innerHTML = newBubble.innerHTML;
+                    }
+                  }
+                }
+
+                // Trigger cart refresh events
+                document.documentElement.dispatchEvent(new CustomEvent('cart:refresh', {
+                  bubbles: true
+                }));
+
+                document.dispatchEvent(new CustomEvent('cartQuantityUpdated', {
+                  bubbles: true
+                }));
+
+                // Now hide spinner and reset button after cart is refreshed
+                button.classList.remove('is-loading');
+                if (buttonSpinner) buttonSpinner.style.display = 'none';
+                if (buttonText) {
+                  buttonText.style.display = 'inline';
+                  buttonText.textContent = buttonText.getAttribute('data-original-text') || 'Upgrade Bundle';
+                }
+                button.disabled = false;
+              })
+              .catch(err => {
+                // Reset button even if refresh fails
+                button.classList.remove('is-loading');
+                if (buttonSpinner) buttonSpinner.style.display = 'none';
+                if (buttonText) {
+                  buttonText.style.display = 'inline';
+                  buttonText.textContent = buttonText.getAttribute('data-original-text') || 'Upgrade Bundle';
+                }
+                button.disabled = false;
+              });
+          })
+          .catch(error => {
+            // Hide spinner, show text, remove loading class
+            button.classList.remove('is-loading');
+            if (buttonSpinner) buttonSpinner.style.display = 'none';
+            if (buttonText) {
+              buttonText.style.display = 'inline';
+              buttonText.textContent = buttonText.getAttribute('data-original-text') || 'Upgrade Bundle';
+            }
+
+            button.disabled = false;
+            alert('Unable to add bundle. Please try again.');
+          });
+        })
+        .catch(error => {
+          // Hide spinner, show text, remove loading class
+          button.classList.remove('is-loading');
+          if (buttonSpinner) buttonSpinner.style.display = 'none';
+          if (buttonText) {
+            buttonText.style.display = 'inline';
+            buttonText.textContent = buttonText.getAttribute('data-original-text') || 'Upgrade Bundle';
+          }
+
+          button.disabled = false;
+          alert('Unable to add bundle: ' + error.message);
+        })
+        .finally(() => {
+          setTimeout(() => {
+            isProcessing = false;
+          }, 1000);
+        });
+
+      return false;
+    }
+
+    function attachBundleHandler(button) {
+      // Check if already processed using data attribute
+      if (button.dataset.bundleHandlerAttached === 'true') {
+        return;
+      }
+
+      // Mark as processed
+      button.dataset.bundleHandlerAttached = 'true';
+
+      // Add click handler with highest priority (capture phase)
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        handleBundleClick(e, this);
+        return false;
+      }, true);
+    }
+
+    // Global event delegation - BOTH blocks events AND calls handler (capture phase = highest priority)
+    document.addEventListener('click', function(e) {
+      const bundleButton = e.target.closest('.bundle-upsell-v2__button');
+
+      if (bundleButton && bundleButton.dataset.isBundleButton === 'true') {
+        // FIRST: Stop all propagation to prevent other handlers
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+
+        if (e.cancelable) {
+          e.returnValue = false;
+        }
+
+        // SECOND: Call our handler
+        handleBundleClick(e, bundleButton);
+
+        return false;
+      }
+    }, true);
+
+    // Watch for bundle buttons being added to DOM
+    const observer = new MutationObserver(function(mutations) {
+      for (let i = 0; i < mutations.length; i++) {
+        const mutation = mutations[i];
+        for (let j = 0; j < mutation.addedNodes.length; j++) {
+          const node = mutation.addedNodes[j];
+          if (node.nodeType === 1) {
+            // Check if the node itself is a bundle button
+            if (node.classList && node.classList.contains('bundle-upsell-v2__button')) {
+              if (!node.dataset.bundleHandlerAttached) {
+                attachBundleHandler(node);
+              }
+            }
+            // Check if any children are bundle buttons
+            else if (node.querySelectorAll) {
+              const buttons = node.querySelectorAll('.bundle-upsell-v2__button');
+              if (buttons.length > 0) {
+                buttons.forEach(function(btn) {
+                  if (!btn.dataset.bundleHandlerAttached) {
+                    attachBundleHandler(btn);
+                  }
+                });
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Start observing
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+
+    // Add variant change listeners to update image and price
+    function attachVariantChangeListeners() {
+      const variantSelectors = document.querySelectorAll('.bundle-upsell-v2__variant-selector');
+
+      variantSelectors.forEach(selector => {
+        if (selector.dataset.variantListenerAttached === 'true') {
+          return;
+        }
+
+        selector.dataset.variantListenerAttached = 'true';
+
+        selector.addEventListener('change', function() {
+          const selectedVariantId = this.value;
+          const productElement = this.closest('.bundle-upsell-v2__product');
+          const productId = this.dataset.productId;
+
+          // Update the data-variant-id on the product element
+          productElement.dataset.variantId = selectedVariantId;
+
+          // Fetch variant data to get image and price
+          fetch(`/products/${productElement.dataset.handle || ''}.js`)
+            .then(response => response.json())
+            .then(product => {
+              const selectedVariant = product.variants.find(v => v.id == selectedVariantId);
+
+              if (selectedVariant) {
+                // Update image if variant has an image
+                const imageWrapper = productElement.querySelector('.bundle-upsell-v2__image-wrapper img');
+                if (imageWrapper && selectedVariant.featured_image) {
+                  imageWrapper.src = selectedVariant.featured_image.src.replace(/\.jpg|\.png|\.gif/, '_300x300$&');
+                } else if (imageWrapper && product.featured_image) {
+                  imageWrapper.src = product.featured_image.replace(/\.jpg|\.png|\.gif/, '_300x300$&');
+                }
+
+                // Get discount settings from data attributes
+                const isFree = productElement.dataset.isFree === 'true';
+                const useCustomPrice = productElement.dataset.useCustomPrice === 'true';
+                const customPrice = productElement.dataset.customPrice;
+                const discountPercent = parseFloat(productElement.dataset.discount) || 0;
+
+                // Update price based on discount settings
+                const priceElement = productElement.querySelector('.bundle-upsell-v2__price');
+                const comparePriceElement = productElement.querySelector('.bundle-upsell-v2__price-compare');
+
+                if (isFree) {
+                  // Show FREE badge (handled by HTML, no price update needed)
+                  if (priceElement) {
+                    priceElement.style.display = 'none';
+                  }
+                  if (comparePriceElement) {
+                    comparePriceElement.style.display = 'none';
+                  }
+                } else if (useCustomPrice) {
+                  // Show custom price text
+                  if (priceElement) {
+                    priceElement.textContent = customPrice;
+                    priceElement.style.display = 'block';
+                  }
+                  if (comparePriceElement) {
+                    comparePriceElement.style.display = 'none';
+                  }
+                } else if (discountPercent > 0) {
+                  // Apply bundle discount
+                  const originalPrice = selectedVariant.price;
+                  const discountAmount = Math.round(originalPrice * (discountPercent / 100));
+                  const discountedPrice = originalPrice - discountAmount;
+
+                  if (priceElement) {
+                    priceElement.textContent = formatMoney(discountedPrice);
+                    priceElement.style.display = 'block';
+                  }
+                  if (comparePriceElement) {
+                    comparePriceElement.textContent = formatMoney(originalPrice);
+                    comparePriceElement.style.display = 'block';
+                  }
+                } else {
+                  // No bundle discount, show regular price
+                  if (priceElement) {
+                    priceElement.textContent = formatMoney(selectedVariant.price);
+                    priceElement.style.display = 'block';
+                  }
+
+                  // Show variant's compare_at_price if it exists
+                  if (comparePriceElement) {
+                    if (selectedVariant.compare_at_price && selectedVariant.compare_at_price > selectedVariant.price) {
+                      comparePriceElement.textContent = formatMoney(selectedVariant.compare_at_price);
+                      comparePriceElement.style.display = 'block';
+                    } else {
+                      comparePriceElement.style.display = 'none';
+                    }
+                  }
+                }
+              }
+            })
+            .catch(err => {});
+        });
+      });
+    }
+
+    // Attach variant listeners on page load
+    attachVariantChangeListeners();
+
+    // Re-attach when cart refreshes
+    document.addEventListener('cart:refresh', function() {
+      setTimeout(attachVariantChangeListeners, 300);
+    });
+
+    // Also check for existing buttons
+    setTimeout(function() {
+      const existing = document.querySelectorAll('.bundle-upsell-v2__button');
+      if (existing.length > 0) {
+        existing.forEach(attachBundleHandler);
+      }
+    }, 100);
+  })();
+</script>

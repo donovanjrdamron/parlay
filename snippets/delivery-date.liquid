@@ -1,0 +1,151 @@
+{% comment %}
+  Delivery Date Snippet
+  Displays a radio button with estimated delivery date
+{% endcomment %}
+
+{%- liquid
+  assign days_ahead = block.settings.days_ahead
+  assign date_format = block.settings.date_format
+  assign alignment = block.settings.alignment
+
+  assign future_timestamp = 'now' | date: '%s' | plus: 0
+  assign seconds_to_add = days_ahead | times: 86400
+  assign delivery_timestamp = future_timestamp | plus: seconds_to_add
+
+  assign day_name = delivery_timestamp | date: '%A'
+  assign day_short = delivery_timestamp | date: '%a'
+  assign day_number = delivery_timestamp | date: '%d'
+  assign month_name = delivery_timestamp | date: '%B'
+  assign month_short = delivery_timestamp | date: '%b'
+  assign month_number = delivery_timestamp | date: '%m'
+  assign year = delivery_timestamp | date: '%Y'
+
+  assign day_number_int = day_number | plus: 0
+  assign last_digit = day_number_int | modulo: 10
+  assign last_two_digits = day_number_int | modulo: 100
+
+  assign suffix = 'th'
+  if last_two_digits == 11 or last_two_digits == 12 or last_two_digits == 13
+    assign suffix = 'th'
+  elsif last_digit == 1
+    assign suffix = 'st'
+  elsif last_digit == 2
+    assign suffix = 'nd'
+  elsif last_digit == 3
+    assign suffix = 'rd'
+  endif
+
+  assign date_with_suffix = day_number_int | append: suffix
+
+  assign formatted_date = date_format
+  assign formatted_date = formatted_date | replace: '[day]', day_name
+  assign formatted_date = formatted_date | replace: '[day_short]', day_short
+  assign formatted_date = formatted_date | replace: '[date]', date_with_suffix
+  assign formatted_date = formatted_date | replace: '[month]', month_name
+  assign formatted_date = formatted_date | replace: '[month_short]', month_short
+  assign formatted_date = formatted_date | replace: '[monthnumber]', month_number
+  assign formatted_date = formatted_date | replace: '[year]', year
+-%}
+
+<div id="delivery-date-{{ block.id }}" class="delivery-date delivery-date--align-{{ alignment }}" {{ block.shopify_attributes }}>
+  <style>
+    #delivery-date-{{ block.id }}.delivery-date {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-top: {{ block.settings.margin_top }}px;
+      margin-bottom: {{ block.settings.margin_bottom }}px;
+      padding-top: {{ block.settings.padding_vertical }}px;
+      padding-bottom: {{ block.settings.padding_vertical }}px;
+      padding-left: {{ block.settings.padding_horizontal }}px;
+      padding-right: {{ block.settings.padding_horizontal }}px;
+      background-color: {{ block.settings.bg_color }};
+      border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+      border-radius: {{ block.settings.border_radius }}px;
+      {% if block.settings.compact_mode %}
+        width: max-content;
+      {% endif %}
+    }
+
+    #delivery-date-{{ block.id }}.delivery-date--align-left {
+      justify-content: flex-start;
+      {% if block.settings.compact_mode %}
+        margin-left: 0;
+        margin-right: auto;
+      {% endif %}
+    }
+
+    #delivery-date-{{ block.id }}.delivery-date--align-center {
+      justify-content: center;
+      {% if block.settings.compact_mode %}
+        margin-left: auto;
+        margin-right: auto;
+      {% endif %}
+    }
+
+    #delivery-date-{{ block.id }}.delivery-date--align-right {
+      justify-content: flex-end;
+      {% if block.settings.compact_mode %}
+        margin-left: auto;
+        margin-right: 0;
+      {% endif %}
+    }
+
+    #delivery-date-{{ block.id }} .delivery-date__content {
+      display: flex;
+      align-items: center;
+      gap: {{ block.settings.gap }}px;
+    }
+
+    #delivery-date-{{ block.id }} .delivery-date__radio {
+      display: block;
+      width: {{ block.settings.radio_size }}px;
+      height: {{ block.settings.radio_size }}px;
+      border-radius: 50%;
+      background-color: {{ block.settings.radio_color }};
+      flex-shrink: 0;
+      position: relative;
+      {% if block.settings.enable_glow %}
+        box-shadow: 0 0 {{ block.settings.glow_intensity }}px {{ block.settings.glow_color }};
+      {% endif %}
+    }
+
+    #delivery-date-{{ block.id }} .delivery-date__radio::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: {{ block.settings.radio_size | times: 0.5 }}px;
+      height: {{ block.settings.radio_size | times: 0.5 }}px;
+      border-radius: 50%;
+      background-color: {{ block.settings.radio_inner_color }};
+    }
+
+    #delivery-date-{{ block.id }} .delivery-date__text {
+      font-size: {{ block.settings.text_size }}px;
+      color: {{ block.settings.text_color }};
+      font-weight: {{ block.settings.text_weight }};
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    #delivery-date-{{ block.id }} .delivery-date__text p {
+      margin: 0;
+    }
+
+    @media screen and (max-width: 749px) {
+      #delivery-date-{{ block.id }} .delivery-date__text {
+        font-size: {{ block.settings.text_size_mobile }}px;
+      }
+    }
+  </style>
+
+  <div class="delivery-date__content">
+    <div class="delivery-date__radio"></div>
+    <div class="delivery-date__text">
+      {{ block.settings.delivery_text | replace: '[date]', formatted_date }}
+    </div>
+  </div>
+</div>

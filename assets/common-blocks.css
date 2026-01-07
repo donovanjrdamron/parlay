@@ -1,0 +1,127 @@
+/* Common Block Styles - Shared across all sections */
+
+/* Header Block Base Styles */
+.block-header {
+  line-height: 1;
+  background: transparent;
+}
+
+.block-header h1,
+.block-header h2,
+.block-header h3,
+.block-header h4,
+.block-header h5,
+.block-header h6 {
+  white-space: nowrap;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.block-header .header-content {
+  white-space: nowrap;
+  overflow: visible;
+}
+
+.block-header .highlighted-text,
+.block-header .highlighted-text-separate {
+  white-space: nowrap;
+}
+
+.block-header .header-wrapper {
+  background: transparent;
+  width: 100%;
+}
+
+.block-header .header-wrapper--left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.block-header .header-wrapper--center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.block-header .header-wrapper--right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* Highlighted Text */
+.block-header .highlighted-text {
+  display: inline-block;
+  width: auto;
+}
+
+.block-header .highlighted-text-separate {
+  display: inline-block;
+  width: auto;
+}
+
+.block-header .header-content {
+  display: inline-block;
+  width: auto;
+}
+
+/* For inline highlighted text */
+.block-header .header-content .highlighted-text {
+  display: inline;
+}
+
+/* Text Block */
+.block-text .text-content {
+  letter-spacing: var(--body-letter-spacing);
+  line-height: var(--body-line-height);
+}
+
+/* Image Block */
+.block-image {
+  position: relative;
+}
+
+.block-image .image-wrapper {
+  max-width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+.block-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media screen and (max-width: 749px) {
+  .block-image .image-wrapper {
+    width: 100% !important;
+  }
+}
+
+/* Button Block */
+.block-button .button-wrapper {
+  display: inline-block;
+}
+
+.block-button .button {
+  display: inline-block;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  letter-spacing: var(--body-letter-spacing);
+}
+
+.block-button .button:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
+/* Custom HTML Block */
+.block-custom-html {
+  width: 100%;
+}

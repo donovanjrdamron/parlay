@@ -1,0 +1,345 @@
+{% comment %}
+  Snippet: Limited Time Sale Block
+  - Prominent sale offer display
+  - Countdown timer
+  - Product image and CTA
+  - Sell-out risk indicator
+{% endcomment %}
+
+<div class="limited-time-sale-{{ block.id }}" style="margin-top: {{ block.settings.margin_top }}px; margin-bottom: {{ block.settings.margin_bottom }}px;">
+  {% if block.settings.chip_text != blank %}
+    <div class="sale-chip-{{ block.id }}">
+      {{ block.settings.chip_text }}
+    </div>
+  {% endif %}
+
+  <div class="sale-container-{{ block.id }}">
+    <div class="sale-media-{{ block.id }}">
+      {% if block.settings.image != blank %}
+        {{ block.settings.image | image_url: width: 600 | image_tag: class: 'sale-image', loading: 'lazy' }}
+      {% else %}
+        <div class="sale-image-placeholder">Product Image</div>
+      {% endif %}
+    </div>
+
+    <div class="sale-content-{{ block.id }}">
+      {% if block.settings.eyebrow_text != blank %}
+        <div class="sale-eyebrow-{{ block.id }}">{{ block.settings.eyebrow_text }}</div>
+      {% endif %}
+
+      <div class="sale-headline-{{ block.id }}">
+        {% if block.settings.headline_accent != blank %}
+          <div class="sale-headline-accent">{{ block.settings.headline_accent }}</div>
+        {% endif %}
+        {% if block.settings.headline_strong != blank %}
+          <div class="sale-headline-strong">{{ block.settings.headline_strong }}</div>
+        {% endif %}
+      </div>
+
+      {% if block.settings.description != blank %}
+        <div class="sale-description-{{ block.id }}">{{ block.settings.description }}</div>
+      {% endif %}
+
+      {% if block.settings.cta_label != blank %}
+        <a href="{{ block.settings.cta_link | default: '#' }}" class="sale-cta-{{ block.id }}">
+          {{ block.settings.cta_label }}
+        </a>
+      {% endif %}
+
+      <div class="sale-meta-{{ block.id }}">
+        <div class="sale-meta-row">
+          <div class="sale-meta-item">
+            <span class="sale-meta-label">{{ block.settings.countdown_label }}</span>
+            <div class="sale-countdown-{{ block.id }}"
+                 id="sale-countdown-{{ block.id }}"
+                 {% if block.settings.deal_mode == 'duration' %}
+                   data-hours="{{ block.settings.duration_hours }}"
+                   data-minutes="{{ block.settings.duration_minutes }}"
+                   data-seconds="{{ block.settings.duration_seconds }}"
+                 {% else %}
+                   data-deadline="{{ block.settings.deadline }}"
+                 {% endif %}>
+              <span id="sale-hh-{{ block.id }}">{{ block.settings.duration_hours | default: 0 | prepend: '0' | slice: -2, 2 }}</span>:
+              <span id="sale-mm-{{ block.id }}">{{ block.settings.duration_minutes | default: 0 | prepend: '0' | slice: -2, 2 }}</span>:
+              <span id="sale-ss-{{ block.id }}">{{ block.settings.duration_seconds | default: 0 | prepend: '0' | slice: -2, 2 }}</span>
+            </div>
+          </div>
+          <div class="sale-divider-{{ block.id }}"></div>
+          <div class="sale-meta-item">
+            <span class="sale-meta-label">{{ block.settings.sellout_risk_label }}</span>
+            <span class="sale-risk-{{ block.id }}">{{ block.settings.sellout_risk }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sale-fineprint-{{ block.id }}">
+        <div>✓ {{ block.settings.shipping_text }}</div>
+        <div>✓ {{ block.settings.guarantee_text }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .limited-time-sale-{{ block.id }} {
+    background: {{ block.settings.bg_cream }};
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .sale-chip-{{ block.id }} {
+    background: {{ block.settings.accent_red }};
+    color: {{ block.settings.navy_color }};
+    text-align: center;
+    padding: 8px 16px;
+    font-weight: var(--font-weight-bold);
+    font-size: 12px;
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  .sale-container-{{ block.id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 30px;
+  }
+
+  .sale-media-{{ block.id }} {
+    background: {{ block.settings.media_bg }};
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .sale-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .sale-image-placeholder {
+    color: {{ block.settings.navy_color }};
+    opacity: 0.3;
+    font-size: 18px;
+  }
+
+  .sale-content-{{ block.id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .sale-eyebrow-{{ block.id }} {
+    background: {{ block.settings.accent_red }};
+    color: {{ block.settings.navy_color }};
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: {{ block.settings.eyebrow_font_size }}px;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block;
+    width: fit-content;
+  }
+
+  .sale-headline-{{ block.id }} {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .sale-headline-accent {
+    font-size: {{ block.settings.headline_font_size }}px;
+    font-weight: var(--font-weight-bold);
+    color: {{ block.settings.navy_color }};
+    letter-spacing: var(--letter-spacing-heading);
+  }
+
+  .sale-headline-strong {
+    font-size: {{ block.settings.headline_font_size | times: 0.7 | round }}px;
+    color: {{ block.settings.meta_label_color }};
+    text-decoration: line-through;
+  }
+
+  .sale-description-{{ block.id }} {
+    font-size: {{ block.settings.description_font_size }}px;
+    color: {{ block.settings.navy_color }};
+    line-height: 1.5;
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  .sale-cta-{{ block.id }} {
+    background: {{ block.settings.navy_color }};
+    color: #ffffff;
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-size: {{ block.settings.cta_font_size }}px;
+    font-weight: var(--font-weight-bold);
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  .sale-cta-{{ block.id }}:hover {
+    background: {{ block.settings.navy_color | color_darken: 10 }};
+    transform: translateY(-2px);
+  }
+
+  .sale-meta-{{ block.id }} {
+    background: {{ block.settings.meta_box_bg }};
+    border: 1px solid {{ block.settings.meta_box_border }};
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .sale-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .sale-meta-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sale-meta-label {
+    font-size: {{ block.settings.meta_font_size }}px;
+    color: {{ block.settings.meta_label_color }};
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  .sale-countdown-{{ block.id }} {
+    font-size: {{ block.settings.deal_font_size }}px;
+    font-weight: var(--font-weight-bold);
+    color: {{ block.settings.navy_color }};
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  .sale-risk-{{ block.id }} {
+    font-size: {{ block.settings.meta_font_size }}px;
+    font-weight: var(--font-weight-bold);
+    color: {{ block.settings.meta_risk_color }};
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  .sale-divider-{{ block.id }} {
+    width: 1px;
+    background: {{ block.settings.meta_divider_color }};
+    align-self: stretch;
+  }
+
+  .sale-fineprint-{{ block.id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: {{ block.settings.fineprint_font_size }}px;
+    color: {{ block.settings.meta_label_color }};
+    letter-spacing: var(--letter-spacing-body);
+  }
+
+  @media (max-width: 768px) {
+    .sale-container-{{ block.id }} {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .sale-eyebrow-{{ block.id }} {
+      font-size: {{ block.settings.mobile_eyebrow_font_size }}px;
+    }
+
+    .sale-headline-accent {
+      font-size: {{ block.settings.mobile_headline_font_size }}px;
+    }
+
+    .sale-headline-strong {
+      font-size: {{ block.settings.mobile_headline_font_size | times: 0.7 | round }}px;
+    }
+
+    .sale-description-{{ block.id }} {
+      font-size: {{ block.settings.mobile_description_font_size }}px;
+    }
+
+    .sale-cta-{{ block.id }} {
+      font-size: {{ block.settings.mobile_cta_font_size }}px;
+      padding: 14px 24px;
+    }
+
+    .sale-countdown-{{ block.id }} {
+      font-size: {{ block.settings.mobile_deal_font_size }}px;
+    }
+
+    .sale-meta-label, .sale-risk-{{ block.id }} {
+      font-size: {{ block.settings.mobile_meta_font_size }}px;
+    }
+
+    .sale-fineprint-{{ block.id }} {
+      font-size: {{ block.settings.mobile_fineprint_font_size }}px;
+    }
+
+    .sale-meta-row {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sale-divider-{{ block.id }} {
+      width: 100%;
+      height: 1px;
+    }
+  }
+</style>
+
+<script>
+(function(){
+  const el = document.getElementById('sale-countdown-{{ block.id }}');
+  if (!el) return;
+
+  const hhEl = document.getElementById('sale-hh-{{ block.id }}');
+  const mmEl = document.getElementById('sale-mm-{{ block.id }}');
+  const ssEl = document.getElementById('sale-ss-{{ block.id }}');
+
+  const deadlineAttr = el.getAttribute('data-deadline');
+  let endTime;
+
+  if (deadlineAttr) {
+    endTime = new Date(deadlineAttr).getTime();
+  } else {
+    const H = parseInt(el.getAttribute('data-hours')||'0',10);
+    const M = parseInt(el.getAttribute('data-minutes')||'0',10);
+    const S = parseInt(el.getAttribute('data-seconds')||'0',10);
+    const durationMs = ((H*60 + M)*60 + S)*1000;
+    endTime = Date.now() + durationMs;
+  }
+
+  function pad(n){return String(n).padStart(2,'0');}
+
+  function tick(){
+    const now = Date.now();
+    let diff = Math.max(0, endTime - now);
+
+    const totalSeconds = Math.floor(diff/1000);
+    const hours = Math.floor(totalSeconds/3600);
+    const minutes = Math.floor((totalSeconds%3600)/60);
+    const seconds = totalSeconds%60;
+
+    hhEl.textContent = pad(hours);
+    mmEl.textContent = pad(minutes);
+    ssEl.textContent = pad(seconds);
+
+    if (diff <= 0) {
+      clearInterval(timerId);
+    }
+  }
+
+  tick();
+  const timerId = setInterval(tick, 1000);
+})();
+</script>

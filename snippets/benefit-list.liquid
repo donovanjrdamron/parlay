@@ -1,0 +1,178 @@
+{% comment %}
+  Benefit List Snippet
+  Renders 3 items with SVG icons and text stacked vertically
+
+  Usage:
+  {% render 'benefit-list', block: block, section_alignment: section_alignment %}
+{% endcomment %}
+
+{%- liquid
+  if section_alignment != blank
+    if section_alignment == 'center'
+      assign final_alignment = 'center'
+    elsif section_alignment == 'right'
+      assign final_alignment = 'flex-end'
+    else
+      assign final_alignment = 'flex-start'
+    endif
+  else
+    if block.settings.list_alignment != blank
+      assign final_alignment = block.settings.list_alignment
+    else
+      assign final_alignment = 'flex-start'
+    endif
+  endif
+
+  if section_mobile_alignment != blank
+    if section_mobile_alignment == 'center'
+      assign final_mobile_alignment = 'center'
+    elsif section_mobile_alignment == 'right'
+      assign final_mobile_alignment = 'flex-end'
+    else
+      assign final_mobile_alignment = 'flex-start'
+    endif
+  else
+    assign final_mobile_alignment = final_alignment
+  endif
+-%}
+
+<div class="benefit-list-wrapper" {{ block.shopify_attributes }} style="--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;">
+  <style>
+    /* ===========================
+       Benefit List Container
+       =========================== */
+    .benefit-list-wrapper {
+      margin-top: var(--margin-top);
+      margin-bottom: var(--margin-bottom);
+    }
+
+    .benefit-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: {{ block.settings.list_gap }}px;
+      align-items: {{ final_alignment }};
+    }
+
+    /* ===========================
+       Individual List Item
+       =========================== */
+    .benefit-list-item {
+      display: flex;
+      align-items: center;
+      gap: {{ block.settings.icon_text_gap }}px;
+      width: 100%;
+      max-width: {{ block.settings.item_max_width }}%;
+      {% if block.settings.item_gradient_enabled %}
+        background: {{ block.settings.item_gradient }};
+      {% else %}
+        background-color: {{ block.settings.item_background }};
+      {% endif %}
+      padding: {{ block.settings.item_padding_vertical }}px {{ block.settings.item_padding_horizontal }}px;
+      border: {{ block.settings.item_border_width }}px {{ block.settings.item_border_style }} {{ block.settings.item_border_color }};
+      border-radius: {{ block.settings.item_border_radius }}px;
+    }
+
+    /* ===========================
+       Icon Styling
+       =========================== */
+    .benefit-list-icon {
+      width: {{ block.settings.icon_size }}px;
+      height: {{ block.settings.icon_size }}px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .benefit-list-icon svg {
+      width: 100%;
+      height: 100%;
+      color: {{ block.settings.icon_color }};
+    }
+
+    /* ===========================
+       Text Styling
+       =========================== */
+    .benefit-list-text {
+      margin: 0;
+      font-size: {{ block.settings.text_size }}px;
+      font-weight: {{ block.settings.text_weight }};
+      color: {{ block.settings.text_color }};
+      line-height: {{ block.settings.text_line_height }};
+      flex: 1;
+    }
+
+    .benefit-list-text p {
+      margin: 0;
+    }
+
+    .benefit-list-text a {
+      color: inherit;
+      text-decoration: underline;
+    }
+
+    /* ===========================
+       Mobile Responsive
+       =========================== */
+    @media screen and (max-width: 749px) {
+      .benefit-list-container {
+        gap: {{ block.settings.list_gap_mobile }}px;
+        align-items: {{ final_mobile_alignment }};
+      }
+
+      .benefit-list-item {
+        padding: {{ block.settings.item_padding_vertical_mobile }}px {{ block.settings.item_padding_horizontal_mobile }}px;
+        gap: {{ block.settings.icon_text_gap_mobile }}px;
+        max-width: 100%;
+      }
+
+      .benefit-list-icon {
+        width: {{ block.settings.icon_size_mobile }}px;
+        height: {{ block.settings.icon_size_mobile }}px;
+      }
+
+      .benefit-list-text {
+        font-size: {{ block.settings.text_size_mobile }}px;
+      }
+    }
+  </style>
+
+  <div class="benefit-list-container">
+    {% comment %} Item 1 {% endcomment %}
+    {% if block.settings.item_1_text != blank %}
+      <div class="benefit-list-item">
+        {% if block.settings.item_1_icon != blank %}
+          <div class="benefit-list-icon">
+            {{ block.settings.item_1_icon }}
+          </div>
+        {% endif %}
+        <div class="benefit-list-text">{{ block.settings.item_1_text }}</div>
+      </div>
+    {% endif %}
+
+    {% comment %} Item 2 {% endcomment %}
+    {% if block.settings.item_2_text != blank %}
+      <div class="benefit-list-item">
+        {% if block.settings.item_2_icon != blank %}
+          <div class="benefit-list-icon">
+            {{ block.settings.item_2_icon }}
+          </div>
+        {% endif %}
+        <div class="benefit-list-text">{{ block.settings.item_2_text }}</div>
+      </div>
+    {% endif %}
+
+    {% comment %} Item 3 {% endcomment %}
+    {% if block.settings.item_3_text != blank %}
+      <div class="benefit-list-item">
+        {% if block.settings.item_3_icon != blank %}
+          <div class="benefit-list-icon">
+            {{ block.settings.item_3_icon }}
+          </div>
+        {% endif %}
+        <div class="benefit-list-text">{{ block.settings.item_3_text }}</div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+

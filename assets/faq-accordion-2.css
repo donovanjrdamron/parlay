@@ -1,0 +1,75 @@
+/* FAQ Accordion 2 - Specific Styles */
+
+.faq-accordion-2 {
+  position: relative;
+  width: 100%;
+}
+
+.faq-accordion-2 .container {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Accordion Item Styles */
+.faq-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+}
+
+.faq-question-text {
+  flex: 1;
+}
+
+.faq-icon {
+  flex-shrink: 0;
+  margin-left: 1rem;
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.faq-question[aria-expanded="true"] .faq-icon {
+  transform: rotate(180deg);
+}
+
+/* Answer Styles */
+.faq-answer {
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  max-height: 0;
+}
+
+.faq-answer.is-open {
+  max-height: max-content;
+}
+
+.faq-answer-inner {
+  padding: 0;
+}
+
+/* Content alignment */
+.faq-accordion-2.content-align-left .container {
+  text-align: left;
+}
+
+.faq-accordion-2.content-align-center .container {
+  text-align: center;
+}
+
+.faq-accordion-2.content-align-right .container {
+  text-align: right;
+}

@@ -1,0 +1,257 @@
+{% comment %}
+  Countdown Timer for Footer
+  Usage: Add as a block in Cart drawer section footer
+{% endcomment %}
+
+{% if block.settings.show_boxed_timer %}
+  {%- comment -%} Boxed timer with styling {%- endcomment -%}
+  {% capture boxed_timer %}
+    <span class="holiday-clock">
+      {% unless block.settings.hide_hours %}
+        <span class="box-3">
+          <span class="clock-number-2" data-timer-hours>00</span>
+          <span class="clock-label-2">Hrs</span>
+        </span>
+        <span class="text-block-countdown">:</span>
+      {% endunless %}
+      <span class="box-3">
+        <span class="clock-number-2" data-timer-minutes>00</span>
+        <span class="clock-label-2">Min</span>
+      </span>
+      <span class="text-block-countdown">:</span>
+      <span class="box-3">
+        <span class="clock-number-2" data-timer-seconds>00</span>
+        <span class="clock-label-2">Sec</span>
+      </span>
+    </span>
+  {% endcapture %}
+
+  <div
+    class="cart-countdown-footer-timer"
+    style="
+      --timer-box-bg: {{ block.settings.timer_box_bg_color | default: '#ffffff' }};
+      --timer-number-color: {{ block.settings.timer_number_color | default: '#2a2552' }};
+      --timer-number-size: {{ block.settings.timer_number_font_size | default: 14 }}px;
+      --timer-number-weight: {{ block.settings.timer_number_font_weight | default: 900 }};
+      --timer-label-size: {{ block.settings.timer_label_font_size | default: 8 }}px;
+      --text-font-size: {{ block.settings.text_font_size | default: 14 }}px;
+      --overlay-bg: {{ block.settings.overlay_background | default: '#000000' }};
+      --overlay-text-color: {{ block.settings.overlay_text_color | default: '#ffffff' }};
+      --overlay-blur: {{ block.settings.overlay_blur | default: 0 }}px;
+      --overlay-opacity: {{ block.settings.overlay_bg_opacity | default: 70 | divided_by: 100.0 }};
+      --overlay-padding-vertical: {{ block.settings.overlay_padding_vertical | default: 10 }}px;
+      --overlay-padding-horizontal: {{ block.settings.overlay_padding_horizontal | default: 15 }}px;
+      --overlay-border-width: {{ block.settings.overlay_border_width | default: 0 }}px;
+      --overlay-border-color: {{ block.settings.overlay_border_color | default: '#ffffff' }};
+      --overlay-border-radius: {{ block.settings.overlay_border_radius | default: 0 }}px;
+      margin-top: {{ block.settings.overlay_margin_top }}px;
+      margin-bottom: {{ block.settings.overlay_margin_bottom }}px;
+    "
+    {{ block.shopify_attributes }}
+    data-timer-duration="{{ block.settings.timer_duration }}"
+    data-boxed-timer="true"
+  >
+    <div class="cart-timer-text color-{{ block.settings.color_scheme }}">
+      {{ block.settings.timer_text | replace: '[timer]', boxed_timer }}
+    </div>
+  </div>
+{% else %}
+  {%- comment -%} Standard countdown-timer {%- endcomment -%}
+  {% capture timer %}
+    <countdown-timer data-duration="{{ block.settings.timer_duration }}"></countdown-timer>
+  {% endcapture %}
+  <div
+    class="cart-countdown-footer-timer cart-countdown-footer-timer--standard"
+    style="
+      --text-font-size: {{ block.settings.text_font_size | default: 14 }}px;
+      --timer-font-size: {{ block.settings.timer_font_size | default: 18 }}px;
+      --overlay-bg: {{ block.settings.overlay_background | default: '#000000' }};
+      --overlay-text-color: {{ block.settings.overlay_text_color | default: '#ffffff' }};
+      --overlay-blur: {{ block.settings.overlay_blur | default: 0 }}px;
+      --overlay-opacity: {{ block.settings.overlay_bg_opacity | default: 70 | divided_by: 100.0 }};
+      --overlay-padding-vertical: {{ block.settings.overlay_padding_vertical | default: 10 }}px;
+      --overlay-padding-horizontal: {{ block.settings.overlay_padding_horizontal | default: 15 }}px;
+      --overlay-border-width: {{ block.settings.overlay_border_width | default: 0 }}px;
+      --overlay-border-color: {{ block.settings.overlay_border_color | default: '#ffffff' }};
+      --overlay-border-radius: {{ block.settings.overlay_border_radius | default: 0 }}px;
+      margin-top: {{ block.settings.overlay_margin_top }}px;
+      margin-bottom: {{ block.settings.overlay_margin_bottom }}px;
+    "
+    {{ block.shopify_attributes }}
+  >
+    <div class="cart-timer-text color-{{ block.settings.color_scheme }}">
+      {{ block.settings.timer_text | replace: '[timer]', timer }}
+    </div>
+  </div>
+{% endif %}
+
+<style>
+  .cart-countdown-footer-timer {
+    text-align: center;
+    padding: var(--overlay-padding-vertical, 10px) var(--overlay-padding-horizontal, 15px);
+    color: var(--overlay-text-color, #fff);
+    backdrop-filter: blur(var(--overlay-blur, 0px));
+    -webkit-backdrop-filter: blur(var(--overlay-blur, 0px));
+    border: var(--overlay-border-width, 0px) solid var(--overlay-border-color, #fff);
+    border-radius: var(--overlay-border-radius, 0px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cart-countdown-footer-timer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--overlay-bg, #000);
+    opacity: var(--overlay-opacity, 0.7);
+    z-index: -1;
+  }
+
+  .cart-countdown-footer-timer .cart-timer-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: var(--text-font-size, 14px);
+  }
+
+  /* Non-boxed timer font size */
+  .cart-countdown-footer-timer--standard countdown-timer {
+    font-size: var(--timer-font-size, 18px);
+    font-weight: 700;
+  }
+
+  .cart-countdown-footer-timer .holiday-clock {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    vertical-align: middle;
+  }
+
+  .cart-countdown-footer-timer .box-3 {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--timer-box-bg, #fff);
+    border-radius: 2px;
+    width: 30px;
+    height: 40px;
+    margin: 0 2px;
+    padding: 3px;
+    font-size: 12px;
+    line-height: 20px;
+    color: var(--timer-number-color, #2a2552);
+  }
+
+  .cart-countdown-footer-timer .clock-number-2 {
+    font-size: var(--timer-number-size, 14px);
+    font-weight: var(--timer-number-weight, 900);
+    line-height: 1;
+    color: var(--timer-number-color, #2a2552);
+  }
+
+  .cart-countdown-footer-timer .clock-label-2 {
+    font-size: var(--timer-label-size, 8px);
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--timer-number-color, #2a2552);
+  }
+
+  .cart-countdown-footer-timer .text-block-countdown {
+    color: var(--overlay-text-color, #fff);
+    padding: 0 2.5px;
+    font-weight: 800;
+    font-size: 18px;
+  }
+
+  /* Mobile adjustments */
+  @media screen and (max-width: 749px) {
+    .cart-countdown-footer-timer .box-3 {
+      width: 25px;
+      height: 28px;
+    }
+
+    .cart-countdown-footer-timer .clock-number-2 {
+      font-size: calc(var(--timer-number-size, 14px) * 0.9);
+    }
+
+    .cart-countdown-footer-timer .clock-label-2 {
+      font-size: calc(var(--timer-label-size, 8px) * 0.85);
+    }
+  }
+
+  @media screen and (max-width: 379px) {
+    .cart-countdown-footer-timer .box-3 {
+      width: 22px;
+      height: 32px;
+    }
+
+    .cart-countdown-footer-timer .text-block-countdown {
+      padding: 0 2px;
+    }
+  }
+</style>
+
+<script>
+(function() {
+  'use strict';
+
+  // Initialize boxed countdown timer for footer
+  function initFooterTimer() {
+    const timer = document.querySelector('.cart-countdown-footer-timer[data-boxed-timer="true"]');
+    if (!timer) return;
+
+    const duration = parseInt(timer.dataset.timerDuration) || 90;
+    const hoursEl = timer.querySelector('[data-timer-hours]');
+    const minutesEl = timer.querySelector('[data-timer-minutes]');
+    const secondsEl = timer.querySelector('[data-timer-seconds]');
+
+    if (!minutesEl || !secondsEl) return;
+
+    let remainingSeconds = duration;
+
+    function formatNumber(num) {
+      return num.toString().padStart(2, '0');
+    }
+
+    function updateTimer() {
+      if (remainingSeconds < 0) {
+        remainingSeconds = 0;
+      }
+
+      const hours = Math.floor(remainingSeconds / 3600);
+      const minutes = Math.floor((remainingSeconds % 3600) / 60);
+      const seconds = remainingSeconds % 60;
+
+      if (hoursEl) {
+        hoursEl.textContent = formatNumber(hours);
+      }
+      minutesEl.textContent = formatNumber(minutes);
+      secondsEl.textContent = formatNumber(seconds);
+
+      if (remainingSeconds > 0) {
+        remainingSeconds--;
+      }
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFooterTimer);
+  } else {
+    initFooterTimer();
+  }
+
+  document.addEventListener('cart:refresh', function() {
+    setTimeout(initFooterTimer, 100);
+  });
+})();
+</script>

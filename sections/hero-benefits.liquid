@@ -1,0 +1,1728 @@
+{{ '//fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200' | stylesheet_tag }}
+
+<style>
+/* Remove blue highlight on tap/click for all elements */
+.hero-section *,
+.hero-section *:focus,
+.hero-section *:active {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline: none;
+}
+
+.hero-section-wrapper {
+    width: 100%;
+    {% if section.settings.enable_section_background %}
+      {% if section.settings.use_section_gradient %}
+        background: {{ section.settings.section_bg_gradient }};
+      {% else %}
+        background-color: {{ section.settings.section_bg_color }};
+      {% endif %}
+    {% endif %}
+}
+
+.hero-section {
+    width: 100%;
+    max-width: {{ settings.page_width }}px;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: {{ section.settings.section_padding_top_mobile }}px 20px {{ section.settings.section_padding_bottom_mobile }}px;
+    box-sizing: border-box;
+}
+
+@media (min-width: 750px) {
+    .hero-section {
+        padding: {{ section.settings.section_padding_top_desktop }}px {{ settings.spacing_grid_horizontal }}px {{ section.settings.section_padding_bottom_desktop }}px;
+    }
+}
+
+.hero-content-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.hero_content_gap_mobile }}px;
+    box-sizing: border-box;
+}
+
+.hero-image-container {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.hero-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-width: 100%;
+    height: 100%;
+    pointer-events: none;
+    flex-shrink: 0;
+}
+
+.section-{{ section.id }} .hero-main-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: {{ section.settings.mobile_background_size }};
+    max-height: 65vh;
+    pointer-events: auto;
+    border-radius: {{ section.settings.hero_image_border_radius }}px;
+    {% if section.settings.hero_image_border_width > 0 %}
+        border: {{ section.settings.hero_image_border_width }}px solid {{ section.settings.hero_image_border_color }};
+    {% endif %}
+    {% if section.settings.enable_image_mask_fade %}
+        -webkit-mask-image: linear-gradient(to bottom,
+            rgba(0,0,0,1) 0%,
+            rgba(0,0,0,1) {{ 100 | minus: section.settings.image_mask_fade_height }}%,
+            rgba(0,0,0,0) 100%);
+        mask-image: linear-gradient(to bottom,
+            rgba(0,0,0,1) 0%,
+            rgba(0,0,0,1) {{ 100 | minus: section.settings.image_mask_fade_height }}%,
+            rgba(0,0,0,0) 100%);
+    {% endif %}
+}
+
+.hero-main-image.desktop-only {
+    display: none;
+}
+
+.hero-main-image.mobile-only {
+    display: block;
+}
+
+.hero-image-placeholder {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+}
+
+.hero-image-placeholder .placeholder-svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+}
+
+/* Desktop and larger screens */
+@media (min-width: 768px) {
+    .hero-content-wrapper {
+        flex-direction: row;
+        gap: {{ section.settings.hero_content_gap_desktop }}px;
+        align-items: stretch;
+    }
+
+    .hero-image-container {
+        width: {{ section.settings.desktop_image_width }}%;
+        min-width: 0;
+        flex-shrink: 0;
+        {% if section.settings.hide_image_on_desktop %}
+          display: none;
+        {% endif %}
+    }
+
+    .content-display {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .section-{{ section.id }} .hero-main-image {
+        width: 100%;
+        object-fit: {{ section.settings.desktop_background_size }};
+    }
+
+    .hero-image-placeholder {
+        width: 100%;
+    }
+
+    .hero-main-image.desktop-only {
+        display: block;
+    }
+
+    .hero-main-image.mobile-only {
+        display: none;
+    }
+
+    .section-{{ section.id }} .benefit-icons-grid {
+        gap: {{ section.settings.icon_vertical_spacing_desktop }}px {{ section.settings.icon_horizontal_spacing_desktop }}px;
+    }
+
+    .benefit-icon-item:nth-child(odd) {
+        margin-right: {{ section.settings.icon_offset_desktop }}%!important;
+    }
+
+    .benefit-icon-item:nth-child(even) {
+        margin-left: {{ section.settings.icon_offset_desktop }}%!important;
+    }
+}
+
+.benefit-icon-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    max-width: 120px;
+    text-align: center;
+    color: #1a3b3b;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    gap: {{ section.settings.icon_label_gap }}px;
+}
+
+.benefit-icon-item p {
+    margin: 0;
+    font-size: {{ section.settings.icon_label_font_size }}px;
+    font-weight: {{ section.settings.icon_label_font_weight }};
+    color: {{ section.settings.icon_label_inactive_color }};
+    transition: all 0.3s ease;
+}
+
+.benefit-icon-item:has(.benefit-icon-image.active) p {
+    color: {{ section.settings.icon_label_active_color }};
+    font-weight: {{ section.settings.icon_label_active_font_weight }};
+}
+
+.section-{{ section.id }} .benefit-icons-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    justify-items: center;
+    position: absolute;
+    width: 100%;
+    gap: {{ section.settings.icon_vertical_spacing_mobile }}px {{ section.settings.icon_horizontal_spacing_mobile }}px;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.benefit-icon-item:nth-child(even) {
+    margin-left: {{ section.settings.icon_offset_mobile }}%;
+}
+
+.benefit-icon-item:nth-child(odd) {
+    margin-right: {{ section.settings.icon_offset_mobile }}%;
+}
+
+.hero-header {
+    flex-direction: column;
+    font-size: 32px;
+    color: #1a3b3b;
+    text-align: center;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    line-height: 38px;
+    text-transform: uppercase;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+.content-display {
+    color: {{ section.settings.content_display_text_color }};
+    padding-top: {{ section.settings.content_display_padding_vertical_desktop }}px;
+    padding-bottom: {{ section.settings.content_display_padding_vertical_desktop }}px;
+    padding-left: {{ section.settings.content_display_padding_horizontal_desktop }}px;
+    padding-right: {{ section.settings.content_display_padding_horizontal_desktop }}px;
+    text-align: {{ section.settings.content_display_text_align }};
+    transition: all 0.5s ease;
+    background: {{ section.settings.content_display_background }};
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: {{ section.settings.content_display_gap }}px;
+    {% if section.settings.content_display_border_radius > 0 %}
+        border-radius: {{ section.settings.content_display_border_radius }}px;
+    {% endif %}
+    {% if section.settings.content_display_border_width > 0 %}
+        border: {{ section.settings.content_display_border_width }}px solid {{ section.settings.content_display_border_color }};
+    {% endif %}
+}
+
+#content-title {
+    margin: 0;
+    transition: all 0.3s ease;
+}
+
+@media (min-width: 750px) {
+    #content-title {
+        font-size: {{ section.settings.content_title_font_size_desktop }}px !important;
+    }
+}
+
+.content-header {
+    {% if section.settings.hide_content_header %}
+        display: none;
+    {% else %}
+        display: flex;
+        align-items: center;
+        justify-content: {% if section.settings.content_display_header_align == 'left' %}flex-start{% elsif section.settings.content_display_header_align == 'right' %}flex-end{% else %}center{% endif %};
+        gap: 15px;
+    {% endif %}
+    order: 2;
+}
+
+#content-text {
+    order: 4;
+}
+
+.review-box {
+    order: 6;
+}
+
+.block-image-wrapper {
+    width: 100%;
+    display: block;
+    transition: all 0.3s ease;
+    order: 5;
+}
+
+.block-image {
+    width: 100%;
+    {% if section.blocks.first.settings.block_image_aspect_ratio == 'custom' %}
+        height: {{ section.blocks.first.settings.block_image_height_mobile }}px;
+    {% else %}
+        height: auto;
+    {% endif %}
+    display: block;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+@media (min-width: 750px) {
+    .block-image {
+        {% if section.blocks.first.settings.block_image_aspect_ratio == 'custom' %}
+            height: {{ section.blocks.first.settings.block_image_height_desktop }}px;
+        {% endif %}
+    }
+}
+
+.content-icon {
+    {% if section.settings.icon_circular %}
+        width: {{ section.settings.icon_circle_size }}px;
+        height: {{ section.settings.icon_circle_size }}px;
+    {% else %}
+        width: {{ section.settings.content_icon_width }}px;
+        height: {{ section.settings.content_icon_height }}px;
+    {% endif %}
+    transition: all 0.3s ease;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.section-{{ section.id }} .content-icon {
+    {% if section.settings.content_icon_show_border %}
+        border: {{ section.settings.icon_border_width }}px solid {{ section.settings.content_icon_border_color }};
+    {% else %}
+        border: none;
+    {% endif %}
+    {% if section.settings.icon_circular %}
+        border-radius: 50%;
+    {% else %}
+        border-radius: {{ section.settings.icon_border_radius }}px;
+    {% endif %}
+    padding: {{ section.settings.icon_padding }}px;
+    {% if section.settings.content_icon_show_background %}
+        background: {{ section.settings.content_icon_background_color }};
+    {% else %}
+        background: transparent;
+    {% endif %}
+    box-sizing: content-box;
+    {% if section.settings.hide_content_icon %}
+        display: none;
+    {% endif %}
+}
+
+/* Content Icon - Google Material Icon */
+.section-{{ section.id }} .material-symbols-outlined.content-icon {
+    font-size: {{ section.settings.google_icon_size }}px;
+    {% if section.settings.hide_content_icon %}
+        display: none;
+    {% else %}
+        display: flex;
+    {% endif %}
+    align-items: center;
+    justify-content: center;
+    {% if section.settings.icon_circular %}
+        width: {{ section.settings.icon_circle_size }}px;
+        height: {{ section.settings.icon_circle_size }}px;
+    {% else %}
+        width: {{ section.settings.content_icon_width }}px;
+        height: {{ section.settings.content_icon_height }}px;
+    {% endif %}
+    color: {{ section.settings.content_icon_color }};
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' {{ section.settings.google_icon_size }};
+    flex-shrink: 0;
+    box-sizing: content-box;
+    max-width: none;
+    overflow: visible;
+}
+
+/* Content Icon - Custom SVG */
+.section-{{ section.id }} .content-icon-svg {
+    {% if section.settings.icon_circular %}
+        width: {{ section.settings.icon_circle_size }}px;
+        height: {{ section.settings.icon_circle_size }}px;
+    {% else %}
+        width: {{ section.settings.content_icon_width }}px;
+        height: {{ section.settings.content_icon_height }}px;
+    {% endif %}
+    {% if section.settings.hide_content_icon %}
+        display: none;
+    {% else %}
+        display: flex;
+    {% endif %}
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-sizing: content-box;
+}
+
+.section-{{ section.id }} .content-icon-svg svg {
+    width: 100%;
+    height: 100%;
+    max-width: 50px;
+    max-height: 50px;
+    fill: {{ section.settings.content_icon_color }};
+    color: {{ section.settings.content_icon_color }};
+}
+
+.section-{{ section.id }} .content-icon-svg svg path,
+.section-{{ section.id }} .content-icon-svg svg circle,
+.section-{{ section.id }} .content-icon-svg svg rect,
+.section-{{ section.id }} .content-icon-svg svg polygon {
+    fill: inherit;
+}
+
+.content-icon-placeholder {
+    {% if section.settings.icon_circular %}
+        width: {{ section.settings.icon_circle_size }}px;
+        height: {{ section.settings.icon_circle_size }}px;
+    {% else %}
+        width: {{ section.settings.content_icon_width }}px;
+        height: {{ section.settings.content_icon_height }}px;
+    {% endif %}
+    {% if section.settings.content_icon_show_background %}
+        background: {{ section.settings.content_icon_background_color }};
+    {% else %}
+        background: #f3f4f6;
+    {% endif %}
+    {% if section.settings.icon_circular %}
+        border-radius: 50%;
+    {% else %}
+        border-radius: {{ section.settings.icon_border_radius }}px;
+    {% endif %}
+    {% if section.settings.content_icon_show_border %}
+        border: {{ section.settings.icon_border_width }}px solid {{ section.settings.content_icon_border_color }};
+    {% else %}
+        border: none;
+    {% endif %}
+    padding: {{ section.settings.icon_padding }}px;
+    {% if section.settings.hide_content_icon %}
+        display: none;
+    {% else %}
+        display: flex;
+    {% endif %}
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-sizing: content-box;
+}
+
+.content-icon-placeholder .placeholder-svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+}
+
+.content-display h3 {
+    margin: 0;
+    font-size: 24px;
+    color: white;
+}
+
+.content-display p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.review-box {
+    background: {{ section.settings.review_box_background }};
+    border: {{ section.settings.review_box_border_width }}px solid {{ section.settings.review_box_border_color }};
+    border-radius: {{ section.settings.review_box_border_radius }}px;
+    padding: {{ section.settings.review_box_padding_top }}px {{ section.settings.review_box_padding_right }}px {{ section.settings.review_box_padding_bottom }}px {{ section.settings.review_box_padding_left }}px;
+    margin-top: {{ section.settings.review_box_margin_top }}px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    flex-direction: column-reverse;
+    display: flex;
+    text-align: {{ section.settings.review_box_text_align }};
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.profile-pic {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.reviewer-info {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.reviewer-name {
+    font-size: {{ section.settings.reviewer_name_font_size }}px;
+    color: {{ section.settings.reviewer_name_color }}!important;
+    border-right: 1px solid transparent;
+    border-image: linear-gradient(to bottom, transparent 0%, transparent 20%, {{ section.settings.reviewer_name_color }} 20%, {{ section.settings.reviewer_name_color }} 80%, transparent 80%, transparent 100%) 1;
+    padding: 0px 10px 0px 0px;
+    margin: 0;
+}
+
+.hero-benefit-star-rating {
+    display: flex;
+    gap: 2px;
+}
+
+.hero-benefit-star {
+    color: {{ section.settings.star_icon_color }};
+    font-size: {{ section.settings.star_icon_size }}px;
+}
+
+.review-text {
+    font-size: {{ section.settings.review_text_font_size }}px!important;
+    margin-bottom: 10px;
+    line-height: 1.5;
+    margin: 0;
+    color: {{ section.settings.review_text_color }} !important;
+    text-align: center;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.timer-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 6px;
+    background: {{ section.settings.timer_bar_color }};
+    width: 0%;
+    z-index: 10;
+    transition: none;
+}
+
+.timer-bar.animate {
+    transition: width {{ section.settings.timer_duration }}s linear;
+    width: 100% !important;
+}
+
+.benefit-icon-image {
+    transition: all 0.3s ease;
+    opacity: {{ section.settings.icon_inactive_opacity | divided_by: 100.0 }};
+    {% if section.settings.icon_circular %}
+        width: {{ section.settings.icon_circle_size }}px;
+        height: {{ section.settings.icon_circle_size }}px;
+    {% else %}
+        width: {{ section.settings.icon_width }}px;
+        height: {{ section.settings.icon_height }}px;
+    {% endif %}
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.section-{{ section.id }} .benefit-icon-image {
+    {% if section.settings.icon_show_border %}
+        border: {{ section.settings.icon_border_width }}px solid {{ section.settings.icon_border_color }};
+    {% else %}
+        border: none;
+    {% endif %}
+    {% if section.settings.icon_circular %}
+        border-radius: 50%;
+    {% else %}
+        border-radius: {{ section.settings.icon_border_radius }}px;
+    {% endif %}
+    padding: {{ section.settings.icon_padding }}px;
+    {% if section.settings.icon_show_background %}
+        background: {{ section.settings.icon_background_color }};
+    {% else %}
+        background: transparent;
+    {% endif %}
+    box-sizing: content-box;
+}
+
+.benefit-icon-image.active {
+    opacity: {{ section.settings.icon_active_opacity | divided_by: 100.0 }};
+    transform: scale({{ section.settings.icon_scale }});
+}
+
+.section-{{ section.id }} .benefit-icon-image.active {
+    {% if section.settings.icon_show_border %}
+        border-color: {{ section.settings.icon_border_color_active }};
+    {% endif %}
+    {% if section.settings.icon_show_background %}
+        background: {{ section.settings.icon_background_color_active }};
+    {% endif %}
+}
+
+.section-{{ section.id }} .benefit-icon-placeholder {
+    {% if section.settings.icon_circular %}
+        width: {{ section.settings.icon_circle_size }}px;
+        height: {{ section.settings.icon_circle_size }}px;
+    {% else %}
+        width: {{ section.settings.icon_width }}px;
+        height: {{ section.settings.icon_height }}px;
+    {% endif %}
+    {% if section.settings.icon_show_background %}
+        background: {{ section.settings.icon_background_color }};
+    {% else %}
+        background: #f3f4f6;
+    {% endif %}
+    {% if section.settings.icon_circular %}
+        border-radius: 50%;
+    {% else %}
+        border-radius: {{ section.settings.icon_border_radius }}px;
+    {% endif %}
+    {% if section.settings.icon_show_border %}
+        border: {{ section.settings.icon_border_width }}px solid {{ section.settings.icon_border_color }};
+    {% else %}
+        border: none;
+    {% endif %}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: {{ section.settings.icon_padding }}px;
+    flex-shrink: 0;
+    box-sizing: content-box;
+}
+
+.section-{{ section.id }} .benefit-icon-placeholder.active {
+    {% if section.settings.icon_show_border %}
+        border-color: {{ section.settings.icon_border_color_active }};
+    {% endif %}
+    {% if section.settings.icon_show_background %}
+        background: {{ section.settings.icon_background_color_active }};
+    {% endif %}
+}
+
+.benefit-icon-placeholder .placeholder-svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+}
+
+/* Google Material Icon */
+.section-{{ section.id }} .material-symbols-outlined.benefit-icon-image {
+    font-size: {{ section.settings.google_icon_size }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    {% if section.settings.icon_circular %}
+        width: {{ section.settings.icon_circle_size }}px;
+        height: {{ section.settings.icon_circle_size }}px;
+    {% else %}
+        width: {{ section.settings.icon_width }}px;
+        height: {{ section.settings.icon_height }}px;
+    {% endif %}
+    color: {{ section.settings.google_icon_color_inactive }};
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' {{ section.settings.google_icon_size }};
+    flex-shrink: 0;
+    box-sizing: content-box;
+    max-width: none;
+    overflow: visible;
+}
+
+.section-{{ section.id }} .material-symbols-outlined.benefit-icon-image.active {
+    color: {{ section.settings.google_icon_color_active }};
+    {% if section.settings.icon_show_background %}
+        background: {{ section.settings.icon_background_color_active }};
+    {% endif %}
+}
+
+/* Custom SVG Container */
+.section-{{ section.id }} .benefit-icon-svg {
+    {% if section.settings.icon_circular %}
+        width: {{ section.settings.icon_circle_size }}px;
+        height: {{ section.settings.icon_circle_size }}px;
+    {% else %}
+        width: {{ section.settings.icon_width }}px;
+        height: {{ section.settings.icon_height }}px;
+    {% endif %}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-sizing: content-box;
+}
+
+.section-{{ section.id }} .benefit-icon-svg svg {
+    width: 100%;
+    height: 100%;
+    max-width: 64px;
+    max-height: 64px;
+    fill: {{ section.settings.svg_icon_color_inactive }};
+    color: {{ section.settings.svg_icon_color_inactive }};
+}
+
+.section-{{ section.id }} .benefit-icon-svg.active {
+    {% if section.settings.icon_show_background %}
+        background: {{ section.settings.icon_background_color_active }};
+    {% endif %}
+}
+
+.section-{{ section.id }} .benefit-icon-svg.active svg {
+    fill: {{ section.settings.svg_icon_color_active }};
+    color: {{ section.settings.svg_icon_color_active }};
+}
+
+.section-{{ section.id }} .benefit-icon-svg svg path,
+.section-{{ section.id }} .benefit-icon-svg svg circle,
+.section-{{ section.id }} .benefit-icon-svg svg rect,
+.section-{{ section.id }} .benefit-icon-svg svg polygon {
+    fill: inherit;
+}
+
+@media (max-width: 549px) {
+    .content-display {
+        padding-top: {{ section.settings.content_display_padding_vertical_mobile }}px;
+        padding-bottom: {{ section.settings.content_display_padding_vertical_mobile }}px;
+        padding-left: {{ section.settings.content_display_padding_horizontal_mobile }}px;
+        padding-right: {{ section.settings.content_display_padding_horizontal_mobile }}px;
+        max-width: 100%;
+    }
+
+    .content-header {
+        gap: 10px;
+    }
+
+    .content-icon {
+        {% if section.settings.icon_circular %}
+            width: {{ section.settings.icon_circle_size }}px;
+            height: {{ section.settings.icon_circle_size }}px;
+        {% else %}
+            width: {{ section.settings.content_icon_width }}px;
+            height: {{ section.settings.content_icon_height }}px;
+        {% endif %}
+        object-fit: cover;
+    }
+
+    .content-display h3 {
+        font-size: 20px;
+    }
+
+    .content-display p {
+        font-size: 14px;
+    }
+
+    .review-box {
+        /* Inherits padding from main .review-box styles above */
+    }
+
+    .review-header {
+        gap: 12px;
+    }
+
+    .profile-pic {
+        width: 40px;
+        height: 40px;
+    }
+
+    .reviewer-name {
+        font-size: {{ section.settings.reviewer_name_font_size }}px;
+        color: {{ section.settings.reviewer_name_color }};
+    }
+
+    .hero-benefit-star {
+        font-size: {{ section.settings.star_icon_size }}px;
+        color: {{ section.settings.star_icon_color }};
+    }
+
+    .review-text {
+        font-size: {{ section.settings.review_text_font_size }}px;
+        font-weight: {{ section.settings.review_text_font_weight }};
+        color: {{ section.settings.review_text_color }};
+        margin-bottom: 10px;
+        text-align: center;
+    }
+}
+
+/* Heading Styles from Customer Review Slider */
+.section-{{ section.id }} .hero-header-wrapper {
+    text-align: {{ section.settings.heading_text_align }};
+}
+
+.section-{{ section.id }} .hero-heading {
+    letter-spacing: {{ settings.heading_letter_spacing | divided_by: 1000.0 }}em;
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.heading_color }};
+    {% else %}
+      color: {{ section.settings.heading_color }};
+    {% endif %}
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.heading_font_size_desktop }}px;
+      font-weight: {{ settings.heading_font_weight }};
+      text-transform: {{ settings.heading_text_transform }};
+    {% else %}
+      font-size: {{ section.settings.heading_font_size_desktop }}px;
+      font-weight: {{ section.settings.heading_font_weight }};
+    {% endif %}
+    margin: 0 0 {{ section.settings.heading_margin_bottom }}px 0;
+    line-height: 1.2;
+}
+
+.section-{{ section.id }} .hero-highlighted-text {
+    text-transform: {{ settings.highlighted_text_transform }};
+    {% if section.settings.use_theme_colors %}
+      {% if settings.highlighted_text_gradient_enabled %}
+        background: {{ settings.highlighted_text_gradient }};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: inline-block;
+      {% else %}
+        color: {{ settings.highlighted_text_solid_color }};
+      {% endif %}
+    {% else %}
+      {% if section.settings.highlighted_gradient_enabled %}
+        background: {{ section.settings.highlighted_gradient }};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: inline-block;
+      {% else %}
+        color: {{ section.settings.highlighted_color }};
+      {% endif %}
+    {% endif %}
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.highlighted_text_font_size_desktop }}px;
+      font-weight: {{ settings.highlighted_text_font_weight }};
+      letter-spacing: {{ settings.highlighted_text_letter_spacing | divided_by: 1000.0 }}em;
+      font-style: {{ settings.highlighted_text_font_style }};
+    {% else %}
+      font-size: {{ section.settings.highlighted_font_size_desktop }}px;
+      font-weight: {{ section.settings.highlighted_font_weight }};
+      letter-spacing: {{ settings.highlighted_text_letter_spacing | divided_by: 1000.0 }}em;
+      font-style: {{ settings.highlighted_text_font_style }};
+    {% endif %}
+}
+
+.section-{{ section.id }} .hero-highlighted-separate {
+    display: inline-block;
+    margin-bottom: {{ section.settings.highlighted_spacing }}px;
+}
+
+.section-{{ section.id }} .hero-intro-text {
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.body_color }};
+    {% else %}
+      color: {{ section.settings.intro_text_color }};
+    {% endif %}
+    line-height: 1.6;
+    margin-bottom: {{ section.settings.intro_spacing }}px;
+    text-align: {{ section.settings.intro_text_align }};
+}
+
+.section-{{ section.id }} .hero-align-left { text-align: left; }
+.section-{{ section.id }} .hero-align-center { text-align: center; }
+.section-{{ section.id }} .hero-align-right { text-align: right; }
+
+@media screen and (max-width: 749px) {
+    .section-{{ section.id }} .hero-heading {
+      {% if settings.enable_global_typography %}
+        font-size: {{ settings.heading_font_size_mobile }}px;
+      {% else %}
+        font-size: {{ section.settings.heading_font_size_mobile }}px;
+      {% endif %}
+    }
+
+    .section-{{ section.id }} .hero-highlighted-text {
+      {% if settings.enable_global_typography %}
+        font-size: {{ settings.highlighted_text_font_size_mobile }}px;
+      {% else %}
+        font-size: {{ section.settings.highlighted_font_size_mobile }}px;
+      {% endif %}
+    }
+}
+</style>
+
+<div class="hero-section-wrapper section-{{ section.id }}-wrapper">
+<section class="hero-section section-{{ section.id }}" data-section-id="{{ section.id }}">
+    {% comment %} Heading {% endcomment %}
+    {% if section.settings.heading_before != blank or section.settings.highlighted_text != blank or section.settings.heading_after != blank %}
+        <div class="hero-header hero-header-wrapper hero-align-{{ section.settings.heading_text_align }}">
+          {% case section.settings.highlight_position %}
+            {% when 'above' %}
+              {% if section.settings.highlighted_text != blank %}
+                <span class="hero-highlighted-text hero-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+              <{{ section.settings.heading_tag }} class="hero-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+            {% when 'below' %}
+              <{{ section.settings.heading_tag }} class="hero-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+              {% if section.settings.highlighted_text != blank %}
+                <span class="hero-highlighted-text hero-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+            {% when 'inline_first' %}
+              <{{ section.settings.heading_tag }} class="hero-heading">
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="hero-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_before != blank %}{{ " " }}{{ section.settings.heading_before }}{% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+            {% when 'inline_second' %}
+              <{{ section.settings.heading_tag }} class="hero-heading">
+                {% if section.settings.heading_before != blank %}{{ section.settings.heading_before }}{{ " " }}{% endif %}
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="hero-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+          {% endcase %}
+        </div>
+    {% endif %}
+
+    {% comment %} Intro Text {% endcomment %}
+    {% if section.settings.intro_text != blank %}
+        <div class="hero-intro-text hero-align-{{ section.settings.intro_text_align }} rte">
+          {{ section.settings.intro_text }}
+        </div>
+    {% endif %}
+
+    {% comment %} Hero Content Wrapper for Desktop Side-by-Side Layout {% endcomment %}
+    <div class="hero-content-wrapper">
+        {% comment %} Hero Image Container with Icons {% endcomment %}
+        <div class="hero-image-container">
+            {% comment %} Image Wrapper - keeps icons position stable {% endcomment %}
+            <div class="hero-image-wrapper">
+                {% comment %} Main Hero Images {% endcomment %}
+                {% if section.settings.mobile_background_image != blank %}
+                    <img class="hero-main-image mobile-only"
+                         src="{{ section.settings.mobile_background_image | image_url }}"
+                         alt="Hero image"
+                         loading="lazy">
+                {% else %}
+                    <div class="hero-main-image mobile-only hero-image-placeholder">
+                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                {% endif %}
+
+                {% if section.settings.desktop_background_image != blank %}
+                    <img class="hero-main-image desktop-only"
+                         src="{{ section.settings.desktop_background_image | image_url }}"
+                         alt="Hero image"
+                         loading="lazy">
+                {% else %}
+                    <div class="hero-main-image desktop-only hero-image-placeholder">
+                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                {% endif %}
+            </div>
+
+            {% comment %} Benefit Icons {% endcomment %}
+            <div class="benefit-icons-grid">
+                {% for block in section.blocks %}
+                    {% if block.type == 'benefit_item' %}
+                        <div class="benefit-icon-item" {{ block.shopify_attributes }}>
+                            {% case block.settings.icon_type %}
+                                {% when 'image' %}
+                                    {% if block.settings.icon != blank %}
+                                        <img class="benefit-icon-image {% if forloop.first %}active{% else %}inactive{% endif %}"
+                                             src="{{ block.settings.icon | image_url }}"
+                                             alt="{{ block.settings.label }}"
+                                             width="80"
+                                             height="80"
+                                             loading="lazy"
+                                             data-index="{{ forloop.index0 }}">
+                                    {% else %}
+                                        <div class="benefit-icon-image benefit-icon-placeholder {% if forloop.first %}active{% else %}inactive{% endif %}"
+                                             data-index="{{ forloop.index0 }}">
+                                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                        </div>
+                                    {% endif %}
+                                {% when 'svg' %}
+                                    <div class="benefit-icon-image benefit-icon-svg {% if forloop.first %}active{% else %}inactive{% endif %}"
+                                         data-index="{{ forloop.index0 }}">
+                                        {{ block.settings.icon_svg }}
+                                    </div>
+                                {% when 'google' %}
+                                    <span class="benefit-icon-image material-symbols-outlined {% if forloop.first %}active{% else %}inactive{% endif %}"
+                                          data-index="{{ forloop.index0 }}">
+                                        {{ block.settings.icon_google_name }}
+                                    </span>
+                            {% endcase %}
+                            <p>{{ block.settings.label }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        {% comment %} Content Display Section {% endcomment %}
+        <div class="content-display">
+            <div class="timer-bar" id="timer-bar"> </div>
+
+            <div class="content-header">
+                {% case section.blocks.first.settings.icon_type %}
+                    {% when 'image' %}
+                        {% if section.blocks.first.settings.icon != blank %}
+                            <img id="content-icon" class="content-icon"
+                                 src="{{ section.blocks.first.settings.icon | image_url }}"
+                                 alt="Content icon">
+                        {% else %}
+                            <div id="content-icon" class="content-icon content-icon-placeholder">
+                                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </div>
+                        {% endif %}
+                    {% when 'svg' %}
+                        <div id="content-icon" class="content-icon content-icon-svg">
+                            {{ section.blocks.first.settings.icon_svg }}
+                        </div>
+                    {% when 'google' %}
+                        <span id="content-icon" class="content-icon material-symbols-outlined">
+                            {{ section.blocks.first.settings.icon_google_name }}
+                        </span>
+                {% endcase %}
+                <h3 id="content-title" style="
+                    color: {{ section.settings.content_title_color }};
+                    text-align: {{ section.settings.content_title_align }};
+                    font-weight: {{ section.settings.content_title_font_weight }};
+                    text-transform: {{ section.settings.content_title_text_transform }};
+                    font-size: {{ section.settings.content_title_font_size_mobile }}px;">
+                    {{ section.blocks.first.settings.label }}
+                </h3>
+            </div>
+
+            <p id="content-text"> {{ section.blocks.first.settings.description }} </p>
+
+            {% if section.blocks.first.settings.block_image != blank %}
+                <div class="block-image-wrapper" id="block-image-wrapper" style="
+                    {% if section.blocks.first.settings.block_image_position == 'above_title' %}
+                        order: 1 !important; margin-bottom: 0; margin-top: 0;
+                    {% elsif section.blocks.first.settings.block_image_position == 'under_title' %}
+                        order: 3 !important; margin-top: 0; margin-bottom: 0;
+                    {% elsif section.blocks.first.settings.block_image_position == 'above_review' %}
+                        order: 5 !important; margin-top: 0; margin-bottom: 0;
+                    {% elsif section.blocks.first.settings.block_image_position == 'under_review' %}
+                        order: 7 !important; margin-top: 20px; margin-bottom: 0;
+                    {% endif %}">
+                    <img id="block-image"
+                         src="{{ section.blocks.first.settings.block_image | image_url }}"
+                         alt="{{ section.blocks.first.settings.label }}"
+                         class="block-image"
+                         style="aspect-ratio: {{ section.blocks.first.settings.block_image_aspect_ratio }}; border-radius: {{ section.blocks.first.settings.block_image_border_radius }}px; border: {{ section.blocks.first.settings.block_image_border_width }}px solid {{ section.blocks.first.settings.block_image_border_color }};">
+                </div>
+            {% endif %}
+
+            <div class="review-box" id="review-box" style="{% if section.settings.hide_all_review_boxes or section.blocks.first.settings.hide_review_box %}display: none;{% endif %}">
+                <p class="review-text" id="review-text" style="display: block !important; visibility: visible !important; opacity: 1 !important;"> {{ section.blocks.first.settings.review_text }} </p>
+                <div class="review-header">
+                    <div class="reviewer-info">
+                        <div class="hero-benefit-star-rating" id="hero-benefit-star-rating">
+                            {% for i in (1..5) %}
+                                <span class="hero-benefit-star">★</span>
+                            {% endfor %}
+                        </div>
+                        <h4 class="reviewer-name" id="reviewer-name"> {{ section.blocks.first.settings.reviewer_name }} </h4>
+                        <svg id="review-profile-pic" style="width: 16px; height: 16px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L15.09 5.26L19.18 5.27L20.04 9.28L23.5 11.5L20.04 13.72L19.18 17.73L15.09 17.74L12 21L8.91 17.74L4.82 17.73L3.96 13.72L0.5 11.5L3.96 9.28L4.82 5.27L8.91 5.26L12 2Z" fill="{{ section.settings.verified_badge_color }}"/>
+                            <path d="M10.5 13.5L8.5 11.5L7.5 12.5L10.5 15.5L16.5 9.5L15.5 8.5L10.5 13.5Z" fill="{{ section.settings.review_box_background }}"/>
+                        </svg>
+                        <font style="font-size: {{ section.settings.verified_badge_font_size }}px; color: {{ section.settings.verified_text_color }};">Verified</font>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</div>
+
+<!-- Hidden content data -->
+<div class="content-data" style="display: none;">
+    {% for block in section.blocks %}
+        {% if block.type == 'benefit_item' %}
+            <div data-index="{{ forloop.index0 }}"
+                 data-icon-type="{{ block.settings.icon_type }}"
+                 data-icon="{{ block.settings.icon | image_url }}"
+                 data-icon-svg="{{ block.settings.icon_svg | escape }}"
+                 data-icon-google="{{ block.settings.icon_google_name }}"
+                 data-reviewer-name="{{ block.settings.reviewer_name | escape }}"
+                 data-reviewer-pic="{{ block.settings.reviewer_pic | image_url }}"
+                 data-stars="{{ block.settings.star_rating }}"
+                 data-review="{{ block.settings.review_text | escape }}"
+                 data-hide-review-box="{{ block.settings.hide_review_box }}"
+                 data-block-image="{% if block.settings.block_image != blank %}{{ block.settings.block_image | image_url }}{% endif %}"
+                 data-block-image-aspect="{{ block.settings.block_image_aspect_ratio }}"
+                 data-block-image-border-radius="{{ block.settings.block_image_border_radius }}"
+                 data-block-image-border-width="{{ block.settings.block_image_border_width }}"
+                 data-block-image-border-color="{{ block.settings.block_image_border_color }}"
+                 data-block-image-height-mobile="{{ block.settings.block_image_height_mobile }}"
+                 data-block-image-height-desktop="{{ block.settings.block_image_height_desktop }}"
+                 data-block-image-position="{{ block.settings.block_image_position }}">
+                <h3>{{ block.settings.label }}</h3>
+                <p>{{ block.settings.description }}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const hotpoints = document.querySelectorAll('.benefit-icon-image');
+    const contentTitle = document.getElementById('content-title');
+    const contentText = document.getElementById('content-text');
+    const timerBar = document.getElementById('timer-bar');
+    const contentData = document.querySelectorAll('.content-data div[data-index]');
+
+    // Review elements
+    const reviewerName = document.getElementById('reviewer-name');
+    const reviewerPic = document.getElementById('review-profile-pic');
+    const starRating = document.getElementById('hero-benefit-star-rating');
+    const reviewText = document.getElementById('review-text');
+
+    let currentIndex = 0;
+    let autoTimer = null;
+    let isUserInteracting = false;
+
+    // Timer settings from section
+    const isTimerDisabled = {{ section.settings.disable_timer }};
+    const timerDuration = {{ section.settings.timer_duration }} * 1000; // Convert to milliseconds
+
+    function setActiveHotpoint(index) {
+        // Clear any existing timer
+        if (autoTimer) {
+            clearTimeout(autoTimer);
+            autoTimer = null;
+        }
+
+        // Reset timer bar - force reset by removing class and setting width to 0
+        timerBar.classList.remove('animate');
+        timerBar.style.width = '0%';
+
+        // Force reflow to ensure the reset happens
+        void timerBar.offsetWidth;
+
+        // Update hotpoint states
+        hotpoints.forEach((hotpoint, i) => {
+            if (i === index) {
+                hotpoint.classList.remove('inactive');
+                hotpoint.classList.add('active');
+            } else {
+                hotpoint.classList.remove('active');
+                hotpoint.classList.add('inactive');
+            }
+        });
+
+        // Update content and review from HTML data
+        const selectedContent = document.querySelector(`.content-data div[data-index="${index}"]`);
+
+        if (selectedContent) {
+            const title = selectedContent.querySelector('h3').textContent;
+            const text = selectedContent.querySelector('p').textContent;
+            const iconType = selectedContent.getAttribute('data-icon-type');
+            const iconSrc = selectedContent.getAttribute('data-icon');
+            const iconSvg = selectedContent.getAttribute('data-icon-svg');
+            const iconGoogle = selectedContent.getAttribute('data-icon-google');
+
+            // Update main content
+            contentTitle.textContent = title;
+            contentText.textContent = text;
+
+            // Apply content title styling from section settings
+            contentTitle.style.color = '{{ section.settings.content_title_color }}';
+            contentTitle.style.textAlign = '{{ section.settings.content_title_align }}';
+            contentTitle.style.fontWeight = '{{ section.settings.content_title_font_weight }}';
+            contentTitle.style.textTransform = '{{ section.settings.content_title_text_transform }}';
+
+            // Apply responsive font size
+            const isMobile = window.innerWidth < 750;
+            const fontSize = isMobile ? '{{ section.settings.content_title_font_size_mobile }}' : '{{ section.settings.content_title_font_size_desktop }}';
+            contentTitle.style.fontSize = fontSize + 'px';
+
+            // Update icon based on icon type - always get fresh reference
+            const contentHeader = document.querySelector('.content-header');
+            let oldIcon = document.getElementById('content-icon');
+
+            if (!oldIcon) return; // Safety check
+
+            let newIcon;
+
+            switch(iconType) {
+                case 'image':
+                    if (oldIcon.tagName === 'IMG') {
+                        oldIcon.src = iconSrc;
+                    } else {
+                        newIcon = document.createElement('img');
+                        newIcon.id = 'content-icon';
+                        newIcon.className = 'content-icon';
+                        newIcon.src = iconSrc;
+                        newIcon.alt = 'Content icon';
+                        oldIcon.replaceWith(newIcon);
+                    }
+                    break;
+                case 'svg':
+                    if (oldIcon.classList && oldIcon.classList.contains('content-icon-svg')) {
+                        oldIcon.innerHTML = iconSvg;
+                    } else {
+                        newIcon = document.createElement('div');
+                        newIcon.id = 'content-icon';
+                        newIcon.className = 'content-icon content-icon-svg';
+                        newIcon.innerHTML = iconSvg;
+                        oldIcon.replaceWith(newIcon);
+                    }
+                    break;
+                case 'google':
+                    if (oldIcon.classList && oldIcon.classList.contains('material-symbols-outlined')) {
+                        oldIcon.textContent = iconGoogle;
+                    } else {
+                        newIcon = document.createElement('span');
+                        newIcon.id = 'content-icon';
+                        newIcon.className = 'content-icon material-symbols-outlined';
+                        newIcon.textContent = iconGoogle;
+                        oldIcon.replaceWith(newIcon);
+                    }
+                    break;
+            }
+
+            // Update review content
+            const name = selectedContent.getAttribute('data-reviewer-name');
+            const pic = selectedContent.getAttribute('data-reviewer-pic');
+            const stars = parseInt(selectedContent.getAttribute('data-stars'));
+            const review = selectedContent.getAttribute('data-review');
+            const hideReviewBox = selectedContent.getAttribute('data-hide-review-box') === 'true';
+
+            // Show/hide review box based on block setting
+            const reviewBox = document.getElementById('review-box');
+            if (reviewBox) {
+                if (hideReviewBox) {
+                    reviewBox.style.display = 'none';
+                } else {
+                    reviewBox.style.display = 'block';
+                }
+            }
+
+            if (reviewerName) {
+                reviewerName.textContent = name;
+            }
+
+            // Update reviewer pic - handle both img and div placeholder
+            if (reviewerPic && reviewerPic.tagName === 'IMG') {
+                reviewerPic.src = pic;
+            }
+
+            if (reviewText) {
+                // Always update the review text
+                reviewText.textContent = review || '';
+                reviewText.style.display = 'block';
+                reviewText.style.visibility = 'visible';
+                reviewText.style.opacity = '1';
+            }
+
+            // Update block image
+            let blockImageWrapper = document.getElementById('block-image-wrapper');
+            const blockImageSrc = selectedContent.getAttribute('data-block-image');
+            const blockImageAspect = selectedContent.getAttribute('data-block-image-aspect');
+            const blockImageBorderRadius = selectedContent.getAttribute('data-block-image-border-radius');
+            const blockImageBorderWidth = selectedContent.getAttribute('data-block-image-border-width');
+            const blockImageBorderColor = selectedContent.getAttribute('data-block-image-border-color');
+            const blockImageHeightMobile = selectedContent.getAttribute('data-block-image-height-mobile');
+            const blockImageHeightDesktop = selectedContent.getAttribute('data-block-image-height-desktop');
+            const blockImagePosition = selectedContent.getAttribute('data-block-image-position');
+
+            if (blockImageSrc && blockImageSrc !== '' && blockImageSrc !== 'null' && !blockImageSrc.includes('no-image')) {
+                if (!blockImageWrapper) {
+                    // Create wrapper if it doesn't exist
+                    const wrapper = document.createElement('div');
+                    wrapper.id = 'block-image-wrapper';
+                    wrapper.className = 'block-image-wrapper';
+                    const img = document.createElement('img');
+                    img.id = 'block-image';
+                    img.className = 'block-image';
+                    wrapper.appendChild(img);
+                    document.querySelector('.content-display').appendChild(wrapper);
+                    blockImageWrapper = wrapper; // Update reference
+                }
+
+                // Get fresh reference to image
+                const blockImage = document.getElementById('block-image');
+                if (blockImage) {
+                    blockImage.src = blockImageSrc;
+                    blockImage.style.borderRadius = blockImageBorderRadius + 'px';
+                    blockImage.style.border = blockImageBorderWidth + 'px solid ' + blockImageBorderColor;
+
+                    // Apply aspect ratio or custom height
+                    if (blockImageAspect === 'custom') {
+                        // Use custom height settings
+                        const isMobile = window.innerWidth < 750;
+                        const imageHeight = isMobile ? blockImageHeightMobile : blockImageHeightDesktop;
+                        blockImage.style.height = imageHeight + 'px';
+                        blockImage.style.aspectRatio = 'auto';
+                    } else {
+                        // Use aspect ratio
+                        blockImage.style.aspectRatio = blockImageAspect || '16/9';
+                        blockImage.style.height = 'auto';
+                    }
+                }
+                if (blockImageWrapper) {
+                    blockImageWrapper.style.display = 'block';
+
+                    // Apply position based on block setting
+                    if (blockImagePosition === 'above_title') {
+                        blockImageWrapper.style.setProperty('order', '1', 'important');
+                        blockImageWrapper.style.marginBottom = '0';
+                        blockImageWrapper.style.marginTop = '0';
+                    } else if (blockImagePosition === 'under_title') {
+                        blockImageWrapper.style.setProperty('order', '3', 'important');
+                        blockImageWrapper.style.marginTop = '0';
+                        blockImageWrapper.style.marginBottom = '0';
+                    } else if (blockImagePosition === 'above_review') {
+                        blockImageWrapper.style.setProperty('order', '5', 'important');
+                        blockImageWrapper.style.marginTop = '0';
+                        blockImageWrapper.style.marginBottom = '0';
+                    } else if (blockImagePosition === 'under_review') {
+                        blockImageWrapper.style.setProperty('order', '7', 'important');
+                        blockImageWrapper.style.marginTop = '20px';
+                        blockImageWrapper.style.marginBottom = '0';
+                    }
+                }
+            } else {
+                // Hide image if no image is set
+                if (blockImageWrapper) {
+                    blockImageWrapper.style.display = 'none';
+                }
+            }
+
+            // Update star rating
+            starRating.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                const star = document.createElement('span');
+                star.className = 'hero-benefit-star';
+                star.textContent = i < stars ? '★' : '☆';
+                starRating.appendChild(star);
+            }
+        }
+
+        currentIndex = index;
+
+        // Start timer bar animation after a small delay (only if timer is enabled)
+        if (!isTimerDisabled) {
+            setTimeout(() => {
+                timerBar.classList.add('animate');
+            }, 50);
+        }
+
+        // Set timer for next hotpoint (only if user isn't actively clicking and timer is enabled)
+        if (!isUserInteracting && !isTimerDisabled) {
+            autoTimer = setTimeout(() => {
+                const nextIndex = (currentIndex + 1) % hotpoints.length;
+                setActiveHotpoint(nextIndex);
+            }, timerDuration);
+        }
+    }
+
+    // Add click listeners to hotpoints
+    hotpoints.forEach((hotpoint, index) => {
+        hotpoint.addEventListener('click', function() {
+            isUserInteracting = true;
+            setActiveHotpoint(index);
+
+            // Reset user interaction flag after a delay (only restart auto-cycling if timer is enabled)
+            if (!isTimerDisabled) {
+                setTimeout(() => {
+                    isUserInteracting = false;
+                    // Restart auto-cycling
+                    autoTimer = setTimeout(() => {
+                        const nextIndex = (currentIndex + 1) % hotpoints.length;
+                        setActiveHotpoint(nextIndex);
+                    }, timerDuration);
+                }, 2000);
+            }
+        });
+    });
+
+    // Initialize
+    setActiveHotpoint(0);
+
+    // Handle window resize to update responsive styles
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function() {
+            const isMobile = window.innerWidth < 750;
+
+            // Update content title font size
+            if (contentTitle) {
+                const fontSize = isMobile ? '{{ section.settings.content_title_font_size_mobile }}' : '{{ section.settings.content_title_font_size_desktop }}';
+                contentTitle.style.fontSize = fontSize + 'px';
+            }
+
+            // Update block image height from current active block (only if using custom aspect ratio)
+            const activeHotpoint = document.querySelector('.benefit-icon-image.active');
+            if (activeHotpoint) {
+                const index = parseInt(activeHotpoint.getAttribute('data-index'));
+                const selectedContent = document.querySelector(`.content-data div[data-index="${index}"]`);
+
+                if (selectedContent) {
+                    const blockImageAspect = selectedContent.getAttribute('data-block-image-aspect');
+                    const blockImage = document.getElementById('block-image');
+
+                    if (blockImage && blockImageAspect === 'custom') {
+                        const blockImageHeightMobile = selectedContent.getAttribute('data-block-image-height-mobile');
+                        const blockImageHeightDesktop = selectedContent.getAttribute('data-block-image-height-desktop');
+                        const imageHeight = isMobile ? blockImageHeightMobile : blockImageHeightDesktop;
+                        blockImage.style.height = imageHeight + 'px';
+                    }
+                }
+            }
+        }, 100);
+    });
+});
+</script>
+
+{% schema %}
+{"name":"Hero Benefits Section","settings": [
+ {"type":"header","content":"THEME COLORS"},
+ {"type":"checkbox","id":"use_theme_colors","label":"Use Theme Colors","default": true
+ },
+ {"type":"header","content":"SECTION BACKGROUND"},
+ {"type":"checkbox","id":"enable_section_background","label":"Enable Section Background","default": true
+ },
+ {"type":"color","id":"section_bg_color","label":"Section Background Color","default":"#ffffff"},
+ {"type":"checkbox","id":"use_section_gradient","label":"Use Gradient Background","default": false
+ },
+ {"type":"color_background","id":"section_bg_gradient","label":"Section Background Gradient","default":"linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(134, 79, 162, 1) 73.022%, rgba(118, 75, 162, 1) 76%)"},
+ {"type":"header","content":"SECTION HEADING"},
+ {"type":"text","id":"heading_before","label":"Heading (Before Highlight)","default":"add your"},
+ {"type":"text","id":"highlighted_text","label":"Highlight","default":"title here"},
+ {"type":"text","id":"heading_after","label":"Heading (After Highlight)"},
+ {"type":"select","id":"highlight_position","label":"Highlight Position","options": [
+ {"value":"inline_second","label":"Inline (Middle)"},
+ {"value":"inline_first","label":"Inline (First)"},
+ {"value":"above","label":"Above Heading"},
+ {"value":"below","label":"Below Heading"}
+ ],"default":"inline_second"},
+ {"type":"select","id":"heading_tag","label":"Heading Tag","options": [
+ {"value":"h1","label":"H1"},
+ {"value":"h2","label":"H2"},
+ {"value":"h3","label":"H3"},
+ {"value":"h4","label":"H4"},
+ {"value":"p","label":"Paragraph"}
+ ],"default":"h2"},
+ {"type":"select","id":"heading_text_align","label":"Heading Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"color","id":"heading_color","label":"Heading Color","default":"#000000"},
+ {"type":"range","id":"heading_font_size_desktop","min": 24,"max": 96,"step": 2,"unit":"px","label":"Heading Font Size (Desktop)","default": 48
+ },
+ {"type":"range","id":"heading_font_size_mobile","min": 22,"max": 60,"step": 2,"unit":"px","label":"Heading Font Size (Mobile)","default": 32
+ },
+ {"type":"select","id":"heading_font_weight","label":"Heading Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Regular"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"500"},
+ {"type":"range","id":"heading_margin_bottom","min": 0,"max": 60,"step": 2,"unit":"px","label":"Heading Margin Bottom","default": 0
+ },
+ {"type":"header","content":"Highlight"},
+ {"type":"checkbox","id":"highlighted_gradient_enabled","label":"Enable Highlight Gradient","default": false
+ },
+ {"type":"color","id":"highlighted_color","label":"Highlight Color","default":"#000000"},
+ {"type":"color_background","id":"highlighted_gradient","label":"Highlight Gradient","default":"linear-gradient(71deg, rgba(0, 0, 0, 1), rgba(161, 161, 161, 1) 100%)"},
+ {"type":"range","id":"highlighted_font_size_desktop","min": 24,"max": 96,"step": 2,"unit":"px","label":"Highlight Font Size (Desktop)","default": 48
+ },
+ {"type":"range","id":"highlighted_font_size_mobile","min": 20,"max": 60,"step": 2,"unit":"px","label":"Highlight Font Size (Mobile)","default": 32
+ },
+ {"type":"select","id":"highlighted_font_weight","label":"Highlight Weight","options": [
+ {"value":"400","label":"Regular"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"500"},
+ {"type":"range","id":"highlighted_spacing","min": 0,"max": 40,"step": 2,"unit":"px","label":"Highlight Spacing (When Above/Below)","default": 6
+ },
+ {"type":"header","content":"INTRO TEXT"},
+ {"type":"richtext","id":"intro_text","label":"Intro Text","default":"<p>Add your intro text here</p>"},
+ {"type":"select","id":"intro_text_align","label":"Intro Text Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"color","id":"intro_text_color","label":"Intro Text Color","default":"#1a3b3b"},
+ {"type":"range","id":"intro_spacing","min": 0,"max": 80,"step": 4,"unit":"px","label":"Spacing Below Intro","default": 28
+ },
+ {"type":"header","content":"️ HERO IMAGES"},
+ {"type":"image_picker","id":"mobile_background_image","label":"Mobile Hero Image"},
+ {"type":"select","id":"mobile_background_size","label":"Mobile Image Fit","options": [
+ {"value":"cover","label":"Cover (fill container)"},
+ {"value":"contain","label":"Contain (fit inside)"},
+ {"value":"fill","label":"Fill (stretch)"}
+ ],"default":"contain"},
+ {"type":"image_picker","id":"desktop_background_image","label":"Desktop Hero Image"},
+ {"type":"select","id":"desktop_background_size","label":"Desktop Image Fit","options": [
+ {"value":"cover","label":"Cover (fill container)"},
+ {"value":"contain","label":"Contain (fit inside)"},
+ {"value":"fill","label":"Fill (stretch)"}
+ ],"default":"contain"},
+ {"type":"range","id":"desktop_image_width","min": 30,"max": 100,"step": 5,"unit":"%","label":"Desktop Image Width","default": 50,"info":"Width of the hero image on desktop (% of container)"},
+ {"type":"checkbox","id":"hide_image_on_desktop","label":"Hide Image on Desktop","default": false,"info":"Hide the hero image on desktop devices"},
+ {"type":"header","content":"️ HERO IMAGE BORDER"},
+ {"type":"range","id":"hero_image_border_radius","label":"Hero Image Border Radius","min": 0,"max": 50,"step": 2,"unit":"px","default": 0,"info":"Corner roundness for main hero image"},
+ {"type":"range","id":"hero_image_border_width","label":"Hero Image Border Width","min": 0,"max": 10,"step": 1,"unit":"px","default": 0,"info":"Border thickness for main hero image"},
+ {"type":"color","id":"hero_image_border_color","label":"Hero Image Border Color","default":"#1a3b3b","info":"Border color for main hero image"},
+ {"type":"header","content":"HERO IMAGE MASK FADE"},
+ {"type":"checkbox","id":"enable_image_mask_fade","label":"Enable Fade to Bottom","default": true,"info":"Add a gradient fade effect to the bottom of the image"},
+ {"type":"range","id":"image_mask_fade_height","min": 10,"max": 100,"step": 5,"unit":"%","label":"Fade Height","default": 45,"info":"Height of the fade effect (% from bottom)"},
+ {"type":"color","id":"image_mask_fade_color","label":"Fade to Color","default":"#ffffff","info":"Color the image fades to at the bottom"},
+ {"type":"header","content":"BENEFIT ICONS - Grid & Spacing"},
+ {"type":"range","id":"icon_vertical_spacing_mobile","min": 0,"max": 200,"step": 5,"unit":"px","label":"Vertical Spacing Between Icons (Mobile)","default": 65
+ },
+ {"type":"range","id":"icon_horizontal_spacing_mobile","min": 0,"max": 200,"step": 5,"unit":"px","label":"Horizontal Spacing Between Icons (Mobile)","default": 30
+ },
+ {"type":"range","id":"icon_vertical_spacing_desktop","min": 0,"max": 200,"step": 5,"unit":"px","label":"Vertical Spacing Between Icons (Desktop)","default": 40
+ },
+ {"type":"range","id":"icon_horizontal_spacing_desktop","min": 0,"max": 200,"step": 5,"unit":"px","label":"Horizontal Spacing Between Icons (Desktop)","default": 0
+ },
+ {"type":"range","id":"icon_label_gap","min": 0,"max": 40,"step": 2,"unit":"px","label":"Gap Between Icon and Label","default": 8,"info":"Space between benefit icon and its label text"},
+ {"type":"range","id":"icon_offset_mobile","min": 0,"max": 50,"step": 5,"unit":"%","label":"Icon Offset (Mobile)","default": 40,"info":"Horizontal offset for staggered icon layout on mobile"},
+ {"type":"range","id":"icon_offset_desktop","min": 0,"max": 50,"step": 5,"unit":"%","label":"Icon Offset (Desktop)","default": 35,"info":"Horizontal offset for staggered icon layout on desktop"},
+ {"type":"header","content":"BENEFIT ICONS - Opacity & Scale"},
+ {"type":"range","id":"icon_active_opacity","min": 0,"max": 100,"step": 5,"unit":"%","label":"Active Icon Opacity","default": 100,"info":"Opacity for the active benefit icon (0% = transparent, 100% = fully visible)"},
+ {"type":"range","id":"icon_inactive_opacity","min": 0,"max": 100,"step": 5,"unit":"%","label":"Inactive Icon Opacity","default": 100,"info":"Opacity for inactive benefit icons (0% = transparent, 100% = fully visible)"},
+ {"type":"header","content":"BENEFIT ICONS - Text Labels"},
+ {"type":"color","id":"icon_label_active_color","label":"Active Text Color","default":"#000000","info":"Color for the label of the active benefit icon"},
+ {"type":"select","id":"icon_label_active_font_weight","label":"Active Text Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Regular"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"700","info":"Font weight for active benefit label"},
+ {"type":"color","id":"icon_label_inactive_color","label":"Inactive Text Color","default":"#1a3b3b","info":"Color for the labels of inactive benefit icons"},
+ {"type":"range","id":"icon_label_font_size","min": 10,"max": 24,"step": 1,"unit":"px","label":"Label Font Size","default": 13,"info":"Font size for benefit icon labels"},
+ {"type":"select","id":"icon_label_font_weight","label":"Inactive Text Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Regular"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"500","info":"Font weight for inactive benefit labels"},
+ {"type":"header","content":"CONTENT DISPLAY BOX"},
+ {"type":"color","id":"content_display_background","label":"Background Color","default":"rgba(0,0,0,0)","info":"Background color for the content display box"},
+ {"type":"color","id":"content_display_text_color","label":"Text Color","default":"#1a3b3b","info":"Main text color for the content display"},
+ {"type":"select","id":"content_display_text_align","label":"Text Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"select","id":"content_display_header_align","label":"Header Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center","info":"Alignment for headings inside content display"},
+ {"type":"range","id":"content_display_padding_vertical_mobile","min": 0,"max": 80,"step": 4,"unit":"px","label":"Vertical Padding (Mobile)","default": 20,"info":"Top and bottom padding inside the content display box on mobile"},
+ {"type":"range","id":"content_display_padding_horizontal_mobile","min": 0,"max": 80,"step": 4,"unit":"px","label":"Horizontal Padding (Mobile)","default": 20,"info":"Left and right padding inside the content display box on mobile"},
+ {"type":"range","id":"content_display_padding_vertical_desktop","min": 0,"max": 100,"step": 4,"unit":"px","label":"Vertical Padding (Desktop)","default": 40,"info":"Top and bottom padding inside the content display box on desktop"},
+ {"type":"range","id":"content_display_padding_horizontal_desktop","min": 0,"max": 100,"step": 4,"unit":"px","label":"Horizontal Padding (Desktop)","default": 40,"info":"Left and right padding inside the content display box on desktop"},
+ {"type":"range","id":"content_display_gap","min": 0,"max": 40,"step": 2,"unit":"px","label":"Internal Gap","default": 0,"info":"Space between content elements inside the box"},
+ {"type":"range","id":"content_display_border_radius","min": 0,"max": 30,"step": 2,"unit":"px","label":"Border Radius","default": 0,"info":"Rounded corners for the content display box"},
+ {"type":"range","id":"content_display_border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Border Width","default": 0,"info":"Border thickness for the content display box"},
+ {"type":"color","id":"content_display_border_color","label":"Border Color","default":"#1a3b3b","info":"Border color for the content display box"},
+ {"type":"color","id":"content_title_color","label":"Heading Color","default":"#000000","info":"Color for the content title"},
+ {"type":"range","id":"content_title_font_size_mobile","label":"Title Font Size (Mobile)","min": 14,"max": 48,"step": 2,"unit":"px","default": 26,"info":"Font size for content title on mobile devices"},
+ {"type":"range","id":"content_title_font_size_desktop","label":"Title Font Size (Desktop)","min": 16,"max": 72,"step": 2,"unit":"px","default": 32,"info":"Font size for content title on desktop"},
+ {"type":"select","id":"content_title_align","label":"Title Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left","info":"Text alignment for content title"},
+ {"type":"select","id":"content_title_font_weight","label":"Title Font Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"},
+ {"value":"800","label":"Extra Bold"}
+ ],"default":"500","info":"Font weight for content title"},
+ {"type":"select","id":"content_title_text_transform","label":"Title Text Transform","options": [
+ {"value":"none","label":"None"},
+ {"value":"uppercase","label":"UPPERCASE"},
+ {"value":"lowercase","label":"lowercase"},
+ {"value":"capitalize","label":"Capitalize"}
+ ],"default":"none","info":"Text transformation for content title"},
+ {"type":"header","content":"HERO CONTENT WRAPPER SPACING"},
+ {"type":"range","id":"hero_content_gap_mobile","min": 0,"max": 80,"step": 4,"unit":"px","label":"Gap (Mobile)","default": 0,"info":"Space between image and content on mobile"},
+ {"type":"range","id":"hero_content_gap_desktop","min": 0,"max": 100,"step": 4,"unit":"px","label":"Gap (Desktop)","default": 40,"info":"Space between image and content on desktop"},
+ {"type":"header","content":"REVIEW BOX STYLING"},
+ {"type":"checkbox","id":"hide_all_review_boxes","label":"Hide All Review Boxes","default": false,"info":"Hide all review boxes globally (overrides individual block settings)"},
+ {"type":"range","id":"review_box_margin_top","min": 0,"max": 60,"step": 2,"unit":"px","label":"Review Box Margin Top","default": 16,"info":"Space above the review box"},
+ {"type":"color","id":"review_box_background","label":"Review Box Background","default":"#000000","info":"Background color for review boxes"},
+ {"type":"color","id":"review_box_border_color","label":"Review Box Border Color","default":"#ffffff33","info":"Border color for review boxes"},
+ {"type":"range","id":"review_box_border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Review Box Border Width","default": 1,"info":"Border thickness for review boxes"},
+ {"type":"range","id":"review_box_border_radius","min": 0,"max": 30,"step": 1,"unit":"px","label":"Review Box Border Radius","default": 5,"info":"Corner roundness for review boxes"},
+ {"type":"range","id":"review_box_padding_top","min": 0,"max": 40,"step": 2,"unit":"px","label":"Review Box Padding Top","default": 16,"info":"Top padding inside review boxes"},
+ {"type":"range","id":"review_box_padding_right","min": 0,"max": 40,"step": 2,"unit":"px","label":"Review Box Padding Right","default": 16,"info":"Right padding inside review boxes"},
+ {"type":"range","id":"review_box_padding_bottom","min": 0,"max": 40,"step": 2,"unit":"px","label":"Review Box Padding Bottom","default": 6,"info":"Bottom padding inside review boxes"},
+ {"type":"range","id":"review_box_padding_left","min": 0,"max": 40,"step": 2,"unit":"px","label":"Review Box Padding Left","default": 16,"info":"Left padding inside review boxes"},
+ {"type":"select","id":"review_box_text_align","label":"Review Box Text Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left","info":"Text alignment for review content"},
+ {"type":"color","id":"verified_badge_color","label":"Verified Badge Color","default":"#ffffff","info":"Color for the verified badge icon"},
+ {"type":"color","id":"review_text_color","label":"Review Text Color","default":"#ffffff","info":"Color for the review quote text"},
+ {"type":"range","id":"review_text_font_size","label":"Review Text Font Size","min": 10,"max": 32,"step": 1,"unit":"px","default": 17,"info":"Font size for the review text"},
+ {"type":"range","id":"review_text_font_weight","label":"Review Text Font Weight","min": 100,"max": 900,"step": 100,"default": 400,"info":"Font weight for the review text"},
+ {"type":"color","id":"reviewer_name_color","label":"Reviewer Name Color","default":"#ffffff","info":"Color for the reviewer's name"},
+ {"type":"range","id":"reviewer_name_font_size","label":"Reviewer Name Font Size","min": 10,"max": 32,"step": 1,"unit":"px","default": 14,"info":"Font size for the reviewer's name"},
+ {"type":"color","id":"verified_text_color","label":"Verified Text Color","default":"#fefefe","info":"Color for the 'Verified' text"},
+ {"type":"range","id":"verified_badge_font_size","label":"Verified Badge Text Size","min": 8,"max": 24,"step": 1,"unit":"px","default": 13,"info":"Font size for 'Verified' text next to badge"},
+ {"type":"range","id":"star_icon_size","label":"Star Icon Size","min": 10,"max": 40,"step": 1,"unit":"px","default": 16,"info":"Size of the star rating icons"},
+ {"type":"color","id":"star_icon_color","label":"Star Icon Color","default":"#ffffff","info":"Color for filled star icons"},
+ {"type":"header","content":"CONTENT ICON - Display & Style"},
+ {"type":"checkbox","id":"hide_content_header","label":"Hide Content Header","default": false,"info":"Hide the entire content header (icon and title)"},
+ {"type":"checkbox","id":"hide_content_icon","label":"Hide Content Icon","default": true,"info":"Hide the icon in the content display section"},
+ {"type":"checkbox","id":"content_icon_show_background","label":"Show Content Icon Background","default": false,"info":"Add background color to content icon"},
+ {"type":"color","id":"content_icon_background_color","label":"Content Icon Background Color","default":"#000000","info":"Background color for content icon (when enabled)"},
+ {"type":"checkbox","id":"content_icon_show_border","label":"Show Content Icon Border","default": false,"info":"Add border to content icon"},
+ {"type":"color","id":"content_icon_border_color","label":"Content Icon Border Color","default":"#1a3b3b","info":"Border color for content icon (when border is enabled)"},
+ {"type":"color","id":"content_icon_color","label":"Content Icon Color","default":"#1a3b3b","info":"Color for the content display icon (applies to all icon types)"},
+ {"type":"header","content":"BENEFIT ICONS - Size & Shape"},
+ {"type":"checkbox","id":"icon_circular","label":"Circular Icons","default": true,"info":"Make benefit icons circular instead of rounded square"},
+ {"type":"range","id":"icon_circle_size","min": 40,"max": 200,"step": 5,"unit":"px","label":"Circle Size","default": 50,"info":"Size of ALL icons when circular mode is ON (ensures perfect circles)"},
+ {"type":"range","id":"icon_border_radius","min": 0,"max": 50,"step": 1,"unit":"px","label":"Border Radius (Non-Circular)","default": 8,"info":"Border radius when circular is OFF (0 = square, 50 = circle)"},
+ {"type":"range","id":"icon_width","min": 40,"max": 200,"step": 5,"unit":"px","label":"Benefit Icon Width (Non-Circular)","default": 100,"info":"Width of benefit icons when circular mode is OFF"},
+ {"type":"range","id":"icon_height","min": 40,"max": 200,"step": 5,"unit":"px","label":"Benefit Icon Height (Non-Circular)","default": 95,"info":"Height of benefit icons when circular mode is OFF"},
+ {"type":"range","id":"icon_scale","min": 1.0,"max": 2.0,"step": 0.1,"label":"Active Icon Scale","default": 1.1,"info":"Scale multiplier for active benefit icon (1.0 = no scale, 2.0 = double size)"},
+ {"type":"header","content":"BENEFIT ICONS - Background"},
+ {"type":"checkbox","id":"icon_show_background","label":"Show Background","default": true,"info":"Add background color to benefit icons"},
+ {"type":"color","id":"icon_background_color","label":"Background Color (Inactive)","default":"#ffffff","info":"Background color for inactive benefit icons (when enabled)"},
+ {"type":"color","id":"icon_background_color_active","label":"Background Color (Active)","default":"#000000","info":"Background color for active benefit icon (when background is enabled)"},
+ {"type":"range","id":"icon_padding","min": 0,"max": 20,"step": 2,"unit":"px","label":"Padding","default": 2,"info":"Spacing inside icon container"},
+ {"type":"header","content":"️ BENEFIT ICONS - Border"},
+ {"type":"checkbox","id":"icon_show_border","label":"Show Border","default": true,"info":"Add border to benefit icons"},
+ {"type":"range","id":"icon_border_width","min": 1,"max": 10,"step": 1,"unit":"px","label":"Border Width","default": 2,"info":"Border thickness (when border is enabled)"},
+ {"type":"color","id":"icon_border_color","label":"Border Color (Inactive)","default":"#c9c9c9","info":"Border color for inactive benefit icons"},
+ {"type":"color","id":"icon_border_color_active","label":"Border Color (Active)","default":"#000000","info":"Border color for the active benefit icon"},
+ {"type":"header","content":"CONTENT ICON - Size"},
+ {"type":"range","id":"content_icon_width","min": 30,"max": 150,"step": 5,"unit":"px","label":"Width (Non-Circular)","default": 60,"info":"Width of content display icon when circular mode is OFF"},
+ {"type":"range","id":"content_icon_height","min": 30,"max": 150,"step": 5,"unit":"px","label":"Height (Non-Circular)","default": 60,"info":"Height of content display icon when circular mode is OFF"},
+ {"type":"header","content":"GOOGLE MATERIAL ICONS (Benefit Icons)"},
+ {"type":"range","id":"google_icon_size","min": 24,"max": 80,"step": 4,"unit":"px","label":"Google Icon Size","default": 36,"info":"Size for Google Material Icons"},
+ {"type":"color","id":"google_icon_color_inactive","label":"Google Icon Color (Inactive)","default":"#000000","info":"Color for inactive Google Material Icons"},
+ {"type":"color","id":"google_icon_color_active","label":"Google Icon Color (Active)","default":"#ffffff","info":"Color for active Google Material Icon"},
+ {"type":"header","content":"CUSTOM SVG ICONS (Benefit Icons)"},
+ {"type":"color","id":"svg_icon_color_inactive","label":"SVG Icon Color (Inactive)","default":"#1a3b3b","info":"Fill color for inactive custom SVG icons"},
+ {"type":"color","id":"svg_icon_color_active","label":"SVG Icon Color (Active)","default":"#1a3b3b","info":"Fill color for active custom SVG icon"},
+ {"type":"header","content":"SECTION PADDING"},
+ {"type":"range","id":"section_padding_top_mobile","label":"Top Padding (Mobile)","min": 0,"max": 100,"step": 4,"unit":"px","default": 40,"info":"Top padding for the section on mobile devices"},
+ {"type":"range","id":"section_padding_top_desktop","label":"Top Padding (Desktop)","min": 0,"max": 200,"step": 4,"unit":"px","default": 60,"info":"Top padding for the section on desktop"},
+ {"type":"range","id":"section_padding_bottom_mobile","label":"Bottom Padding (Mobile)","min": 0,"max": 100,"step": 4,"unit":"px","default": 40,"info":"Bottom padding for the section on mobile devices"},
+ {"type":"range","id":"section_padding_bottom_desktop","label":"Bottom Padding (Desktop)","min": 0,"max": 200,"step": 4,"unit":"px","default": 60,"info":"Bottom padding for the section on desktop"},
+ {"type":"header","content":"️ AUTO-ROTATION TIMER"},
+ {"type":"checkbox","id":"disable_timer","label":"Disable Auto-Rotation","default": true,"info":"Turn off automatic cycling between benefit items"},
+ {"type":"range","id":"timer_duration","label":"Timer Duration","min": 2,"max": 30,"step": 1,"unit":"s","default": 10,"info":"Seconds before auto-rotating to next benefit (only applies when auto-rotation is enabled)"},
+ {"type":"color","id":"timer_bar_color","label":"Timer Bar Color","default":"#000000","info":"Color of the timer progress bar"}
+ ],"blocks": [
+ {"type":"benefit_item","name":"Benefit Item","settings": [
+ {"type":"text","id":"label","label":"Label","default":"Hydration"},
+ {"type":"header","content":"Icon Settings"},
+ {"type":"select","id":"icon_type","label":"Icon Type","options": [
+ {"value":"image","label":"Image Upload"},
+ {"value":"svg","label":"Custom SVG Code"},
+ {"value":"google","label":"Google Material Icon"}
+ ],"default":"image","info":"Choose how to display the benefit icon"},
+ {"type":"image_picker","id":"icon","label":"Icon Image","info":"Upload an icon image (for Image Upload type)"},
+ {"type":"html","id":"icon_svg","label":"Custom SVG Code","info":"Paste your SVG code here (for Custom SVG type)"},
+ {"type":"text","id":"icon_google_name","label":"Google Icon Name","default":"check_circle","info":"Enter Material Icon name from https://fonts.google.com/icons (for Google Material Icon type)"},
+ {"type":"textarea","id":"description","label":"Description","default":"Experience optimal hydration with our advanced electrolyte formula."},
+ {"type":"text","id":"reviewer_name","label":"Reviewer Name","default":"Sarah M"},
+ {"type":"image_picker","id":"reviewer_pic","label":"Reviewer Picture"},
+ {"type":"range","id":"star_rating","label":"Star Rating","min": 1,"max": 5,"step": 1,"default": 5
+ },
+ {"type":"textarea","id":"review_text","label":"Review Text","default":"\"No more afternoon crashes!\""},
+ {"type":"checkbox","id":"hide_review_box","label":"Hide Review Box","default": false,"info":"Hide the review box for this benefit"},
+ {"type":"header","content":"Block Image Settings"},
+ {"type":"image_picker","id":"block_image","label":"Block Image","info":"Optional image for this benefit block"},
+ {"type":"select","id":"block_image_position","label":"Image Position","options": [
+ {"value":"above_title","label":"Above the Title"},
+ {"value":"under_title","label":"Under the Title"},
+ {"value":"above_review","label":"Above the Review"},
+ {"value":"under_review","label":"Under the Review"}
+ ],"default":"above_review","info":"Position of the block image within the content display"},
+ {"type":"select","id":"block_image_aspect_ratio","label":"Image Aspect Ratio","options": [
+ {"value":"1/1","label":"Square (1:1)"},
+ {"value":"4/3","label":"Landscape (4:3)"},
+ {"value":"16/9","label":"Wide (16:9)"},
+ {"value":"3/4","label":"Portrait (3:4)"},
+ {"value":"auto","label":"Original"},
+ {"value":"custom","label":"Custom (use height settings below)"}
+ ],"default":"16/9","info":"Aspect ratio for the block image. Select 'Custom' to use custom height settings"},
+ {"type":"range","id":"block_image_border_radius","label":"Image Border Radius","min": 0,"max": 50,"step": 2,"unit":"px","default": 10,"info":"Corner roundness for block image"},
+ {"type":"range","id":"block_image_border_width","label":"Image Border Width","min": 0,"max": 10,"step": 1,"unit":"px","default": 0,"info":"Border thickness for block image"},
+ {"type":"color","id":"block_image_border_color","label":"Image Border Color","default":"#1a3b3b","info":"Border color for block image"},
+ {"type":"range","id":"block_image_height_mobile","label":"Image Height (Mobile)","min": 100,"max": 600,"step": 10,"unit":"px","default": 250,"info":"Only applies when aspect ratio is set to 'Custom'"},
+ {"type":"range","id":"block_image_height_desktop","label":"Image Height (Desktop)","min": 100,"max": 800,"step": 10,"unit":"px","default": 400,"info":"Only applies when aspect ratio is set to 'Custom'"}
+ ]
+ }
+ ],"presets": [
+ {"name":"Hero Benefits","settings": {"use_theme_colors": true,"enable_section_background": true,"section_bg_color":"#ffffff","use_section_gradient": false,"section_bg_gradient":"linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(134, 79, 162, 1) 73.022%, rgba(118, 75, 162, 1) 76%)","heading_before":"add your","highlighted_text":"title here","highlight_position":"inline_second","heading_text_align":"center","heading_color":"#000000","heading_font_size_desktop": 48,"heading_font_size_mobile": 32,"heading_font_weight":"500","heading_margin_bottom": 0,"highlighted_gradient_enabled": false,"highlighted_color":"#000000","highlighted_gradient":"linear-gradient(71deg, rgba(0, 0, 0, 1), rgba(161, 161, 161, 1) 100%)","highlighted_font_size_desktop": 48,"highlighted_font_size_mobile": 32,"highlighted_font_weight":"500","highlighted_spacing": 6,"intro_text":"<p>Add your intro text here</p>","intro_text_align":"center","intro_text_color":"#1a3b3b","intro_spacing": 28,"enable_image_mask_fade": true,"image_mask_fade_height": 45,"image_mask_fade_color":"#ffffff","icon_vertical_spacing_mobile": 65,"icon_horizontal_spacing_mobile": 30,"icon_vertical_spacing_desktop": 40,"icon_horizontal_spacing_desktop": 0,"icon_label_gap": 8,"icon_offset_mobile": 40,"icon_offset_desktop": 35,"icon_active_opacity": 100,"icon_inactive_opacity": 100,"icon_label_active_color":"#000000","icon_label_active_font_weight":"700","icon_label_inactive_color":"#1a3b3b","icon_label_font_size": 13,"icon_label_font_weight":"500","content_display_background":"rgba(0,0,0,0)","content_display_text_color":"#1a3b3b","content_display_text_align":"center","content_display_header_align":"center","content_display_gap": 0,"content_title_color":"#000000","content_title_font_size_mobile": 26,"content_title_font_size_desktop": 32,"content_title_align":"left","content_title_font_weight":"500","content_title_text_transform":"none","hero_content_gap_mobile": 0,"hero_content_gap_desktop": 40,"hide_all_review_boxes": false,"review_box_margin_top": 16,"review_box_background":"#000000","review_box_border_color":"#ffffff33","review_box_border_width": 1,"review_box_border_radius": 5,"review_box_padding_top": 16,"review_box_padding_right": 16,"review_box_padding_bottom": 6,"review_box_padding_left": 16,"review_box_text_align":"left","verified_badge_color":"#ffffff","review_text_color":"#ffffff","review_text_font_size": 17,"review_text_font_weight": 400,"reviewer_name_color":"#ffffff","reviewer_name_font_size": 14,"verified_text_color":"#fefefe","verified_badge_font_size": 13,"star_icon_size": 16,"star_icon_color":"#ffffff","hide_content_header": false,"hide_content_icon": true,"content_icon_show_background": false,"content_icon_background_color":"#000000","content_icon_show_border": false,"content_icon_border_color":"#1a3b3b","content_icon_color":"#1a3b3b","icon_circular": true,"icon_circle_size": 50,"icon_border_radius": 8,"icon_width": 100,"icon_height": 95,"icon_scale": 1.1,"icon_show_background": true,"icon_background_color":"#ffffff","icon_background_color_active":"#000000","icon_padding": 2,"icon_show_border": true,"icon_border_width": 2,"icon_border_color":"#c9c9c9","icon_border_color_active":"#000000","content_icon_width": 60,"content_icon_height": 60,"google_icon_size": 36,"google_icon_color_inactive":"#000000","google_icon_color_active":"#ffffff","svg_icon_color_inactive":"#1a3b3b","svg_icon_color_active":"#1a3b3b","section_padding_top_mobile": 40,"section_padding_top_desktop": 60,"section_padding_bottom_mobile": 40,"section_padding_bottom_desktop": 60,"disable_timer": true,"timer_duration": 10,"timer_bar_color":"#000000"},"blocks": [
+ {"type":"benefit_item","settings": {"label":"Hydration","description":"Experience optimal hydration with our advanced electrolyte formula that helps you stay refreshed and energized throughout your day.","reviewer_name":"Sarah M","star_rating": 5,"review_text":"\"No more afternoon crashes!\""}
+ },
+ {"type":"benefit_item","settings": {"label":"Energy","description":"Natural energy boost without the crash. Our carefully crafted blend provides sustained vitality to power through your activities.","reviewer_name":"Marcus T","star_rating": 5,"review_text":"\"More focused, more me.\""}
+ },
+ {"type":"benefit_item","settings": {"label":"Recovery","description":"Accelerate your recovery with essential nutrients that help your body bounce back stronger after workouts and daily challenges.","reviewer_name":"Jessica L","star_rating": 5,"review_text":"\"Push further without feeling tired.\""}
+ },
+ {"type":"benefit_item","settings": {"label":"Wellness","description":"Support your overall health with our comprehensive blend of vitamins, minerals, and antioxidants for total body wellness.","reviewer_name":"David R","star_rating": 5,"review_text":"\"Actually feels different this time.\""}
+ }
+ ],"category":"Hero"}
+ ]
+}
+{% endschema %}

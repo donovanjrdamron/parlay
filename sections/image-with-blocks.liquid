@@ -1,0 +1,1788 @@
+{% comment %}
+  Image with Blocks Section
+  Flexible section with image and customizable content blocks (review, button, body text)
+{% endcomment %}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
+{% comment %} Find image and heading blocks {% endcomment %}
+{% assign image_block = null %}
+{% assign heading_block = null %}
+{% for block in section.blocks %}
+  {% if block.type == 'image' %}
+    {% assign image_block = block %}
+  {% elsif block.type == 'heading' %}
+    {% assign heading_block = block %}
+  {% endif %}
+{% endfor %}
+
+<section class="image-with-blocks section-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="iwb-container page-width">
+    
+    {% comment %} Desktop Layout {% endcomment %}
+    <div class="iwb-desktop-layout">
+      
+      {% comment %} Top of Section Heading {% endcomment %}
+      {% if section.settings.heading_position == 'top-section' and heading_block %}
+        <div class="iwb-block iwb-block-heading" {{ heading_block.shopify_attributes }}>
+          <div class="iwb-header-wrapper iwb-align-{{ heading_block.settings.text_align }}" data-block-id="{{ heading_block.id }}">
+            {% case heading_block.settings.highlight_position %}
+              {% when 'above' %}
+                {% if heading_block.settings.highlighted_text != blank %}
+                  <span class="iwb-highlighted-text iwb-highlighted-separate">{{ heading_block.settings.highlighted_text }}</span>
+                {% endif %}
+                <{{ heading_block.settings.heading_tag }} class="iwb-heading {{ heading_block.settings.heading_tag }}">
+                  {{ heading_block.settings.heading_before }}
+                  {{ heading_block.settings.heading_after }}
+                </{{ heading_block.settings.heading_tag }}>
+              {% when 'below' %}
+                <{{ heading_block.settings.heading_tag }} class="iwb-heading {{ heading_block.settings.heading_tag }}">
+                  {{ heading_block.settings.heading_before }}
+                  {{ heading_block.settings.heading_after }}
+                </{{ heading_block.settings.heading_tag }}>
+                {% if heading_block.settings.highlighted_text != blank %}
+                  <span class="iwb-highlighted-text iwb-highlighted-separate">{{ heading_block.settings.highlighted_text }}</span>
+                {% endif %}
+              {% when 'inline_first' %}
+                <{{ heading_block.settings.heading_tag }} class="iwb-heading {{ heading_block.settings.heading_tag }}">
+                  {% if heading_block.settings.highlighted_text != blank %}
+                    <span class="iwb-highlighted-text">{{ heading_block.settings.highlighted_text }}</span>
+                  {% endif %}
+                  {% if heading_block.settings.heading_before != blank %}{{ " " }}{{ heading_block.settings.heading_before }}{% endif %}
+                  {% if heading_block.settings.heading_after != blank %}{{ " " }}{{ heading_block.settings.heading_after }}{% endif %}
+                </{{ heading_block.settings.heading_tag }}>
+              {% when 'inline_second' %}
+                <{{ heading_block.settings.heading_tag }} class="iwb-heading {{ heading_block.settings.heading_tag }}">
+                  {% if heading_block.settings.heading_before != blank %}{{ heading_block.settings.heading_before }}{{ " " }}{% endif %}
+                  {% if heading_block.settings.highlighted_text != blank %}
+                    <span class="iwb-highlighted-text">{{ heading_block.settings.highlighted_text }}</span>
+                  {% endif %}
+                  {% if heading_block.settings.heading_after != blank %}{{ " " }}{{ heading_block.settings.heading_after }}{% endif %}
+                </{{ heading_block.settings.heading_tag }}>
+            {% endcase %}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="iwb-columns">
+        
+        {% comment %} Image Column {% endcomment %}
+        <div class="iwb-image-column">
+          {% if section.settings.heading_position == 'top-image' and heading_block %}
+            <div class="iwb-block iwb-block-heading" {{ heading_block.shopify_attributes }}>
+              <div class="iwb-header-wrapper iwb-align-{{ heading_block.settings.text_align }}" data-block-id="{{ heading_block.id }}">
+                {% case heading_block.settings.highlight_position %}
+                  {% when 'above' %}
+                    {% if heading_block.settings.highlighted_text != blank %}
+                      <span class="iwb-highlighted-text iwb-highlighted-separate">{{ heading_block.settings.highlighted_text }}</span>
+                    {% endif %}
+                    <{{ heading_block.settings.heading_tag }} class="iwb-heading {{ heading_block.settings.heading_tag }}">
+                      {{ heading_block.settings.heading_before }}
+                      {{ heading_block.settings.heading_after }}
+                    </{{ heading_block.settings.heading_tag }}>
+                  {% when 'below' %}
+                    <{{ heading_block.settings.heading_tag }} class="iwb-heading {{ heading_block.settings.heading_tag }}">
+                      {{ heading_block.settings.heading_before }}
+                      {{ heading_block.settings.heading_after }}
+                    </{{ heading_block.settings.heading_tag }}>
+                    {% if heading_block.settings.highlighted_text != blank %}
+                      <span class="iwb-highlighted-text iwb-highlighted-separate">{{ heading_block.settings.highlighted_text }}</span>
+                    {% endif %}
+                  {% when 'inline_first' %}
+                    <{{ heading_block.settings.heading_tag }} class="iwb-heading {{ heading_block.settings.heading_tag }}">
+                      {% if heading_block.settings.highlighted_text != blank %}
+                        <span class="iwb-highlighted-text">{{ heading_block.settings.highlighted_text }}</span>
+                      {% endif %}
+                      {% if heading_block.settings.heading_before != blank %}{{ " " }}{{ heading_block.settings.heading_before }}{% endif %}
+                      {% if heading_block.settings.heading_after != blank %}{{ " " }}{{ heading_block.settings.heading_after }}{% endif %}
+                    </{{ heading_block.settings.heading_tag }}>
+                  {% when 'inline_second' %}
+                    <{{ heading_block.settings.heading_tag }} class="iwb-heading {{ heading_block.settings.heading_tag }}">
+                      {% if heading_block.settings.heading_before != blank %}{{ heading_block.settings.heading_before }}{{ " " }}{% endif %}
+                      {% if heading_block.settings.highlighted_text != blank %}
+                        <span class="iwb-highlighted-text">{{ heading_block.settings.highlighted_text }}</span>
+                      {% endif %}
+                      {% if heading_block.settings.heading_after != blank %}{{ " " }}{{ heading_block.settings.heading_after }}{% endif %}
+                    </{{ heading_block.settings.heading_tag }}>
+                {% endcase %}
+              </div>
+            </div>
+          {% endif %}
+          
+          {% if image_block %}
+            <div class="iwb-block iwb-block-image" {{ image_block.shopify_attributes }}>
+              <div class="iwb-image-wrapper iwb-desktop-image" data-block-id="{{ image_block.id }}">
+                {% if image_block.settings.image_desktop != blank %}
+                  <img
+                    src="{{ image_block.settings.image_desktop | image_url: width: 1200 }}"
+                    srcset="{{ image_block.settings.image_desktop | image_url: width: 400 }} 400w,
+                            {{ image_block.settings.image_desktop | image_url: width: 600 }} 600w,
+                            {{ image_block.settings.image_desktop | image_url: width: 800 }} 800w,
+                            {{ image_block.settings.image_desktop | image_url: width: 1200 }} 1200w"
+                    sizes="{{ section.settings.image_width_desktop }}vw"
+                    alt="{{ image_block.settings.image_desktop.alt | escape }}"
+                    class="iwb-image"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="iwb-image-placeholder">
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                  </div>
+                {% endif %}
+              </div>
+              {% if image_block.settings.image_mobile != blank %}
+                <div class="iwb-image-wrapper iwb-mobile-image" data-block-id="{{ image_block.id }}">
+                  <img
+                    src="{{ image_block.settings.image_mobile | image_url: width: 1200 }}"
+                    srcset="{{ image_block.settings.image_mobile | image_url: width: 400 }} 400w,
+                            {{ image_block.settings.image_mobile | image_url: width: 600 }} 600w,
+                            {{ image_block.settings.image_mobile | image_url: width: 800 }} 800w,
+                            {{ image_block.settings.image_mobile | image_url: width: 1200 }} 1200w"
+                    sizes="100vw"
+                    alt="{{ image_block.settings.image_mobile.alt | escape }}"
+                    class="iwb-image"
+                    loading="lazy"
+                  >
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+
+        {% comment %} Content Column {% endcomment %}
+        <div class="iwb-content-column">
+          <div class="iwb-content-blocks">
+            {% for block in section.blocks %}
+              {% assign skip_block = false %}
+              {% if block.type == 'image' %}
+                {% assign skip_block = true %}
+              {% endif %}
+              {% if block.type == 'heading' and section.settings.heading_position != 'top-content' %}
+                {% assign skip_block = true %}
+              {% endif %}
+
+              {% unless skip_block %}
+                {% case block.type %}
+                  {% when 'heading' %}
+                    <div class="iwb-block iwb-block-heading" {{ block.shopify_attributes }}>
+                      <div class="iwb-header-wrapper iwb-align-{{ block.settings.text_align }}" data-block-id="{{ block.id }}">
+                        {% case block.settings.highlight_position %}
+                          {% when 'above' %}
+                            {% if block.settings.highlighted_text != blank %}
+                              <span class="iwb-highlighted-text iwb-highlighted-separate">{{ block.settings.highlighted_text }}</span>
+                            {% endif %}
+                            <{{ block.settings.heading_tag }} class="iwb-heading {{ block.settings.heading_tag }}">
+                              {{ block.settings.heading_before }}
+                              {{ block.settings.heading_after }}
+                            </{{ block.settings.heading_tag }}>
+                          {% when 'below' %}
+                            <{{ block.settings.heading_tag }} class="iwb-heading {{ block.settings.heading_tag }}">
+                              {{ block.settings.heading_before }}
+                              {{ block.settings.heading_after }}
+                            </{{ block.settings.heading_tag }}>
+                            {% if block.settings.highlighted_text != blank %}
+                              <span class="iwb-highlighted-text iwb-highlighted-separate">{{ block.settings.highlighted_text }}</span>
+                            {% endif %}
+                          {% when 'inline_first' %}
+                            <{{ block.settings.heading_tag }} class="iwb-heading {{ block.settings.heading_tag }}">
+                              {% if block.settings.highlighted_text != blank %}
+                                <span class="iwb-highlighted-text">{{ block.settings.highlighted_text }}</span>
+                              {% endif %}
+                              {% if block.settings.heading_before != blank %}{{ " " }}{{ block.settings.heading_before }}{% endif %}
+                              {% if block.settings.heading_after != blank %}{{ " " }}{{ block.settings.heading_after }}{% endif %}
+                            </{{ block.settings.heading_tag }}>
+                          {% when 'inline_second' %}
+                            <{{ block.settings.heading_tag }} class="iwb-heading {{ block.settings.heading_tag }}">
+                              {% if block.settings.heading_before != blank %}{{ block.settings.heading_before }}{{ " " }}{% endif %}
+                              {% if block.settings.highlighted_text != blank %}
+                                <span class="iwb-highlighted-text">{{ block.settings.highlighted_text }}</span>
+                              {% endif %}
+                              {% if block.settings.heading_after != blank %}{{ " " }}{{ block.settings.heading_after }}{% endif %}
+                            </{{ block.settings.heading_tag }}>
+                        {% endcase %}
+                      </div>
+                    </div>
+                  {% when 'body_text' %}
+                    <div class="iwb-block iwb-block-body-text" {{ block.shopify_attributes }}>
+                      <div class="iwb-body-text rte" data-block-id="{{ block.id }}">
+                        {{ block.settings.body_text }}
+                      </div>
+                    </div>
+                  {% when 'button' %}
+                    {%- if block.settings.button_text != blank -%}
+                    <div class="iwb-button-wrapper" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+                      <a
+                        href="{% if block.settings.scroll_to_section != blank %}#{% elsif block.settings.button_link != blank %}{{ block.settings.button_link }}{% else %}#{% endif %}"
+                        class="iwb-button {% if block.settings.use_custom_styles %}iwb-button--custom-styles{% endif %}{% if block.settings.scroll_to_section != blank %} scroll-to-section{% endif %}"
+                        {% if block.settings.scroll_to_section != blank %}data-scroll-target="{{ block.settings.scroll_to_section }}"{% endif %}
+                      >
+                        {%- if block.settings.icon_position == 'left' -%}
+                          {%- if block.settings.button_custom_icon != blank -%}
+                            <span class="iwb-button-icon iwb-button-icon--left iwb-button-icon--custom">
+                              {{ block.settings.button_custom_icon }}
+                            </span>
+                          {%- elsif block.settings.button_icon != blank -%}
+                            <span class="material-symbols-outlined iwb-button-icon iwb-button-icon--left{% if block.settings.button_icon_filled %} material-symbols-filled{% endif %}">
+                              {{ block.settings.button_icon }}
+                            </span>
+                          {%- endif -%}
+                        {%- endif -%}
+
+                        <span class="iwb-button-text">{{- block.settings.button_text -}}</span>
+
+                        {%- if block.settings.icon_position == 'right' -%}
+                          {%- if block.settings.button_custom_icon != blank -%}
+                            <span class="iwb-button-icon iwb-button-icon--right iwb-button-icon--custom">
+                              {{ block.settings.button_custom_icon }}
+                            </span>
+                          {%- elsif block.settings.button_icon != blank -%}
+                            <span class="material-symbols-outlined iwb-button-icon iwb-button-icon--right{% if block.settings.button_icon_filled %} material-symbols-filled{% endif %}">
+                              {{ block.settings.button_icon }}
+                            </span>
+                          {%- endif -%}
+                        {%- endif -%}
+                      </a>
+                    </div>
+                    {%- endif -%}
+                  {% when 'review' %}
+                    <div class="iwb-block iwb-block-review" {{ block.shopify_attributes }}>
+                      <div class="iwb-review-inline" data-block-id="{{ block.id }}">
+                        {% if block.settings.show_stars %}
+                          <div class="iwb-review-stars">
+                            {% assign rating = block.settings.star_rating %}
+                            {% for i in (1..5) %}
+                              {% if i <= rating %}
+                                <svg class="iwb-star iwb-star-filled" viewBox="0 0 24 24" fill="currentColor">
+                                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                              {% else %}
+                                <svg class="iwb-star iwb-star-empty" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                              {% endif %}
+                            {% endfor %}
+                          </div>
+                        {% endif %}
+                        {% if block.settings.review_count != blank %}
+                          <div class="iwb-review-count">
+                            {{ block.settings.review_count }}
+                          </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% when 'customer_testimonial' %}
+                    <div class="iwb-block iwb-block-testimonial" {{ block.shopify_attributes }}>
+                      <div class="iwb-testimonial-card" data-block-id="{{ block.id }}">
+                        {% if block.settings.quote_before != blank or block.settings.quote_highlight != blank or block.settings.quote_after != blank %}
+                          <div class="iwb-testimonial-quote">
+                            "{% if block.settings.quote_before != blank %}{{ block.settings.quote_before }} {% endif %}{% if block.settings.quote_highlight != blank %}<span class="iwb-testimonial-highlight">{{ block.settings.quote_highlight }}</span>{% endif %}{% if block.settings.quote_after != blank %} {{ block.settings.quote_after }}{% endif %}"
+                          </div>
+                        {% endif %}
+                        <div class="iwb-testimonial-footer">
+                          <div class="iwb-testimonial-rating">
+                            {% if block.settings.show_stars %}
+                              <div class="iwb-testimonial-stars">
+                                {% assign rating = block.settings.star_rating %}
+                                {% for i in (1..5) %}
+                                  {% if i <= rating %}
+                                    <svg class="iwb-star iwb-star-filled" viewBox="0 0 24 24" fill="currentColor">
+                                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                  {% else %}
+                                    <svg class="iwb-star iwb-star-empty" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                  {% endif %}
+                                {% endfor %}
+                              </div>
+                            {% endif %}
+                            {% if block.settings.customer_name != blank %}
+                              <div class="iwb-testimonial-name">
+                                {{ block.settings.customer_name }}
+                              </div>
+                            {% endif %}
+                            {% if block.settings.customer_name != blank and block.settings.show_verified %}
+                              <div class="iwb-testimonial-separator">|</div>
+                            {% endif %}
+                            {% if block.settings.show_verified %}
+                              <div class="iwb-testimonial-verified">
+                                <svg class="iwb-verified-icon" viewBox="0 0 24 24" fill="none">
+                                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span>Verified</span>
+                              </div>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% when 'custom_html' %}
+                    <div class="iwb-block iwb-block-custom-html" {{ block.shopify_attributes }}>
+                      <div class="iwb-custom-html" data-block-id="{{ block.id }}">
+                        {{ block.settings.custom_html }}
+                      </div>
+                    </div>
+                {% endcase %}
+              {% endunless %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% comment %} Mobile Layout - All blocks in order {% endcomment %}
+    <div class="iwb-mobile-layout">
+      {% if section.blocks.size > 0 %}
+        <div class="iwb-blocks-wrapper">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              
+              {% when 'image' %}
+                <div class="iwb-block iwb-block-image" {{ block.shopify_attributes }}>
+                  <div class="iwb-image-wrapper" data-block-id="{{ block.id }}">
+                    {% assign mobile_img = block.settings.image_mobile %}
+                    {% assign desktop_img = block.settings.image_desktop %}
+                    {% assign display_img = mobile_img | default: desktop_img %}
+                    
+                    {% if display_img != blank %}
+                      <img
+                        src="{{ display_img | image_url: width: 1200 }}"
+                        srcset="{{ display_img | image_url: width: 400 }} 400w,
+                                {{ display_img | image_url: width: 600 }} 600w,
+                                {{ display_img | image_url: width: 800 }} 800w,
+                                {{ display_img | image_url: width: 1200 }} 1200w"
+                        sizes="100vw"
+                        alt="{{ display_img.alt | escape }}"
+                        class="iwb-image"
+                        loading="lazy"
+                      >
+                    {% else %}
+                      <div class="iwb-image-placeholder">
+                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+
+              {% when 'heading' %}
+                <div class="iwb-block iwb-block-heading" {{ block.shopify_attributes }}>
+                  <div class="iwb-header-wrapper iwb-align-{{ block.settings.text_align }}" data-block-id="{{ block.id }}">
+                    {% case block.settings.highlight_position %}
+                      {% when 'above' %}
+                        {% if block.settings.highlighted_text != blank %}
+                          <span class="iwb-highlighted-text iwb-highlighted-separate">{{ block.settings.highlighted_text }}</span>
+                        {% endif %}
+                        <{{ block.settings.heading_tag }} class="iwb-heading">
+                          {{ block.settings.heading_before }}
+                          {{ block.settings.heading_after }}
+                        </{{ block.settings.heading_tag }}>
+                      {% when 'below' %}
+                        <{{ block.settings.heading_tag }} class="iwb-heading">
+                          {{ block.settings.heading_before }}
+                          {{ block.settings.heading_after }}
+                        </{{ block.settings.heading_tag }}>
+                        {% if block.settings.highlighted_text != blank %}
+                          <span class="iwb-highlighted-text iwb-highlighted-separate">{{ block.settings.highlighted_text }}</span>
+                        {% endif %}
+                      {% when 'inline_first' %}
+                        <{{ block.settings.heading_tag }} class="iwb-heading">
+                          {% if block.settings.highlighted_text != blank %}
+                            <span class="iwb-highlighted-text">{{ block.settings.highlighted_text }}</span>
+                          {% endif %}
+                          {% if block.settings.heading_before != blank %}{{ " " }}{{ block.settings.heading_before }}{% endif %}
+                          {% if block.settings.heading_after != blank %}{{ " " }}{{ block.settings.heading_after }}{% endif %}
+                        </{{ block.settings.heading_tag }}>
+                      {% when 'inline_second' %}
+                        <{{ block.settings.heading_tag }} class="iwb-heading">
+                          {% if block.settings.heading_before != blank %}{{ block.settings.heading_before }}{{ " " }}{% endif %}
+                          {% if block.settings.highlighted_text != blank %}
+                            <span class="iwb-highlighted-text">{{ block.settings.highlighted_text }}</span>
+                          {% endif %}
+                          {% if block.settings.heading_after != blank %}{{ " " }}{{ block.settings.heading_after }}{% endif %}
+                        </{{ block.settings.heading_tag }}>
+                    {% endcase %}
+                  </div>
+                </div>
+                
+                {% when 'body_text' %}
+                  <div class="iwb-block iwb-block-body-text" {{ block.shopify_attributes }}>
+                    <div class="iwb-body-text rte" data-block-id="{{ block.id }}">
+                      {{ block.settings.body_text }}
+                    </div>
+                  </div>
+
+                {% when 'button' %}
+                  {%- if block.settings.button_text != blank -%}
+                  <div class="iwb-button-wrapper" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+                    <a
+                      href="{% if block.settings.scroll_to_section != blank %}#{% elsif block.settings.button_link != blank %}{{ block.settings.button_link }}{% else %}#{% endif %}"
+                      class="iwb-button {% if block.settings.use_custom_styles %}iwb-button--custom-styles{% endif %}{% if block.settings.scroll_to_section != blank %} scroll-to-section{% endif %}"
+                      {% if block.settings.scroll_to_section != blank %}data-scroll-target="{{ block.settings.scroll_to_section }}"{% endif %}
+                    >
+                      {%- if block.settings.icon_position == 'left' -%}
+                        {%- if block.settings.button_custom_icon != blank -%}
+                          <span class="iwb-button-icon iwb-button-icon--left iwb-button-icon--custom">
+                            {{ block.settings.button_custom_icon }}
+                          </span>
+                        {%- elsif block.settings.button_icon != blank -%}
+                          <span class="material-symbols-outlined iwb-button-icon iwb-button-icon--left{% if block.settings.button_icon_filled %} material-symbols-filled{% endif %}">
+                            {{ block.settings.button_icon }}
+                          </span>
+                        {%- endif -%}
+                      {%- endif -%}
+
+                      <span class="iwb-button-text">{{- block.settings.button_text -}}</span>
+
+                      {%- if block.settings.icon_position == 'right' -%}
+                        {%- if block.settings.button_custom_icon != blank -%}
+                          <span class="iwb-button-icon iwb-button-icon--right iwb-button-icon--custom">
+                            {{ block.settings.button_custom_icon }}
+                          </span>
+                        {%- elsif block.settings.button_icon != blank -%}
+                          <span class="material-symbols-outlined iwb-button-icon iwb-button-icon--right{% if block.settings.button_icon_filled %} material-symbols-filled{% endif %}">
+                            {{ block.settings.button_icon }}
+                          </span>
+                        {%- endif -%}
+                      {%- endif -%}
+                    </a>
+                  </div>
+                  {%- endif -%}
+
+                {% when 'review' %}
+                  <div class="iwb-block iwb-block-review" {{ block.shopify_attributes }}>
+                    <div class="iwb-review-inline" data-block-id="{{ block.id }}">
+                      {% comment %} Stars {% endcomment %}
+                      {% if block.settings.show_stars %}
+                        <div class="iwb-review-stars">
+                          {% assign rating = block.settings.star_rating %}
+                          {% for i in (1..5) %}
+                            {% if i <= rating %}
+                              <svg class="iwb-star iwb-star-filled" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                              </svg>
+                            {% else %}
+                              <svg class="iwb-star iwb-star-empty" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                              </svg>
+                            {% endif %}
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                      
+                      {% comment %} Review Count {% endcomment %}
+                      {% if block.settings.review_count != blank %}
+                        <div class="iwb-review-count">
+                          {{ block.settings.review_count }}
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                {% when 'customer_testimonial' %}
+                  <div class="iwb-block iwb-block-testimonial" {{ block.shopify_attributes }}>
+                    <div class="iwb-testimonial-card" data-block-id="{{ block.id }}">
+                      
+                      {% comment %} Quote with Highlighting {% endcomment %}
+                      {% if block.settings.quote_before != blank or block.settings.quote_highlight != blank or block.settings.quote_after != blank %}
+                        <div class="iwb-testimonial-quote">
+                          "{% if block.settings.quote_before != blank %}{{ block.settings.quote_before }} {% endif %}{% if block.settings.quote_highlight != blank %}<span class="iwb-testimonial-highlight">{{ block.settings.quote_highlight }}</span>{% endif %}{% if block.settings.quote_after != blank %} {{ block.settings.quote_after }}{% endif %}"
+                        </div>
+                      {% endif %}
+
+                      {% comment %} Footer: Stars + Name + Verified {% endcomment %}
+                      <div class="iwb-testimonial-footer">
+                        <div class="iwb-testimonial-rating">
+                          {% comment %} Stars {% endcomment %}
+                          {% if block.settings.show_stars %}
+                            <div class="iwb-testimonial-stars">
+                              {% assign rating = block.settings.star_rating %}
+                              {% for i in (1..5) %}
+                                {% if i <= rating %}
+                                  <svg class="iwb-star iwb-star-filled" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                  </svg>
+                                {% else %}
+                                  <svg class="iwb-star iwb-star-empty" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                  </svg>
+                                {% endif %}
+                              {% endfor %}
+                            </div>
+                          {% endif %}
+
+                          {% comment %} Name {% endcomment %}
+                          {% if block.settings.customer_name != blank %}
+                            <div class="iwb-testimonial-name">
+                              {{ block.settings.customer_name }}
+                            </div>
+                          {% endif %}
+
+                          {% comment %} Separator {% endcomment %}
+                          {% if block.settings.customer_name != blank and block.settings.show_verified %}
+                            <div class="iwb-testimonial-separator">|</div>
+                          {% endif %}
+
+                          {% comment %} Verified Badge {% endcomment %}
+                          {% if block.settings.show_verified %}
+                            <div class="iwb-testimonial-verified">
+                              <svg class="iwb-verified-icon" viewBox="0 0 24 24" fill="none">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                              </svg>
+                              <span>Verified</span>
+                            </div>
+                          {% endif %}
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                {% when 'custom_html' %}
+                  <div class="iwb-block iwb-block-custom-html" {{ block.shopify_attributes }}>
+                    <div class="iwb-custom-html" data-block-id="{{ block.id }}">
+                      {{ block.settings.custom_html }}
+                    </div>
+                  </div>
+
+              {% endcase %}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+</section>
+
+<style>
+/* ===========================
+   Section Container
+   =========================== */
+
+.section-{{ section.id }} {
+  padding: {{ section.settings.section_padding_top }}px 0 {{ section.settings.section_padding_bottom }}px;
+  {% if section.settings.use_theme_colors %}
+    background: {{ settings.background_color }};
+  {% else %}
+    background: {{ section.settings.background_color }};
+  {% endif %}
+}
+
+.section-{{ section.id }} .iwb-container {
+  width: 100%;
+}
+
+/* ===========================
+   Desktop & Mobile Layout
+   =========================== */
+
+/* Hide mobile layout on desktop */
+@media screen and (min-width: 769px) {
+  .section-{{ section.id }} .iwb-mobile-layout {
+    display: none;
+  }
+}
+
+/* Hide desktop layout on mobile */
+@media screen and (max-width: 768px) {
+  .section-{{ section.id }} .iwb-desktop-layout {
+    display: none;
+  }
+}
+
+/* Desktop Layout */
+@media screen and (min-width: 769px) {
+  .section-{{ section.id }} .iwb-desktop-layout {
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.block_spacing_desktop }}px;
+  }
+
+  .section-{{ section.id }} .iwb-columns {
+    display: flex;
+    gap: {{ section.settings.content_gap_desktop }}px;
+    align-items: {{ section.settings.vertical_alignment }};
+    {% if section.settings.image_position == 'right' %}
+      flex-direction: row-reverse;
+    {% else %}
+      flex-direction: row;
+    {% endif %}
+  }
+
+  .section-{{ section.id }} .iwb-image-column {
+    flex: 0 0 {{ section.settings.image_width_desktop }}%;
+    max-width: {{ section.settings.image_width_desktop }}%;
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.block_spacing_desktop }}px;
+  }
+
+  .section-{{ section.id }} .iwb-content-column {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.block_spacing_desktop }}px;
+  }
+
+  .section-{{ section.id }} .iwb-content-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.content_block_spacing_desktop }}px;
+  }
+}
+
+/* Mobile Layout */
+@media screen and (max-width: 749px) {
+  .section-{{ section.id }} .iwb-blocks-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.content_block_spacing_mobile }}px;
+  }
+
+  .section-{{ section.id }} .iwb-content-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.content_block_spacing_mobile }}px;
+  }
+}
+
+.section-{{ section.id }} .iwb-block {
+  width: 100%;
+}
+
+/* ===========================
+   Image Block - Per Block Styling
+   =========================== */
+
+{% for block in section.blocks %}
+  {% if block.type == 'image' %}
+    .section-{{ section.id }} .iwb-block-image[data-block-id="{{ block.id }}"] {
+      margin-top: {{ block.settings.margin_top }}px;
+      margin-bottom: {{ block.settings.margin_bottom }}px;
+    }
+
+    .section-{{ section.id }} .iwb-image-wrapper[data-block-id="{{ block.id }}"] {
+      max-width: {{ block.settings.max_width }}%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Desktop Image */
+    .section-{{ section.id }} .iwb-desktop-image[data-block-id="{{ block.id }}"] .iwb-image {
+      width: 100%;
+      {% if block.settings.aspect_ratio_desktop != 'auto' %}
+        aspect-ratio: {{ block.settings.aspect_ratio_desktop }};
+        object-fit: cover;
+      {% else %}
+        height: auto;
+      {% endif %}
+      display: block;
+      border-radius: {{ block.settings.border_radius }}px;
+    }
+
+    /* Mobile Image */
+    .section-{{ section.id }} .iwb-mobile-image[data-block-id="{{ block.id }}"] {
+      display: none;
+    }
+
+    .section-{{ section.id }} .iwb-mobile-image[data-block-id="{{ block.id }}"] .iwb-image {
+      width: 100%;
+      {% if block.settings.aspect_ratio_mobile != 'auto' %}
+        aspect-ratio: {{ block.settings.aspect_ratio_mobile }};
+        object-fit: cover;
+      {% else %}
+        height: auto;
+      {% endif %}
+      display: block;
+      border-radius: {{ block.settings.border_radius }}px;
+    }
+
+    /* Show/Hide images based on screen size */
+    @media screen and (max-width: 768px) {
+      .section-{{ section.id }} .iwb-desktop-image[data-block-id="{{ block.id }}"] {
+        display: none;
+      }
+
+      .section-{{ section.id }} .iwb-mobile-image[data-block-id="{{ block.id }}"] {
+        display: block;
+      }
+
+      /* Apply mobile aspect ratio to desktop image when shown on mobile (when no mobile image is set) */
+      {% if block.settings.image_mobile == blank %}
+        .section-{{ section.id }} .iwb-desktop-image[data-block-id="{{ block.id }}"] {
+          display: block;
+        }
+
+        .section-{{ section.id }} .iwb-desktop-image[data-block-id="{{ block.id }}"] .iwb-image {
+          {% if block.settings.aspect_ratio_mobile != 'auto' %}
+            aspect-ratio: {{ block.settings.aspect_ratio_mobile }};
+            object-fit: cover;
+          {% else %}
+            height: auto;
+          {% endif %}
+        }
+      {% endif %}
+    }
+
+    /* Mobile Layout Images - Apply mobile aspect ratio */
+    .section-{{ section.id }} .iwb-mobile-layout .iwb-image-wrapper[data-block-id="{{ block.id }}"] .iwb-image {
+      width: 100%;
+      {% if block.settings.aspect_ratio_mobile != 'auto' %}
+        aspect-ratio: {{ block.settings.aspect_ratio_mobile }};
+        object-fit: cover;
+      {% else %}
+        height: auto;
+      {% endif %}
+      display: block;
+      border-radius: {{ block.settings.border_radius }}px;
+    }
+
+    /* Placeholder */
+    .section-{{ section.id }} .iwb-image-wrapper[data-block-id="{{ block.id }}"] .iwb-image-placeholder {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #f3f4f6;
+      border-radius: {{ block.settings.border_radius }}px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .section-{{ section.id }} .iwb-image-wrapper[data-block-id="{{ block.id }}"] .iwb-image-placeholder svg {
+      width: 60%;
+      height: 60%;
+      opacity: 0.3;
+    }
+  {% endif %}
+{% endfor %}
+
+/* ===========================
+   Heading Block - Per Block Styling
+   =========================== */
+
+{% for block in section.blocks %}
+  {% if block.type == 'heading' %}
+    .section-{{ section.id }} .iwb-block-heading[data-block-id="{{ block.id }}"] {
+      margin-top: {{ block.settings.margin_top }}px;
+      margin-bottom: {{ block.settings.margin_bottom }}px;
+    }
+
+    .section-{{ section.id }} .iwb-header-wrapper[data-block-id="{{ block.id }}"] {
+      margin-top: {{ block.settings.heading_margin_top }}px;
+      margin-bottom: {{ block.settings.heading_margin_bottom }}px;
+    }
+
+    .section-{{ section.id }} .iwb-header-wrapper[data-block-id="{{ block.id }}"].iwb-align-left {
+      text-align: left;
+    }
+
+    .section-{{ section.id }} .iwb-header-wrapper[data-block-id="{{ block.id }}"].iwb-align-center {
+      text-align: center;
+    }
+
+    .section-{{ section.id }} .iwb-header-wrapper[data-block-id="{{ block.id }}"].iwb-align-right {
+      text-align: right;
+    }
+
+    /* Desktop Alignment */
+    @media screen and (min-width: 769px) {
+      .section-{{ section.id }} .iwb-desktop-layout .iwb-block-heading .iwb-header-wrapper[data-block-id="{{ block.id }}"] {
+        display: flex;
+        flex-direction: column;
+        {% if block.settings.desktop_alignment == 'center' %}
+          align-items: center;
+        {% elsif block.settings.desktop_alignment == 'right' %}
+          align-items: flex-end;
+        {% else %}
+          align-items: flex-start;
+        {% endif %}
+      }
+    }
+
+    .section-{{ section.id }} .iwb-header-wrapper[data-block-id="{{ block.id }}"] .iwb-heading {
+      font-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+      letter-spacing: {{ settings.heading_letter_spacing | divided_by: 1000.0 }}em;
+      {% if section.settings.use_theme_colors %}
+        color: {{ settings.heading_color }};
+      {% else %}
+        color: {{ block.settings.heading_color }};
+      {% endif %}
+      {% if settings.enable_global_typography %}
+        font-size: {{ settings.heading_font_size_desktop }}px;
+        font-weight: {{ settings.heading_font_weight }};
+      {% else %}
+        font-size: {{ block.settings.heading_font_size_desktop }}px;
+        font-weight: {{ block.settings.heading_font_weight }};
+      {% endif %}
+      line-height: {{ block.settings.heading_line_height }};
+      margin: 0 0 {{ block.settings.heading_margin_bottom }}px 0;
+    }
+
+    .section-{{ section.id }} .iwb-header-wrapper[data-block-id="{{ block.id }}"] .iwb-highlighted-text {
+      display: inline-block;
+      font-family: {{ settings.highlighted_text_font.family }}, {{ settings.highlighted_text_font.fallback_families }};
+      text-transform: {{ settings.highlighted_text_transform }};
+      {% if section.settings.use_theme_colors %}
+        {% if settings.highlighted_text_gradient_enabled %}
+          background: {{ settings.highlighted_text_gradient }};
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        {% else %}
+          color: {{ settings.highlighted_text_solid_color }};
+        {% endif %}
+      {% else %}
+        {% if block.settings.highlighted_gradient_enabled %}
+          background: {{ block.settings.highlighted_gradient }};
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        {% else %}
+          color: {{ block.settings.highlighted_solid_color }};
+        {% endif %}
+      {% endif %}
+      {% if settings.enable_global_typography %}
+        font-size: {{ settings.highlighted_text_font_size_desktop }}px;
+        font-weight: {{ settings.highlighted_text_font_weight }};
+      letter-spacing: {{ settings.highlighted_text_letter_spacing | divided_by: 1000.0 }}em;
+      font-style: {{ settings.highlighted_text_font_style }};
+      {% else %}
+        font-size: {{ block.settings.highlight_font_size_desktop }}px;
+        font-weight: {{ block.settings.highlight_font_weight }};
+      {% endif %}
+      margin-left: {{ block.settings.highlighted_spacing }}px;
+    }
+
+    .section-{{ section.id }} .iwb-header-wrapper[data-block-id="{{ block.id }}"] .iwb-highlighted-separate {
+      display: block;
+      margin-top: {{ block.settings.highlight_margin_top }}px;
+      margin-bottom: {{ block.settings.highlight_margin_bottom }}px;
+    }
+
+    .section-{{ section.id }} .iwb-header-wrapper[data-block-id="{{ block.id }}"] .iwb-highlighted-separate.iwb-highlighted-text {
+      display: inline-block;
+    }
+
+    /* Mobile Responsive Typography */
+    @media screen and (max-width: 768px) {
+      .section-{{ section.id }} .iwb-header-wrapper[data-block-id="{{ block.id }}"] .iwb-heading {
+        {% if settings.enable_global_typography %}
+          font-size: {{ settings.heading_font_size_mobile }}px;
+        {% else %}
+          font-size: {{ block.settings.heading_font_size_mobile }}px;
+        {% endif %}
+      }
+
+      .section-{{ section.id }} .iwb-header-wrapper[data-block-id="{{ block.id }}"] .iwb-highlighted-text {
+        {% if settings.enable_global_typography %}
+          font-size: {{ settings.highlighted_text_font_size_mobile }}px;
+        {% else %}
+          font-size: {{ block.settings.highlight_font_size_mobile }}px;
+        {% endif %}
+      }
+    }
+  {% endif %}
+{% endfor %}
+
+/* ===========================
+   Blocks
+   =========================== */
+
+.section-{{ section.id }} .iwb-blocks-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Desktop gap for blocks wrapper */
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }} .iwb-blocks-wrapper {
+    gap: {{ section.settings.content_block_spacing_desktop }}px;
+  }
+}
+
+/* Mobile gap for blocks wrapper */
+@media screen and (max-width: 749px) {
+  .section-{{ section.id }} .iwb-blocks-wrapper {
+    gap: {{ section.settings.content_block_spacing_mobile }}px;
+  }
+}
+
+/* Body Text Block - Per Block Styling */
+{% for block in section.blocks %}
+  {% if block.type == 'body_text' %}
+    .section-{{ section.id }} .iwb-block-body-text[data-block-id="{{ block.id }}"] {
+      margin-top: {{ block.settings.margin_top }}px;
+      margin-bottom: {{ block.settings.margin_bottom }}px;
+    }
+
+    .section-{{ section.id }} .iwb-body-text[data-block-id="{{ block.id }}"] {
+      font-size: {{ block.settings.font_size_mobile }}px;
+      line-height: 1.6;
+      font-weight: {{ block.settings.font_weight }};
+      color: {{ block.settings.text_color }};
+      background: {{ block.settings.bg_color }};
+      padding: {{ block.settings.padding }}px;
+      border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }};
+      border-radius: {{ block.settings.border_radius }}px;
+    }
+
+    /* Mobile Alignment */
+    @media screen and (max-width: 768px) {
+      .section-{{ section.id }} .iwb-body-text[data-block-id="{{ block.id }}"] {
+        text-align: {{ block.settings.mobile_alignment }};
+      }
+    }
+
+    /* Desktop Font Size & Alignment */
+    @media screen and (min-width: 769px) {
+      .section-{{ section.id }} .iwb-body-text[data-block-id="{{ block.id }}"] {
+        font-size: {{ block.settings.font_size_desktop }}px;
+        text-align: {{ block.settings.desktop_alignment }};
+      }
+    }
+  {% endif %}
+{% endfor %}
+
+/* Button Block - Base Styling */
+.section-{{ section.id }} .iwb-button-align-left {
+  text-align: left;
+}
+
+.section-{{ section.id }} .iwb-button-align-center {
+  text-align: center;
+}
+
+.section-{{ section.id }} .iwb-button-align-right {
+  text-align: right;
+}
+
+.section-{{ section.id }} .iwb-button {
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Theme Button Styles (when override is disabled) */
+.section-{{ section.id }} .iwb-button-theme {
+  {% if settings.button_enable_gradient %}
+    background: {{ settings.button_gradient }};
+  {% else %}
+    background: {{ settings.button_background_color }};
+  {% endif %}
+  color: {{ settings.button_text_color }};
+  font-weight: {{ settings.button_font_weight }};
+  padding: {{ settings.button_padding_vertical }}px {{ settings.button_padding_horizontal }}px;
+  border: {{ settings.button_border_width }}px solid {{ settings.button_border_color }};
+  border-radius: {{ settings.button_border_radius }}px;
+}
+
+/* Desktop font size */
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }} .iwb-button-theme {
+    font-size: {{ settings.button_font_size_desktop }}px;
+  }
+}
+
+/* Mobile font size */
+@media screen and (max-width: 749px) {
+  .section-{{ section.id }} .iwb-button-theme {
+    font-size: {{ settings.button_font_size_mobile }}px;
+  }
+}
+
+.section-{{ section.id }} .iwb-button-theme:hover {
+  {% if settings.button_enable_hover %}
+    {% if settings.button_enable_hover_gradient %}
+      background: {{ settings.button_hover_gradient }};
+    {% else %}
+      background: {{ settings.button_hover_background_color }};
+    {% endif %}
+    color: {{ settings.button_hover_text_color }};
+    border-color: {{ settings.button_hover_border_color }};
+  {% endif %}
+}
+
+/* ===========================
+   Button Block Styles
+   =========================== */
+{% for block in section.blocks %}
+  {% if block.type == 'button' %}
+    #shopify-section-{{ section.id }} .iwb-button-wrapper[data-block-id="{{ block.id }}"] {
+      margin-top: {{ block.settings.margin_top | default: 0 }}px;
+      margin-bottom: {{ block.settings.margin_bottom | default: 24 }}px;
+      text-align: {{ block.settings.alignment_desktop | default: 'left' }};
+      {% if block.settings.hide_on_desktop %}
+        display: none;
+      {% endif %}
+    }
+
+    @media screen and (max-width: 768px) {
+      #shopify-section-{{ section.id }} .iwb-button-wrapper[data-block-id="{{ block.id }}"] {
+        text-align: {{ block.settings.alignment_mobile | default: 'center' }};
+        {% if block.settings.hide_on_desktop %}
+          display: block;
+        {% endif %}
+      }
+    }
+
+    #shopify-section-{{ section.id }} .iwb-button-wrapper[data-block-id="{{ block.id }}"] .iwb-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      {% if block.settings.full_width %}
+        width: 100%;
+      {% elsif block.settings.use_custom_width %}
+        width: {{ block.settings.custom_width_desktop | default: 300 }}px;
+      {% endif %}
+    }
+
+    @media screen and (max-width: 768px) {
+      #shopify-section-{{ section.id }} .iwb-button-wrapper[data-block-id="{{ block.id }}"] .iwb-button {
+        {% if block.settings.full_width_mobile_only %}
+          width: 100%;
+        {% elsif block.settings.use_custom_width %}
+          width: {{ block.settings.custom_width_mobile | default: 280 }}px;
+        {% endif %}
+      }
+    }
+
+    #shopify-section-{{ section.id }} .iwb-button-wrapper[data-block-id="{{ block.id }}"] .iwb-button--custom-styles {
+      {% if block.settings.use_gradient %}
+        background: {{ block.settings.button_gradient }};
+      {% else %}
+        background-color: {{ block.settings.button_bg_color | default: '#000000' }};
+      {% endif %}
+      color: {{ block.settings.button_text_color | default: '#FFFFFF' }};
+      border: {{ block.settings.border_width | default: 0 }}px solid {{ block.settings.border_color | default: '#000000' }};
+      border-radius: {{ block.settings.border_radius | default: 4 }}px;
+      padding: {{ block.settings.padding_vertical | default: 16 }}px {{ block.settings.padding_horizontal | default: 24 }}px;
+      font-size: {{ block.settings.font_size_desktop | default: 16 }}px;
+      font-weight: {{ block.settings.font_weight | default: '600' }};
+      text-transform: {{ block.settings.text_transform | default: 'uppercase' }};
+      letter-spacing: {{ block.settings.letter_spacing | default: 1 }}px;
+    }
+
+    @media screen and (max-width: 768px) {
+      #shopify-section-{{ section.id }} .iwb-button-wrapper[data-block-id="{{ block.id }}"] .iwb-button--custom-styles {
+        font-size: {{ block.settings.font_size_mobile | default: 14 }}px;
+      }
+    }
+
+    #shopify-section-{{ section.id }} .iwb-button-wrapper[data-block-id="{{ block.id }}"] .iwb-button--custom-styles:hover {
+      background-color: {{ block.settings.button_bg_color_hover | default: '#333333' }};
+      color: {{ block.settings.button_text_color_hover | default: '#FFFFFF' }};
+      transform: translateY(-2px);
+    }
+
+    #shopify-section-{{ section.id }} .iwb-button-wrapper[data-block-id="{{ block.id }}"] .iwb-button-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: {{ block.settings.button_icon_size | default: 20 }}px;
+      color: {{ block.settings.button_icon_color | default: '#FFFFFF' }};
+    }
+
+    #shopify-section-{{ section.id }} .iwb-button-wrapper[data-block-id="{{ block.id }}"] .iwb-button-icon--left {
+      margin-right: {{ block.settings.button_icon_gap | default: 8 }}px;
+    }
+
+    #shopify-section-{{ section.id }} .iwb-button-wrapper[data-block-id="{{ block.id }}"] .iwb-button-icon--right {
+      margin-left: {{ block.settings.button_icon_gap | default: 8 }}px;
+    }
+
+    #shopify-section-{{ section.id }} .iwb-button-wrapper[data-block-id="{{ block.id }}"] .iwb-button-icon--custom {
+      width: {{ block.settings.button_icon_size | default: 20 }}px;
+      height: {{ block.settings.button_icon_size | default: 20 }}px;
+    }
+
+    #shopify-section-{{ section.id }} .iwb-button-wrapper[data-block-id="{{ block.id }}"] .iwb-button-icon--custom svg {
+      width: 100%;
+      height: 100%;
+      fill: currentColor;
+    }
+
+    #shopify-section-{{ section.id }} .iwb-button-wrapper[data-block-id="{{ block.id }}"] .iwb-button-text {
+      display: inline-block;
+    }
+  {% endif %}
+{% endfor %}
+
+/* Review Block - Inline Stars + Count */
+.section-{{ section.id }} .iwb-block-review {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.section-{{ section.id }} .iwb-block-review p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.section-{{ section.id }} .iwb-review-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.section-{{ section.id }} .iwb-review-stars {
+  display: flex;
+  gap: 4px;
+}
+
+.section-{{ section.id }} .iwb-star-empty {
+  stroke-width: 1.5;
+}
+
+/* Review Block - Per Block Styling */
+{% for block in section.blocks %}
+  {% if block.type == 'review' %}
+    .section-{{ section.id }} .iwb-block-review[data-block-id="{{ block.id }}"] {
+      margin-top: {{ block.settings.margin_top }}px;
+      margin-bottom: {{ block.settings.margin_bottom }}px;
+    }
+
+    .section-{{ section.id }} .iwb-review-inline[data-block-id="{{ block.id }}"] {
+      background: {{ block.settings.bg_color }};
+      padding: {{ block.settings.padding }}px;
+      border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }};
+      border-radius: {{ block.settings.border_radius }}px;
+    }
+    .section-{{ section.id }} .iwb-review-inline[data-block-id="{{ block.id }}"] .iwb-review-stars {
+      gap: {{ block.settings.star_spacing }}px;
+    }
+    .section-{{ section.id }} .iwb-review-inline[data-block-id="{{ block.id }}"] .iwb-star {
+      width: {{ block.settings.star_size }}px;
+      height: {{ block.settings.star_size }}px;
+    }
+    .section-{{ section.id }} .iwb-review-inline[data-block-id="{{ block.id }}"] .iwb-star-filled {
+      color: {{ block.settings.star_color }};
+    }
+    .section-{{ section.id }} .iwb-review-inline[data-block-id="{{ block.id }}"] .iwb-review-count {
+      font-size: {{ block.settings.font_size }}px;
+      font-weight: {{ block.settings.font_weight }};
+      color: {{ block.settings.text_color }};
+    }
+
+    /* Mobile Alignment */
+    @media screen and (max-width: 768px) {
+      .section-{{ section.id }} .iwb-block-review {
+        display: flex;
+        {% if block.settings.mobile_alignment == 'center' %}
+          justify-content: center;
+        {% elsif block.settings.mobile_alignment == 'right' %}
+          justify-content: flex-end;
+        {% else %}
+          justify-content: flex-start;
+        {% endif %}
+      }
+    }
+
+    /* Desktop Alignment */
+    @media screen and (min-width: 769px) {
+      .section-{{ section.id }} .iwb-desktop-layout .iwb-block-review {
+        display: flex;
+        {% if block.settings.desktop_alignment == 'center' %}
+          justify-content: center;
+        {% elsif block.settings.desktop_alignment == 'right' %}
+          justify-content: flex-end;
+        {% else %}
+          justify-content: flex-start;
+        {% endif %}
+      }
+    }
+  {% endif %}
+{% endfor %}
+
+/* Customer Testimonial Block - Base Styling */
+.section-{{ section.id }} .iwb-testimonial-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section-{{ section.id }} .iwb-testimonial-quote {
+  line-height: 1.4;
+}
+
+.section-{{ section.id }} .iwb-testimonial-footer {
+  display: flex;
+  align-items: center;
+}
+
+.section-{{ section.id }} .iwb-testimonial-rating {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.section-{{ section.id }} .iwb-testimonial-stars {
+  display: flex;
+  gap: 4px;
+}
+
+.section-{{ section.id }} .iwb-testimonial-separator {
+  opacity: 0.5;
+}
+
+.section-{{ section.id }} .iwb-testimonial-verified {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.section-{{ section.id }} .iwb-testimonial-verified .iwb-verified-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Customer Testimonial Block - Per Block Styling */
+{% for block in section.blocks %}
+  {% if block.type == 'customer_testimonial' %}
+    .section-{{ section.id }} .iwb-testimonial-card[data-block-id="{{ block.id }}"] {
+      {% if block.settings.enable_gradient and block.settings.gradient_bg != blank %}
+        background: {{ block.settings.gradient_bg }};
+      {% else %}
+        background: {{ block.settings.bg_color }};
+      {% endif %}
+      padding: {{ block.settings.padding }}px;
+      border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }};
+      border-radius: {{ block.settings.border_radius }}px;
+    }
+    .section-{{ section.id }} .iwb-testimonial-card[data-block-id="{{ block.id }}"] .iwb-testimonial-quote {
+      font-size: {{ block.settings.quote_size }}px;
+      font-weight: {{ block.settings.quote_weight }};
+      color: {{ block.settings.quote_color }};
+    }
+    .section-{{ section.id }} .iwb-testimonial-card[data-block-id="{{ block.id }}"] .iwb-testimonial-highlight {
+      color: {{ block.settings.highlight_color }};
+    }
+    .section-{{ section.id }} .iwb-testimonial-card[data-block-id="{{ block.id }}"] .iwb-testimonial-stars {
+      gap: {{ block.settings.star_spacing }}px;
+    }
+    .section-{{ section.id }} .iwb-testimonial-card[data-block-id="{{ block.id }}"] .iwb-testimonial-stars .iwb-star {
+      width: {{ block.settings.star_size }}px;
+      height: {{ block.settings.star_size }}px;
+    }
+    .section-{{ section.id }} .iwb-testimonial-card[data-block-id="{{ block.id }}"] .iwb-star-filled {
+      color: {{ block.settings.star_color }};
+    }
+    .section-{{ section.id }} .iwb-testimonial-card[data-block-id="{{ block.id }}"] .iwb-testimonial-name {
+      font-size: {{ block.settings.name_size }}px;
+      font-weight: {{ block.settings.name_weight }};
+      color: {{ block.settings.name_color }};
+    }
+    .section-{{ section.id }} .iwb-testimonial-card[data-block-id="{{ block.id }}"] .iwb-testimonial-separator {
+      font-size: {{ block.settings.name_size }}px;
+      color: {{ block.settings.name_color }};
+    }
+    .section-{{ section.id }} .iwb-testimonial-card[data-block-id="{{ block.id }}"] .iwb-testimonial-verified {
+      font-size: {{ block.settings.verified_size }}px;
+      color: {{ block.settings.verified_color }};
+    }
+
+    /* Desktop Layout */
+    @media screen and (min-width: 769px) {
+      .section-{{ section.id }} .iwb-desktop-layout .iwb-block-customer_testimonial {
+        display: flex;
+        width: 100%;
+        {% if block.settings.desktop_alignment == 'center' %}
+          justify-content: center;
+        {% elsif block.settings.desktop_alignment == 'right' %}
+          justify-content: flex-end;
+        {% else %}
+          justify-content: flex-start;
+        {% endif %}
+      }
+      .section-{{ section.id }} .iwb-desktop-layout .iwb-block-customer_testimonial .iwb-testimonial-card[data-block-id="{{ block.id }}"] {
+        width: 100%;
+        max-width: {{ block.settings.desktop_max_width }}%;
+      }
+    }
+  {% endif %}
+{% endfor %}
+
+/* ===========================
+   Custom HTML Block - Base Styling
+   =========================== */
+
+.section-{{ section.id }} .iwb-custom-html {
+  width: 100%;
+}
+
+/* Custom HTML Block - Per Block Styling */
+{% for block in section.blocks %}
+  {% if block.type == 'custom_html' %}
+    .section-{{ section.id }} .iwb-custom-html[data-block-id="{{ block.id }}"] {
+      padding: {{ block.settings.padding }}px;
+      background: {{ block.settings.bg_color }};
+      border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }};
+      border-radius: {{ block.settings.border_radius }}px;
+    }
+
+    /* Desktop Alignment */
+    @media screen and (min-width: 769px) {
+      .section-{{ section.id }} .iwb-desktop-layout .iwb-block-custom-html {
+        display: flex;
+        {% if block.settings.desktop_alignment == 'center' %}
+          justify-content: center;
+        {% elsif block.settings.desktop_alignment == 'right' %}
+          justify-content: flex-end;
+        {% else %}
+          justify-content: flex-start;
+        {% endif %}
+      }
+    }
+  {% endif %}
+{% endfor %}
+
+</style>
+
+{% schema %}
+{"name":"Image with Blocks","tag":"section","class":"section-image-with-blocks","settings": [
+ {"type":"checkbox","id":"use_theme_colors","label":"Use Theme Background Colors","default": true
+ },
+ {"type":"header","content":"Desktop Positioning"},
+ {"type":"paragraph","content":"On mobile, all blocks follow their drag-and-drop order. These settings only apply to desktop layout."},
+ {"type":"select","id":"image_position","label":"Image Position","options": [
+ {"value":"left","label":"Left"},
+ {"value":"right","label":"Right"}
+ ],"default":"left"},
+ {"type":"range","id":"image_width_desktop","min": 30,"max": 60,"step": 5,"unit":"%","label":"Image Width (Desktop)","default": 50
+ },
+ {"type":"range","id":"content_gap_desktop","min": 20,"max": 100,"step": 5,"unit":"px","label":"Gap Between Image & Content","default": 45
+ },
+ {"type":"select","id":"heading_position","label":"Heading Position","options": [
+ {"value":"top-section","label":"Top of Entire Section"},
+ {"value":"top-image","label":"Top of Image Column"},
+ {"value":"top-content","label":"In Content"}
+ ],"default":"top-content","info":"Where the heading block appears. 'In Content' follows block order."},
+ {"type":"select","id":"vertical_alignment","label":"Vertical Alignment","options": [
+ {"value":"flex-start","label":"Top"},
+ {"value":"center","label":"Center"},
+ {"value":"flex-end","label":"Bottom"}
+ ],"default":"center"},
+ {"type":"header","content":"Background"},
+ {"type":"color","id":"background_color","label":"Background Color","default":"#ffffff","info":"Only applies if 'Use Theme Background Colors' is off"},
+ {"type":"header","content":"Spacing"},
+ {"type":"range","id":"section_padding_top","min": 0,"max": 150,"step": 5,"unit":"px","label":"Section Padding Top","default": 60
+ },
+ {"type":"range","id":"section_padding_bottom","min": 0,"max": 150,"step": 5,"unit":"px","label":"Section Padding Bottom","default": 60
+ },
+ {"type":"range","id":"block_spacing_mobile","min": 0,"max": 80,"step": 4,"unit":"px","label":"Space Between Blocks (Mobile)","default": 20
+ },
+ {"type":"range","id":"block_spacing_desktop","min": 0,"max": 120,"step": 4,"unit":"px","label":"Space Between Blocks (Desktop)","default": 12
+ },
+ {"type":"range","id":"content_block_spacing_mobile","min": 0,"max": 80,"step": 4,"unit":"px","label":"Content Block Spacing (Mobile)","default": 12,"info":"Space between blocks in the content column on mobile"},
+ {"type":"range","id":"content_block_spacing_desktop","min": 0,"max": 120,"step": 4,"unit":"px","label":"Content Block Spacing (Desktop)","default": 20,"info":"Space between blocks in the content column on desktop"}
+ ],"blocks": [
+ {"type":"image","name":"Image","limit": 1,"settings": [
+ {"type":"header","content":"️ Desktop Image"},
+ {"type":"image_picker","id":"image_desktop","label":"Desktop Image"},
+ {"type":"select","id":"aspect_ratio_desktop","label":"Desktop Aspect Ratio","options": [
+ {"value":"auto","label":"Original"},
+ {"value":"1 / 1","label":"Square (1:1)"},
+ {"value":"4 / 3","label":"Landscape (4:3)"},
+ {"value":"16 / 9","label":"Widescreen (16:9)"},
+ {"value":"3 / 4","label":"Portrait (3:4)"},
+ {"value":"2 / 3","label":"Portrait (2:3)"}
+ ],"default":"auto"},
+ {"type":"header","content":"Mobile Image"},
+ {"type":"image_picker","id":"image_mobile","label":"Mobile Image","info":"Leave empty to use desktop image on mobile"},
+ {"type":"select","id":"aspect_ratio_mobile","label":"Mobile Aspect Ratio","options": [
+ {"value":"auto","label":"Original"},
+ {"value":"1 / 1","label":"Square (1:1)"},
+ {"value":"4 / 3","label":"Landscape (4:3)"},
+ {"value":"16 / 9","label":"Widescreen (16:9)"},
+ {"value":"3 / 4","label":"Portrait (3:4)"},
+ {"value":"2 / 3","label":"Portrait (2:3)"}
+ ],"default":"auto"},
+ {"type":"header","content":"Styling"},
+ {"type":"range","id":"border_radius","min": 0,"max": 50,"step": 2,"unit":"px","label":"Border Radius","default": 10
+ },
+ {"type":"range","id":"max_width","min": 20,"max": 100,"step": 5,"unit":"%","label":"Max Width","default": 100
+ },
+ {"type":"header","content":"Spacing"},
+ {"type":"range","id":"margin_top","min": 0,"max": 100,"step": 4,"unit":"px","label":"Margin Top","default": 0
+ },
+ {"type":"range","id":"margin_bottom","min": 0,"max": 100,"step": 4,"unit":"px","label":"Margin Bottom","default": 0
+ }
+ ]
+ },
+ {"type":"heading","name":"Heading","limit": 1,"settings": [
+ {"type":"header","content":"Heading Content"},
+ {"type":"text","id":"heading_before","label":"Heading Text (Before Highlight)","default":"add your"},
+ {"type":"text","id":"highlighted_text","label":"Highlighted Text","default":"title here"},
+ {"type":"text","id":"heading_after","label":"Heading Text (After Highlight)"},
+ {"type":"select","id":"highlight_position","label":"Highlight Position","options": [
+ {"value":"above","label":"Above Heading"},
+ {"value":"below","label":"Below Heading"},
+ {"value":"inline_first","label":"Inline - First"},
+ {"value":"inline_second","label":"Inline - Second"}
+ ],"default":"inline_second"},
+ {"type":"header","content":"Heading Styling"},
+ {"type":"select","id":"heading_tag","label":"Heading Tag","options": [
+ {"value":"h1","label":"H1"},
+ {"value":"h2","label":"H2"},
+ {"value":"h3","label":"H3"},
+ {"value":"h4","label":"H4"},
+ {"value":"h5","label":"H5"},
+ {"value":"h6","label":"H6"},
+ {"value":"p","label":"Paragraph"}
+ ],"default":"h2"},
+ {"type":"select","id":"text_align","label":"Text Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"color","id":"heading_color","label":"Heading Color","default":"#1f2937"},
+ {"type":"range","id":"heading_font_size_desktop","label":"Heading Font Size (Desktop)","min": 20,"max": 100,"step": 2,"unit":"px","default": 48
+ },
+ {"type":"range","id":"heading_font_size_mobile","label":"Heading Font Size (Mobile)","min": 16,"max": 60,"step": 2,"unit":"px","default": 32
+ },
+ {"type":"select","id":"heading_font_weight","label":"Heading Font Weight","options": [
+ {"value":"300","label":"Light (300)"},
+ {"value":"400","label":"Regular (400)"},
+ {"value":"500","label":"Medium (500)"},
+ {"value":"600","label":"Semi-Bold (600)"},
+ {"value":"700","label":"Bold (700)"},
+ {"value":"800","label":"Extra Bold (800)"},
+ {"value":"900","label":"Black (900)"}
+ ],"default":"500"},
+ {"type":"range","id":"heading_line_height","label":"Line Height","min": 1,"max": 2,"step": 0.1,"default": 1.2
+ },
+ {"type":"range","id":"heading_margin_top","label":"Heading Top Margin","min": 0,"max": 50,"step": 2,"unit":"px","default": 0
+ },
+ {"type":"range","id":"heading_margin_bottom","label":"Heading Bottom Margin","min": 0,"max": 50,"step": 2,"unit":"px","default": 0
+ },
+ {"type":"header","content":"Highlight Styling"},
+ {"type":"checkbox","id":"highlighted_gradient_enabled","label":"Enable Gradient Text","default": false,"info":"Toggle between solid color and gradient"},
+ {"type":"color","id":"highlighted_solid_color","label":"Solid Color","default":"#ef4444"},
+ {"type":"color_background","id":"highlighted_gradient","label":"Gradient Color","default":"linear-gradient(90deg, rgba(237, 18, 45, 1), rgba(255, 107, 107, 1) 100%)"},
+ {"type":"range","id":"highlight_font_size_desktop","label":"Highlight Font Size (Desktop)","min": 20,"max": 100,"step": 2,"unit":"px","default": 48
+ },
+ {"type":"range","id":"highlight_font_size_mobile","label":"Highlight Font Size (Mobile)","min": 16,"max": 60,"step": 2,"unit":"px","default": 32
+ },
+ {"type":"select","id":"highlight_font_weight","label":"Highlight Font Weight","options": [
+ {"value":"300","label":"Light (300)"},
+ {"value":"400","label":"Regular (400)"},
+ {"value":"500","label":"Medium (500)"},
+ {"value":"600","label":"Semi-Bold (600)"},
+ {"value":"700","label":"Bold (700)"},
+ {"value":"800","label":"Extra Bold (800)"},
+ {"value":"900","label":"Black (900)"}
+ ],"default":"500"},
+ {"type":"range","id":"highlight_margin_top","label":"Highlight Top Margin","min": 0,"max": 50,"step": 2,"unit":"px","default": 0,"info":"Only applies when positioned above/below"},
+ {"type":"range","id":"highlight_margin_bottom","label":"Highlight Bottom Margin","min": 0,"max": 50,"step": 2,"unit":"px","default": 10,"info":"Only applies when positioned above/below"},
+ {"type":"header","content":"️ Desktop Layout"},
+ {"type":"select","id":"desktop_alignment","label":"Desktop Content Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left","info":"Alignment on desktop (mobile follows text alignment)"},
+ {"type":"header","content":"Spacing"},
+ {"type":"range","id":"margin_top","min": 0,"max": 100,"step": 4,"unit":"px","label":"Margin Top","default": 0
+ },
+ {"type":"range","id":"margin_bottom","min": 0,"max": 100,"step": 4,"unit":"px","label":"Margin Bottom","default": 0
+ }
+ ]
+ },
+ {"type":"body_text","name":"Body Text","settings": [
+ {"type":"richtext","id":"body_text","label":"Body Text","default":"<p>Add your text content here.</p>"},
+ {"type":"select","id":"font_weight","label":"Font Weight","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"400"},
+ {"type":"color","id":"text_color","label":"Text Color","default":"#000000"},
+ {"type":"color","id":"bg_color","label":"Background Color","default":"rgba(0,0,0,0)"},
+ {"type":"range","id":"padding","min": 0,"max": 60,"step": 4,"unit":"px","label":"Padding","default": 0
+ },
+ {"type":"range","id":"border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Border Width","default": 0
+ },
+ {"type":"color","id":"border_color","label":"Border Color","default":"#e5e7eb"},
+ {"type":"select","id":"border_style","label":"Border Style","options": [
+ {"value":"solid","label":"Solid"},
+ {"value":"dashed","label":"Dashed"},
+ {"value":"dotted","label":"Dotted"}
+ ],"default":"solid"},
+ {"type":"range","id":"border_radius","min": 0,"max": 30,"step": 2,"unit":"px","label":"Border Radius","default": 0
+ },
+ {"type":"header","content":"Mobile Layout"},
+ {"type":"range","id":"font_size_mobile","min": 12,"max": 32,"step": 1,"unit":"px","label":"Font Size (Mobile)","default": 14
+ },
+ {"type":"select","id":"mobile_alignment","label":"Mobile Content Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center","info":"Horizontal alignment on mobile"},
+ {"type":"header","content":"️ Desktop Layout"},
+ {"type":"range","id":"font_size_desktop","min": 12,"max": 40,"step": 1,"unit":"px","label":"Font Size (Desktop)","default": 16
+ },
+ {"type":"select","id":"desktop_alignment","label":"Desktop Content Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left","info":"Horizontal alignment on desktop"},
+ {"type":"header","content":"Spacing"},
+ {"type":"range","id":"margin_top","min": 0,"max": 100,"step": 4,"unit":"px","label":"Margin Top","default": 0
+ },
+ {"type":"range","id":"margin_bottom","min": 0,"max": 100,"step": 4,"unit":"px","label":"Margin Bottom","default": 0
+ }
+ ]
+ },
+ {"type":"button","name":"Button","settings": [
+ {"type":"paragraph","content":"**Call-to-Action Button**"},
+ {"type":"text","id":"button_text","label":"Button Text","default":"Click Here"},
+ {"type":"url","id":"button_link","label":"Button Link"},
+ {"type":"text","id":"scroll_to_section","label":"Scroll to Section Class","info":"Enter class name WITHOUT the dot (e.g., 'product-info' NOT '.product-info'). Leave button link empty when using this."},
+ {"type":"checkbox","id":"hide_on_desktop","label":"Hide on Desktop","default": false,"info":"Hide this button on desktop devices"},
+ {"type":"header","content":"Icon Settings"},
+ {"type":"text","id":"button_icon","label":"Google Icon Name","info":"Enter icon name like: shopping_cart, local_shipping, favorite. Use underscores between words. [View all icons](https://fonts.google.com/icons?icon.set=Material+Symbols&icon.platform=web)","default":"arrow_right_alt"},
+ {"type":"checkbox","id":"button_icon_filled","label":"Filled icon","default": false},
+ {"type":"html","id":"button_custom_icon","label":"Custom SVG Icon Code","info":"If provided, this custom SVG will be used instead of the Google Material Icon. Paste your SVG code here."},
+ {"type":"select","id":"icon_position","label":"Icon Position","options": [
+ {"value":"left","label":"Left of text"},
+ {"value":"right","label":"Right of text"}
+ ],"default":"right"},
+ {"type":"range","id":"button_icon_size","min": 12,"max": 48,"step": 2,"unit":"px","label":"Icon Size","default": 20},
+ {"type":"range","id":"button_icon_gap","min": 0,"max": 30,"step": 2,"unit":"px","label":"Gap Between Icon & Text","default": 8},
+ {"type":"color","id":"button_icon_color","label":"Icon Color","default":"#FFFFFF","info":"Leave as white if using custom styles, or match your theme button color"},
+ {"type":"header","content":"Alignment"},
+ {"type":"select","id":"alignment_desktop","label":"Alignment (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left"},
+ {"type":"select","id":"alignment_mobile","label":"Alignment (Mobile)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"header","content":"Style Settings"},
+ {"type":"checkbox","id":"use_custom_styles","label":"Use Custom Styles","default": true,"info":"Enable to override theme button styles with custom settings below"},
+ {"type":"header","content":"Colors"},
+ {"type":"color","id":"button_text_color","label":"Text Color","default":"#FFFFFF"},
+ {"type":"color","id":"button_bg_color","label":"Background Color","default":"#000000"},
+ {"type":"checkbox","id":"use_gradient","label":"Use Gradient Background","default": false},
+ {"type":"color_background","id":"button_gradient","label":"Gradient Background"},
+ {"type":"color","id":"button_text_color_hover","label":"Text Color (Hover)","default":"#FFFFFF"},
+ {"type":"color","id":"button_bg_color_hover","label":"Background Color (Hover)","default":"#333333"},
+ {"type":"header","content":"Border"},
+ {"type":"range","id":"border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Border Width","default": 0},
+ {"type":"color","id":"border_color","label":"Border Color","default":"#000000"},
+ {"type":"range","id":"border_radius","min": 0,"max": 50,"step": 1,"unit":"px","label":"Border Radius","default": 6},
+ {"type":"header","content":"Typography"},
+ {"type":"range","id":"font_size_desktop","min": 12,"max": 32,"step": 1,"unit":"px","label":"Font Size (Desktop)","default": 16},
+ {"type":"range","id":"font_size_mobile","min": 12,"max": 28,"step": 1,"unit":"px","label":"Font Size (Mobile)","default": 14},
+ {"type":"select","id":"font_weight","label":"Font Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"},
+ {"value":"800","label":"Extra Bold"}
+ ],"default":"600"},
+ {"type":"select","id":"text_transform","label":"Text Transform","options": [
+ {"value":"none","label":"None"},
+ {"value":"uppercase","label":"Uppercase"},
+ {"value":"lowercase","label":"Lowercase"},
+ {"value":"capitalize","label":"Capitalize"}
+ ],"default":"uppercase"},
+ {"type":"range","id":"letter_spacing","min": -2,"max": 10,"step": 0.5,"unit":"px","label":"Letter Spacing","default": 1},
+ {"type":"header","content":"Padding"},
+ {"type":"range","id":"padding_vertical","min": 0,"max": 40,"step": 2,"unit":"px","label":"Vertical Padding","default": 14},
+ {"type":"range","id":"padding_horizontal","min": 0,"max": 80,"step": 2,"unit":"px","label":"Horizontal Padding","default": 32},
+ {"type":"header","content":"Layout"},
+ {"type":"checkbox","id":"full_width","label":"Full Width Button","default": false},
+ {"type":"checkbox","id":"full_width_mobile_only","label":"Full Width on Mobile Only","default": true},
+ {"type":"checkbox","id":"use_custom_width","label":"Use Custom Width","default": false,"info":"Enable to set custom button width instead of auto"},
+ {"type":"range","id":"custom_width_desktop","min": 100,"max": 800,"step": 10,"unit":"px","label":"Custom Width (Desktop)","default": 300},
+ {"type":"range","id":"custom_width_mobile","min": 100,"max": 500,"step": 10,"unit":"px","label":"Custom Width (Mobile)","default": 280},
+ {"type":"range","id":"margin_top","min": -20,"max": 40,"step": 2,"unit":"px","label":"Top Margin","default": 0},
+ {"type":"range","id":"margin_bottom","min": -20,"max": 40,"step": 2,"unit":"px","label":"Bottom Margin","default": 0}
+ ]
+ },
+ {"type":"review","name":"Review","settings": [
+ {"type":"checkbox","id":"show_stars","label":"Show Star Rating","default": true
+ },
+ {"type":"range","id":"star_rating","min": 1,"max": 5,"step": 1,"label":"Star Rating","default": 5
+ },
+ {"type":"range","id":"star_size","min": 14,"max": 40,"step": 2,"unit":"px","label":"Star Size","default": 16
+ },
+ {"type":"color","id":"star_color","label":"Star Color","default":"#fbbf24"},
+ {"type":"range","id":"star_spacing","min": 0,"max": 12,"step": 1,"unit":"px","label":"Star Spacing","default": 0
+ },
+ {"type":"richtext","id":"review_count","label":"Review Count Text","default":"<p><strong>+4,768 reviews </strong>from real customers</p>","info":"Use the editor to make parts of text bold, italic, etc."},
+ {"type":"range","id":"font_size","min": 12,"max": 24,"step": 1,"unit":"px","label":"Font Size","default": 13
+ },
+ {"type":"select","id":"font_weight","label":"Font Weight","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"400"},
+ {"type":"color","id":"text_color","label":"Text Color","default":"#000000"},
+ {"type":"color","id":"bg_color","label":"Background Color","default":"transparent"},
+ {"type":"range","id":"padding","min": 0,"max": 60,"step": 4,"unit":"px","label":"Padding","default": 0
+ },
+ {"type":"range","id":"border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Border Width","default": 0
+ },
+ {"type":"color","id":"border_color","label":"Border Color","default":"#e5e7eb"},
+ {"type":"select","id":"border_style","label":"Border Style","options": [
+ {"value":"solid","label":"Solid"},
+ {"value":"dashed","label":"Dashed"},
+ {"value":"dotted","label":"Dotted"}
+ ],"default":"solid"},
+ {"type":"range","id":"border_radius","min": 0,"max": 30,"step": 2,"unit":"px","label":"Border Radius","default": 0
+ },
+ {"type":"header","content":"Mobile Layout"},
+ {"type":"select","id":"mobile_alignment","label":"Mobile Content Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center","info":"Horizontal alignment on mobile"},
+ {"type":"header","content":"️ Desktop Layout"},
+ {"type":"select","id":"desktop_alignment","label":"Desktop Content Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left","info":"Horizontal alignment on desktop"},
+ {"type":"header","content":"Spacing"},
+ {"type":"range","id":"margin_top","min": 0,"max": 100,"step": 4,"unit":"px","label":"Margin Top","default": 0
+ },
+ {"type":"range","id":"margin_bottom","min": 0,"max": 100,"step": 4,"unit":"px","label":"Margin Bottom","default": 0
+ }
+ ]
+ },
+ {"type":"customer_testimonial","name":"Customer Testimonial","settings": [
+ {"type":"text","id":"quote_before","label":"Quote Text (Before Highlight)","default":"More focused,","info":"Text before the highlighted portion"},
+ {"type":"text","id":"quote_highlight","label":"Highlighted Quote Text","default":"more me","info":"This text will be highlighted"},
+ {"type":"text","id":"quote_after","label":"Quote Text (After Highlight)","default":".","info":"Text after the highlighted portion"},
+ {"type":"range","id":"quote_size","min": 16,"max": 48,"step": 2,"unit":"px","label":"Quote Text Size","default": 24
+ },
+ {"type":"select","id":"quote_weight","label":"Quote Font Weight","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"400"},
+ {"type":"color","id":"quote_color","label":"Quote Text Color","default":"#ffffff"},
+ {"type":"color","id":"highlight_color","label":"Highlight Text Color","default":"#fbbf24"},
+ {"type":"color","id":"bg_color","label":"Background Color","default":"#1f2937"},
+ {"type":"checkbox","id":"enable_gradient","label":"Enable Gradient Background","default": false
+ },
+ {"type":"color_background","id":"gradient_bg","label":"Gradient Background","info":"Only applies if gradient is enabled"},
+ {"type":"range","id":"padding","min": 12,"max": 80,"step": 4,"unit":"px","label":"Padding","default": 32
+ },
+ {"type":"range","id":"border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Border Width","default": 0
+ },
+ {"type":"color","id":"border_color","label":"Border Color","default":"#e5e7eb"},
+ {"type":"select","id":"border_style","label":"Border Style","options": [
+ {"value":"solid","label":"Solid"},
+ {"value":"dashed","label":"Dashed"},
+ {"value":"dotted","label":"Dotted"}
+ ],"default":"solid"},
+ {"type":"range","id":"border_radius","min": 0,"max": 50,"step": 2,"unit":"px","label":"Border Radius","default": 12
+ },
+ {"type":"checkbox","id":"show_stars","label":"Show Star Rating","default": true
+ },
+ {"type":"range","id":"star_rating","min": 1,"max": 5,"step": 1,"label":"Star Rating","default": 5
+ },
+ {"type":"range","id":"star_size","min": 12,"max": 32,"step": 2,"unit":"px","label":"Star Size","default": 18
+ },
+ {"type":"color","id":"star_color","label":"Star Color","default":"#fbbf24"},
+ {"type":"range","id":"star_spacing","min": 0,"max": 12,"step": 1,"unit":"px","label":"Star Spacing","default": 4
+ },
+ {"type":"text","id":"customer_name","label":"Customer Name","default":"Marcus T"},
+ {"type":"range","id":"name_size","min": 12,"max": 22,"step": 1,"unit":"px","label":"Name Text Size","default": 15
+ },
+ {"type":"select","id":"name_weight","label":"Name Font Weight","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"400"},
+ {"type":"color","id":"name_color","label":"Name Text Color","default":"#ffffff"},
+ {"type":"checkbox","id":"show_verified","label":"Show Verified Badge","default": true
+ },
+ {"type":"range","id":"verified_size","min": 11,"max": 18,"step": 1,"unit":"px","label":"Verified Text Size","default": 14
+ },
+ {"type":"color","id":"verified_color","label":"Verified Text Color","default":"#ffffff"},
+ {"type":"header","content":"️ Desktop Layout"},
+ {"type":"range","id":"desktop_max_width","min": 40,"max": 100,"step": 5,"unit":"%","label":"Desktop Max Width","default": 100,"info":"Maximum width of testimonial card on desktop"},
+ {"type":"select","id":"desktop_alignment","label":"Desktop Content Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left","info":"Horizontal alignment on desktop"}
+ ]
+ },
+ {"type":"custom_html","name":"Custom HTML","settings": [
+ {"type":"html","id":"custom_html","label":"Custom HTML/Liquid Code","default":"<div style='padding: 20px; background: #f9fafb; border-radius: 8px;'><p>Add your custom HTML or Liquid code here.</p></div>"},
+ {"type":"header","content":"Styling"},
+ {"type":"range","id":"padding","min": 0,"max": 60,"step": 4,"unit":"px","label":"Padding","default": 0
+ },
+ {"type":"color","id":"bg_color","label":"Background Color","default":"transparent"},
+ {"type":"range","id":"border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Border Width","default": 0
+ },
+ {"type":"color","id":"border_color","label":"Border Color","default":"#e5e7eb"},
+ {"type":"select","id":"border_style","label":"Border Style","options": [
+ {"value":"solid","label":"Solid"},
+ {"value":"dashed","label":"Dashed"},
+ {"value":"dotted","label":"Dotted"}
+ ],"default":"solid"},
+ {"type":"range","id":"border_radius","min": 0,"max": 30,"step": 2,"unit":"px","label":"Border Radius","default": 0
+ },
+ {"type":"header","content":"️ Desktop Layout"},
+ {"type":"select","id":"desktop_alignment","label":"Desktop Content Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left","info":"Horizontal alignment on desktop"}
+ ]
+ }
+ ],"presets": [
+ {"name":"Image with Blocks","blocks": [
+ {"type":"review","settings":{"show_stars":true,"star_rating":5,"star_size":16,"star_color":"#fbbf24","star_spacing":0,"review_count":"<p><strong>+4,768 reviews </strong>from real customers</p>","font_size":13,"font_weight":"400","text_color":"#000000","bg_color":"rgba(0,0,0,0)","padding":0,"border_width":0,"border_color":"#e5e7eb","border_style":"solid","border_radius":0,"mobile_alignment":"center","desktop_alignment":"left","margin_top":0,"margin_bottom":0}},
+ {"type":"heading","settings":{"heading_before":"add your","highlighted_text":"title here","heading_after":"","highlight_position":"inline_second","heading_tag":"h2","text_align":"center","heading_color":"#1f2937","heading_font_size_desktop":48,"heading_font_size_mobile":32,"heading_font_weight":"500","heading_line_height":1.2,"heading_margin_top":0,"heading_margin_bottom":0,"highlighted_gradient_enabled":false,"highlighted_solid_color":"#ef4444","highlighted_gradient":"linear-gradient(90deg, rgba(237, 18, 45, 1), rgba(255, 107, 107, 1) 100%)","highlight_font_size_desktop":48,"highlight_font_size_mobile":32,"highlight_font_weight":"500","highlight_margin_top":0,"highlight_margin_bottom":10,"desktop_alignment":"left","margin_top":0,"margin_bottom":0}},
+ {"type":"image","settings":{"aspect_ratio_desktop":"auto","aspect_ratio_mobile":"auto","border_radius":10,"max_width":100,"margin_top":0,"margin_bottom":0}},
+ {"type":"body_text","settings":{"body_text":"<p>Add your text content here.</p>","font_weight":"400","text_color":"#000000","bg_color":"rgba(0,0,0,0)","padding":0,"border_width":0,"border_color":"#e5e7eb","border_style":"solid","border_radius":0,"font_size_mobile":14,"mobile_alignment":"center","font_size_desktop":16,"desktop_alignment":"left","margin_top":0,"margin_bottom":0}},
+ {"type":"button","settings":{"button_text":"Click Here","button_link":"","scroll_to_section":"","hide_on_desktop":false,"button_icon":"arrow_right_alt","button_icon_filled":false,"button_custom_icon":"","icon_position":"right","button_icon_size":20,"button_icon_gap":8,"button_icon_color":"#ffffff","alignment_desktop":"left","alignment_mobile":"center","use_custom_styles":true,"button_text_color":"#ffffff","button_bg_color":"#000000","use_gradient":false,"button_gradient":"","button_text_color_hover":"#ffffff","button_bg_color_hover":"#333333","border_width":0,"border_color":"#000000","border_radius":6,"font_size_desktop":16,"font_size_mobile":14,"font_weight":"600","text_transform":"uppercase","letter_spacing":1,"padding_vertical":14,"padding_horizontal":32,"full_width":false,"full_width_mobile_only":true,"use_custom_width":false,"custom_width_desktop":300,"custom_width_mobile":280,"margin_top":0,"margin_bottom":0}}
+ ],"category":"Content"}
+ ]
+}
+{% endschema %}
+
+<script>
+(function() {
+  const buttons = document.querySelectorAll('#shopify-section-{{ section.id }} .scroll-to-section');
+
+  buttons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      const targetClass = this.getAttribute('data-scroll-target');
+
+      if (targetClass) {
+        e.preventDefault();
+
+        const targetElement = document.querySelector('.' + targetClass);
+
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }
+    });
+  });
+})();
+</script>
+

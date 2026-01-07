@@ -1,0 +1,1227 @@
+{% doc %}
+  @prompt
+    create me a clean section for my "leanr page" i want to explain the importance of blue light with blocks, headings, paragraphs, images, and everything I need to complete the entire section. make it feel fancy  , it needs to be like an advertorial layout 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-advertorial-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background: {{ block.settings.background_color }};
+    padding: {{ block.settings.padding_top }}px 20px {{ block.settings.padding_bottom }}px;
+  }
+
+  .ai-advertorial-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-advertorial-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.header_spacing }}px;
+    border-bottom: {{ block.settings.divider_width }}px solid {{ block.settings.divider_color }};
+    padding-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-advertorial-category-{{ ai_gen_id }} {
+    font-size: {{ block.settings.category_size }}px;
+    font-weight: {{ block.settings.category_weight }};
+    color: {{ block.settings.category_color }};
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+  }
+
+  .ai-advertorial-headline-{{ ai_gen_id }} {
+    font-size: {{ block.settings.headline_size_desktop }}px;
+    font-weight: {{ block.settings.headline_weight }};
+    color: {{ block.settings.headline_color }};
+    line-height: 1.15;
+    margin: 0 0 {{ block.settings.headline_spacing }}px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .ai-advertorial-byline-{{ ai_gen_id }} {
+    font-size: {{ block.settings.byline_size }}px;
+    color: {{ block.settings.byline_color }};
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+
+  .ai-advertorial-date-{{ ai_gen_id }} {
+    font-size: {{ block.settings.date_size }}px;
+    color: {{ block.settings.date_color }};
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .ai-advertorial-hero-{{ ai_gen_id }} {
+    margin-bottom: {{ block.settings.section_spacing }}px;
+  }
+
+  .ai-advertorial-hero-image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    margin-bottom: 16px;
+    border-radius: {{ block.settings.image_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-advertorial-hero-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-advertorial-hero-image-wrapper-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    background: #f4f4f4;
+  }
+
+  .ai-advertorial-caption-{{ ai_gen_id }} {
+    font-size: {{ block.settings.caption_size }}px;
+    color: {{ block.settings.caption_color }};
+    font-style: italic;
+    text-align: center;
+    margin-top: 12px;
+  }
+
+  .ai-advertorial-intro-{{ ai_gen_id }} {
+    font-size: {{ block.settings.intro_size }}px;
+    color: {{ block.settings.intro_color }};
+    line-height: 1.8;
+    margin-bottom: {{ block.settings.section_spacing }}px;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .ai-advertorial-intro-{{ ai_gen_id }} p:first-child::first-letter {
+    font-size: 3.5em;
+    font-weight: 700;
+    float: left;
+    line-height: 0.85;
+    margin: 8px 12px 0 0;
+    color: {{ block.settings.dropcap_color }};
+  }
+
+  .ai-advertorial-body-{{ ai_gen_id }} {
+    max-width: 720px;
+    margin: 0 auto {{ block.settings.section_spacing }}px;
+  }
+
+  .ai-advertorial-section-{{ ai_gen_id }} {
+    margin-bottom: {{ block.settings.section_spacing }}px;
+  }
+
+  .ai-advertorial-subheading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size }}px;
+    font-weight: {{ block.settings.subheading_weight }};
+    color: {{ block.settings.subheading_color }};
+    line-height: 1.3;
+    margin: 0 0 {{ block.settings.subheading_spacing }}px;
+  }
+
+  .ai-advertorial-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_size }}px;
+    color: {{ block.settings.body_color }};
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  .ai-advertorial-text-{{ ai_gen_id }} p {
+    margin: 0 0 20px;
+  }
+
+  .ai-advertorial-text-{{ ai_gen_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-advertorial-pullquote-{{ ai_gen_id }} {
+    border-left: {{ block.settings.quote_border_width }}px solid {{ block.settings.quote_border_color }};
+    padding-left: {{ block.settings.quote_padding }}px;
+    margin: {{ block.settings.quote_spacing }}px 0;
+    font-size: {{ block.settings.quote_size }}px;
+    font-weight: {{ block.settings.quote_weight }};
+    color: {{ block.settings.quote_color }};
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .ai-advertorial-image-block-{{ ai_gen_id }} {
+    margin: {{ block.settings.image_block_spacing }}px 0;
+  }
+
+  .ai-advertorial-image-block-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    border-radius: {{ block.settings.image_radius }}px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .ai-advertorial-image-block-img-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-advertorial-image-block-wrapper-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    background: #f4f4f4;
+  }
+
+  .ai-advertorial-cta-box-{{ ai_gen_id }} {
+    background: {{ block.settings.cta_box_background }};
+    border: {{ block.settings.cta_box_border_width }}px solid {{ block.settings.cta_box_border_color }};
+    border-radius: {{ block.settings.cta_box_radius }}px;
+    padding: {{ block.settings.cta_box_padding }}px;
+    text-align: center;
+    margin: {{ block.settings.section_spacing }}px auto;
+    max-width: 600px;
+  }
+
+  .ai-advertorial-cta-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.cta_heading_size }}px;
+    font-weight: {{ block.settings.cta_heading_weight }};
+    color: {{ block.settings.cta_heading_color }};
+    margin: 0 0 16px;
+  }
+
+  .ai-advertorial-cta-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.cta_text_size }}px;
+    color: {{ block.settings.cta_text_color }};
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .ai-advertorial-button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    background: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    font-size: {{ block.settings.button_font_size }}px;
+    font-weight: {{ block.settings.button_font_weight }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_radius }}px;
+    border: {{ block.settings.button_border_width }}px solid {{ block.settings.button_border_color }};
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .ai-advertorial-button-{{ ai_gen_id }}:hover {
+    background: {{ block.settings.button_hover_background }};
+    color: {{ block.settings.button_hover_text_color }};
+    border-color: {{ block.settings.button_hover_border_color }};
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-advertorial-headline-{{ ai_gen_id }} {
+      font-size: {{ block.settings.headline_size_tablet }}px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-advertorial-{{ ai_gen_id }} {
+      padding: {{ block.settings.padding_top_mobile }}px 16px {{ block.settings.padding_bottom_mobile }}px;
+    }
+
+    .ai-advertorial-headline-{{ ai_gen_id }} {
+      font-size: {{ block.settings.headline_size_mobile }}px;
+    }
+
+    .ai-advertorial-intro-{{ ai_gen_id }} p:first-child::first-letter {
+      font-size: 2.5em;
+      margin: 4px 8px 0 0;
+    }
+
+    .ai-advertorial-hero-image-wrapper-{{ ai_gen_id }} svg {
+      height: 300px;
+    }
+
+    .ai-advertorial-image-block-wrapper-{{ ai_gen_id }} svg {
+      height: 250px;
+    }
+  }
+{% endstyle %}
+
+<article class="ai-advertorial-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-advertorial-container-{{ ai_gen_id }}">
+    {% if block.settings.show_header %}
+      <header class="ai-advertorial-header-{{ ai_gen_id }}">
+        {% if block.settings.category != blank %}
+          <div class="ai-advertorial-category-{{ ai_gen_id }}">
+            {{ block.settings.category }}
+          </div>
+        {% endif %}
+
+        {% if block.settings.headline != blank %}
+          <h1 class="ai-advertorial-headline-{{ ai_gen_id }}">
+            {{ block.settings.headline }}
+          </h1>
+        {% endif %}
+
+        {% if block.settings.byline != blank %}
+          <div class="ai-advertorial-byline-{{ ai_gen_id }}">
+            {{ block.settings.byline }}
+          </div>
+        {% endif %}
+
+        {% if block.settings.date != blank %}
+          <div class="ai-advertorial-date-{{ ai_gen_id }}">
+            {{ block.settings.date }}
+          </div>
+        {% endif %}
+      </header>
+    {% endif %}
+
+    {% if block.settings.show_hero %}
+      <div class="ai-advertorial-hero-{{ ai_gen_id }}">
+        <div class="ai-advertorial-hero-image-wrapper-{{ ai_gen_id }}">
+          {% if block.settings.hero_image != blank %}
+            <img
+              src="{{ block.settings.hero_image | image_url: width: 1400 }}"
+              alt="{{ block.settings.hero_image.alt | escape }}"
+              class="ai-advertorial-hero-image-{{ ai_gen_id }}"
+              loading="lazy"
+              width="{{ block.settings.hero_image.width }}"
+              height="{{ block.settings.hero_image.height }}"
+            >
+          {% else %}
+            {{ 'hero-apparel-1' | placeholder_svg_tag }}
+          {% endif %}
+        </div>
+
+        {% if block.settings.hero_caption != blank %}
+          <div class="ai-advertorial-caption-{{ ai_gen_id }}">
+            {{ block.settings.hero_caption }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if block.settings.intro_text != blank %}
+      <div class="ai-advertorial-intro-{{ ai_gen_id }}">
+        {{ block.settings.intro_text }}
+      </div>
+    {% endif %}
+
+    <div class="ai-advertorial-body-{{ ai_gen_id }}">
+      {% if block.settings.show_section_1 %}
+        <section class="ai-advertorial-section-{{ ai_gen_id }}">
+          {% if block.settings.section_1_heading != blank %}
+            <h2 class="ai-advertorial-subheading-{{ ai_gen_id }}">
+              {{ block.settings.section_1_heading }}
+            </h2>
+          {% endif %}
+
+          {% if block.settings.section_1_text != blank %}
+            <div class="ai-advertorial-text-{{ ai_gen_id }}">
+              {{ block.settings.section_1_text }}
+            </div>
+          {% endif %}
+        </section>
+      {% endif %}
+
+      {% if block.settings.show_pullquote %}
+        <blockquote class="ai-advertorial-pullquote-{{ ai_gen_id }}">
+          {{ block.settings.pullquote_text }}
+        </blockquote>
+      {% endif %}
+
+      {% if block.settings.show_section_2 %}
+        <section class="ai-advertorial-section-{{ ai_gen_id }}">
+          {% if block.settings.section_2_heading != blank %}
+            <h2 class="ai-advertorial-subheading-{{ ai_gen_id }}">
+              {{ block.settings.section_2_heading }}
+            </h2>
+          {% endif %}
+
+          {% if block.settings.section_2_text != blank %}
+            <div class="ai-advertorial-text-{{ ai_gen_id }}">
+              {{ block.settings.section_2_text }}
+            </div>
+          {% endif %}
+        </section>
+      {% endif %}
+
+      {% if block.settings.show_image_block %}
+        <figure class="ai-advertorial-image-block-{{ ai_gen_id }}">
+          <div class="ai-advertorial-image-block-wrapper-{{ ai_gen_id }}">
+            {% if block.settings.image_block != blank %}
+              <img
+                src="{{ block.settings.image_block | image_url: width: 1200 }}"
+                alt="{{ block.settings.image_block.alt | escape }}"
+                class="ai-advertorial-image-block-img-{{ ai_gen_id }}"
+                loading="lazy"
+                width="{{ block.settings.image_block.width }}"
+                height="{{ block.settings.image_block.height }}"
+              >
+            {% else %}
+              {{ 'image' | placeholder_svg_tag }}
+            {% endif %}
+          </div>
+
+          {% if block.settings.image_block_caption != blank %}
+            <figcaption class="ai-advertorial-caption-{{ ai_gen_id }}">
+              {{ block.settings.image_block_caption }}
+            </figcaption>
+          {% endif %}
+        </figure>
+      {% endif %}
+
+      {% if block.settings.show_section_3 %}
+        <section class="ai-advertorial-section-{{ ai_gen_id }}">
+          {% if block.settings.section_3_heading != blank %}
+            <h2 class="ai-advertorial-subheading-{{ ai_gen_id }}">
+              {{ block.settings.section_3_heading }}
+            </h2>
+          {% endif %}
+
+          {% if block.settings.section_3_text != blank %}
+            <div class="ai-advertorial-text-{{ ai_gen_id }}">
+              {{ block.settings.section_3_text }}
+            </div>
+          {% endif %}
+        </section>
+      {% endif %}
+    </div>
+
+    {% if block.settings.show_cta %}
+      <div class="ai-advertorial-cta-box-{{ ai_gen_id }}">
+        {% if block.settings.cta_heading != blank %}
+          <h3 class="ai-advertorial-cta-heading-{{ ai_gen_id }}">
+            {{ block.settings.cta_heading }}
+          </h3>
+        {% endif %}
+
+        {% if block.settings.cta_text != blank %}
+          <div class="ai-advertorial-cta-text-{{ ai_gen_id }}">
+            {{ block.settings.cta_text }}
+          </div>
+        {% endif %}
+
+        <a
+          href="{{ block.settings.cta_link }}"
+          class="ai-advertorial-button-{{ ai_gen_id }}"
+        >
+          {{ block.settings.cta_button_text }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Blue light advertorial",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Article header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show header",
+      "default": true
+    },
+    {
+      "type": "inline_richtext",
+      "id": "category",
+      "label": "Category",
+      "default": "Eye Health & Wellness"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "headline",
+      "label": "Headline",
+      "default": "The Hidden Danger of Blue Light: What Every Screen User Needs to Know"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "byline",
+      "label": "Byline",
+      "default": "By Dr. Sarah Mitchell, Optometrist"
+    },
+    {
+      "type": "text",
+      "id": "date",
+      "label": "Date",
+      "default": "January 5, 2026"
+    },
+    {
+      "type": "header",
+      "content": "Hero image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_hero",
+      "label": "Show hero image",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Image"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "hero_caption",
+      "label": "Caption"
+    },
+    {
+      "type": "header",
+      "content": "Introduction"
+    },
+    {
+      "type": "richtext",
+      "id": "intro_text",
+      "label": "Intro paragraph",
+      "default": "<p>In our increasingly digital world, the average person spends over 7 hours a day staring at screens. But what many don't realize is that this constant exposure to blue light could be silently damaging their eyes and disrupting their sleep patterns. Here's everything you need to know about protecting your vision in the digital age.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Section 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_section_1",
+      "label": "Show section 1",
+      "default": true
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_1_heading",
+      "label": "Heading",
+      "default": "What Exactly Is Blue Light?"
+    },
+    {
+      "type": "richtext",
+      "id": "section_1_text",
+      "label": "Text",
+      "default": "<p>Blue light is a high-energy visible (HEV) light with wavelengths between 380 and 500 nanometers. While the sun is the primary source of blue light, our digital devices—smartphones, computers, tablets, and LED lights—emit significant amounts of it.</p><p>Unlike other types of light, blue light has a shorter wavelength and higher energy, which means it scatters more easily and is harder for our eyes to focus on. This is why extended screen time often leads to digital eye strain, characterized by dry eyes, headaches, and blurred vision.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Pull quote"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pullquote",
+      "label": "Show pull quote",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "pullquote_text",
+      "label": "Quote text",
+      "default": "<p>Studies show that prolonged blue light exposure can contribute to digital eye strain and may disrupt your natural sleep-wake cycle.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Section 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_section_2",
+      "label": "Show section 2",
+      "default": true
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_2_heading",
+      "label": "Heading",
+      "default": "The Real Impact on Your Health"
+    },
+    {
+      "type": "richtext",
+      "id": "section_2_text",
+      "label": "Text",
+      "default": "<p>The effects of blue light exposure go beyond simple eye strain. Research has shown that blue light can suppress the production of melatonin, the hormone responsible for regulating sleep. This is why using devices before bed can make it harder to fall asleep and reduce sleep quality.</p><p>Additionally, chronic exposure to blue light may contribute to long-term retinal damage. While more research is needed, some studies suggest a potential link between excessive blue light exposure and age-related macular degeneration.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Image block"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image_block",
+      "label": "Show image block",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image_block",
+      "label": "Image"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "image_block_caption",
+      "label": "Caption"
+    },
+    {
+      "type": "header",
+      "content": "Section 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_section_3",
+      "label": "Show section 3",
+      "default": true
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_3_heading",
+      "label": "Heading",
+      "default": "The Solution: Blue Light Protection"
+    },
+    {
+      "type": "richtext",
+      "id": "section_3_text",
+      "label": "Text",
+      "default": "<p>Fortunately, protecting your eyes from blue light is easier than you might think. Blue light filtering glasses feature specialized lenses that block or absorb blue light wavelengths, reducing eye strain and helping maintain your natural sleep rhythm.</p><p>Modern blue light blocking technology has advanced significantly. Today's lenses can filter up to 90% of harmful blue light while maintaining true color perception, so you won't experience the yellow tint associated with older blue light glasses.</p><p>Whether you're working from home, gaming, or simply scrolling through social media, blue light protection has become an essential part of digital wellness. The best part? You don't need a prescription to start protecting your eyes today.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show call to action",
+      "default": true
+    },
+    {
+      "type": "inline_richtext",
+      "id": "cta_heading",
+      "label": "Heading",
+      "default": "Protect Your Eyes Today"
+    },
+    {
+      "type": "richtext",
+      "id": "cta_text",
+      "label": "Text",
+      "default": "<p>Discover our collection of premium blue light blocking glasses, designed for style and protection.</p>"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "cta_button_text",
+      "label": "Button text",
+      "default": "Shop Blue Light Glasses"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 800,
+      "max": 1400,
+      "step": 100,
+      "unit": "px",
+      "default": 1000
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding on mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding on mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "label": "Header bottom spacing",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_spacing",
+      "label": "Section spacing",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "subheading_spacing",
+      "label": "Subheading bottom spacing",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "headline_spacing",
+      "label": "Headline bottom spacing",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "quote_spacing",
+      "label": "Quote vertical spacing",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "image_block_spacing",
+      "label": "Image block vertical spacing",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "category_color",
+      "label": "Category",
+      "default": "#da9100"
+    },
+    {
+      "type": "color",
+      "id": "headline_color",
+      "label": "Headline",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "byline_color",
+      "label": "Byline",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "date_color",
+      "label": "Date",
+      "default": "#999999"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "intro_color",
+      "label": "Intro text",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "dropcap_color",
+      "label": "Drop cap",
+      "default": "#da9100"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Body text",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "caption_color",
+      "label": "Caption",
+      "default": "#999999"
+    },
+    {
+      "type": "color",
+      "id": "quote_color",
+      "label": "Quote text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "quote_border_color",
+      "label": "Quote border",
+      "default": "#da9100"
+    },
+    {
+      "type": "color",
+      "id": "cta_box_background",
+      "label": "CTA box background",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "cta_box_border_color",
+      "label": "CTA box border",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "cta_heading_color",
+      "label": "CTA heading",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA text",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "category_size",
+      "label": "Category size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "category_weight",
+      "label": "Category weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "headline_size_desktop",
+      "label": "Headline size on desktop",
+      "min": 28,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "headline_size_tablet",
+      "label": "Headline size on tablet",
+      "min": 24,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "headline_size_mobile",
+      "label": "Headline size on mobile",
+      "min": 20,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "select",
+      "id": "headline_weight",
+      "label": "Headline weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "byline_size",
+      "label": "Byline size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "date_size",
+      "label": "Date size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "intro_size",
+      "label": "Intro text size",
+      "min": 16,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 19
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Subheading size",
+      "min": 18,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "select",
+      "id": "subheading_weight",
+      "label": "Subheading weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "label": "Body text size",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "caption_size",
+      "label": "Caption size",
+      "min": 11,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "quote_size",
+      "label": "Quote size",
+      "min": 16,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "quote_weight",
+      "label": "Quote weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "range",
+      "id": "cta_heading_size",
+      "label": "CTA heading size",
+      "min": 18,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "cta_heading_weight",
+      "label": "CTA heading weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "cta_text_size",
+      "label": "CTA text size",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Style details"
+    },
+    {
+      "type": "range",
+      "id": "divider_width",
+      "label": "Divider width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Image corner radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "quote_border_width",
+      "label": "Quote border width",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "quote_padding",
+      "label": "Quote left padding",
+      "min": 15,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "cta_box_padding",
+      "label": "CTA box padding",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "cta_box_radius",
+      "label": "CTA box corner radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "cta_box_border_width",
+      "label": "CTA box border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Border",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_border_color",
+      "label": "Hover border",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Font size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "button_font_weight",
+      "label": "Font weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "label": "Vertical padding",
+      "min": 10,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 20,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blue light advertorial"
+    }
+  ]
+}
+{% endschema %}

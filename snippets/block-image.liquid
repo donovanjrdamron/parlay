@@ -1,0 +1,40 @@
+{% comment %}
+  Block Image Snippet
+  Usage: {% render 'block-image', block: block, section_id: section.id %}
+{% endcomment %}
+
+{% if block.settings.image %}
+  <div class="block-image block-{{ block.id }}" {{ block.shopify_attributes }}>
+    <div class="image-wrapper">
+      <img src="{{ block.settings.image | img_url: 'master' }}"
+           alt="{{ block.settings.image.alt | escape }}"
+           loading="lazy"
+           width="{{ block.settings.image.width }}"
+           height="{{ block.settings.image.height }}">
+    </div>
+  </div>
+
+  <style>
+    .block-{{ block.id }} {
+      margin-top: {{ block.settings.image_margin_top }}px;
+      margin-bottom: {{ block.settings.image_margin_bottom }}px;
+    }
+
+    .block-{{ block.id }} .image-wrapper {
+      width: {% if block.settings.image_width_desktop %}{{ block.settings.image_width_desktop }}%{% else %}100%{% endif %};
+    }
+
+    .block-{{ block.id }} img {
+      border-radius: {{ block.settings.image_border_radius }}px;
+      {% if block.settings.image_border_width > 0 %}
+        border: {{ block.settings.image_border_width }}px solid {{ block.settings.image_border_color }};
+      {% endif %}
+    }
+
+    @media screen and (max-width: 749px) {
+      .block-{{ block.id }} .image-wrapper {
+        width: 100%;
+      }
+    }
+  </style>
+{% endif %}

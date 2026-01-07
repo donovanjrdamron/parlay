@@ -1,0 +1,1240 @@
+
+{%- if section.settings.hide_header_footer -%}
+<style>
+    /* Hide header and footer when toggle is enabled */
+    body:has(.section-{{ section.id }}) header,
+    body:has(.section-{{ section.id }}) .shopify-section-header,
+    body:has(.section-{{ section.id }}) footer,
+    body:has(.section-{{ section.id }}) .shopify-section-footer {
+      display: none !important;
+    }
+</style>
+{%- endif -%}
+
+<style>
+    .section-{{ section.id }} {
+      background-color: {% if section.settings.use_theme_colors %}{{ settings.section_background_color }}{% else %}{{ section.settings.section_background_color }}{% endif %};
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+    
+    .section-{{ section.id }} .eelist-container {
+      max-width: 768px;
+      margin: 0 auto;
+      padding-left: {{ section.settings.container_padding_horizontal }}px;
+      padding-right: {{ section.settings.container_padding_horizontal }}px;
+    }
+    
+    .section-{{ section.id }} .eelist-listicle-header {
+      margin-bottom: {{ section.settings.header_margin_bottom }}px;
+    }
+    
+    .section-{{ section.id }} .eelist-listicle-title {
+      font-size: {{ section.settings.title_size }}px;
+      font-weight: {{ section.settings.title_font_weight }};
+      line-height: {{ section.settings.title_line_height }};
+      letter-spacing: var(--letter-spacing-heading);
+      color: {% if section.settings.use_theme_colors %}{{ settings.body_color }}{% else %}{{ section.settings.title_color }}{% endif %};
+      text-align: {{ section.settings.title_alignment }};
+      margin: {{ section.settings.title_margin_top }}px 0 {{ section.settings.title_margin_bottom }}px 0;
+    }
+    
+    .section-{{ section.id }} .eelist-author-info {
+      display: flex;
+      align-items: center;
+      gap: {{ section.settings.author_gap }}px;
+      margin-bottom: {{ section.settings.author_margin_bottom }}px;
+      justify-content: {{ section.settings.author_alignment }};
+    }
+    
+    .section-{{ section.id }} .eelist-author-avatar {
+      width: {{ section.settings.avatar_size }}px;
+      height: {{ section.settings.avatar_size }}px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    
+    .section-{{ section.id }} .eelist-author-details {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    
+    .section-{{ section.id }} .eelist-author-name {
+      font-size: {{ section.settings.author_name_size }}px;
+      font-weight: {% if section.settings.author_name_force_bold %}700 !important{% else %}{{ section.settings.author_name_font_weight }} !important{% endif %};
+      color: {% if section.settings.use_theme_colors %}{{ settings.body_color }}{% else %}{{ section.settings.author_name_color }}{% endif %};
+      letter-spacing: var(--letter-spacing-body);
+      margin: 0;
+    }
+    
+    .section-{{ section.id }} .eelist-author-date {
+      font-size: {{ section.settings.author_date_size }}px;
+      font-weight: {{ section.settings.author_date_font_weight }};
+      color: {% if section.settings.use_theme_colors %}{{ settings.body_color | color_modify: 'alpha', 0.7 }}{% else %}{{ section.settings.author_date_color }}{% endif %};
+      letter-spacing: var(--letter-spacing-body);
+      margin: 0;
+    }
+    
+    .section-{{ section.id }} .eelist-summary-section {
+      padding-bottom: {{ section.settings.summary_padding_bottom }}px;
+      border-bottom: 1px solid {% if section.settings.use_theme_colors %}{{ settings.body_color | color_modify: 'alpha', 0.2 }}{% else %}{{ section.settings.divider_color }}{% endif %};
+    }
+    
+    .section-{{ section.id }} .eelist-summary-text {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: #333333;
+      letter-spacing: var(--letter-spacing-body);
+      margin: 0;
+    }
+    
+    .section-{{ section.id }} .eelist-summary-text a {
+      color: #007BFF;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+    
+    .section-{{ section.id }} .eelist-summary-text a:hover {
+      color: #0056B3;
+      text-decoration: none;
+    }
+    
+    .section-{{ section.id }} .eelist-listicle-content {
+      display: flex;
+      flex-direction: column;
+      gap: {{ section.settings.content_gap }}px;
+    }
+    
+    .section-{{ section.id }} .eelist-listicle-item {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: {{ section.settings.item_margin_top }}px;
+      margin-bottom: {{ section.settings.item_margin_bottom }}px;
+    }
+    
+    .section-{{ section.id }} .eelist-listicle-item-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .section-{{ section.id }} .eelist-listicle-item-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    
+    
+    .section-{{ section.id }} .eelist-item-title {
+      font-weight: 700 !important;
+      letter-spacing: {% if section.settings.item_title_letter_spacing == 'heading' %}var(--letter-spacing-heading){% else %}var(--letter-spacing-body){% endif %};
+      margin: 0;
+    }
+    
+    /* Bold text styling for rich text content */
+    .section-{{ section.id }} strong,
+    .section-{{ section.id }} b {
+      font-weight: 700 !important;
+    }
+    
+    .section-{{ section.id }} .eelist-item-content {
+      letter-spacing: var(--letter-spacing-body);
+      margin: 0;
+    }
+    
+    .section-{{ section.id }} .eelist-item-highlight {
+      letter-spacing: var(--letter-spacing-body);
+      display: inline-block;
+    }
+    
+    .section-{{ section.id }} .eelist-item-image {
+      width: 100%;
+      max-width: 300px;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+    
+    @media screen and (max-width: {{ section.settings.mobile_breakpoint }}px) {
+      .section-{{ section.id }} .eelist-container {
+        padding-left: {{ section.settings.mobile_container_padding }}px;
+        padding-right: {{ section.settings.mobile_container_padding }}px;
+      }
+      
+      .section-{{ section.id }} .eelist-listicle-title {
+        font-size: {{ section.settings.mobile_title_size }}px;
+      }
+      
+      .section-{{ section.id }} .eelist-author-name {
+        font-size: {{ section.settings.mobile_author_name_size }}px;
+      }
+      
+      .section-{{ section.id }} .eelist-author-date {
+        font-size: {{ section.settings.mobile_author_date_size }}px;
+      }
+      
+    
+      
+      .section-{{ section.id }} .eelist-author-info {
+        justify-content: flex-start;
+      }
+      
+      .section-{{ section.id }} .eelist-listicle-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+      }
+      
+      .section-{{ section.id }} .eelist-listicle-item-image {
+        flex: none;
+        justify-content: flex-start;
+        width: 100%;
+      }
+      
+      .section-{{ section.id }} .eelist-item-image {
+        width: 100%;
+        max-width: none;
+        aspect-ratio: auto;
+      }
+      
+      .section-{{ section.id }} .eelist-listicle-item-content {
+        flex: none;
+        display: contents;
+      }
+      
+      .section-{{ section.id }} .eelist-item-title {
+        order: 1;
+      }
+      
+      .section-{{ section.id }} .eelist-listicle-item-image {
+        order: 2;
+      }
+      
+      .section-{{ section.id }} .eelist-item-content {
+        order: 3;
+      }
+      
+      .section-{{ section.id }} .eelist-item-highlight {
+        order: 4;
+      }
+    }
+    
+    /* Countdown Header Styles */
+    .section-{{ section.id }} .eelist-countdown-header {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .eelist-countdown-banner-{{ section.id }} {
+      background: var(--countdown-bg-color) !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: var(--countdown-gap);
+      padding: var(--countdown-padding-v) var(--countdown-padding-h);
+      font-weight: 700 !important;
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: var(--letter-spacing-body);
+    }
+    
+    .eelist-countdown-banner-{{ section.id }} .eelist-countdown-banner-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+      text-align: center;
+      gap: 4px;
+    }
+    
+    div.eelist-countdown-banner-{{ section.id }} .eelist-countdown-banner-text .eelist-countdown-banner-title {
+      font-size: var(--countdown-title-size) !important;
+      font-weight: var(--font-weight-bold) !important;
+      color: var(--countdown-title-color) !important;
+      letter-spacing: var(--letter-spacing-body);
+    }
+    
+    div.eelist-countdown-banner-{{ section.id }} .eelist-countdown-banner-text .eelist-countdown-banner-subtitle {
+      font-size: var(--countdown-subtitle-size) !important;
+      font-weight: var(--font-weight-regular) !important;
+      opacity: 0.95;
+      color: var(--countdown-subtitle-color) !important;
+      letter-spacing: var(--letter-spacing-body);
+    }
+    
+    .eelist-countdown-banner-{{ section.id }} .eelist-countdown-timer {
+      background: var(--countdown-timer-bg) !important;
+      border-radius: var(--countdown-timer-radius);
+      padding: var(--countdown-timer-padding-v) var(--countdown-timer-padding-h);
+      display: flex;
+      align-items: center;
+      gap: 0px;
+    }
+    
+    .eelist-countdown-banner-{{ section.id }} .eelist-countdown-timer-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: var(--countdown-unit-width);
+    }
+    
+    .eelist-countdown-banner-{{ section.id }} .eelist-countdown-timer-value {
+      font-size: var(--countdown-value-size) !important;
+      line-height: 1;
+      font-weight: var(--font-weight-semibold) !important;
+      color: var(--countdown-value-color) !important;
+      letter-spacing: var(--letter-spacing-body);
+    }
+    
+    .eelist-countdown-banner-{{ section.id }} .eelist-countdown-timer-label {
+      font-size: var(--countdown-label-size) !important;
+      line-height: 1.1;
+      font-weight: 700 !important;
+      opacity: 0.9;
+      margin-top: 3px;
+      color: var(--countdown-label-color) !important;
+      letter-spacing: var(--letter-spacing-body);
+    }
+    
+    .eelist-countdown-banner-{{ section.id }} .eelist-countdown-timer-separator {
+      font-size: var(--countdown-value-size) !important;
+      font-weight: 800 !important;
+      line-height: 1;
+      color: var(--countdown-separator-color) !important;
+      letter-spacing: var(--letter-spacing-body);
+    }
+    
+    @media (max-width: 768px) {
+      .eelist-countdown-banner-{{ section.id }} {
+        gap: var(--countdown-mobile-gap);
+        padding: var(--countdown-mobile-padding-v) var(--countdown-mobile-padding-h);
+      }
+      
+      div.eelist-countdown-banner-{{ section.id }} .eelist-countdown-banner-text .eelist-countdown-banner-title {
+        font-size: var(--countdown-mobile-title-size) !important;
+      }
+      
+      div.eelist-countdown-banner-{{ section.id }} .eelist-countdown-banner-text .eelist-countdown-banner-subtitle {
+        font-size: var(--countdown-mobile-subtitle-size) !important;
+      }
+      
+      .eelist-countdown-banner-{{ section.id }} .eelist-countdown-timer {
+        gap: 0px;
+        padding: var(--countdown-mobile-timer-padding-v) var(--countdown-mobile-timer-padding-h);
+      }
+      
+      .eelist-countdown-banner-{{ section.id }} .eelist-countdown-timer-unit {
+        min-width: var(--countdown-mobile-unit-width);
+      }
+      
+      .eelist-countdown-banner-{{ section.id }} .eelist-countdown-timer-value {
+        font-size: var(--countdown-mobile-value-size) !important;
+      }
+      
+      .eelist-countdown-banner-{{ section.id }} .eelist-countdown-timer-label {
+        font-size: var(--countdown-mobile-label-size) !important;
+      }
+      
+      .eelist-countdown-banner-{{ section.id }} .eelist-countdown-timer-separator {
+        font-size: var(--countdown-mobile-value-size) !important;
+      }
+    }
+    </style>
+    
+    <section class="section-{{ section.id }}">
+      {%- comment -%} Render countdown banner first if it exists {%- endcomment -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'countdown_banner' -%}
+          <div class="eelist-countdown-header" {{ block.shopify_attributes }} style="
+            --countdown-bg-color: {{ block.settings.background_color }};
+            --countdown-gap: {{ block.settings.gap }}px;
+            --countdown-padding-v: {{ block.settings.padding_vertical }}px;
+            --countdown-padding-h: {{ block.settings.padding_horizontal }}px;
+            --countdown-title-size: {{ block.settings.title_size }}px;
+            --countdown-subtitle-size: {{ block.settings.subtitle_size }}px;
+            --countdown-title-color: {{ block.settings.title_color }};
+            --countdown-subtitle-color: {{ block.settings.subtitle_color }};
+            --countdown-timer-bg: {{ block.settings.timer_background_color }};
+            --countdown-timer-radius: {{ block.settings.timer_border_radius }}px;
+            --countdown-timer-padding-v: {{ block.settings.timer_padding_vertical }}px;
+            --countdown-timer-padding-h: {{ block.settings.timer_padding_horizontal }}px;
+            --countdown-unit-width: {{ block.settings.unit_min_width }}px;
+            --countdown-value-size: {{ block.settings.timer_value_size }}px;
+            --countdown-label-size: {{ block.settings.timer_label_size }}px;
+            --countdown-value-color: {{ block.settings.timer_value_color }};
+            --countdown-label-color: {{ block.settings.timer_label_color }};
+            --countdown-separator-color: {{ block.settings.timer_separator_color }};
+            --countdown-mobile-gap: {{ block.settings.mobile_gap }}px;
+            --countdown-mobile-padding-v: {{ block.settings.mobile_padding_vertical }}px;
+            --countdown-mobile-padding-h: {{ block.settings.mobile_padding_horizontal }}px;
+            --countdown-mobile-title-size: {{ block.settings.mobile_title_size }}px;
+            --countdown-mobile-subtitle-size: {{ block.settings.mobile_subtitle_size }}px;
+            --countdown-mobile-timer-padding-v: {{ block.settings.mobile_timer_padding_vertical }}px;
+            --countdown-mobile-timer-padding-h: {{ block.settings.mobile_timer_padding_horizontal }}px;
+            --countdown-mobile-unit-width: {{ block.settings.mobile_unit_min_width }}px;
+            --countdown-mobile-value-size: {{ block.settings.mobile_timer_value_size }}px;
+            --countdown-mobile-label-size: {{ block.settings.mobile_timer_label_size }}px;
+          ">
+            <div class="eelist-countdown-banner-{{ section.id }}">
+              <div class="eelist-countdown-banner-text">
+                <div class="eelist-countdown-banner-title">{{ block.settings.title }}</div>
+                <div class="eelist-countdown-banner-subtitle">{{ block.settings.subtitle }}</div>
+              </div>
+    
+              <div id="countdown-{{ block.id }}" class="eelist-countdown-timer" 
+                   {% if block.settings.countdown_type == 'duration' %}
+                     data-hours="{{ block.settings.countdown_hours }}" 
+                     data-minutes="{{ block.settings.countdown_minutes }}" 
+                     data-seconds="{{ block.settings.countdown_seconds }}"
+                   {% else %}
+                     data-deadline="{{ block.settings.countdown_deadline }}"
+                   {% endif %}>
+                <div class="eelist-countdown-timer-unit">
+                  <div class="eelist-countdown-timer-value" id="hh-{{ block.id }}">{{ block.settings.countdown_hours | default: 0 | prepend: '0' | slice: -2, 2 }}</div>
+                  <div class="eelist-countdown-timer-label">{{ block.settings.hours_label }}</div>
+                </div>
+                <div class="eelist-countdown-timer-separator">:</div>
+                <div class="eelist-countdown-timer-unit">
+                  <div class="eelist-countdown-timer-value" id="mm-{{ block.id }}">{{ block.settings.countdown_minutes | default: 0 | prepend: '0' | slice: -2, 2 }}</div>
+                  <div class="eelist-countdown-timer-label">{{ block.settings.minutes_label }}</div>
+                </div>
+                <div class="eelist-countdown-timer-separator">:</div>
+                <div class="eelist-countdown-timer-unit">
+                  <div class="eelist-countdown-timer-value" id="ss-{{ block.id }}">{{ block.settings.countdown_seconds | default: 0 | prepend: '0' | slice: -2, 2 }}</div>
+                  <div class="eelist-countdown-timer-label">{{ block.settings.seconds_label }}</div>
+                </div>
+              </div>
+            </div>
+    
+            <script>
+            (function(){
+              const el = document.getElementById('countdown-{{ block.id }}');
+              const hhEl = document.getElementById('hh-{{ block.id }}');
+              const mmEl = document.getElementById('mm-{{ block.id }}');
+              const ssEl = document.getElementById('ss-{{ block.id }}');
+    
+              // If data-deadline is present, use that exact moment; otherwise start from given H/M/S duration.
+              const deadlineAttr = el.getAttribute('data-deadline');
+              let endTime;
+    
+              if (deadlineAttr) {
+                // Count down to a specific timestamp
+                endTime = new Date(deadlineAttr).getTime();
+              } else {
+                // Count down from a duration (H/M/S)
+                const H = parseInt(el.getAttribute('data-hours')||'0',10);
+                const M = parseInt(el.getAttribute('data-minutes')||'0',10);
+                const S = parseInt(el.getAttribute('data-seconds')||'0',10);
+                const durationMs = ((H*60 + M)*60 + S)*1000;
+                endTime = Date.now() + durationMs;
+              }
+    
+              function pad(n){return String(n).padStart(2,'0');}
+    
+              function tick(){
+                const now = Date.now();
+                let diff = Math.max(0, endTime - now);
+    
+                const totalSeconds = Math.floor(diff/1000);
+                const hours = Math.floor(totalSeconds/3600);
+                const minutes = Math.floor((totalSeconds%3600)/60);
+                const seconds = totalSeconds%60;
+    
+                hhEl.textContent = pad(hours);
+                mmEl.textContent = pad(minutes);
+                ssEl.textContent = pad(seconds);
+    
+                if (diff <= 0) {
+                  clearInterval(timerId);
+                }
+              }
+    
+              tick();
+              const timerId = setInterval(tick, 1000);
+            })();
+            </script>
+          </div>
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+      
+      <div class="eelist-container">
+        
+        {%- if section.blocks.size > 0 -%}
+          <div class="eelist-listicle-content">
+            {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when 'header' -%}
+                  <div class="eelist-listicle-header eelist-listicle-header-{{ block.id }}" {{ block.shopify_attributes }}>
+                    {%- if block.settings.title != blank -%}
+                      <h1 class="eelist-listicle-title">{{ block.settings.title }}</h1>
+                    {%- endif -%}
+                    
+                    {%- if block.settings.show_author_info -%}
+                      <div class="eelist-author-info">
+                        {%- if block.settings.author_avatar != blank -%}
+                          <img class="eelist-author-avatar" src="{{ block.settings.author_avatar | image_url: width: block.settings.avatar_size }}" alt="{{ block.settings.author_name | escape }}" width="{{ block.settings.avatar_size }}" height="{{ block.settings.avatar_size }}" loading="lazy">
+                        {%- endif -%}
+                        <div class="eelist-author-details">
+                          {%- if block.settings.author_name != blank -%}
+                            <p class="eelist-author-name">By {{ block.settings.author_name }}</p>
+                          {%- endif -%}
+                          {%- if block.settings.author_date != blank -%}
+                            <p class="eelist-author-date">{{ block.settings.author_date }}</p>
+                          {%- endif -%}
+                        </div>
+                      </div>
+                    {%- endif -%}
+                  </div>
+                  
+                  <style>
+                    .eelist-listicle-header-{{ block.id }} {
+                      margin-top: {{ block.settings.header_margin_top }}px;
+                      margin-bottom: {{ block.settings.header_margin_bottom }}px;
+                    }
+                    
+                    .eelist-listicle-header-{{ block.id }} .eelist-listicle-title {
+                      font-size: {{ block.settings.title_size }}px;
+                      font-weight: {{ block.settings.title_font_weight }};
+                      line-height: {{ block.settings.title_line_height }};
+                      color: {% if section.settings.use_theme_colors %}{{ settings.body_color }}{% else %}{{ block.settings.title_color }}{% endif %};
+                      text-align: {{ block.settings.title_alignment }};
+                      margin: {{ block.settings.title_margin_top }}px 0 {{ block.settings.title_margin_bottom }}px 0;
+                    }
+                    
+                    .eelist-listicle-header-{{ block.id }} .eelist-author-info {
+                      display: flex;
+                      align-items: center;
+                      gap: {{ block.settings.author_gap }}px;
+                      margin-bottom: {{ block.settings.author_margin_bottom }}px;
+                      justify-content: {{ block.settings.author_alignment }};
+                    }
+                    
+                    .eelist-listicle-header-{{ block.id }} .eelist-author-avatar {
+                      width: {{ block.settings.avatar_size }}px;
+                      height: {{ block.settings.avatar_size }}px;
+                      border-radius: 50%;
+                      object-fit: cover;
+                    }
+                    
+                    .eelist-listicle-header-{{ block.id }} .eelist-author-name {
+                      font-size: {{ block.settings.author_name_size }}px !important;
+                      font-weight: {% if section.settings.author_name_force_bold %}700 !important{% else %}{{ block.settings.author_name_font_weight }} !important{% endif %};
+                      color: {% if section.settings.use_theme_colors %}{{ settings.body_color }}{% else %}{{ block.settings.author_name_color }}{% endif %} !important;
+                      letter-spacing: var(--letter-spacing-body) !important;
+                      margin: 0 !important;
+                    }
+                    
+                    .eelist-listicle-header-{{ block.id }} .eelist-author-date {
+                      font-size: {{ block.settings.author_date_size }}px;
+                      font-weight: {{ block.settings.author_date_font_weight }};
+                      color: {% if section.settings.use_theme_colors %}{{ settings.body_color | color_modify: 'alpha', 0.7 }}{% else %}{{ block.settings.author_date_color }}{% endif %};
+                      letter-spacing: var(--letter-spacing-body);
+                      margin: 0;
+                    }
+                    
+                    @media (max-width: 768px) {
+                      .eelist-listicle-header-{{ block.id }} .eelist-listicle-title {
+                        font-size: {{ block.settings.mobile_title_size }}px;
+                      }
+                      
+                      .eelist-listicle-header-{{ block.id }} .eelist-author-name {
+                        font-size: {{ block.settings.mobile_author_name_size }}px;
+                      }
+                      
+                      .eelist-listicle-header-{{ block.id }} .eelist-author-date {
+                        font-size: {{ block.settings.mobile_author_date_size }}px;
+                      }
+                      
+                      .eelist-listicle-header-{{ block.id }} .eelist-author-info {
+                        justify-content: flex-start;
+                      }
+                    }
+                  </style>
+                {%- when 'countdown_banner' -%}
+                  {%- comment -%} Skip countdown banner as it's already rendered at the top {%- endcomment -%}
+                {%- when 'summary' -%}
+                  <div class="eelist-summary-section eelist-summary-{{ block.id }}" {{ block.shopify_attributes }}>
+                    <div class="eelist-summary-text">{{ block.settings.summary_text }}</div>
+                  </div>
+                  
+                  <style>
+                    .summary-{{ block.id }} {
+                      margin-top: {{ block.settings.summary_margin_top }}px;
+                      margin-bottom: {{ block.settings.summary_margin_bottom }}px;
+                    }
+                  </style>
+    
+                {%- when 'limited_time_sale' -%}
+                  <div {{ block.shopify_attributes }}>
+                    {% render 'limited-time-sale', block: block %}
+                  </div>
+                {%- when 'sticky_add_to_cart' -%}
+                  <div {{ block.shopify_attributes }}>
+                    {% render 'listicle-sticky-button', block: block %}
+                  </div>
+                {%- when 'advertorial_footer' -%}
+                  {%- comment -%} Skip advertorial footer as it's rendered at the bottom {%- endcomment -%}
+                {%- when 'listicle_item' -%}
+                  <div class="eelist-listicle-item eelist-listicle-item-{{ block.id }}{% if block.settings.enable_container %} has-container{% endif %}" {{ block.shopify_attributes }}>
+                    {%- unless block.settings.hide_image -%}
+                      <div class="eelist-listicle-item-image">
+                        {%- if block.settings.image != blank -%}
+                          <img class="eelist-item-image"
+                               src="{{ block.settings.image | image_url: width: 800 }}"
+                               srcset="{{ block.settings.image | image_url: width: 300 }} 300w,
+                                       {{ block.settings.image | image_url: width: 400 }} 400w,
+                                       {{ block.settings.image | image_url: width: 600 }} 600w,
+                                       {{ block.settings.image | image_url: width: 800 }} 800w,
+                                       {{ block.settings.image | image_url: width: 1200 }} 1200w,
+                                       {{ block.settings.image | image_url: width: 1600 }} 1600w"
+                               sizes="(max-width: 480px) 100vw, (max-width: 768px) 90vw, (max-width: 1024px) 45vw, (max-width: 1440px) 300px, 400px"
+                               alt="{{ block.settings.title | escape }}"
+                               width="300"
+                               height="300"
+                               loading="lazy"
+                               decoding="async">
+                        {%- else -%}
+                          <img class="eelist-item-image eelist-item-image-placeholder"
+                               src="https://placehold.co/400x400/f0f0f0/cccccc?text=Item+Image"
+                               alt="Placeholder for {{ block.settings.title | escape }}"
+                               width="300"
+                               height="300"
+                               loading="lazy">
+                        {%- endif -%}
+                      </div>
+                    {%- endunless -%}
+                    <div class="eelist-listicle-item-content">
+                      {%- if block.settings.title != blank -%}
+                        <h3 class="eelist-item-title">{{ block.settings.title }}</h3>
+                      {%- endif -%}
+                      {%- if block.settings.content != blank -%}
+                        <div class="eelist-item-content">{{ block.settings.content }}</div>
+                      {%- endif -%}
+                      {%- if block.settings.highlight_text != blank -%}
+                        <div class="eelist-item-highlight">{{ block.settings.highlight_text }}</div>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                  
+                  <style>
+                    .eelist-listicle-item-{{ block.id }} {
+                      gap: {{ block.settings.item_gap }}px;
+                      flex-direction: {% if block.settings.image_position == 'right' %}row-reverse{% else %}row{% endif %};
+                    }
+
+                    .eelist-listicle-item-{{ block.id }}.has-container {
+                      padding: {{ block.settings.item_padding }}px;
+                      background-color: {% if section.settings.use_theme_colors %}{{ settings.section_background_color }}{% else %}{{ block.settings.item_background_color }}{% endif %};
+                      border-radius: {{ block.settings.item_border_radius }}px;
+                      {% if block.settings.item_border_width > 0 %}
+                        border: {{ block.settings.item_border_width }}px solid {% if section.settings.use_theme_colors %}{{ settings.body_color | color_modify: 'alpha', 0.1 }}{% else %}{{ block.settings.item_border_color }}{% endif %};
+                      {% endif %}
+                      {% if block.settings.enable_item_shadow %}
+                        box-shadow: {{ block.settings.item_shadow }};
+                      {% endif %}
+                    }
+
+                    .eelist-listicle-item-{{ block.id }} .eelist-listicle-item-image {
+                      width: {{ block.settings.item_image_width }}px;
+                      flex-shrink: 0;
+                    }
+
+                    .eelist-listicle-item-{{ block.id }} .eelist-item-image {
+                      border-radius: {{ block.settings.item_image_border_radius }}px;
+                      margin-bottom: {{ block.settings.item_image_margin_bottom }}px;
+                      width: 100%;
+                      height: auto;
+                      object-fit: cover;
+                      {% if block.settings.image_aspect_ratio == 'square' %}
+                        aspect-ratio: 1 / 1;
+                      {% elsif block.settings.image_aspect_ratio == 'portrait' %}
+                        aspect-ratio: 3 / 4;
+                      {% elsif block.settings.image_aspect_ratio == 'landscape' %}
+                        aspect-ratio: 4 / 3;
+                      {% elsif block.settings.image_aspect_ratio == 'wide' %}
+                        aspect-ratio: 16 / 9;
+                      {% endif %}
+                    }
+                    
+                    .eelist-listicle-item-{{ block.id }} .eelist-item-title {
+                      font-size: {{ section.settings.item_title_size }}px;
+                      line-height: {{ section.settings.item_title_line_height }};
+                      color: {% if section.settings.use_theme_colors %}{{ settings.body_color }}{% else %}{{ section.settings.item_title_color }}{% endif %};
+                      margin: 0 0 {{ section.settings.item_title_margin_bottom }}px 0;
+                      letter-spacing: {% if section.settings.item_title_letter_spacing == 'heading' %}var(--letter-spacing-heading){% else %}var(--letter-spacing-body){% endif %};
+                    }
+                    
+                    .eelist-listicle-item-{{ block.id }} .eelist-item-content {
+                      font-size: {{ section.settings.item_content_size }}px;
+                      font-weight: {{ section.settings.item_content_font_weight }};
+                      line-height: {{ section.settings.item_content_line_height }};
+                      color: {% if section.settings.use_theme_colors %}{{ settings.body_color }}{% else %}{{ section.settings.item_content_color }}{% endif %};
+                    }
+                    
+                    .eelist-listicle-item-{{ block.id }} .eelist-item-highlight {
+                      background-color: {{ block.settings.highlight_background_color }};
+                      color: {{ block.settings.highlight_text_color }};
+                      padding: {{ block.settings.highlight_padding }}px;
+                      border-radius: {{ block.settings.highlight_border_radius }}px;
+                      margin-top: {{ block.settings.highlight_margin_top }}px;
+                    }
+                    
+                    @media (max-width: 768px) {
+                      .eelist-listicle-item-{{ block.id }} {
+                        flex-direction: column;
+                      }
+
+                      .eelist-listicle-item-{{ block.id }} .eelist-listicle-item-image {
+                        width: 100% !important;
+                        {%- liquid
+                          assign mobile_pos = block.settings.mobile_image_position | default: section.settings.default_mobile_image_position
+                        -%}
+                        order: {% if mobile_pos == 'bottom' %}2{% else %}0{% endif %};
+                      }
+
+                      .eelist-listicle-item-{{ block.id }} .eelist-listicle-item-content {
+                        order: 1;
+                      }
+
+                      .eelist-listicle-item-{{ block.id }} .eelist-item-title {
+                        font-size: {{ section.settings.mobile_item_title_size }}px;
+                      }
+
+                      .eelist-listicle-item-{{ block.id }} .eelist-item-content {
+                        font-size: {{ section.settings.mobile_item_content_size }}px;
+                      }
+
+                      .eelist-listicle-item-{{ block.id }} .eelist-item-highlight {
+                        font-size: {{ section.settings.mobile_highlight_font_size }}px;
+                      }
+                    }
+                  </style>
+              {%- endcase -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+      
+      {%- comment -%} Render advertorial footer at the bottom {%- endcomment -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'advertorial_footer' -%}
+          <div {{ block.shopify_attributes }}>
+            {% render 'advertorial-footer', block: block %}
+          </div>
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </section>
+    
+    {% schema %}
+{"name":"Listicle","tag":"section","class":"section","settings": [
+ {"type":"checkbox","id":"hide_header_footer","label":"Hide Header & Footer","default": false,"info":"Hide the site header and footer for this page only (creates a distraction-free landing page experience)"},
+ {"type":"header","content":"Section Layout"},
+ {"type":"range","id":"padding_top","min": 0,"max": 200,"step": 10,"unit":"px","label":"Section Padding Top","default": 0
+ },
+ {"type":"range","id":"padding_bottom","min": 0,"max": 200,"step": 10,"unit":"px","label":"Section Padding Bottom","default": 0
+ },
+ {"type":"header","content":"Theme Integration"},
+ {"type":"checkbox","id":"use_theme_colors","label":"Use Theme Colors","default": false,"info":"Override all custom colors with your theme's color scheme"},
+ {"type":"color","id":"section_background_color","label":"Section Background Color","default":"#ffffff"},
+ {"type":"range","id":"container_padding_horizontal","min": 20,"max": 100,"step": 5,"unit":"px","label":"Container Horizontal Padding","default": 45
+ },
+ {"type":"header","content":"Summary Divider"},
+ {"type":"color","id":"divider_color","label":"Divider Color","default":"#f1f4f5"},
+ {"type":"range","id":"summary_margin_bottom","min": 0,"max": 50,"step": 5,"unit":"px","label":"Summary Margin Bottom","default": 40
+ },
+ {"type":"range","id":"summary_padding_bottom","min": 15,"max": 40,"step": 5,"unit":"px","label":"Summary Padding Bottom","default": 25
+ },
+ {"type":"header","content":"Listicle Items"},
+ {"type":"range","id":"content_gap","min": 20,"max": 60,"step": 5,"unit":"px","label":"Gap Between Items","default": 30
+ },
+ {"type":"range","id":"item_title_size","min": 8,"max": 50,"step": 2,"unit":"px","label":"Item Title Font Size","default": 24
+ },
+ {"type":"range","id":"item_title_line_height","min": 1.1,"max": 1.6,"step": 0.1,"label":"Item Title Line Height","default": 1.2
+ },
+ {"type":"color","id":"item_title_color","label":"Item Title Color","default":"#25282a"},
+ {"type":"range","id":"item_title_margin_bottom","min": 0,"max": 50,"step": 2,"unit":"px","label":"Item Title Margin Bottom","default": 16
+ },
+ {"type":"select","id":"item_title_letter_spacing","label":"Item Title Letter Spacing","options": [
+ {"value":"heading","label":"Heading Spacing"},
+ {"value":"body","label":"Body Spacing"}
+ ],"default":"heading","info":"Choose between heading or body letter-spacing for item titles"},
+ {"type":"range","id":"item_content_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Item Content Font Size","default": 14
+ },
+ {"type":"range","id":"item_content_font_weight","min": 300,"max": 500,"step": 100,"label":"Item Content Font Weight","default": 400
+ },
+ {"type":"range","id":"item_content_line_height","min": 1.4,"max": 2,"step": 0.1,"label":"Item Content Line Height","default": 1.6
+ },
+ {"type":"color","id":"item_content_color","label":"Item Content Color","default":"#25282a"},
+ {"type":"range","id":"item_margin_top","min": 0,"max": 100,"step": 5,"unit":"px","label":"Item Top Margin","default": 30,"info":"Top margin between listicle item blocks"},
+ {"type":"range","id":"item_margin_bottom","min": 0,"max": 100,"step": 5,"unit":"px","label":"Item Bottom Margin","default": 30,"info":"Bottom margin between listicle item blocks"},
+ {"type":"header","content":"Mobile Settings"},
+ {"type":"range","id":"mobile_breakpoint","min": 600,"max": 800,"step": 20,"unit":"px","label":"Mobile Breakpoint","default": 760
+ },
+ {"type":"range","id":"mobile_container_padding","min": 15,"max": 40,"step": 5,"unit":"px","label":"Mobile Container Padding","default": 20
+ },
+ {"type":"header","content":"Mobile Listicle Items"},
+ {"type":"select","id":"default_mobile_image_position","label":"Default Image Position (Mobile)","options": [
+ {"value":"top","label":"Top"},
+ {"value":"bottom","label":"Bottom"}
+ ],"default":"top","info":"Default image position for mobile - can be overridden per item"},
+ {"type":"range","id":"mobile_item_title_size","min": 8,"max": 50,"step": 2,"unit":"px","label":"Mobile Item Title Font Size","default": 24
+ },
+ {"type":"range","id":"mobile_item_content_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Item Content Font Size","default": 15
+ },
+ {"type":"range","id":"mobile_highlight_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Highlight Font Size","default": 14
+ }
+ ],"blocks": [
+ {"type":"header","name":"Header (Title & Author)","settings": [
+ {"type":"header","content":"Title Settings"},
+ {"type":"text","id":"title","label":"Listicle Title","default":"10 Reasons Why EcomElevate Is The Best Shopify Theme For High-Converting Stores"},
+ {"type":"range","id":"title_size","min": 8,"max": 50,"step": 2,"unit":"px","label":"Title Font Size","default": 48
+ },
+ {"type":"range","id":"title_font_weight","min": 400,"max": 900,"step": 100,"label":"Title Font Weight","default": 700
+ },
+ {"type":"range","id":"title_line_height","min": 1,"max": 1.8,"step": 0.1,"label":"Title Line Height","default": 1.2
+ },
+ {"type":"select","id":"title_alignment","label":"Title Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left"},
+ {"type":"color","id":"title_color","label":"Title Color","default":"#25282a"},
+ {"type":"range","id":"title_margin_top","min": 0,"max": 50,"step": 5,"unit":"px","label":"Title Margin Top","default": 0
+ },
+ {"type":"range","id":"title_margin_bottom","min": 0,"max": 50,"step": 5,"unit":"px","label":"Title Margin Bottom","default": 30
+ },
+ {"type":"header","content":"Author Information"},
+ {"type":"checkbox","id":"show_author_info","label":"Show Author Information","default": true
+ },
+ {"type":"image_picker","id":"author_avatar","label":"Author Avatar"},
+ {"type":"text","id":"author_name","label":"Author Name","default":"EcomElevate Team"},
+ {"type":"text","id":"author_date","label":"Date","default":"Last Updated November 2025"},
+ {"type":"range","id":"avatar_size","min": 30,"max": 80,"step": 5,"unit":"px","label":"Avatar Size","default": 50
+ },
+ {"type":"range","id":"author_gap","min": 10,"max": 30,"step": 2,"unit":"px","label":"Gap Between Avatar and Text","default": 16
+ },
+ {"type":"select","id":"author_alignment","label":"Author Info Alignment","options": [
+ {"value":"flex-start","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"flex-end","label":"Right"}
+ ],"default":"flex-start"},
+ {"type":"range","id":"author_name_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Author Name Font Size","default": 16
+ },
+ {"type":"range","id":"author_name_font_weight","min": 400,"max": 700,"step": 100,"label":"Author Name Font Weight","default": 600
+ },
+ {"type":"color","id":"author_name_color","label":"Author Name Color","default":"#25282a"},
+ {"type":"checkbox","id":"author_name_force_bold","label":"Force Bold Author Name","default": true,"info":"Override font weight with 700 !important for stronger emphasis"},
+ {"type":"range","id":"author_date_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Date Font Size","default": 14
+ },
+ {"type":"range","id":"author_date_font_weight","min": 300,"max": 600,"step": 100,"label":"Date Font Weight","default": 400
+ },
+ {"type":"color","id":"author_date_color","label":"Date Color","default":"#25282a"},
+ {"type":"range","id":"author_margin_bottom","min": 0,"max": 50,"step": 5,"unit":"px","label":"Author Section Margin Bottom","default": 25
+ },
+ {"type":"range","id":"header_margin_top","min": 0,"max": 50,"step": 5,"unit":"px","label":"Header Section Margin Top","default": 30
+ },
+ {"type":"range","id":"header_margin_bottom","min": 0,"max": 50,"step": 5,"unit":"px","label":"Header Section Margin Bottom","default": 0
+ },
+ {"type":"header","content":"Mobile Settings"},
+ {"type":"range","id":"mobile_title_size","min": 8,"max": 50,"step": 2,"unit":"px","label":"Mobile Title Font Size","default": 40
+ },
+ {"type":"range","id":"mobile_author_name_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Author Name Font Size","default": 16
+ },
+ {"type":"range","id":"mobile_author_date_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Author Date Font Size","default": 14
+ }
+ ]
+ },
+ {"type":"summary","name":"Summary","settings": [
+ {"type":"richtext","id":"summary_text","label":"Summary (Rich Text)","default":"<p><strong>Summary:</strong> Stop settling for generic Shopify themes that look like everyone else's store. EcomElevate is the <strong>most powerful and customizable</strong> Shopify theme ever created for serious e-commerce brands. With 50+ conversion-optimized sections, built-in advertorial capabilities, and pixel-perfect design controls, it's the only theme you'll ever need. Keep reading to discover why top brands are calling it a \"game-changer\"!</p>"},
+ {"type":"range","id":"summary_margin_top","min": 0,"max": 100,"step": 5,"unit":"px","label":"Top Margin","default": 30
+ },
+ {"type":"range","id":"summary_margin_bottom","min": 0,"max": 100,"step": 5,"unit":"px","label":"Bottom Margin","default": 30
+ }
+ ]
+ },
+ {"type":"countdown_banner","name":"Countdown Banner","settings": [
+ {"type":"header","content":"Banner Content"},
+ {"type":"text","id":"title","label":"Banner Title","default":"FLASH SALE ENDING SOON"},
+ {"type":"text","id":"subtitle","label":"Banner Subtitle","default":"60% OFF + FREE SERUM - Limited Stock Available!"},
+ {"type":"header","content":"Countdown Settings"},
+ {"type":"select","id":"countdown_type","label":"Countdown Type","options": [
+ {"value":"duration","label":"Duration (Hours/Minutes/Seconds)"},
+ {"value":"deadline","label":"Specific Date & Time"}
+ ],"default":"duration"},
+ {"type":"range","id":"countdown_hours","min": 0,"max": 48,"step": 1,"label":"Hours","default": 2,"info":"Used when countdown type is 'Duration'"},
+ {"type":"range","id":"countdown_minutes","min": 0,"max": 59,"step": 1,"label":"Minutes","default": 47,"info":"Used when countdown type is 'Duration'"},
+ {"type":"range","id":"countdown_seconds","min": 0,"max": 59,"step": 1,"label":"Seconds","default": 33,"info":"Used when countdown type is 'Duration'"},
+ {"type":"text","id":"countdown_deadline","label":"Deadline (ISO Format)","default":"2025-09-03T23:59:59Z","info":"Used when countdown type is 'Specific Date & Time'. Format: YYYY-MM-DDTHH:MM:SSZ"},
+ {"type":"text","id":"hours_label","label":"Hours Label","default":"HRS"},
+ {"type":"text","id":"minutes_label","label":"Minutes Label","default":"MIN"},
+ {"type":"text","id":"seconds_label","label":"Seconds Label","default":"SEC"},
+ {"type":"header","content":"Banner Styling"},
+ {"type":"color","id":"background_color","label":"Background Color","default":"#25282A"},
+ {"type":"color","id":"title_color","label":"Title Color","default":"#FFFFFF"},
+ {"type":"color","id":"subtitle_color","label":"Subtitle Color","default":"#FFFFFF"},
+ {"type":"range","id":"gap","min": 10,"max": 30,"step": 2,"unit":"px","label":"Gap Between Elements","default": 16
+ },
+ {"type":"range","id":"padding_vertical","min": 5,"max": 20,"step": 1,"unit":"px","label":"Vertical Padding","default": 8
+ },
+ {"type":"range","id":"padding_horizontal","min": 10,"max": 40,"step": 5,"unit":"px","label":"Horizontal Padding","default": 20
+ },
+ {"type":"header","content":"Typography"},
+ {"type":"range","id":"title_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Title Font Size","default": 14
+ },
+ {"type":"range","id":"subtitle_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Subtitle Font Size","default": 12
+ },
+ {"type":"header","content":"Timer Styling"},
+ {"type":"color","id":"timer_background_color","label":"Timer Background Color","default":"#D9ECFC"},
+ {"type":"color","id":"timer_value_color","label":"Timer Value Color","default":"#25282A"},
+ {"type":"color","id":"timer_label_color","label":"Timer Label Color","default":"#25282A"},
+ {"type":"color","id":"timer_separator_color","label":"Timer Separator Color","default":"#25282A"},
+ {"type":"range","id":"timer_border_radius","min": 0,"max": 15,"step": 1,"unit":"px","label":"Timer Border Radius","default": 6
+ },
+ {"type":"range","id":"timer_padding_vertical","min": 4,"max": 12,"step": 1,"unit":"px","label":"Timer Vertical Padding","default": 6
+ },
+ {"type":"range","id":"timer_padding_horizontal","min": 6,"max": 20,"step": 2,"unit":"px","label":"Timer Horizontal Padding","default": 10
+ },
+ {"type":"range","id":"unit_min_width","min": 25,"max": 45,"step": 1,"unit":"px","label":"Timer Unit Min Width","default": 34
+ },
+ {"type":"range","id":"timer_value_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Timer Value Font Size","default": 18
+ },
+ {"type":"range","id":"timer_label_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Timer Label Font Size","default": 10
+ },
+ {"type":"header","content":"Mobile Settings"},
+ {"type":"range","id":"mobile_gap","min": 6,"max": 20,"step": 2,"unit":"px","label":"Mobile Gap","default": 10
+ },
+ {"type":"range","id":"mobile_padding_vertical","min": 4,"max": 15,"step": 1,"unit":"px","label":"Mobile Vertical Padding","default": 6
+ },
+ {"type":"range","id":"mobile_padding_horizontal","min": 10,"max": 30,"step": 5,"unit":"px","label":"Mobile Horizontal Padding","default": 15
+ },
+ {"type":"range","id":"mobile_title_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Title Font Size","default": 13
+ },
+ {"type":"range","id":"mobile_subtitle_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Subtitle Font Size","default": 11
+ },
+ {"type":"range","id":"mobile_timer_padding_vertical","min": 3,"max": 8,"step": 1,"unit":"px","label":"Mobile Timer Vertical Padding","default": 5
+ },
+ {"type":"range","id":"mobile_timer_padding_horizontal","min": 6,"max": 15,"step": 1,"unit":"px","label":"Mobile Timer Horizontal Padding","default": 8
+ },
+ {"type":"range","id":"mobile_unit_min_width","min": 20,"max": 35,"step": 1,"unit":"px","label":"Mobile Timer Unit Min Width","default": 28
+ },
+ {"type":"range","id":"mobile_timer_value_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Timer Value Font Size","default": 16
+ },
+ {"type":"range","id":"mobile_timer_label_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Timer Label Font Size","default": 9
+ }
+ ]
+ },
+ {"type":"limited_time_sale","name":"Limited Time Sale Block","settings": [
+ {"type":"text","id":"chip_text","label":"Top chip text","default":"FREE LIFETIME UPDATES INCLUDED"},
+ {"type":"image_picker","id":"image","label":"Left image"},
+ {"type":"text","id":"eyebrow_text","label":"Eyebrow text","default":"LAUNCH SPECIAL - LIMITED TIME ONLY!"},
+ {"type":"text","id":"headline_accent","label":"Headline accent","default":"GET ECOMELEVATE NOW"},
+ {"type":"text","id":"headline_strong","label":"Headline strong line","default":"(One-Time Payment)"},
+ {"type":"textarea","id":"description","label":"Description","default":"Join thousands of successful store owners who've transformed their Shopify stores with EcomElevate."},
+ {"type":"text","id":"cta_label","label":"CTA Button Text","default":"GET THE THEME NOW"},
+ {"type":"url","id":"cta_link","label":"CTA Button Link"},
+ {"type":"select","id":"deal_mode","label":"Countdown Mode","options": [
+ {"value":"duration","label":"Duration (Hours/Minutes/Seconds)"},
+ {"value":"deadline","label":"Specific Date & Time"}
+ ],"default":"duration"},
+ {"type":"range","id":"duration_hours","min": 0,"max": 48,"step": 1,"label":"Duration Hours","default": 2
+ },
+ {"type":"range","id":"duration_minutes","min": 0,"max": 59,"step": 1,"label":"Duration Minutes","default": 33
+ },
+ {"type":"range","id":"duration_seconds","min": 0,"max": 59,"step": 1,"label":"Duration Seconds","default": 53
+ },
+ {"type":"text","id":"deadline","label":"Deadline (ISO Format)","default":"2025-12-31T23:59:59Z","info":"Format: YYYY-MM-DDTHH:MM:SSZ"},
+ {"type":"text","id":"sellout_risk","label":"Sell-Out Risk Text","default":"HIGH DEMAND"},
+ {"type":"text","id":"countdown_label","label":"Countdown Label","default":"OFFER ENDING IN:","info":"Label shown before the countdown timer"},
+ {"type":"text","id":"sellout_risk_label","label":"Sell-Out Risk Label","default":"Availability:","info":"Label shown before the sell-out risk text"},
+ {"type":"text","id":"shipping_text","label":"Shipping Text","default":"INSTANT DOWNLOAD"},
+ {"type":"textarea","id":"guarantee_text","label":"Guarantee Text","default":"30-Day Money-Back Guarantee"},
+ {"type":"header","content":"Colors"},
+ {"type":"color","id":"navy_color","label":"Navy Color","default":"#25282a"},
+ {"type":"color","id":"accent_red","label":"Accent Red","default":"#e79dd3"},
+ {"type":"color","id":"bg_cream","label":"Background Cream","default":"#ffffff"},
+ {"type":"color","id":"media_bg","label":"Media Background","default":"#ffffff"},
+ {"type":"color","id":"meta_box_bg","label":"Meta Box Background","default":"#fae8e8"},
+ {"type":"color","id":"meta_box_border","label":"Meta Box Border","default":"#fcaaaa"},
+ {"type":"color","id":"meta_label_color","label":"Meta Label Color","default":"#6b6b6b"},
+ {"type":"color","id":"meta_risk_color","label":"Risk Text Color","default":"#d22f2f"},
+ {"type":"color","id":"meta_divider_color","label":"Meta Divider Color","default":"#ef4a65"},
+ {"type":"header","content":"Typography"},
+ {"type":"range","id":"eyebrow_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Eyebrow Font Size","default": 11
+ },
+ {"type":"range","id":"headline_font_size","min": 8,"max": 50,"step": 2,"unit":"px","label":"Headline Font Size","default": 32
+ },
+ {"type":"range","id":"description_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Description Font Size","default": 14
+ },
+ {"type":"range","id":"cta_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"CTA Button Font Size","default": 16
+ },
+ {"type":"range","id":"deal_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Deal Countdown Font Size","default": 16
+ },
+ {"type":"range","id":"meta_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Meta Box Font Size","default": 13
+ },
+ {"type":"range","id":"fineprint_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Fine Print Font Size","default": 12
+ },
+ {"type":"header","content":"Mobile Typography"},
+ {"type":"range","id":"mobile_eyebrow_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Eyebrow Font Size","default": 10
+ },
+ {"type":"range","id":"mobile_headline_font_size","min": 8,"max": 50,"step": 2,"unit":"px","label":"Mobile Headline Font Size","default": 28
+ },
+ {"type":"range","id":"mobile_description_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Description Font Size","default": 14
+ },
+ {"type":"range","id":"mobile_cta_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile CTA Button Font Size","default": 15
+ },
+ {"type":"range","id":"mobile_deal_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Deal Countdown Font Size","default": 15
+ },
+ {"type":"range","id":"mobile_meta_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Meta Box Font Size","default": 12
+ },
+ {"type":"range","id":"mobile_fineprint_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Fine Print Font Size","default": 11
+ },
+ {"type":"header","content":"Spacing"},
+ {"type":"range","id":"margin_top","min": 0,"max": 50,"step": 5,"unit":"px","label":"Top Margin","default": 50
+ },
+ {"type":"range","id":"margin_bottom","min": 0,"max": 50,"step": 5,"unit":"px","label":"Bottom Margin","default": 50
+ }
+ ]
+ },
+ {"type":"sticky_add_to_cart","name":"Sticky CTA Button","settings": [
+ {"type":"text","id":"button_text","label":"Button Text","default":"YES, I WANT ECOMELEVATE NOW"},
+ {"type":"url","id":"button_link","label":"Button Link"},
+ {"type":"header","content":"Button Styling"},
+ {"type":"color","id":"button_bg_color","label":"Button Background Color","default":"#25282a"},
+ {"type":"color","id":"button_text_color","label":"Button Text Color","default":"#ffffff"},
+ {"type":"range","id":"button_border_radius","min": 0,"max": 20,"step": 1,"unit":"px","label":"Button Border Radius","default": 8
+ },
+ {"type":"range","id":"button_padding_vertical","min": 10,"max": 25,"step": 1,"unit":"px","label":"Button Vertical Padding","default": 16
+ },
+ {"type":"range","id":"button_padding_horizontal","min": 15,"max": 40,"step": 1,"unit":"px","label":"Button Horizontal Padding","default": 24
+ },
+ {"type":"range","id":"button_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Button Font Size","default": 16
+ },
+ {"type":"range","id":"button_width_desktop","min": 200,"max": 600,"step": 10,"unit":"px","label":"Desktop Button Width","default": 400
+ },
+ {"type":"range","id":"arrow_size","min": 14,"max": 24,"step": 1,"unit":"px","label":"Arrow Size","default": 18
+ },
+ {"type":"header","content":"Layout"},
+ {"type":"range","id":"z_index","min": 1000,"max": 9900,"step": 100,"label":"Z-Index","default": 9900
+ },
+ {"type":"range","id":"max_width","min": 300,"max": 800,"step": 20,"unit":"px","label":"Max Width","default": 600
+ },
+ {"type":"range","id":"container_padding","min": 10,"max": 30,"step": 2,"unit":"px","label":"Container Padding","default": 16
+ },
+ {"type":"range","id":"gap","min": 4,"max": 16,"step": 2,"unit":"px","label":"Gap Between Elements","default": 8
+ },
+ {"type":"header","content":"Mobile Settings"},
+ {"type":"range","id":"mobile_container_padding","min": 8,"max": 24,"step": 2,"unit":"px","label":"Mobile Container Padding","default": 12
+ },
+ {"type":"range","id":"mobile_button_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Button Font Size","default": 15
+ },
+ {"type":"range","id":"mobile_button_padding_vertical","min": 8,"max": 20,"step": 1,"unit":"px","label":"Mobile Button Vertical Padding","default": 14
+ },
+ {"type":"range","id":"mobile_button_padding_horizontal","min": 12,"max": 30,"step": 1,"unit":"px","label":"Mobile Button Horizontal Padding","default": 20
+ },
+ {"type":"range","id":"mobile_arrow_size","min": 12,"max": 20,"step": 1,"unit":"px","label":"Mobile Arrow Size","default": 16
+ },
+ {"type":"range","id":"mobile_verification_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Verification Font Size","default": 12
+ },
+ {"type":"range","id":"mobile_checkmark_size","min": 10,"max": 16,"step": 1,"unit":"px","label":"Mobile Checkmark Size","default": 12
+ }
+ ]
+ },
+ {"type":"advertorial_footer","name":"Advertorial Footer","settings": [
+ {"type":"textarea","id":"disclaimer_text","label":"Disclaimer Text","default":"*EcomElevate is a premium Shopify theme. One-time purchase includes lifetime updates for one store. Additional store licenses available."},
+ {"type":"text","id":"copyright_text","label":"Copyright Text","default":"© 2025 EcomElevate. All rights reserved."},
+ {"type":"checkbox","id":"show_links","label":"Show Legal Links","default": true
+ },
+ {"type":"text","id":"terms_text","label":"Terms Link Text","default":"Terms of Service"},
+ {"type":"url","id":"terms_link","label":"Terms Link URL"},
+ {"type":"text","id":"privacy_text","label":"Privacy Link Text","default":"Privacy Policy"},
+ {"type":"url","id":"privacy_link","label":"Privacy Link URL"},
+ {"type":"header","content":"Styling"},
+ {"type":"color","id":"background_color","label":"Background Color","default":"#d9ecfc"},
+ {"type":"color","id":"text_color","label":"Text Color","default":"#25282a"},
+ {"type":"color","id":"link_color","label":"Link Color","default":"#25282a"},
+ {"type":"color","id":"link_hover_color","label":"Link Hover Color","default":"#fcdef4"},
+ {"type":"select","id":"link_decoration","label":"Link Decoration","options": [
+ {"value":"none","label":"None"},
+ {"value":"underline","label":"Underline"}
+ ],"default":"underline"},
+ {"type":"select","id":"link_hover_decoration","label":"Link Hover Decoration","options": [
+ {"value":"none","label":"None"},
+ {"value":"underline","label":"Underline"}
+ ],"default":"none"},
+ {"type":"header","content":"Layout"},
+ {"type":"range","id":"max_width","min": 600,"max": 1200,"step": 20,"unit":"px","label":"Max Width","default": 1000
+ },
+ {"type":"range","id":"padding_vertical","min": 0,"max": 60,"step": 5,"unit":"px","label":"Vertical Padding","default": 40
+ },
+ {"type":"range","id":"padding_horizontal","min": 0,"max": 50,"step": 5,"unit":"px","label":"Horizontal Padding","default": 30
+ },
+ {"type":"range","id":"gap","min": 10,"max": 40,"step": 2,"unit":"px","label":"Gap Between Sections","default": 20
+ },
+ {"type":"range","id":"disclaimer_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Disclaimer Font Size","default": 13
+ },
+ {"type":"range","id":"disclaimer_line_height","min": 1.2,"max": 1.8,"step": 0.1,"label":"Disclaimer Line Height","default": 1.5
+ },
+ {"type":"select","id":"disclaimer_alignment","label":"Disclaimer Text Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left"},
+ {"type":"range","id":"disclaimer_opacity","min": 0.6,"max": 1.0,"step": 0.1,"label":"Disclaimer Opacity","default": 0.9
+ },
+ {"type":"select","id":"bottom_layout","label":"Bottom Layout Direction","options": [
+ {"value":"row","label":"Horizontal"},
+ {"value":"column","label":"Vertical"}
+ ],"default":"row"},
+ {"type":"select","id":"bottom_alignment","label":"Bottom Vertical Alignment","options": [
+ {"value":"flex-start","label":"Top"},
+ {"value":"center","label":"Center"},
+ {"value":"flex-end","label":"Bottom"}
+ ],"default":"center"},
+ {"type":"select","id":"bottom_justify","label":"Bottom Horizontal Alignment","options": [
+ {"value":"flex-start","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"flex-end","label":"Right"},
+ {"value":"space-between","label":"Space Between"}
+ ],"default":"space-between"},
+ {"type":"range","id":"bottom_gap","min": 5,"max": 30,"step": 1,"unit":"px","label":"Bottom Section Gap","default": 15
+ },
+ {"type":"range","id":"copyright_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Copyright Font Size","default": 12
+ },
+ {"type":"range","id":"copyright_opacity","min": 0.6,"max": 1.0,"step": 0.1,"label":"Copyright Opacity","default": 0.8
+ },
+ {"type":"range","id":"link_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Link Font Size","default": 12
+ },
+ {"type":"range","id":"links_gap","min": 5,"max": 20,"step": 1,"unit":"px","label":"Links Gap","default": 10
+ },
+ {"type":"range","id":"mobile_padding_vertical","min": 0,"max": 40,"step": 5,"unit":"px","label":"Mobile Vertical Padding","default": 25
+ },
+ {"type":"range","id":"mobile_padding_horizontal","min": 0,"max": 30,"step": 2,"unit":"px","label":"Mobile Horizontal Padding","default": 20
+ },
+ {"type":"range","id":"mobile_disclaimer_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Disclaimer Font Size","default": 12
+ },
+ {"type":"select","id":"mobile_disclaimer_alignment","label":"Mobile Disclaimer Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left"},
+ {"type":"select","id":"mobile_bottom_layout","label":"Mobile Bottom Layout","options": [
+ {"value":"row","label":"Horizontal"},
+ {"value":"column","label":"Vertical"}
+ ],"default":"column"},
+ {"type":"select","id":"mobile_bottom_alignment","label":"Mobile Bottom Alignment","options": [
+ {"value":"flex-start","label":"Top"},
+ {"value":"center","label":"Center"},
+ {"value":"flex-end","label":"Bottom"}
+ ],"default":"center"},
+ {"type":"select","id":"mobile_bottom_justify","label":"Mobile Bottom Justify","options": [
+ {"value":"flex-start","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"flex-end","label":"Right"},
+ {"value":"space-between","label":"Space Between"}
+ ],"default":"center"},
+ {"type":"range","id":"mobile_bottom_gap","min": 5,"max": 20,"step": 1,"unit":"px","label":"Mobile Bottom Gap","default": 10
+ },
+ {"type":"range","id":"mobile_copyright_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Copyright Font Size","default": 11
+ },
+ {"type":"range","id":"mobile_link_font_size","min": 8,"max": 50,"step": 1,"unit":"px","label":"Mobile Link Font Size","default": 11
+ },
+ {"type":"range","id":"mobile_links_gap","min": 3,"max": 15,"step": 1,"unit":"px","label":"Mobile Links Gap","default": 8
+ }
+ ]
+ },
+ {"type":"listicle_item","name":"Listicle Item","settings": [
+ {"type":"checkbox","id":"enable_container","label":"Enable Container Styling","default": false,"info":"Add background, padding, borders, and shadows to the item"},
+ {"type":"image_picker","id":"image","label":"Item Image"},
+ {"type":"checkbox","id":"hide_image","label":"Hide Image","default": true,"info":"Hide the image for this item"},
+ {"type":"text","id":"title","label":"Item Title","default":"50+ Professionally Designed Sections That Actually Convert"},
+ {"type":"richtext","id":"content","label":"Item Content","default":"<p>Unlike other themes with limited, cookie-cutter sections, EcomElevate gives you <strong>over 50 unique, conversion-optimized sections</strong> designed by e-commerce experts. From stunning hero banners and feature cards to advanced comparison tables and testimonial sliders — every section is crafted to turn visitors into customers.</p>"},
+ {"type":"text","id":"highlight_text","label":"Highlight Text (Optional)","info":"Add text that will appear in a highlighted box below the content"},
+ {"type":"header","content":"Layout & Spacing"},
+ {"type":"select","id":"image_position","label":"Image Position (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"right","label":"Right"}
+ ],"default":"left","info":"Position of image relative to content on desktop"},
+ {"type":"select","id":"mobile_image_position","label":"Image Position (Mobile)","options": [
+ {"value":"top","label":"Top"},
+ {"value":"bottom","label":"Bottom"}
+ ],"default":"bottom","info":"Position of image relative to content on mobile"},
+ {"type":"select","id":"image_aspect_ratio","label":"Image Aspect Ratio","options": [
+ {"value":"square","label":"Square (1:1)"},
+ {"value":"portrait","label":"Portrait (3:4)"},
+ {"value":"landscape","label":"Landscape (4:3)"},
+ {"value":"wide","label":"Wide (16:9)"},
+ {"value":"auto","label":"Auto (Original)"}
+ ],"default":"square","info":"Aspect ratio for item images"},
+ {"type":"range","id":"item_gap","min": 15,"max": 50,"step": 5,"unit":"px","label":"Gap Between Image and Content","default": 25
+ },
+ {"type":"range","id":"item_image_width","min": 150,"max": 400,"step": 25,"unit":"px","label":"Item Image Width","default": 225
+ },
+ {"type":"range","id":"item_image_border_radius","min": 0,"max": 15,"step": 1,"unit":"px","label":"Item Image Border Radius","default": 6
+ },
+ {"type":"range","id":"item_image_margin_bottom","min": 0,"max": 50,"step": 2,"unit":"px","label":"Item Image Margin Bottom","default": 16
+ },
+ {"type":"header","content":"Container Styling"},
+ {"type":"color","id":"item_background_color","label":"Item Background Color","default":"#ffffff"},
+ {"type":"range","id":"item_padding","min": 15,"max": 40,"step": 5,"unit":"px","label":"Item Padding","default": 25
+ },
+ {"type":"range","id":"item_border_radius","min": 0,"max": 20,"step": 2,"unit":"px","label":"Item Border Radius","default": 8
+ },
+ {"type":"range","id":"item_border_width","min": 0,"max": 5,"step": 1,"unit":"px","label":"Item Border Width","default": 1
+ },
+ {"type":"color","id":"item_border_color","label":"Item Border Color","default":"#d9ecfc"},
+ {"type":"checkbox","id":"enable_item_shadow","label":"Enable Item Shadow","default": false
+ },
+ {"type":"text","id":"item_shadow","label":"Item Shadow","default":"0 2px 8px rgba(0,0,0,0.1)"},
+ {"type":"header","content":"Highlight Styling"},
+ {"type":"color","id":"highlight_background_color","label":"Highlight Background Color","default":"#fcdef4"},
+ {"type":"color","id":"highlight_text_color","label":"Highlight Text Color","default":"#25282a"},
+ {"type":"range","id":"highlight_padding","min": 5,"max": 20,"step": 1,"unit":"px","label":"Highlight Padding","default": 8
+ },
+ {"type":"range","id":"highlight_border_radius","min": 0,"max": 15,"step": 1,"unit":"px","label":"Highlight Border Radius","default": 4
+ },
+ {"type":"range","id":"highlight_margin_top","min": 0,"max": 50,"step": 1,"unit":"px","label":"Highlight Margin Top","default": 10
+ }
+ ]
+ }
+ ],"presets": [
+ {"name":"Listicle","settings": {"padding_top":0,"padding_bottom":0,"use_theme_colors":false,"section_background_color":"#ffffff","container_padding_horizontal":45,"divider_color":"#f1f4f5","summary_margin_bottom":40,"summary_padding_bottom":25,"content_gap":30,"item_title_size":24,"item_title_line_height":1.2,"item_title_color":"#25282a","item_title_margin_bottom":16,"item_title_letter_spacing":"heading","item_content_size":14,"item_content_font_weight":400,"item_content_line_height":1.6,"item_content_color":"#25282a","item_margin_top":30,"item_margin_bottom":30,"mobile_breakpoint":760,"mobile_container_padding":20,"default_mobile_image_position":"top","mobile_item_title_size":24,"mobile_item_content_size":15,"mobile_highlight_font_size":14},"blocks": [
+ {"type":"header","settings": {"title":"10 Reasons Why EcomElevate Is The Best Shopify Theme For High-Converting Stores","title_size":48,"title_font_weight":700,"title_line_height":1.2,"title_alignment":"left","title_color":"#25282a","title_margin_top":0,"title_margin_bottom":30,"show_author_info":true,"author_name":"EcomElevate Team","author_date":"Last Updated November 2025","avatar_size":50,"author_gap":16,"author_alignment":"flex-start","author_name_size":16,"author_name_font_weight":600,"author_name_color":"#25282a","author_name_force_bold":true,"author_date_size":14,"author_date_font_weight":400,"author_date_color":"#25282a","author_margin_bottom":25,"header_margin_top":30,"header_margin_bottom":0,"mobile_title_size":40,"mobile_author_name_size":16,"mobile_author_date_size":14}
+ },
+ {"type":"summary","settings": {"summary_text":"<p><strong>Summary:</strong> Stop settling for generic Shopify themes that look like everyone else's store. EcomElevate is the <strong>most powerful and customizable</strong> Shopify theme ever created for serious e-commerce brands. With 50+ conversion-optimized sections, built-in advertorial capabilities, and pixel-perfect design controls, it's the only theme you'll ever need. Keep reading to discover why top brands are calling it a \"game-changer\"!</p>","summary_margin_top":30,"summary_margin_bottom":30}
+ },
+ {"type":"listicle_item","settings": {"enable_container":false,"hide_image":true,"title":"1. 50+ Professionally Designed Sections That Actually Convert","content":"<p>Unlike other themes with limited, cookie-cutter sections, EcomElevate gives you <strong>over 50 unique, conversion-optimized sections</strong> designed by e-commerce experts. From stunning hero banners and feature cards to advanced comparison tables and testimonial sliders — every section is crafted to turn visitors into customers. <strong>No more settling for \"good enough\" when you can have exceptional.</strong></p>","image_position":"left","mobile_image_position":"bottom","image_aspect_ratio":"square","item_gap":25,"item_image_width":225,"item_image_border_radius":6,"item_image_margin_bottom":16,"item_background_color":"#ffffff","item_padding":25,"item_border_radius":8,"item_border_width":1,"item_border_color":"#d9ecfc","enable_item_shadow":false,"item_shadow":"0 2px 8px rgba(0,0,0,0.1)","highlight_background_color":"#fcdef4","highlight_text_color":"#25282a","highlight_padding":8,"highlight_border_radius":4,"highlight_margin_top":10}
+ },
+ {"type":"listicle_item","settings": {"enable_container":false,"hide_image":false,"title":"2. Built-In Advertorial & Listicle Pages That Print Money","content":"<p>Stop paying for expensive landing page builders! EcomElevate includes <strong>professional advertorial and listicle templates</strong> right out of the box. Create high-converting editorial-style pages that build trust and drive sales — the same format used by 8-figure DTC brands. <strong>This feature alone is worth more than the entire theme price.</strong></p>","image_position":"left","mobile_image_position":"top","image_aspect_ratio":"square","item_gap":25,"item_image_width":250,"item_image_border_radius":6,"item_image_margin_bottom":16,"item_background_color":"#ffffff","item_padding":25,"item_border_radius":12,"item_border_width":1,"item_border_color":"#d9ecfc","enable_item_shadow":false,"item_shadow":"0 2px 8px rgba(0,0,0,0.1)","highlight_background_color":"#fcdef4","highlight_text_color":"#25282a","highlight_padding":8,"highlight_border_radius":4,"highlight_margin_top":10}
+ },
+ {"type":"listicle_item","settings": {"enable_container":false,"hide_image":false,"title":"3. Pixel-Perfect Customization Without Writing Code","content":"<p>Every single element is customizable. <strong>Font sizes, colors, spacing, borders, gradients</strong> — you control it all from the theme editor. Want that heading 2px bigger? Done. Need custom padding on mobile? Easy. EcomElevate gives you designer-level control without touching a single line of code. <strong>Your vision, perfectly executed.</strong></p>","highlight_text":"Font sizes, colors, spacing, borders, gradients","image_position":"left","mobile_image_position":"top","image_aspect_ratio":"square","item_gap":25,"item_image_width":250,"item_image_border_radius":6,"item_image_margin_bottom":16,"item_background_color":"#ffffff","item_padding":25,"item_border_radius":8,"item_border_width":1,"item_border_color":"#d9ecfc","enable_item_shadow":false,"item_shadow":"0 2px 8px rgba(0,0,0,0.1)","highlight_background_color":"#fcdef4","highlight_text_color":"#25282a","highlight_padding":8,"highlight_border_radius":4,"highlight_margin_top":10}
+ },
+ {"type":"listicle_item","settings": {"enable_container":false,"hide_image":false,"title":"4. Lightning-Fast Performance That Boosts SEO & Conversions","content":"<p>Speed kills (your competition). EcomElevate is built with <strong>clean, optimized code that loads blazing fast.</strong> Better page speed means higher Google rankings, lower bounce rates, and more conversions. While other themes bloat your store with unnecessary code, EcomElevate keeps things lean and mean. <strong>Your customers won't wait — and now they won't have to.</strong></p>","highlight_text":"clean, optimized code that loads blazing fast.","image_position":"left","mobile_image_position":"top","image_aspect_ratio":"square","item_gap":25,"item_image_width":250,"item_image_border_radius":6,"item_image_margin_bottom":16,"item_background_color":"#ffffff","item_padding":25,"item_border_radius":8,"item_border_width":1,"item_border_color":"#d9ecfc","enable_item_shadow":false,"item_shadow":"0 2px 8px rgba(0,0,0,0.1)","highlight_background_color":"#fcdef4","highlight_text_color":"#25282a","highlight_padding":8,"highlight_border_radius":4,"highlight_margin_top":10}
+ },
+ {"type":"listicle_item","settings": {"enable_container":false,"hide_image":false,"title":"5. Mobile-First Design That Captures Every Sale","content":"<p>Over 70% of e-commerce traffic comes from mobile. EcomElevate is designed <strong>mobile-first from the ground up</strong> with separate controls for mobile, tablet, and desktop. Every section looks stunning and converts beautifully on any device. <strong>Stop losing mobile customers to poorly optimized themes.</strong></p>","highlight_text":"mobile-first from the ground up","image_position":"left","mobile_image_position":"top","image_aspect_ratio":"square","item_gap":25,"item_image_width":250,"item_image_border_radius":6,"item_image_margin_bottom":16,"item_background_color":"#ffffff","item_padding":25,"item_border_radius":8,"item_border_width":1,"item_border_color":"#d9ecfc","enable_item_shadow":false,"item_shadow":"0 2px 8px rgba(0,0,0,0.1)","highlight_background_color":"#fcdef4","highlight_text_color":"#25282a","highlight_padding":8,"highlight_border_radius":4,"highlight_margin_top":10}
+ },
+ {"type":"listicle_item","settings": {"enable_container":false,"hide_image":false,"title":"6. Advanced Product Page Features That Sell For You","content":"<p><strong><em>Editor's Note: This is where EcomElevate truly shines!</em></strong> Benefit pills, icon features, quantity breaks, variant pickers with swatches, sticky add-to-cart, and so much more. Every element is designed to overcome objections and drive purchases. Your product pages will look like they cost $10,000 to build — but they're included free with the theme.</p>","highlight_text":"This is where EcomElevate truly shines!","image_position":"left","mobile_image_position":"top","image_aspect_ratio":"square","item_gap":25,"item_image_width":250,"item_image_border_radius":6,"item_image_margin_bottom":16,"item_background_color":"#ffffff","item_padding":25,"item_border_radius":8,"item_border_width":1,"item_border_color":"#d9ecfc","enable_item_shadow":false,"item_shadow":"0 2px 8px rgba(0,0,0,0.1)","highlight_background_color":"#fcdef4","highlight_text_color":"#25282a","highlight_padding":8,"highlight_border_radius":4,"highlight_margin_top":10}
+ },
+ {"type":"listicle_item","settings": {"enable_container":false,"hide_image":false,"title":"7. Us vs Them Comparison Tables That Crush Competitors","content":"<p>Show customers exactly why you're the best choice. The built-in <strong>comparison table section</strong> lets you highlight your advantages over competitors in a visually stunning format. Customizable icons, colors, and layouts make it easy to communicate your value proposition instantly. <strong>Turn fence-sitters into buyers with powerful visual comparisons.</strong></p>","highlight_text":"Turn fence-sitters into buyers with powerful visual comparisons.","image_position":"left","mobile_image_position":"top","image_aspect_ratio":"square","item_gap":25,"item_image_width":250,"item_image_border_radius":6,"item_image_margin_bottom":16,"item_background_color":"#ffffff","item_padding":25,"item_border_radius":8,"item_border_width":1,"item_border_color":"#d9ecfc","enable_item_shadow":false,"item_shadow":"0 2px 8px rgba(0,0,0,0.1)","highlight_background_color":"#fcdef4","highlight_text_color":"#25282a","highlight_padding":8,"highlight_border_radius":4,"highlight_margin_top":10}
+ },
+ {"type":"listicle_item","settings": {"enable_container":false,"hide_image":false,"title":"8. Interactive Elements That Engage & Convert","content":"<p><em><strong>Pro Tip: Interactive content increases time on page by 47%!</strong></em> EcomElevate includes before/after sliders, animated progress sections, hotspot images, hero benefits with auto-rotation, and video sliders. These aren't just pretty features — they're proven conversion boosters that keep visitors engaged and moving toward checkout.</p>","highlight_text":"Interactive content increases time on page by 47%!","image_position":"left","mobile_image_position":"top","image_aspect_ratio":"square","item_gap":25,"item_image_width":250,"item_image_border_radius":6,"item_image_margin_bottom":16,"item_background_color":"#ffffff","item_padding":25,"item_border_radius":8,"item_border_width":1,"item_border_color":"#d9ecfc","enable_item_shadow":false,"item_shadow":"0 2px 8px rgba(0,0,0,0.1)","highlight_background_color":"#fcdef4","highlight_text_color":"#25282a","highlight_padding":8,"highlight_border_radius":4,"highlight_margin_top":10}
+ },
+ {"type":"listicle_item","settings": {"enable_container":false,"hide_image":false,"title":"9. Global Typography & Color Controls For Brand Consistency","content":"<p>Set it once, apply it everywhere. EcomElevate's <strong>global typography and color system</strong> ensures your brand stays consistent across every page and section. Change your heading font or primary color in one place, and watch it update site-wide. <strong>Professional branding has never been this easy.</strong></p>","highlight_text":"global typography and color system","image_position":"left","mobile_image_position":"top","image_aspect_ratio":"square","item_gap":25,"item_image_width":250,"item_image_border_radius":6,"item_image_margin_bottom":16,"item_background_color":"#ffffff","item_padding":25,"item_border_radius":8,"item_border_width":1,"item_border_color":"#d9ecfc","enable_item_shadow":false,"item_shadow":"0 2px 8px rgba(0,0,0,0.1)","highlight_background_color":"#fcdef4","highlight_text_color":"#25282a","highlight_padding":8,"highlight_border_radius":4,"highlight_margin_top":10}
+ },
+ {"type":"listicle_item","settings": {"enable_container":false,"hide_image":false,"title":"10. Built By E-Commerce Experts Who Understand Conversions","content":"<p>EcomElevate isn't built by random developers — it's crafted by <strong>e-commerce specialists who have generated millions in online sales.</strong> Every feature, every section, every setting is designed with one goal: helping you sell more. We've studied what works, tested relentlessly, and packed it all into one incredible theme. <strong>Your success is our obsession.</strong></p>","highlight_text":"e-commerce specialists who have generated millions in online sales.","image_position":"left","mobile_image_position":"top","image_aspect_ratio":"square","item_gap":25,"item_image_width":250,"item_image_border_radius":6,"item_image_margin_bottom":16,"item_background_color":"#ffffff","item_padding":25,"item_border_radius":8,"item_border_width":1,"item_border_color":"#d9ecfc","enable_item_shadow":false,"item_shadow":"0 2px 8px rgba(0,0,0,0.1)","highlight_background_color":"#fcdef4","highlight_text_color":"#25282a","highlight_padding":8,"highlight_border_radius":4,"highlight_margin_top":10}
+ },
+ {"type":"limited_time_sale","settings": {"chip_text":"FREE LIFETIME UPDATES INCLUDED","eyebrow_text":"LAUNCH SPECIAL - LIMITED TIME ONLY!","headline_accent":"GET ECOMELEVATE NOW","headline_strong":"(One-Time Payment)","description":"Join thousands of successful store owners who've transformed their Shopify stores with EcomElevate.","cta_label":"GET THE THEME NOW","deal_mode":"duration","duration_hours":2,"duration_minutes":33,"duration_seconds":53,"deadline":"2025-12-31T23:59:59Z","sellout_risk":"HIGH DEMAND","countdown_label":"OFFER ENDING IN:","sellout_risk_label":"Availability:","shipping_text":"INSTANT DOWNLOAD","guarantee_text":"30-Day Money-Back Guarantee","navy_color":"#25282a","accent_red":"#e79dd3","bg_cream":"#ffffff","media_bg":"#ffffff","meta_box_bg":"#fae8e8","meta_box_border":"#fcaaaa","meta_label_color":"#6b6b6b","meta_risk_color":"#d22f2f","meta_divider_color":"#ef4a65","eyebrow_font_size":11,"headline_font_size":32,"description_font_size":14,"cta_font_size":16,"deal_font_size":16,"meta_font_size":13,"fineprint_font_size":12,"mobile_eyebrow_font_size":10,"mobile_headline_font_size":28,"mobile_description_font_size":14,"mobile_cta_font_size":15,"mobile_deal_font_size":15,"mobile_meta_font_size":12,"mobile_fineprint_font_size":11,"margin_top":50,"margin_bottom":50}
+ },
+ {"type":"sticky_add_to_cart","settings": {"button_text":"YES, I WANT ECOMELEVATE NOW","button_bg_color":"#25282a","button_text_color":"#ffffff","button_border_radius":8,"button_padding_vertical":16,"button_padding_horizontal":24,"button_font_size":16,"button_width_desktop":400,"arrow_size":18,"z_index":9900,"max_width":600,"container_padding":16,"gap":8,"mobile_container_padding":12,"mobile_button_font_size":15,"mobile_button_padding_vertical":14,"mobile_button_padding_horizontal":20,"mobile_arrow_size":16,"mobile_verification_font_size":12,"mobile_checkmark_size":12}
+ },
+ {"type":"advertorial_footer","settings": {"disclaimer_text":"*EcomElevate is a premium Shopify theme. One-time purchase includes lifetime updates for one store. Additional store licenses available.","copyright_text":"© 2025 EcomElevate. All rights reserved.","show_links":true,"terms_text":"Terms of Service","privacy_text":"Privacy Policy","background_color":"#d9ecfc","text_color":"#25282a","link_color":"#25282a","link_hover_color":"#fcdef4","link_decoration":"underline","link_hover_decoration":"none","max_width":1000,"padding_vertical":40,"padding_horizontal":30,"gap":20,"disclaimer_font_size":13,"disclaimer_line_height":1.5,"disclaimer_alignment":"left","disclaimer_opacity":0.9,"bottom_layout":"row","bottom_alignment":"center","bottom_justify":"space-between","bottom_gap":15,"copyright_font_size":12,"copyright_opacity":0.8,"link_font_size":12,"links_gap":10,"mobile_padding_vertical":25,"mobile_padding_horizontal":20,"mobile_disclaimer_font_size":12,"mobile_disclaimer_alignment":"left","mobile_bottom_layout":"column","mobile_bottom_alignment":"center","mobile_bottom_justify":"center","mobile_bottom_gap":10,"mobile_copyright_font_size":11,"mobile_link_font_size":11,"mobile_links_gap":8}
+ }
+ ],"category":"Content"}
+ ]
+}
+{% endschema %}

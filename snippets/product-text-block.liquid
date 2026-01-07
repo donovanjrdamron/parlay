@@ -1,0 +1,77 @@
+{%- liquid
+  assign block_id = block.id
+  assign text = block.settings.text
+  assign text_color = block.settings.text_color
+  assign font_size_desktop = block.settings.font_size_desktop
+  assign font_size_mobile = block.settings.font_size_mobile
+  assign line_height_desktop = block.settings.line_height_desktop
+  assign line_height_mobile = block.settings.line_height_mobile
+  assign text_align = block.settings.text_align
+  assign font_weight = block.settings.font_weight
+  assign highlight_text = block.settings.highlight_text
+  assign highlight_color = block.settings.highlight_color
+  assign highlight_text_color = block.settings.highlight_text_color
+  assign highlight_padding = block.settings.highlight_padding
+  assign margin_top = block.settings.margin_top
+  assign margin_bottom = block.settings.margin_bottom
+
+  assign processed_text = text
+
+  if highlight_text != blank
+    # Normalize smart quotes to regular quotes in highlight_text field
+    assign normalized_highlight = highlight_text | replace: '"', '"' | replace: '"', '"'
+
+    # Split by quotes to extract phrases to highlight
+    assign highlight_parts = normalized_highlight | split: '"'
+    assign part_index = 0
+
+    # Loop through and highlight odd-indexed items (text between quotes)
+    for part in highlight_parts
+      assign remainder = part_index | modulo: 2
+      if remainder == 1 and part != blank
+        assign trimmed_part = part | strip
+        assign replacement = '<span class="ecl-text-highlight-' | append: block_id | append: '">' | append: trimmed_part | append: '</span>'
+        assign processed_text = processed_text | replace: trimmed_part, replacement
+      endif
+      assign part_index = part_index | plus: 1
+    endfor
+  endif
+-%}
+
+<style>
+  .ecl-text-block-{{ block_id }} {
+    color: {{ text_color }};
+    font-size: {{ font_size_mobile }}px;
+    line-height: {{ line_height_mobile }};
+    text-align: {{ text_align }};
+    font-weight: {{ font_weight }};
+    margin-top: {{ margin_top }}px;
+    margin-bottom: {{ margin_bottom }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ecl-text-block-{{ block_id }} {
+      font-size: {{ font_size_desktop }}px;
+      line-height: {{ line_height_desktop }};
+    }
+  }
+
+  .ecl-text-highlight-{{ block_id }} {
+    background-color: {{ highlight_color }};
+    color: {{ highlight_text_color }};
+    padding: {{ highlight_padding }}px;
+    border-radius: 4px;
+  }
+
+  .ecl-text-block-{{ block_id }} p {
+    margin: 0;
+  }
+
+  .ecl-text-block-{{ block_id }} p + p {
+    margin-top: 1em;
+  }
+</style>
+
+<div class="ecl-text-block-{{ block_id }}" {{ block.shopify_attributes }}>
+  {{ processed_text }}
+</div>

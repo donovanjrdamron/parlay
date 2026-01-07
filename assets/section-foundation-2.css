@@ -1,0 +1,25 @@
+/* Section Foundation 2 - Specific Styles */
+
+.section-foundation-2 {
+  position: relative;
+  width: 100%;
+}
+
+.section-foundation-2 .container {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Content alignment */
+.section-foundation-2.content-align-left .container {
+  text-align: left;
+}
+
+.section-foundation-2.content-align-center .container {
+  text-align: center;
+}
+
+.section-foundation-2.content-align-right .container {
+  text-align: right;
+}

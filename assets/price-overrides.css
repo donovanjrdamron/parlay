@@ -1,0 +1,169 @@
+/* ========================================
+   GLOBAL PRICE SETTINGS
+   Connected to Theme Settings > Price Settings
+   Updates CSS variables for price colors
+   ======================================== */
+
+
+
+/* ========================================
+   ROOT CSS VARIABLE OVERRIDES
+   ======================================== */
+:root {
+  /* Override accent colors for prices */
+  --color-price-regular: 0, 0, 0;
+  --color-price-sale: 221, 29, 29;
+  --color-price-compare: 153, 153, 153;
+
+  /* Font settings */
+  --price-font-weight: 700;
+  --price-font-size: 16px;
+  --price-font-size-large: 20px;
+  --price-font-size-small: 14px;
+
+  /* Currency color */
+  
+  --color-price-currency: var(--color-price-regular);
+  
+
+  /* Badge colors */
+  --color-badge-sale-bg: 221, 29, 29;
+  --color-badge-sale-text: 255, 255, 255;
+  --color-badge-soldout-bg: 0, 0, 0;
+  --color-badge-soldout-text: 255, 255, 255;
+}
+
+/* ========================================
+   OVERRIDE ACCENT COLOR FOR PRICE CONTEXT
+   ======================================== */
+.price,
+.price-wrapper,
+.price__container,
+.product-card-wrapper .price,
+.card__information .price {
+  --accent-color: var(--color-price-regular);
+  --accent-2-color: var(--color-price-sale);
+}
+
+/* ========================================
+   REGULAR PRICE COLORS
+   ======================================== */
+.price .price-item,
+.price .main-price,
+.price__regular,
+.price-item--regular {
+  color: rgb(var(--color-price-regular));
+  font-weight: var(--price-font-weight);
+}
+
+/* ========================================
+   SALE PRICE COLORS
+   ======================================== */
+.price__sale,
+.price .price-item--sale,
+.price-item--sale,
+.price--on-sale .price__sale {
+  color: rgb(var(--color-price-sale));
+  font-weight: var(--price-font-weight);
+}
+
+/* ========================================
+   COMPARE AT PRICE COLORS
+   ======================================== */
+.price s,
+.price del,
+.price .price-item--regular[aria-hidden="true"],
+.price--on-sale .price-item--regular,
+.compare-at-price,
+.was-price {
+  color: rgb(var(--color-price-compare));
+  opacity: 1;
+  text-decoration: line-through;
+}
+
+/* ========================================
+   FONT SIZES
+   ======================================== */
+.price,
+.price .price-item {
+  font-size: var(--price-font-size);
+}
+
+/* Larger sizes for product pages */
+.product__info .price,
+.product__info .price .price-item {
+  font-size: var(--price-font-size-large);
+}
+
+/* Smaller sizes for cards */
+.card__information .price,
+.card__information .price .price-item,
+.product-card-wrapper .price,
+.product-card-wrapper .price .price-item {
+  font-size: var(--price-font-size-small);
+}
+
+/* ========================================
+   SALE BADGES
+   ======================================== */
+.badge--sale,
+.price__badge--sale,
+.product__badge--sale,
+.card__badge.sale,
+.sale-badge {
+  background-color: rgb(var(--color-badge-sale-bg));
+  color: rgb(var(--color-badge-sale-text));
+  border-color: rgb(var(--color-badge-sale-bg));
+}
+
+/* ========================================
+   SOLD OUT BADGES
+   ======================================== */
+.badge--sold-out,
+.price__badge--sold-out,
+.product__badge--sold-out,
+.card__badge.sold-out,
+.sold-out-badge {
+  background-color: rgb(var(--color-badge-soldout-bg));
+  color: rgb(var(--color-badge-soldout-text));
+  border-color: rgb(var(--color-badge-soldout-bg));
+}
+
+/* ========================================
+   UNIT PRICE
+   ======================================== */
+.price__unit,
+.unit-price,
+.price .price__unit-price {
+  color: rgb(var(--color-price-compare));
+  font-size: calc(var(--price-font-size) - 3px);
+}
+
+/* ========================================
+   CART & CHECKOUT PRICES
+   ======================================== */
+.cart-item__totals .price,
+.cart-drawer__footer .price,
+.totals__subtotal-value,
+.cart__subtotal {
+  --accent-color: var(--color-price-regular);
+  color: rgb(var(--color-price-regular));
+  font-weight: var(--price-font-weight);
+}
+
+/* Cart sale prices */
+.cart-item__totals .price--on-sale .price-item--sale,
+.cart-drawer__footer .price--on-sale .price-item--sale {
+  color: rgb(var(--color-price-sale));
+}
+
+/* ========================================
+   MOBILE RESPONSIVE
+   ======================================== */
+@media screen and (max-width: 749px) {
+  :root {
+    --price-font-size: 14px;
+    --price-font-size-large: 18px;
+  }
+}
+

@@ -1,0 +1,1182 @@
+{{ 'section-animated-progress.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
+{%- style -%}
+  .section-{{ section.id }} {
+    {% if section.settings.enable_section_gradient %}
+      background: {{ section.settings.section_gradient_bg }};
+    {% else %}
+      background-color: {{ section.settings.section_bg_color }};
+    {% endif %}
+  }
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.section_padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.section_padding_bottom_mobile }}px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.section_padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.section_padding_bottom_desktop }}px;
+      padding-left: {{ settings.spacing_grid_horizontal }}px;
+      padding-right: {{ settings.spacing_grid_horizontal }}px;
+    }
+  }
+{%- endstyle -%}
+
+<style>
+  /* Progress Bar Styles */
+  .custom-section-{{ section.id }} {
+    margin: 30px 0;
+    position: relative;
+    padding-left: 20px;
+  }
+
+  .custom-progress-bar-{{ section.id }} {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: {{ section.settings.progress_bar_width }}px;
+    background-color: {{ section.settings.progress_bar_bg }};
+    z-index: 1;
+    border-radius: {{ section.settings.progress_bar_radius }}px;
+  }
+
+  .custom-pink-fill-{{ section.id }} {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: {{ section.settings.progress_bar_width }}px;
+    height: 0%;
+    {% if section.settings.progress_fill_gradient_enabled %}
+      background: {{ section.settings.progress_fill_gradient }};
+    {% else %}
+      background: {{ section.settings.progress_fill_color }};
+    {% endif %}
+    transition: height 0.5s ease;
+    z-index: 2;
+    border-radius: {{ section.settings.progress_bar_radius }}px;
+  }
+
+  /* Progress Number/Icon Styling */
+  .progress-number-{{ section.id }} {
+    position: absolute;
+    top: {{ section.settings.number_top_offset }}px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: {{ section.settings.number_size }}px;
+    height: {{ section.settings.number_size }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: {{ section.settings.number_font_size }}px;
+    border-radius: {{ section.settings.number_border_radius }}%;
+    {% if section.settings.number_border_width > 0 %}
+      border: {{ section.settings.number_border_width }}px solid var(--number-border-color);
+    {% endif %}
+    z-index: 3;
+    transition: all 0.5s ease;
+    color: var(--number-text-color);
+    background-color: var(--number-bg-color);
+  }
+
+  /* Custom SVG Icon Styling */
+  .progress-number-{{ section.id }} .progress-custom-svg {
+    color: inherit;
+  }
+
+  .progress-number-{{ section.id }} .progress-custom-svg svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+    stroke: currentColor;
+  }
+
+  /* Google Material Icons */
+  .progress-number-{{ section.id }} .material-icons {
+    color: inherit;
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Header container styling */
+  .header-container-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    width: 100%;
+  }
+
+  .custom-header-{{ section.id }} {
+    margin: 0;
+    margin-left: {{ section.settings.header_margin_left }}px;
+    font-size: {{ section.settings.section_heading_font_size }}px;
+    color: {{ section.settings.section_heading_color }};
+    flex: 1;
+    padding-right: 15px;
+  }
+
+  /* Image styling */
+  .section-image-container-{{ section.id }} {
+    position: relative;
+    height: {{ section.settings.image_height }}px;
+    width: {{ section.settings.image_width }}px;
+    border-radius: {{ section.settings.image_radius }}px;
+  }
+
+  .section-image-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    border-radius: {{ section.settings.image_radius }}px;
+    object-fit: cover;
+  }
+
+  .image-placeholder-{{ section.id }} {
+    position: relative;
+    height: {{ section.settings.image_height }}px;
+    width: {{ section.settings.image_width }}px;
+    background-color: {{ section.settings.placeholder_bg }};
+    border-radius: {{ section.settings.image_radius }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: {{ section.settings.placeholder_text_color }};
+    border: 1px solid {{ section.settings.placeholder_border_color }};
+  }
+
+  .image-text-overlay-{{ section.id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: {{ section.settings.overlay_padding }}px;
+    z-index: 2;
+    text-align: {{ section.settings.overlay_text_align }};
+  }
+
+  .image-title-{{ section.id }} {
+    font-size: {{ section.settings.image_title_size }}px;
+    font-weight: {{ section.settings.image_title_weight }};
+    color: {{ section.settings.image_title_color }};
+    margin: 0 0 {{ section.settings.title_subtitle_spacing }}px 0;
+    line-height: 1.2;
+  }
+
+  .image-subtitle-{{ section.id }} {
+    font-size: {{ section.settings.image_subtitle_size }}px;
+    font-weight: {{ section.settings.image_subtitle_weight }};
+    color: {{ section.settings.image_subtitle_color }};
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-image-{{ section.id }}.mobile-only {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .section-image-{{ section.id }}.desktop-only {
+      display: none;
+    }
+
+    .image-title-{{ section.id }} {
+      font-size: {{ section.settings.image_title_size_mobile }}px;
+    }
+
+    .image-subtitle-{{ section.id }} {
+      font-size: {{ section.settings.image_subtitle_size_mobile }}px;
+    }
+  }
+
+  .custom-content-{{ section.id }} {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.5s ease-in-out, opacity 0.6s ease-in-out, margin 0.6s ease-in-out, padding 0.6s ease-in-out;
+    padding: 0;
+    margin: 0;
+    font-size: {{ section.settings.content_font_size }}px;
+    color: {{ section.settings.content_color }};
+  }
+
+  .custom-content-{{ section.id }}.visible {
+    max-height: 2000px;
+    opacity: 1;
+    padding-bottom: 15px;
+  }
+
+  /* Main heading styles */
+  .ps-header-wrapper-{{ section.id }} {
+    text-align: {{ section.settings.heading_text_align }};
+    margin-bottom: {{ section.settings.header_spacing }}px;
+  }
+
+  /* On desktop, heading is inside image column */
+  @media screen and (min-width: 750px) {
+    .ps-image-column-{{ section.id }} .ps-header-wrapper-{{ section.id }} {
+      text-align: left;
+    }
+  }
+
+  .ps-heading-{{ section.id }} {
+    font-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+    letter-spacing: {{ settings.heading_letter_spacing | divided_by: 1000.0 }}em;
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.heading_color }};
+    {% else %}
+      color: {{ section.settings.heading_color }};
+    {% endif %}
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.heading_font_size_desktop }}px;
+      font-weight: {{ settings.heading_font_weight }};
+      text-transform: {{ settings.heading_text_transform }};
+    {% else %}
+      font-size: {{ section.settings.heading_font_size_desktop }}px;
+      font-weight: {{ section.settings.heading_font_weight }};
+    {% endif %}
+    margin: 0 0 {{ section.settings.heading_margin_bottom }}px 0;
+    line-height: 1.2;
+  }
+
+  .ps-highlighted-text-{{ section.id }} {
+    font-family: {{ settings.highlighted_text_font.family }}, {{ settings.highlighted_text_font.fallback_families }};
+    text-transform: {{ settings.highlighted_text_transform }};
+    {% if section.settings.use_theme_colors %}
+      {% if settings.highlighted_text_gradient_enabled %}
+        background: {{ settings.highlighted_text_gradient }};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: inline-block;
+      {% else %}
+        color: {{ settings.highlighted_text_solid_color }};
+      {% endif %}
+    {% else %}
+      {% if section.settings.highlighted_gradient_enabled %}
+        background: {{ section.settings.highlighted_gradient }};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: inline-block;
+      {% else %}
+        color: {{ section.settings.highlighted_color }};
+      {% endif %}
+    {% endif %}
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.highlighted_text_font_size_desktop }}px;
+      font-weight: {{ settings.highlighted_text_font_weight }};
+      letter-spacing: {{ settings.highlighted_text_letter_spacing | divided_by: 1000.0 }}em;
+      font-style: {{ settings.highlighted_text_font_style }};
+    {% else %}
+      font-size: {{ section.settings.highlighted_font_size_desktop }}px;
+      font-weight: {{ section.settings.highlighted_font_weight }};
+      letter-spacing: {{ settings.highlighted_text_letter_spacing | divided_by: 1000.0 }}em;
+      font-style: {{ settings.highlighted_text_font_style }};
+    {% endif %}
+  }
+
+  .ps-highlighted-separate-{{ section.id }} {
+    display: inline-block;
+    margin-bottom: {{ section.settings.highlighted_spacing }}px;
+  }
+
+  .ps-intro-text-{{ section.id }} {
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.body_color }};
+    {% else %}
+      color: {{ section.settings.intro_text_color }};
+    {% endif %}
+    line-height: 1.6;
+    margin-bottom: {{ section.settings.intro_spacing }}px;
+    text-align: {{ section.settings.heading_text_align }};
+  }
+
+  /* On desktop, intro is inside image column */
+  @media screen and (min-width: 750px) {
+    .ps-image-column-{{ section.id }} .ps-intro-text-{{ section.id }} {
+      text-align: left;
+    }
+  }
+
+  /* Main content wrapper with image */
+  .ps-main-content-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.content_gap_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ps-main-content-{{ section.id }} {
+      display: flex;
+      flex-direction: row;
+      gap: {{ section.settings.content_gap_desktop }}px;
+      align-items: {{ section.settings.image_vertical_align }};
+    }
+
+    .ps-main-content-{{ section.id }}.image-left .ps-image-column-{{ section.id }} {
+      order: 1;
+    }
+
+    .ps-main-content-{{ section.id }}.image-left .ps-progress-column-{{ section.id }} {
+      order: 2;
+    }
+
+    .ps-main-content-{{ section.id }}.image-right .ps-image-column-{{ section.id }} {
+      order: 2;
+    }
+
+    .ps-main-content-{{ section.id }}.image-right .ps-progress-column-{{ section.id }} {
+      order: 1;
+    }
+  }
+
+  .ps-image-column-{{ section.id }} {
+    width: 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ps-image-column-{{ section.id }} {
+      flex: 0 0 {{ section.settings.image_width_desktop }}%;
+    }
+  }
+
+  .ps-progress-column-{{ section.id }} {
+    flex: 1;
+  }
+
+  .ps-section-image-{{ section.id }} {
+    width: 100%;
+    height: auto;
+    border-radius: {{ section.settings.section_image_radius }}px;
+    display: block;
+  }
+
+  .ps-image-placeholder-{{ section.id }} {
+    width: 100%;
+    min-height: {{ section.settings.image_placeholder_height }}px;
+    background-color: {{ section.settings.image_placeholder_bg }};
+    border-radius: {{ section.settings.section_image_radius }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: {{ section.settings.image_placeholder_text_size }}px;
+    color: {{ section.settings.image_placeholder_text_color }};
+    border: 2px dashed {{ section.settings.image_placeholder_border_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ps-section-image-{{ section.id }}.hide-mobile {
+      display: none;
+    }
+
+    .ps-image-placeholder-{{ section.id }}.hide-mobile {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ps-heading-{{ section.id }} {
+      {% if settings.enable_global_typography %}
+        font-size: {{ settings.heading_font_size_mobile }}px;
+      {% else %}
+        font-size: {{ section.settings.heading_font_size_mobile }}px;
+      {% endif %}
+    }
+
+    .ps-highlighted-text-{{ section.id }} {
+      {% if settings.enable_global_typography %}
+        font-size: {{ settings.highlighted_text_font_size_mobile }}px;
+      {% else %}
+        font-size: {{ section.settings.highlighted_font_size_mobile }}px;
+      {% endif %}
+    }
+  }
+
+  {% comment %} Button Styles {% endcomment %}
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'button' -%}
+      #shopify-section-{{ section.id }} .ps-button-wrapper[data-block-id="{{ block.id }}"] {
+        margin-top: {{ block.settings.margin_top | default: 0 }}px;
+        margin-bottom: {{ block.settings.margin_bottom | default: 24 }}px;
+        text-align: {{ block.settings.alignment_desktop | default: 'left' }};
+        {% if block.settings.hide_on_desktop %}
+          display: none;
+        {% endif %}
+      }
+
+      #shopify-section-{{ section.id }} .ps-button-wrapper[data-block-id="{{ block.id }}"] .ps-button {
+        {% if block.settings.use_custom_styles %}
+          color: {{ block.settings.button_text_color | default: '#FFFFFF' }};
+          background-color: {{ block.settings.button_bg_color | default: '#000000' }};
+          {% if block.settings.use_gradient and block.settings.button_gradient != blank %}
+            background: {{ block.settings.button_gradient }};
+          {% endif %}
+          border: {{ block.settings.border_width | default: 0 }}px solid {{ block.settings.border_color | default: '#000000' }};
+          border-radius: {{ block.settings.border_radius | default: 4 }}px;
+          font-size: {{ block.settings.font_size_desktop | default: 16 }}px;
+          font-weight: {{ block.settings.font_weight | default: '600' }};
+          text-transform: {{ block.settings.text_transform | default: 'uppercase' }};
+          letter-spacing: {{ block.settings.letter_spacing | default: 1 }}px;
+          padding: {{ block.settings.padding_vertical | default: 16 }}px {{ block.settings.padding_horizontal | default: 24 }}px;
+          {% if block.settings.full_width %}
+            width: 100%;
+            justify-content: center;
+          {% elsif block.settings.use_custom_width %}
+            width: {{ block.settings.custom_width_desktop | default: 300 }}px;
+            max-width: 100%;
+          {% else %}
+            width: auto;
+          {% endif %}
+        {% endif %}
+        display: inline-flex;
+        align-items: center;
+        gap: {{ block.settings.button_icon_gap | default: 8 }}px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      #shopify-section-{{ section.id }} .ps-button-wrapper[data-block-id="{{ block.id }}"] .ps-button:hover {
+        {% if block.settings.use_custom_styles %}
+          color: {{ block.settings.button_text_color_hover | default: '#FFFFFF' }};
+          background-color: {{ block.settings.button_bg_color_hover | default: '#333333' }};
+        {% endif %}
+      }
+
+      #shopify-section-{{ section.id }} .ps-button-wrapper[data-block-id="{{ block.id }}"] .ps-btn-icon-material {
+        font-family: 'Material Symbols Outlined';
+        font-weight: normal;
+        font-style: normal;
+        font-size: {{ block.settings.button_icon_size | default: 20 }}px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-smoothing: antialiased;
+        color: {{ block.settings.button_icon_color | default: '#FFFFFF' }};
+      }
+
+      #shopify-section-{{ section.id }} .ps-button-wrapper[data-block-id="{{ block.id }}"] .ps-btn-icon-filled {
+        font-variation-settings: 'FILL' 1;
+      }
+
+      #shopify-section-{{ section.id }} .ps-button-wrapper[data-block-id="{{ block.id }}"] .ps-custom-icon {
+        width: {{ block.settings.button_icon_size | default: 20 }}px;
+        height: {{ block.settings.button_icon_size | default: 20 }}px;
+        object-fit: contain;
+      }
+
+      @media screen and (max-width: 749px) {
+        #shopify-section-{{ section.id }} .ps-button-wrapper[data-block-id="{{ block.id }}"] {
+          text-align: {{ block.settings.alignment_mobile | default: 'center' }};
+          {% if block.settings.hide_on_desktop %}
+            display: block;
+          {% endif %}
+        }
+
+        #shopify-section-{{ section.id }} .ps-button-wrapper[data-block-id="{{ block.id }}"] .ps-button {
+          font-size: {{ block.settings.font_size_mobile | default: 14 }}px;
+          {% if block.settings.full_width_mobile_only %}
+            width: 100%;
+            justify-content: center;
+          {% elsif block.settings.use_custom_width %}
+            width: {{ block.settings.custom_width_mobile | default: 280 }}px;
+            max-width: 100%;
+          {% endif %}
+        }
+      }
+    {%- endif -%}
+  {%- endfor -%}
+
+</style>
+
+<section class="section-{{ section.id }}">
+<div class="page-width section-{{ section.id }}-padding">
+
+  {% comment %} Main Content Wrapper {% endcomment %}
+  <div class="ps-main-content-{{ section.id }} image-{{ section.settings.section_image_position }}">
+
+    {% comment %} Section Image Column {% endcomment %}
+    <div class="ps-image-column-{{ section.id }}">
+      {% comment %} Heading (Desktop: above image) {% endcomment %}
+      {% if section.settings.heading_before != blank or section.settings.highlighted_text != blank or section.settings.heading_after != blank %}
+        <div class="ps-header-wrapper-{{ section.id }}">
+          {% case section.settings.highlight_position %}
+            {% when 'above' %}
+              {% if section.settings.highlighted_text != blank %}
+                <span class="ps-highlighted-text-{{ section.id }} ps-highlighted-separate-{{ section.id }}">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+              <{{ section.settings.heading_tag }} class="ps-heading-{{ section.id }}">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+            {% when 'below' %}
+              <{{ section.settings.heading_tag }} class="ps-heading-{{ section.id }}">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+              {% if section.settings.highlighted_text != blank %}
+                <span class="ps-highlighted-text-{{ section.id }} ps-highlighted-separate-{{ section.id }}">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+            {% when 'inline_first' %}
+              <{{ section.settings.heading_tag }} class="ps-heading-{{ section.id }}">
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="ps-highlighted-text-{{ section.id }}">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_before != blank %}{{ " " }}{{ section.settings.heading_before }}{% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+            {% when 'inline_second' %}
+              <{{ section.settings.heading_tag }} class="ps-heading-{{ section.id }}">
+                {% if section.settings.heading_before != blank %}{{ section.settings.heading_before }}{{ " " }}{% endif %}
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="ps-highlighted-text-{{ section.id }}">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+          {% endcase %}
+        </div>
+      {% endif %}
+
+      {% comment %} Intro Text {% endcomment %}
+      {% if section.settings.intro_text != blank %}
+        <div class="ps-intro-text-{{ section.id }} rte">
+          {{ section.settings.intro_text }}
+        </div>
+      {% endif %}
+
+      {% comment %} Image or Placeholder {% endcomment %}
+      {% if section.settings.section_image != blank %}
+        <img
+          src="{{ section.settings.section_image | image_url: width: 1200 }}"
+          srcset="{{ section.settings.section_image | image_url: width: 400 }} 400w,
+                  {{ section.settings.section_image | image_url: width: 800 }} 800w,
+                  {{ section.settings.section_image | image_url: width: 1200 }} 1200w"
+          sizes="(max-width: 749px) 100vw, {{ section.settings.image_width_desktop }}vw"
+          alt="{{ section.settings.section_image.alt | escape }}"
+          class="ps-section-image-{{ section.id }}{% if section.settings.hide_image_on_mobile %} hide-mobile{% endif %}"
+          loading="lazy"
+        >
+      {% else %}
+        <div class="ps-image-placeholder-{{ section.id }}{% if section.settings.hide_image_on_mobile %} hide-mobile{% endif %}">
+          {{ section.settings.image_placeholder_text }}
+        </div>
+      {% endif %}
+    </div>
+
+    {% comment %} Progress Sections Column {% endcomment %}
+    <div class="ps-progress-column-{{ section.id }}">
+      {% assign progress_blocks = section.blocks | where: 'type', 'progress_section' %}
+      {% for block in progress_blocks %}
+    <div class="custom-section-{{ section.id }} custom-section-{{ section.id }}-{{ forloop.index }}" {{ block.shopify_attributes }}>
+      <div class="custom-progress-bar-{{ section.id }}">
+        {% comment %} Progress Number/Icon at Top (Priority: Custom SVG > Google Icon > Number) {% endcomment %}
+        {%- liquid
+          assign has_custom_svg = false
+          assign has_google_icon = false
+          assign has_number = false
+
+          if block.settings.custom_svg != blank
+            assign has_custom_svg = true
+          elsif block.settings.google_icon != blank
+            assign has_google_icon = true
+          elsif block.settings.progress_number != blank
+            assign has_number = true
+          endif
+        -%}
+
+        {% if has_custom_svg or has_google_icon or has_number %}
+          <div class="progress-number-{{ section.id }} progress-number-{{ section.id }}-{{ forloop.index }}"
+               data-inactive-text="{{ block.settings.number_text_color_inactive }}"
+               data-active-text="{{ block.settings.number_text_color_active }}"
+               data-inactive-bg="{{ block.settings.number_bg_color_inactive }}"
+               data-active-bg="{{ block.settings.number_bg_color_active }}"
+               data-inactive-border="{{ section.settings.number_border_color_inactive }}"
+               data-active-border="{{ section.settings.number_border_color_active }}"
+               style="{% if has_custom_svg or has_google_icon %}font-size: {{ block.settings.icon_size }}px;{% endif %}">
+            {% if has_custom_svg %}
+              <div class="progress-custom-svg" style="width: {{ block.settings.icon_size }}px; height: {{ block.settings.icon_size }}px; display: inline-flex; align-items: center; justify-content: center;">
+                {{ block.settings.custom_svg }}
+              </div>
+            {% elsif has_google_icon %}
+              <span class="material-icons" style="font-size: {{ block.settings.icon_size }}px;">{{ block.settings.google_icon }}</span>
+            {% else %}
+              {{ block.settings.progress_number }}
+            {% endif %}
+          </div>
+        {% endif %}
+        <div class="custom-pink-fill-{{ section.id }} custom-pink-fill-{{ section.id }}-{{ forloop.index }}"> </div>
+      </div>
+      <div class="header-container-{{ section.id }}">
+        <h2 class="custom-header-{{ section.id }} custom-header-{{ section.id }}-{{ forloop.index }}">
+          {{ block.settings.heading }}
+        </h2>
+
+        {% unless block.settings.hide_image %}
+          {% assign has_desktop_image = false %}
+          {% assign has_mobile_image = false %}
+          {% if block.settings.image_desktop != blank %}
+            {% assign has_desktop_image = true %}
+          {% endif %}
+          {% if block.settings.image_mobile != blank %}
+            {% assign has_mobile_image = true %}
+          {% endif %}
+
+          {% if has_desktop_image or has_mobile_image %}
+            <div class="section-image-container-{{ section.id }}">
+              {% if has_desktop_image %}
+                <img src="{{ block.settings.image_desktop | image_url: width: section.settings.image_width }}"
+                     alt="{{ block.settings.heading }}"
+                     class="section-image-{{ section.id }} desktop-only"
+                     loading="lazy">
+              {% endif %}
+              {% if has_mobile_image %}
+                <img src="{{ block.settings.image_mobile | image_url: width: section.settings.image_width }}"
+                     alt="{{ block.settings.heading }}"
+                     class="section-image-{{ section.id }} mobile-only"
+                     loading="lazy">
+              {% elsif has_desktop_image %}
+                <img src="{{ block.settings.image_desktop | image_url: width: section.settings.image_width }}"
+                     alt="{{ block.settings.heading }}"
+                     class="section-image-{{ section.id }} mobile-only"
+                     loading="lazy">
+              {% endif %}
+
+              {% if block.settings.image_title != blank or block.settings.image_subtitle != blank %}
+                <div class="image-text-overlay-{{ section.id }}">
+                  {% if block.settings.image_title != blank %}
+                    <div class="image-title-{{ section.id }}">{{ block.settings.image_title }}</div>
+                  {% endif %}
+                  {% if block.settings.image_subtitle != blank %}
+                    <div class="image-subtitle-{{ section.id }}">{{ block.settings.image_subtitle }}</div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% else %}
+            <div class="image-placeholder-{{ section.id }}"></div>
+          {% endif %}
+        {% endunless %}
+      </div>
+      <div class="custom-content-{{ section.id }} custom-content-{{ section.id }}-{{ forloop.index }}">
+        <span>{{ block.settings.content }}</span>
+      </div>
+    </div>
+      {% endfor %}
+
+      {% comment %} Render button blocks {% endcomment %}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'button' -%}
+          {%- if block.settings.button_text != blank -%}
+            <div class="ps-button-wrapper" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+              <a href="{% if block.settings.scroll_to_section != blank %}#{% elsif block.settings.button_link != blank %}{{ block.settings.button_link }}{% else %}#{% endif %}"
+                 class="ps-button{% if block.settings.scroll_to_section != blank %} scroll-to-section{% endif %}"
+                 {% if block.settings.scroll_to_section != blank %}data-scroll-target="{{ block.settings.scroll_to_section }}"{% endif %}>
+                {%- if block.settings.button_icon != blank and block.settings.icon_position == 'left' -%}
+                  {%- if block.settings.button_custom_icon != blank -%}
+                    <img src="{{ block.settings.button_custom_icon | image_url: width: 100 }}" class="ps-button-icon ps-button-icon--left ps-custom-icon" alt="icon">
+                  {%- else -%}
+                    <span class="ps-btn-icon-material ps-button-icon ps-button-icon--left{% if block.settings.button_icon_filled %} ps-btn-icon-filled{% endif %}">
+                      {{ block.settings.button_icon }}
+                    </span>
+                  {%- endif -%}
+                {%- endif -%}
+                <span class="ps-button-text">{{ block.settings.button_text }}</span>
+                {%- if block.settings.button_icon != blank and block.settings.icon_position == 'right' -%}
+                  {%- if block.settings.button_custom_icon != blank -%}
+                    <img src="{{ block.settings.button_custom_icon | image_url: width: 100 }}" class="ps-button-icon ps-button-icon--right ps-custom-icon" alt="icon">
+                  {%- else -%}
+                    <span class="ps-btn-icon-material ps-button-icon ps-button-icon--right{% if block.settings.button_icon_filled %} ps-btn-icon-filled{% endif %}">
+                      {{ block.settings.button_icon }}
+                    </span>
+                  {%- endif -%}
+                {%- endif -%}
+              </a>
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+    </div>{% comment %} End progress column {% endcomment %}
+
+  </div>{% comment %} End main content wrapper {% endcomment %}
+</div>
+</section>
+
+<script>
+(function() {
+  const sectionId = '{{ section.id }}';
+
+  // Progress bars functionality
+  function initProgressBars() {
+    let lastScrollTop = 0;
+
+    function getElements(index) {
+      try {
+        return {
+          section: document.querySelector('.custom-section-' + sectionId + '-' + index),
+          header: document.querySelector('.custom-header-' + sectionId + '-' + index),
+          content: document.querySelector('.custom-content-' + sectionId + '-' + index),
+          fill: document.querySelector('.custom-pink-fill-' + sectionId + '-' + index),
+          number: document.querySelector('.progress-number-' + sectionId + '-' + index)
+        };
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function updateSections() {
+      try {
+        const scrollTop = window.pageYOffset ||
+                          document.documentElement.scrollTop ||
+                          document.body.scrollTop || 0;
+
+        const windowHeight = window.innerHeight;
+        const bottomThreshold = windowHeight * {{ section.settings.trigger_threshold | divided_by: 100.0 }};
+
+        {% assign progress_blocks = section.blocks | where: 'type', 'progress_section' %}
+        const sectionCount = {{ progress_blocks.size }};
+
+        for (let i = 1; i <= sectionCount; i++) {
+          const elements = getElements(i);
+          if (!elements || !elements.section || !elements.header || !elements.content || !elements.fill) {
+            continue;
+          }
+
+          const sectionRect = elements.section.getBoundingClientRect();
+          const headerRect = elements.header.getBoundingClientRect();
+
+          if (sectionRect.top < windowHeight && sectionRect.bottom > 0) {
+            const triggerPoint = bottomThreshold;
+            const headerPosition = headerRect.top;
+
+            if (headerPosition <= triggerPoint) {
+              const pixelsPastTrigger = triggerPoint - headerPosition;
+              const fillDistance = windowHeight * 0.7;
+
+              const fillHeight = Math.min(100, (pixelsPastTrigger / fillDistance) * 100);
+              elements.fill.style.height = fillHeight + '%';
+
+              // Update number colors based on fill
+              if (elements.number) {
+                const numberRect = elements.number.getBoundingClientRect();
+                const numberHeight = numberRect.height;
+                const fillPixels = (fillHeight / 100) * elements.section.offsetHeight;
+
+                if (fillPixels > numberHeight) {
+                  // Number is fully covered by fill - use active colors
+                  elements.number.style.setProperty('--number-text-color', elements.number.dataset.activeText);
+                  elements.number.style.setProperty('--number-bg-color', elements.number.dataset.activeBg);
+                  elements.number.style.setProperty('--number-border-color', elements.number.dataset.activeBorder);
+                } else {
+                  // Number not covered - use inactive colors
+                  elements.number.style.setProperty('--number-text-color', elements.number.dataset.inactiveText);
+                  elements.number.style.setProperty('--number-bg-color', elements.number.dataset.inactiveBg);
+                  elements.number.style.setProperty('--number-border-color', elements.number.dataset.inactiveBorder);
+                }
+              }
+
+              if (fillHeight > {{ section.settings.content_reveal_threshold }}) {
+                elements.content.classList.add('visible');
+                elements.fill.style.height = '100%';
+              } else {
+                elements.content.classList.remove('visible');
+              }
+            } else {
+              elements.fill.style.height = '0%';
+              elements.content.classList.remove('visible');
+
+              // Reset number to inactive colors
+              if (elements.number) {
+                elements.number.style.setProperty('--number-text-color', elements.number.dataset.inactiveText);
+                elements.number.style.setProperty('--number-bg-color', elements.number.dataset.inactiveBg);
+                elements.number.style.setProperty('--number-border-color', elements.number.dataset.inactiveBorder);
+              }
+            }
+          }
+          else if (sectionRect.bottom <= 0) {
+            elements.fill.style.height = '100%';
+
+            // Set number to active colors when section passed
+            if (elements.number) {
+              elements.number.style.setProperty('--number-text-color', elements.number.dataset.activeText);
+              elements.number.style.setProperty('--number-bg-color', elements.number.dataset.activeBg);
+              elements.number.style.setProperty('--number-border-color', elements.number.dataset.activeBorder);
+            }
+
+            if (scrollTop > lastScrollTop) {
+              elements.content.classList.add('visible');
+              elements.fill.style.height = '100%';
+            } else {
+              elements.content.classList.remove('visible');
+            }
+          }
+          else {
+            elements.fill.style.height = '0%';
+            elements.content.classList.remove('visible');
+
+            // Reset number to inactive colors
+            if (elements.number) {
+              elements.number.style.setProperty('--number-text-color', elements.number.dataset.inactiveText);
+              elements.number.style.setProperty('--number-bg-color', elements.number.dataset.inactiveBg);
+              elements.number.style.setProperty('--number-border-color', elements.number.dataset.inactiveBorder);
+            }
+          }
+        }
+
+        lastScrollTop = scrollTop;
+      } catch (e) {
+      }
+    }
+
+    window.addEventListener('scroll', updateSections, { passive: true });
+    document.addEventListener('DOMContentLoaded', updateSections);
+    window.addEventListener('load', updateSections);
+
+    setTimeout(updateSections, 500);
+    setTimeout(updateSections, 1000);
+    setTimeout(updateSections, 2000);
+  }
+
+  if (typeof jQuery === 'function') {
+    jQuery(document).ready(initProgressBars);
+  } else {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initProgressBars);
+    } else {
+      initProgressBars();
+    }
+  }
+})();
+</script>
+
+{% schema %}
+{"name":"Progress Sections","settings": [
+ {"type":"header","content":"Section Padding"},
+ {"type":"range","id":"section_padding_top_mobile","min": 0,"max": 152,"step": 4,"unit":"px","label":"Top Padding (Mobile)","default": 36
+ },
+ {"type":"range","id":"section_padding_bottom_mobile","min": 0,"max": 152,"step": 4,"unit":"px","label":"Bottom Padding (Mobile)","default": 36
+ },
+ {"type":"range","id":"section_padding_top_desktop","min": 0,"max": 200,"step": 4,"unit":"px","label":"Top Padding (Desktop)","default": 60
+ },
+ {"type":"range","id":"section_padding_bottom_desktop","min": 0,"max": 200,"step": 4,"unit":"px","label":"Bottom Padding (Desktop)","default": 60
+ },
+ {"type":"header","content":"Section Background"},
+ {"type":"color","id":"section_bg_color","label":"Section Background Color","default":"#ffffff"},
+ {"type":"checkbox","id":"enable_section_gradient","label":"Enable Gradient Background","default":false},
+ {"type":"color_background","id":"section_gradient_bg","label":"Gradient Background","info":"Applied when gradient is enabled"},
+ {"type":"header","content":"Use Theme Colors"},
+ {"type":"checkbox","id":"use_theme_colors","label":"Use Theme Colors","default": true
+ },
+ {"type":"header","content":"Heading"},
+ {"type":"text","id":"heading_before","label":"Heading (Before Highlight)","default":"Add your"},
+ {"type":"text","id":"highlighted_text","label":"Highlight","default":"title here"},
+ {"type":"text","id":"heading_after","label":"Heading (After Highlight)"},
+ {"type":"select","id":"highlight_position","label":"Highlight Position","options": [
+ {"value":"inline_second","label":"Inline (Middle)"},
+ {"value":"inline_first","label":"Inline (First)"},
+ {"value":"above","label":"Above Heading"},
+ {"value":"below","label":"Below Heading"}
+ ],"default":"inline_second"},
+ {"type":"select","id":"heading_tag","label":"Heading Tag","options": [
+ {"value":"h1","label":"H1"},
+ {"value":"h2","label":"H2"},
+ {"value":"h3","label":"H3"},
+ {"value":"h4","label":"H4"},
+ {"value":"p","label":"Paragraph"}
+ ],"default":"h2"},
+ {"type":"select","id":"heading_text_align","label":"Heading Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"color","id":"heading_color","label":"Heading Color","default":"#0f172a"},
+ {"type":"range","id":"heading_font_size_desktop","min": 24,"max": 96,"step": 2,"unit":"px","label":"Heading Font Size (Desktop)","default": 48
+ },
+ {"type":"range","id":"heading_font_size_mobile","min": 22,"max": 60,"step": 2,"unit":"px","label":"Heading Font Size (Mobile)","default": 32
+ },
+ {"type":"select","id":"heading_font_weight","label":"Heading Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Regular"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"500"},
+ {"type":"range","id":"heading_margin_bottom","min": 0,"max": 60,"step": 2,"unit":"px","label":"Heading Margin Bottom","default": 0
+ },
+ {"type":"range","id":"header_spacing","min": 0,"max": 100,"step": 4,"unit":"px","label":"Spacing Below Header","default": 20
+ },
+ {"type":"header","content":"Highlight"},
+ {"type":"checkbox","id":"highlighted_gradient_enabled","label":"Enable Highlight Gradient","default": true
+ },
+ {"type":"color","id":"highlighted_color","label":"Highlight Color","default":"#ef4444"},
+ {"type":"color_background","id":"highlighted_gradient","label":"Highlight Gradient","default":"linear-gradient(71deg, rgba(0, 0, 0, 1), rgba(161, 161, 161, 1) 100%)"},
+ {"type":"range","id":"highlighted_font_size_desktop","min": 24,"max": 96,"step": 2,"unit":"px","label":"Highlight Font Size (Desktop)","default": 48
+ },
+ {"type":"range","id":"highlighted_font_size_mobile","min": 20,"max": 60,"step": 2,"unit":"px","label":"Highlight Font Size (Mobile)","default": 32
+ },
+ {"type":"select","id":"highlighted_font_weight","label":"Highlight Weight","options": [
+ {"value":"400","label":"Regular"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"500"},
+ {"type":"range","id":"highlighted_spacing","min": 0,"max": 40,"step": 2,"unit":"px","label":"Highlight Spacing (When Above/Below)","default": 12
+ },
+ {"type":"header","content":"Intro"},
+ {"type":"richtext","id":"intro_text","label":"Intro Text","default":"<p>Add your intro text here</p>"},
+ {"type":"color","id":"intro_text_color","label":"Intro Text Color","default":"#475467"},
+ {"type":"range","id":"intro_spacing","min": 0,"max": 80,"step": 4,"unit":"px","label":"Spacing Below Intro","default": 8
+ },
+ {"type":"header","content":"Section Image"},
+ {"type":"image_picker","id":"section_image","label":"Section Image","info":"Image appears alongside the progress sections"},
+ {"type":"checkbox","id":"hide_image_on_mobile","label":"Hide Image on Mobile","default": true,"info":"Hide this image on mobile devices"},
+ {"type":"select","id":"section_image_position","label":"Image Position (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"right","label":"Right"}
+ ],"default":"left","info":"Position of the section image on desktop"},
+ {"type":"range","id":"image_width_desktop","min": 20,"max": 60,"step": 5,"unit":"%","label":"Image Width (Desktop)","default": 50,"info":"Width of image column on desktop"},
+ {"type":"select","id":"image_vertical_align","label":"Image Vertical Alignment (Desktop)","options": [
+ {"value":"flex-start","label":"Top"},
+ {"value":"center","label":"Center"},
+ {"value":"flex-end","label":"Bottom"}
+ ],"default":"flex-start","info":"Vertical alignment of image relative to content"},
+ {"type":"range","id":"content_gap_desktop","min": 0,"max": 100,"step": 4,"unit":"px","label":"Gap Between Image & Progress (Desktop)","default": 40
+ },
+ {"type":"range","id":"content_gap_mobile","min": 0,"max": 60,"step": 4,"unit":"px","label":"Gap Below Image (Mobile)","default": 0
+ },
+ {"type":"range","id":"section_image_radius","min": 0,"max": 30,"step": 2,"unit":"px","label":"Section Image Border Radius","default": 8
+ },
+ {"type":"header","content":"Progress Bar Settings"},
+ {"type":"range","id":"progress_bar_width","min": 3,"max": 20,"step": 1,"unit":"px","label":"Progress bar width","default": 7
+ },
+ {"type":"color","id":"progress_bar_bg","label":"Progress bar background","default":"#dddddd"},
+ {"type":"checkbox","id":"progress_fill_gradient_enabled","label":"Enable Progress Fill Gradient","default": false,"info":"Use gradient instead of solid color for progress fill"},
+ {"type":"color","id":"progress_fill_color","label":"Progress fill color","default":"#000000","info":"Used when gradient is disabled"},
+ {"type":"color_background","id":"progress_fill_gradient","label":"Progress Fill Gradient","default":"linear-gradient(180deg, rgba(0, 81, 157, 1), rgba(0, 145, 234, 1) 100%)","info":"Used when gradient is enabled"},
+ {"type":"range","id":"progress_bar_radius","min": 0,"max": 20,"step": 1,"unit":"px","label":"Progress bar border radius","default": 10
+ },
+ {"type":"header","content":"Progress Number Styling"},
+ {"type":"range","id":"number_size","min": 16,"max": 60,"step": 2,"unit":"px","label":"Number Container Size","default": 24,"info":"Width and height of the number circle"},
+ {"type":"range","id":"number_font_size","min": 10,"max": 36,"step": 1,"unit":"px","label":"Number Font Size","default": 15
+ },
+ {"type":"range","id":"number_border_radius","min": 0,"max": 50,"step": 5,"unit":"%","label":"Number Border Radius","default": 50,"info":"50% makes it a circle"},
+ {"type":"range","id":"number_top_offset","min": -20,"max": 40,"step": 2,"unit":"px","label":"Number Top Offset","default": 26,"info":"Adjust vertical position (negative moves up, positive moves down)"},
+ {"type":"range","id":"number_border_width","min": 0,"max": 5,"step": 1,"unit":"px","label":"Number Border Width","default": 2
+ },
+ {"type":"color","id":"number_border_color_inactive","label":"Number Border Color (Inactive)","default":"#dddddd"},
+ {"type":"color","id":"number_border_color_active","label":"Number Border Color (Active)","default":"#000000"},
+ {"type":"header","content":"Header Spacing"},
+ {"type":"range","id":"header_margin_left","min": 0,"max": 15,"step": 1,"unit":"px","label":"Header Left Margin","default": 6,"info":"Space between progress bar and header text"},
+ {"type":"range","id":"trigger_threshold","min": 50,"max": 90,"step": 5,"unit":"%","label":"Scroll trigger position","default": 80,"info":"Percentage from top of viewport where animation triggers"},
+ {"type":"range","id":"content_reveal_threshold","min": 10,"max": 50,"step": 5,"unit":"%","label":"Content reveal threshold","default": 30,"info":"Progress percentage at which content becomes visible"},
+ {"type":"header","content":"Section Content"},
+ {"type":"range","id":"section_heading_font_size","min": 14,"max": 48,"step": 2,"unit":"px","label":"Section heading font size","default": 20
+ },
+ {"type":"color","id":"section_heading_color","label":"Section heading color","default":"#000000"},
+ {"type":"range","id":"content_font_size","min": 12,"max": 24,"step": 1,"unit":"px","label":"Content font size","default": 16
+ },
+ {"type":"color","id":"content_color","label":"Content color","default":"#333333"},
+ {"type":"header","content":"Image Settings"},
+ {"type":"range","id":"image_width","min": 50,"max": 300,"step": 5,"unit":"px","label":"Image width","default": 125
+ },
+ {"type":"range","id":"image_height","min": 30,"max": 200,"step": 5,"unit":"px","label":"Image height","default": 60
+ },
+ {"type":"range","id":"image_radius","min": 0,"max": 30,"step": 2,"unit":"px","label":"Image border radius","default": 8
+ },
+ {"type":"header","content":"Image Overlay Text"},
+ {"type":"range","id":"overlay_padding","min": 0,"max": 30,"step": 2,"unit":"px","label":"Overlay padding","default": 8
+ },
+ {"type":"select","id":"overlay_text_align","label":"Overlay text alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"range","id":"image_title_size","min": 10,"max": 28,"step": 1,"unit":"px","label":"Title font size (Desktop)","default": 14
+ },
+ {"type":"range","id":"image_title_size_mobile","min": 8,"max": 20,"step": 1,"unit":"px","label":"Title font size (Mobile)","default": 12
+ },
+ {"type":"select","id":"image_title_weight","label":"Title font weight","options": [
+ {"value":"400","label":"Regular"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"600"},
+ {"type":"color","id":"image_title_color","label":"Title color","default":"#ffffff"},
+ {"type":"range","id":"image_subtitle_size","min": 8,"max": 20,"step": 1,"unit":"px","label":"Subtitle font size (Desktop)","default": 11
+ },
+ {"type":"range","id":"image_subtitle_size_mobile","min": 6,"max": 16,"step": 1,"unit":"px","label":"Subtitle font size (Mobile)","default": 9
+ },
+ {"type":"select","id":"image_subtitle_weight","label":"Subtitle font weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Regular"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"}
+ ],"default":"400"},
+ {"type":"color","id":"image_subtitle_color","label":"Subtitle color","default":"#f0f0f0"},
+ {"type":"range","id":"title_subtitle_spacing","min": 0,"max": 12,"step": 1,"unit":"px","label":"Space between title and subtitle","default": 3
+ }
+ ],"blocks": [
+ {"type":"progress_section","name":"Progress Section","settings": [
+ {"type":"text","id":"heading","label":"Section heading","default":"Section Heading"},
+ {"type":"textarea","id":"content","label":"Section content","default":"Add your section content here."},
+ {"type":"header","content":"Images"},
+ {"type":"checkbox","id":"hide_image","label":"Hide Image","default":false,"info":"Hide image for this block"},
+ {"type":"image_picker","id":"image_desktop","label":"Desktop image","info":"Displayed on screens 750px and wider"},
+ {"type":"image_picker","id":"image_mobile","label":"Mobile image (optional)","info":"Displayed on screens smaller than 750px. If not set, desktop image will be used."},
+ {"type":"header","content":"Image Overlay Text"},
+ {"type":"text","id":"image_title","label":"Title (on image)","info":"Text displayed at the top of the image"},
+ {"type":"text","id":"image_subtitle","label":"Subtitle (on image)","info":"Text displayed below the title"},
+ {"type":"header","content":"Progress Number/Icon Settings"},
+ {"type":"paragraph","content":"Priority: Custom SVG > Google Icon > Number. If Custom SVG is filled, it takes priority. If Google Icon is filled, it takes priority over Number."},
+ {"type":"text","id":"progress_number","label":"Number","default":"1","info":"Number displayed at top of progress bar (lowest priority)"},
+ {"type":"text","id":"google_icon","label":"Google Material Icon Name","info":"Enter Material Icon name (e.g., 'check_circle', 'star'). See https://fonts.google.com/icons. Takes priority over Number."},
+ {"type":"html","id":"custom_svg","label":"Custom SVG Code","info":"Paste your custom SVG code here. Takes priority over Google Icon and Number."},
+ {"type":"range","id":"icon_size","min":16,"max":64,"step":2,"unit":"px","label":"Icon Size","default":24,"info":"Size for Google Icon or Custom SVG"},
+ {"type":"color","id":"number_text_color_inactive","label":"Number/Icon Text Color (Inactive)","default":"#999999"},
+ {"type":"color","id":"number_text_color_active","label":"Number/Icon Text Color (Active)","default":"#ffffff"},
+ {"type":"color","id":"number_bg_color_inactive","label":"Number Background (Inactive)","default":"#f0f0f0"},
+ {"type":"color","id":"number_bg_color_active","label":"Number Background (Active)","default":"#ec4899"}
+ ]
+ },
+ {"type":"button","name":"Button","settings": [
+ {"type":"paragraph","content":"**Call-to-Action Button**"},
+ {"type":"text","id":"button_text","label":"Button Text","default":"SHOP NOW"},
+ {"type":"url","id":"button_link","label":"Button Link"},
+ {"type":"text","id":"scroll_to_section","label":"Scroll to Section Class","info":"Enter class name WITHOUT the dot (e.g., 'product-info' NOT '.product-info'). Leave button link empty when using this."},
+ {"type":"checkbox","id":"hide_on_desktop","label":"Hide on Desktop","default": false,"info":"Only show button on mobile devices"},
+ {"type":"header","content":"Icon Settings"},
+ {"type":"text","id":"button_icon","label":"Material Icon Name","default":"arrow_right_alt","info":"Enter Material Symbol name from https://fonts.google.com/icons"},
+ {"type":"checkbox","id":"button_icon_filled","label":"Use Filled Icon","default": false},
+ {"type":"image_picker","id":"button_custom_icon","label":"Custom Icon Image (Optional)","info":"Use custom image instead of Material Icon"},
+ {"type":"select","id":"icon_position","label":"Icon Position","options": [
+ {"value":"left","label":"Left"},
+ {"value":"right","label":"Right"}
+ ],"default":"right"},
+ {"type":"range","id":"button_icon_size","min": 12,"max": 48,"step": 2,"unit":"px","label":"Icon Size","default": 20
+ },
+ {"type":"range","id":"button_icon_gap","min": 0,"max": 24,"step": 2,"unit":"px","label":"Icon Gap","default": 8,"info":"Space between icon and text"
+ },
+ {"type":"color","id":"button_icon_color","label":"Icon Color","default":"#FFFFFF"},
+ {"type":"header","content":"Alignment"},
+ {"type":"select","id":"alignment_desktop","label":"Alignment (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"select","id":"alignment_mobile","label":"Alignment (Mobile)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"header","content":"Custom Styles"},
+ {"type":"checkbox","id":"use_custom_styles","label":"Enable Custom Styles","default": true},
+ {"type":"color","id":"button_text_color","label":"Text Color","default":"#FFFFFF"},
+ {"type":"color","id":"button_bg_color","label":"Background Color","default":"#000000"},
+ {"type":"checkbox","id":"use_gradient","label":"Use Gradient Background","default": false},
+ {"type":"color_background","id":"button_gradient","label":"Gradient Background","default":"linear-gradient(135deg, #667eea 0%, #764ba2 100%)"},
+ {"type":"color","id":"button_text_color_hover","label":"Text Color (Hover)","default":"#FFFFFF"},
+ {"type":"color","id":"button_bg_color_hover","label":"Background Color (Hover)","default":"#333333"},
+ {"type":"header","content":"Border"},
+ {"type":"range","id":"border_width","min": 0,"max": 5,"step": 1,"unit":"px","label":"Border Width","default": 0
+ },
+ {"type":"color","id":"border_color","label":"Border Color","default":"#000000"},
+ {"type":"range","id":"border_radius","min": 0,"max": 50,"step": 2,"unit":"px","label":"Border Radius","default": 4
+ },
+ {"type":"header","content":"Typography"},
+ {"type":"range","id":"font_size_desktop","min": 10,"max": 32,"step": 1,"unit":"px","label":"Font Size (Desktop)","default": 16
+ },
+ {"type":"range","id":"font_size_mobile","min": 10,"max": 28,"step": 1,"unit":"px","label":"Font Size (Mobile)","default": 14
+ },
+ {"type":"select","id":"font_weight","label":"Font Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"600"},
+ {"type":"select","id":"text_transform","label":"Text Transform","options": [
+ {"value":"none","label":"None"},
+ {"value":"uppercase","label":"Uppercase"},
+ {"value":"lowercase","label":"Lowercase"},
+ {"value":"capitalize","label":"Capitalize"}
+ ],"default":"uppercase"},
+ {"type":"range","id":"letter_spacing","min": 0,"max": 5,"step": 0.5,"unit":"px","label":"Letter Spacing","default": 1
+ },
+ {"type":"header","content":"Size & Spacing"},
+ {"type":"range","id":"padding_vertical","min": 0,"max": 40,"step": 2,"unit":"px","label":"Vertical Padding","default": 16
+ },
+ {"type":"range","id":"padding_horizontal","min": 0,"max": 80,"step": 2,"unit":"px","label":"Horizontal Padding","default": 24
+ },
+ {"type":"checkbox","id":"full_width","label":"Full Width Button","default": false},
+ {"type":"checkbox","id":"full_width_mobile_only","label":"Full Width on Mobile Only","default": true},
+ {"type":"checkbox","id":"use_custom_width","label":"Use Custom Width","default": false},
+ {"type":"range","id":"custom_width_desktop","min": 100,"max": 600,"step": 10,"unit":"px","label":"Custom Width (Desktop)","default": 300
+ },
+ {"type":"range","id":"custom_width_mobile","min": 100,"max": 400,"step": 10,"unit":"px","label":"Custom Width (Mobile)","default": 280
+ },
+ {"type":"range","id":"margin_top","min": 0,"max": 100,"step": 4,"unit":"px","label":"Margin Top","default": 0
+ },
+ {"type":"range","id":"margin_bottom","min": 0,"max": 100,"step": 4,"unit":"px","label":"Margin Bottom","default": 24
+ }
+ ]
+ }
+ ],"presets": [
+ {"name":"Progress Sections","blocks": [
+ {"type":"progress_section","settings": {"heading":"First Product Collection","content":"Explore our latest collection of premium products.","hide_image":false}
+ },
+ {"type":"progress_section","settings": {"heading":"Customer Testimonials","content":"Absolutely love the products! Fast shipping and amazing quality. - Sarah K.","hide_image":false}
+ },
+ {"type":"progress_section","settings": {"heading":"About Our Brand","content":"Join us in making a positive impact through conscious consumption.","hide_image":false}
+ },
+ {"type":"button","settings": {"button_text":"SHOP NOW","button_link":"","scroll_to_section":"","hide_on_desktop": false,"button_icon":"arrow_right_alt","button_icon_filled": false,"button_custom_icon":"","icon_position":"right","button_icon_size": 20,"button_icon_gap": 8,"button_icon_color":"#FFFFFF","alignment_desktop":"center","alignment_mobile":"center","use_custom_styles": true,"button_text_color":"#FFFFFF","button_bg_color":"#000000","use_gradient": false,"button_gradient":"","button_text_color_hover":"#FFFFFF","button_bg_color_hover":"#333333","border_width": 0,"border_color":"#000000","border_radius": 4,"font_size_desktop": 16,"font_size_mobile": 14,"font_weight":"600","text_transform":"uppercase","letter_spacing": 1,"padding_vertical": 16,"padding_horizontal": 24,"full_width": false,"full_width_mobile_only": true,"use_custom_width": false,"custom_width_desktop": 300,"custom_width_mobile": 280,"margin_top": 0,"margin_bottom": 24}
+ }
+ ],"category":"Stats"}
+ ]
+}
+{% endschema %}
+
+<script>
+(function() {
+  const buttons = document.querySelectorAll('#shopify-section-{{ section.id }} .scroll-to-section');
+
+  buttons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      const targetClass = this.getAttribute('data-scroll-target');
+      if (targetClass) {
+        e.preventDefault();
+        const targetElement = document.querySelector('.' + targetClass);
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }
+    });
+  });
+})();
+</script>

@@ -1,0 +1,33 @@
+{% comment %}
+  Product Image Display Fix - Ensures proper aspect ratio without breaking page
+{% endcomment %}
+
+<style>
+  /* Targeted fix for product images only */
+  .product__media .media {
+    padding-bottom: 0 !important;
+    height: auto !important;
+  }
+
+  .product__media .media img {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+  /* Fix for product page main images */
+  main[id*="MainProduct"] .media,
+  .product-single__media .media {
+    padding-bottom: 0 !important;
+    height: auto !important;
+  }
+
+  main[id*="MainProduct"] .media img,
+  .product-single__media img {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+</style>

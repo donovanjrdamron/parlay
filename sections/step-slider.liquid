@@ -1,0 +1,1317 @@
+{% comment %}
+  Step Slider Section
+  Mobile: Horizontal slider with progress circles
+  Desktop: Vertical layout with numbered steps
+{% endcomment %}
+
+<section class="step-slider section-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="container page-width">
+    <div class="ss-content-wrapper">
+
+      {% comment %} Heading {% endcomment %}
+      {% if section.settings.heading_before != blank or section.settings.highlighted_text != blank or section.settings.heading_after != blank %}
+        <div class="ss-header-wrapper ss-align-{{ section.settings.heading_text_align }}">
+          {% case section.settings.highlight_position %}
+            {% when 'above' %}
+              {% if section.settings.highlighted_text != blank %}
+                <span class="ss-highlighted-text ss-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+              <{{ section.settings.heading_tag }} class="ss-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+            {% when 'below' %}
+              <{{ section.settings.heading_tag }} class="ss-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+              {% if section.settings.highlighted_text != blank %}
+                <span class="ss-highlighted-text ss-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+            {% when 'inline_first' %}
+              <{{ section.settings.heading_tag }} class="ss-heading">
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="ss-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_before != blank %}{{ " " }}{{ section.settings.heading_before }}{% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+            {% when 'inline_second' %}
+              <{{ section.settings.heading_tag }} class="ss-heading">
+                {% if section.settings.heading_before != blank %}{{ section.settings.heading_before }}{{ " " }}{% endif %}
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="ss-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+          {% endcase %}
+        </div>
+      {% endif %}
+
+      {% comment %} Subtext {% endcomment %}
+      {% if section.settings.subtext != blank %}
+        <div class="ss-subtext-wrapper ss-align-{{ section.settings.heading_text_align }}">
+          <p class="ss-subtext">{{ section.settings.subtext }}</p>
+        </div>
+      {% endif %}
+
+      {% if section.blocks.size > 0 %}
+        
+        {% comment %} Mobile: Progress Indicator {% endcomment %}
+        <div class="ss-progress-mobile">
+          {% for block in section.blocks %}
+            <div class="ss-progress-item">
+              <div class="ss-progress-circle {% if forloop.first %}ss-active{% endif %}" data-step="{{ forloop.index }}">
+                {{ forloop.index }}
+              </div>
+              {% unless forloop.last %}
+                <div class="ss-progress-connector">&nbsp;</div>
+              {% endunless %}
+            </div>
+          {% endfor %}
+        </div>
+
+        {% comment %} Mobile: Horizontal Slider {% endcomment %}
+        <div class="ss-slider-mobile" data-slider-container>
+          <div class="ss-slider-viewport">
+            <div class="ss-slider-track" data-slider-track>
+              {% for block in section.blocks %}
+              {% if block.type == 'step' %}
+                <div class="ss-slide" data-slide-index="{{ forloop.index }}" {{ block.shopify_attributes }}>
+                  
+                  {% comment %} Image {% endcomment %}
+                  <div class="ss-step-image-wrapper">
+                    {% if block.settings.image != blank %}
+                      <img
+                        src="{{ block.settings.image | image_url: width: 800 }}"
+                        srcset="{{ block.settings.image | image_url: width: 400 }} 400w,
+                                {{ block.settings.image | image_url: width: 600 }} 600w,
+                                {{ block.settings.image | image_url: width: 800 }} 800w"
+                        sizes="(max-width: 768px) 90vw, 600px"
+                        alt="{{ block.settings.step_heading | escape }}"
+                        width="{{ block.settings.image.width }}"
+                        height="{{ block.settings.image.height }}"
+                        loading="lazy"
+                        class="ss-step-image"
+                      >
+                    {% else %}
+                      <div class="ss-image-placeholder">
+                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  {% comment %} Content {% endcomment %}
+                  <div class="ss-step-content">
+                    {% if block.settings.step_heading != blank %}
+                      <div class="ss-title-wrapper">
+                        {% if block.settings.enable_number %}
+                          {%- liquid
+                            assign has_custom_svg = false
+                            assign has_google_icon = false
+                            assign display_color = block.settings.icon_color
+
+                            if block.settings.custom_svg != blank
+                              assign has_custom_svg = true
+                              if block.settings.custom_svg_color != blank
+                                assign display_color = block.settings.custom_svg_color
+                              endif
+                            elsif block.settings.google_icon != blank
+                              assign has_google_icon = true
+                            endif
+                          -%}
+                          <div class="ss-number-badge" style="{% if has_custom_svg or has_google_icon %}font-size: {{ block.settings.icon_size }}px; color: {{ display_color }};{% else %}color: {{ block.settings.icon_color }};{% endif %}">
+                            {% if has_custom_svg %}
+                              <div class="ss-custom-svg" style="width: {{ block.settings.icon_size }}px; height: {{ block.settings.icon_size }}px; display: inline-flex; align-items: center; justify-content: center; color: {{ display_color }};">
+                                {{ block.settings.custom_svg }}
+                              </div>
+                            {% elsif has_google_icon %}
+                              <span class="material-icons" style="font-size: {{ block.settings.icon_size }}px; color: {{ display_color }};">{{ block.settings.google_icon }}</span>
+                            {% else %}
+                              {{ block.settings.number_value }}
+                            {% endif %}
+                          </div>
+                        {% endif %}
+                        <h3 class="ss-step-heading">{{ block.settings.step_heading }}</h3>
+                      </div>
+                    {% endif %}
+                    {% if block.settings.step_text != blank %}
+                      <div class="ss-step-text rte">{{ block.settings.step_text }}</div>
+                    {% endif %}
+                    {% if block.settings.custom_html != blank %}
+                      <div class="ss-step-custom-html">
+                        {{ block.settings.custom_html }}
+                      </div>
+                    {% endif %}
+                  </div>
+
+                </div>
+              {% elsif block.type == 'custom_html' %}
+                <div class="ss-slide ss-custom-html-slide" data-slide-index="{{ forloop.index }}" {{ block.shopify_attributes }}>
+                  <div class="ss-custom-html">
+                    {{ block.settings.html_content }}
+                  </div>
+                </div>
+              {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+          {% comment %} Scrollbar {% endcomment %}
+          <div class="ss-scrollbar-wrapper">
+            <div class="ss-scrollbar-track">
+              <div class="ss-scrollbar-thumb" data-scrollbar-thumb></div>
+            </div>
+          </div>
+        </div>
+
+        {% comment %} Desktop: Vertical Steps Container {% endcomment %}
+        <div class="ss-desktop-container">
+
+          {% comment %} Fixed Progress Indicator {% endcomment %}
+          <div class="ss-desktop-progress">
+            {% for block in section.blocks %}
+              <div class="ss-desktop-progress-item">
+                <div class="ss-desktop-progress-circle {% if forloop.first %}ss-active{% endif %}" data-desktop-step="{{ forloop.index }}">
+                  {{ forloop.index }}
+                </div>
+                {% unless forloop.last %}
+                  <div class="ss-desktop-progress-connector">&nbsp;</div>
+                {% endunless %}
+              </div>
+            {% endfor %}
+          </div>
+
+          {% comment %} Scrollable Steps {% endcomment %}
+          <div class="ss-steps-desktop" data-desktop-scroller>
+            {% for block in section.blocks %}
+              {% if block.type == 'step' %}
+              <div class="ss-step-item" data-step="{{ forloop.index }}" {{ block.shopify_attributes }}>
+                
+                {% comment %} Step Content {% endcomment %}
+                <div class="ss-step-main">
+                
+                {% comment %} Image {% endcomment %}
+                <div class="ss-step-image-wrapper">
+                  {% if block.settings.image != blank %}
+                    <img
+                      src="{{ block.settings.image | image_url: width: 800 }}"
+                      srcset="{{ block.settings.image | image_url: width: 400 }} 400w,
+                              {{ block.settings.image | image_url: width: 600 }} 600w,
+                              {{ block.settings.image | image_url: width: 800 }} 800w"
+                      sizes="(max-width: 768px) 90vw, 600px"
+                      alt="{{ block.settings.step_heading | escape }}"
+                      width="{{ block.settings.image.width }}"
+                      height="{{ block.settings.image.height }}"
+                      loading="lazy"
+                      class="ss-step-image"
+                    >
+                  {% else %}
+                    <div class="ss-image-placeholder">
+                      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                  {% endif %}
+                </div>
+
+                {% comment %} Text Content {% endcomment %}
+                <div class="ss-step-content">
+                  {% if block.settings.step_heading != blank %}
+                    <div class="ss-title-wrapper">
+                      {% if block.settings.enable_number %}
+                        <div class="ss-number-badge">
+                          {{ block.settings.number_value }}
+                        </div>
+                      {% endif %}
+                      <h3 class="ss-step-heading">{{ block.settings.step_heading }}</h3>
+                    </div>
+                  {% endif %}
+                  {% if block.settings.step_text != blank %}
+                    <div class="ss-step-text rte">{{ block.settings.step_text }}</div>
+                  {% endif %}
+                  {% if block.settings.custom_html != blank %}
+                    <div class="ss-step-custom-html">
+                      {{ block.settings.custom_html }}
+                    </div>
+                  {% endif %}
+                </div>
+
+              </div>
+            </div>
+              {% elsif block.type == 'custom_html' %}
+              <div class="ss-step-item ss-custom-html-step" data-step="{{ forloop.index }}" {{ block.shopify_attributes }}>
+                <div class="ss-custom-html">
+                  {{ block.settings.html_content }}
+                </div>
+              </div>
+              {% endif %}
+          {% endfor %}
+          </div>
+        </div>
+
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ===========================
+     Section Base
+     =========================== */
+  .section-{{ section.id }} {
+    {% if section.settings.use_theme_colors %}
+      {% if settings.global_section_use_gradient_background %}
+        background: var(--gradient-background);
+      {% else %}
+        background-color: {{ settings.global_section_background_color }};
+      {% endif %}
+    {% else %}
+      {% if section.settings.enable_gradient_background %}
+        background: {{ section.settings.gradient_background }};
+      {% else %}
+        background-color: {{ section.settings.background_color }};
+      {% endif %}
+    {% endif %}
+    padding-top: {{ section.settings.section_padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.section_padding_bottom_mobile }}px;
+    overflow-x: hidden;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }} {
+      padding-top: {{ section.settings.section_padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.section_padding_bottom_desktop }}px;
+    }
+  }
+
+  /* ===========================
+     Alignment Utilities
+     =========================== */
+  .section-{{ section.id }} .ss-align-left {
+    text-align: left;
+  }
+
+  .section-{{ section.id }} .ss-align-center {
+    text-align: center;
+  }
+
+  .section-{{ section.id }} .ss-align-right {
+    text-align: right;
+  }
+
+  /* ===========================
+     Heading
+     =========================== */
+  .section-{{ section.id }} .ss-heading {
+    font-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+    letter-spacing: {{ settings.heading_letter_spacing | divided_by: 1000.0 }}em;
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.heading_color }};
+    {% else %}
+      color: {{ section.settings.heading_color }};
+    {% endif %}
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.heading_font_size_desktop }}px;
+      font-weight: {{ settings.heading_font_weight }};
+    {% else %}
+      font-size: {{ section.settings.heading_font_size_desktop }}px;
+      font-weight: {{ section.settings.heading_font_weight }};
+    {% endif %}
+    line-height: 1.2;
+    margin: 0 0 {{ section.settings.heading_margin_bottom }}px 0;
+  }
+
+  /* ===========================
+     Highlighted Text
+     =========================== */
+  .section-{{ section.id }} .ss-highlighted-text {
+    display: inline-block;
+    font-family: {{ settings.highlighted_text_font.family }}, {{ settings.highlighted_text_font.fallback_families }};
+    text-transform: {{ settings.highlighted_text_transform }};
+    {% if section.settings.use_theme_colors %}
+      {% if settings.highlighted_text_gradient_enabled %}
+        background: {{ settings.highlighted_text_gradient }};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      {% else %}
+        color: {{ settings.highlighted_text_solid_color }};
+      {% endif %}
+    {% else %}
+      {% if section.settings.highlighted_gradient_enabled %}
+        background: {{ section.settings.highlighted_gradient }};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      {% else %}
+        color: {{ section.settings.highlighted_color }};
+      {% endif %}
+    {% endif %}
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.highlighted_text_font_size_desktop }}px;
+      font-weight: {{ settings.highlighted_text_font_weight }};
+      letter-spacing: {{ settings.highlighted_text_letter_spacing | divided_by: 1000.0 }}em;
+      font-style: {{ settings.highlighted_text_font_style }};
+    {% else %}
+      font-size: {{ section.settings.highlighted_font_size_desktop }}px;
+      font-weight: {{ section.settings.highlighted_font_weight }};
+      letter-spacing: {{ settings.highlighted_text_letter_spacing | divided_by: 1000.0 }}em;
+      font-style: {{ settings.highlighted_text_font_style }};
+    {% endif %}
+  }
+
+  .section-{{ section.id }} .ss-highlighted-separate {
+    display: block;
+    width: 100%;
+    margin-bottom: {{ section.settings.highlighted_spacing }}px;
+  }
+
+  /* ===========================
+     Subtext
+     =========================== */
+  .section-{{ section.id }} .ss-subtext {
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.text_color }};
+    {% else %}
+      color: {{ section.settings.subtext_color }};
+    {% endif %}
+    font-size: {{ section.settings.subtext_font_size_mobile }}px;
+    line-height: 1.6;
+    margin: 0 0 {{ section.settings.subtext_margin_bottom }}px 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }} .ss-subtext {
+      font-size: {{ section.settings.subtext_font_size_desktop }}px;
+    }
+  }
+
+  /* ===========================
+     Mobile Progress Indicator
+     =========================== */
+  .section-{{ section.id }} .ss-progress-mobile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: {{ section.settings.progress_spacing_mobile }}px;
+    gap: 0;
+  }
+
+  .section-{{ section.id }} .ss-progress-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .section-{{ section.id }} .ss-progress-circle {
+    width: {{ section.settings.desktop_circle_size }}px;
+    height: {{ section.settings.desktop_circle_size }}px;
+    border-radius: 50%;
+    background: {{ section.settings.progress_circle_inactive_bg }};
+    border: {{ section.settings.progress_circle_border_width }}px solid {{ section.settings.progress_circle_border_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: {{ section.settings.desktop_circle_font_size }}px;
+    font-weight: {{ section.settings.desktop_circle_font_weight }};
+    color: {{ section.settings.progress_circle_text_color }};
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .section-{{ section.id }} .ss-progress-circle:hover {
+    opacity: 0.8;
+  }
+
+  .section-{{ section.id }} .ss-progress-circle.ss-active {
+    background: {{ section.settings.progress_circle_active_bg }};
+    color: {{ section.settings.progress_circle_active_text_color }};
+    border-color: {{ section.settings.progress_circle_active_border_color }};
+    transform: scale(1.1);
+  }
+
+  .section-{{ section.id }} .ss-progress-connector {
+    width: {{ section.settings.progress_connector_width }}px;
+    height: {{ section.settings.progress_line_height }}px;
+    background: {{ section.settings.progress_line_color }};
+    flex-shrink: 0;
+    margin: 0 {{ section.settings.progress_connector_spacing }}px;
+    transition: background 0.3s ease;
+  }
+  
+  .section-{{ section.id }} .ss-progress-connector.ss-active {
+    background: {{ section.settings.progress_line_color_active }};
+  }
+
+  /* ===========================
+     Mobile Slider
+     =========================== */
+  .section-{{ section.id }} .ss-slider-mobile {
+    display: block;
+    overflow: hidden;
+  }
+
+  .section-{{ section.id }} .ss-slider-viewport {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    width: 100%;
+    scroll-snap-type: x mandatory;
+  }
+
+  .section-{{ section.id }} .ss-slider-viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .section-{{ section.id }} .ss-slider-track {
+    display: flex;
+    gap: {{ section.settings.slide_gap_mobile }}px;
+  }
+
+  .section-{{ section.id }} .ss-slide {
+    flex: 0 0 calc({{ section.settings.slide_width_mobile }}% - {{ section.settings.slide_gap_mobile }}px);
+    min-width: calc({{ section.settings.slide_width_mobile }}% - {{ section.settings.slide_gap_mobile }}px);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  @media screen and (max-width: 749px) {
+    .section-{{ section.id }} .ss-content-wrapper {
+      overflow: hidden;
+    }
+
+    .section-{{ section.id }} .container,
+    .section-{{ section.id }} .page-width {
+      overflow: hidden;
+    }
+  }
+
+  /* ===========================
+     Scrollbar (Mobile)
+     =========================== */
+  .section-{{ section.id }} .ss-scrollbar-wrapper {
+    margin-top: {{ section.settings.scrollbar_spacing }}px;
+    padding: 0 10px;
+  }
+
+  .section-{{ section.id }} .ss-scrollbar-track {
+    width: 100%;
+    height: {{ section.settings.scrollbar_height }}px;
+    background: {{ section.settings.scrollbar_track_color }};
+    border-radius: {{ section.settings.scrollbar_border_radius }}px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section-{{ section.id }} .ss-scrollbar-thumb {
+    height: 100%;
+    background: {{ section.settings.scrollbar_thumb_color }};
+    border-radius: {{ section.settings.scrollbar_border_radius }}px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: left 0.1s ease-out;
+  }
+
+  /* ===========================
+     Desktop: Vertical Steps (Hidden on Mobile)
+     =========================== */
+  .section-{{ section.id }} .ss-desktop-container {
+    display: none;
+  }
+
+  /* ===========================
+     Step Image
+     =========================== */
+  .section-{{ section.id }} .ss-step-image-wrapper {
+    width: 100%;
+    height: auto;
+    aspect-ratio: {{ section.settings.image_aspect_ratio }};
+    overflow: hidden;
+    border-radius: {{ section.settings.image_border_radius }}px;
+    margin-bottom: {{ section.settings.image_spacing_mobile }}px;
+  }
+
+  .section-{{ section.id }} .ss-step-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .section-{{ section.id }} .ss-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .section-{{ section.id }} .ss-image-placeholder svg {
+    width: 50%;
+    height: 50%;
+    opacity: 0.3;
+  }
+
+  /* ===========================
+     Step Content
+     =========================== */
+  .section-{{ section.id }} .ss-step-content {
+    padding: {{ section.settings.step_content_padding_mobile }}px;
+    background: {{ section.settings.step_content_bg }};
+    border-radius: {{ section.settings.step_content_border_radius }}px;
+  }
+
+  /* Title Wrapper (for inline number + title) */
+  .section-{{ section.id }} .ss-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: {{ section.settings.number_spacing }}px;
+    margin-bottom: {{ section.settings.step_heading_spacing }}px;
+  }
+
+  /* Number Badge */
+  .section-{{ section.id }} .ss-number-badge {
+    width: {{ section.settings.number_size }}px;
+    height: {{ section.settings.number_size }}px;
+    background: {{ section.settings.number_background }};
+    color: {{ section.settings.number_text_color }};
+    border-radius: {{ section.settings.number_border_radius }}%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: {{ section.settings.number_font_size_mobile }}px;
+    font-weight: {{ section.settings.number_font_weight }};
+    border: {{ section.settings.number_border_width }}px solid {{ section.settings.number_border_color }};
+    flex-shrink: 0;
+  }
+
+  .section-{{ section.id }} .ss-step-heading {
+    font-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+    font-size: {{ section.settings.step_heading_size_mobile }}px;
+    font-weight: {{ section.settings.step_heading_weight }};
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.heading_color }};
+    {% else %}
+      color: {{ section.settings.step_heading_color }};
+    {% endif %}
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .section-{{ section.id }} .ss-step-text {
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    font-size: {{ section.settings.step_text_size_mobile }}px;
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.text_color }};
+    {% else %}
+      color: {{ section.settings.step_text_color }};
+    {% endif %}
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .section-{{ section.id }} .ss-step-custom-html {
+    margin-top: 20px;
+  }
+
+  .section-{{ section.id }} .ss-step-custom-html > *:first-child {
+    margin-top: 0;
+  }
+
+  .section-{{ section.id }} .ss-step-custom-html > *:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ===========================
+     Custom HTML
+     =========================== */
+  .section-{{ section.id }} .ss-custom-html {
+    width: 100%;
+  }
+
+  .section-{{ section.id }} .ss-custom-html-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+  }
+
+  .section-{{ section.id }} .ss-custom-html-step {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ===========================
+     Desktop Responsive
+     =========================== */
+  @media screen and (min-width: 750px) {
+    
+    /* Hide mobile slider and progress */
+    .section-{{ section.id }} .ss-slider-mobile,
+    .section-{{ section.id }} .ss-progress-mobile {
+      display: none;
+    }
+
+    /* Desktop Container - Vertical Stack */
+    .section-{{ section.id }} .ss-desktop-container {
+      display: flex !important;
+      flex-direction: column;
+      gap: {{ section.settings.progress_to_content_gap }}px;
+      align-items: center;
+    }
+
+    /* Desktop Progress Indicator (Horizontal, at top) */
+    .section-{{ section.id }} .ss-desktop-progress {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0;
+    }
+
+    .section-{{ section.id }} .ss-desktop-progress-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0;
+    }
+
+    .section-{{ section.id }} .ss-desktop-progress-circle {
+      width: {{ section.settings.desktop_circle_size }}px;
+      height: {{ section.settings.desktop_circle_size }}px;
+      border-radius: 50%;
+      background: {{ section.settings.progress_circle_inactive_bg }};
+      border: {{ section.settings.progress_circle_border_width }}px solid {{ section.settings.progress_circle_border_color }};
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: {{ section.settings.desktop_circle_font_size }}px;
+      font-weight: {{ section.settings.desktop_circle_font_weight }};
+      color: {{ section.settings.progress_circle_text_color }};
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .section-{{ section.id }} .ss-desktop-progress-circle:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    .section-{{ section.id }} .ss-desktop-progress-circle.ss-active {
+      background: {{ section.settings.progress_circle_active_bg }};
+      color: {{ section.settings.progress_circle_active_text_color }};
+      border-color: {{ section.settings.progress_circle_active_border_color }};
+    }
+
+    .section-{{ section.id }} .ss-desktop-progress-connector {
+      width: {{ section.settings.desktop_connector_width }}px;
+      height: {{ section.settings.progress_line_height }}px;
+      background: {{ section.settings.progress_line_color }};
+      flex-shrink: 0;
+      margin: 0 {{ section.settings.desktop_connector_spacing }}px;
+      transition: background 0.3s ease;
+    }
+    
+    .section-{{ section.id }} .ss-desktop-progress-connector.ss-active {
+      background: {{ section.settings.progress_line_color_active }};
+    }
+
+    /* Scrollable Steps Container */
+    .section-{{ section.id }} .ss-steps-desktop {
+      display: block !important;
+      width: {{ section.settings.desktop_slider_width }}%;
+      height: auto;
+      max-height: 70vh;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: auto;
+      scrollbar-color: {{ section.settings.desktop_scrollbar_thumb_color }} {{ section.settings.desktop_scrollbar_track_color }};
+      border: {{ section.settings.desktop_container_border_width }}px solid {{ section.settings.desktop_container_border_color }};
+      border-radius: {{ section.settings.desktop_container_border_radius }}px;
+      padding: {{ section.settings.desktop_container_padding }}px;
+    }
+
+    .section-{{ section.id }} .ss-steps-desktop::-webkit-scrollbar {
+      width: {{ section.settings.desktop_scrollbar_width }}px;
+    }
+
+    .section-{{ section.id }} .ss-steps-desktop::-webkit-scrollbar-track {
+      background: {{ section.settings.desktop_scrollbar_track_color }};
+    }
+
+    .section-{{ section.id }} .ss-steps-desktop::-webkit-scrollbar-thumb {
+      background: {{ section.settings.desktop_scrollbar_thumb_color }};
+      border-radius: {{ section.settings.desktop_scrollbar_border_radius }}px;
+    }
+
+    .section-{{ section.id }} .ss-steps-desktop .ss-step-item {
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      margin-bottom: {{ section.settings.step_spacing_desktop }}px;
+    }
+
+    .section-{{ section.id }} .ss-steps-desktop .ss-step-item:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Step Main Content */
+    .section-{{ section.id }} .ss-step-main {
+      display: flex;
+      flex-direction: row;
+      gap: {{ section.settings.desktop_content_gap }}px;
+      align-items: {{ section.settings.desktop_content_alignment }};
+    }
+
+    .section-{{ section.id }} .ss-step-image-wrapper {
+      flex: 0 0 {{ section.settings.image_width_desktop }}%;
+      height: auto;
+      aspect-ratio: {{ section.settings.image_aspect_ratio }};
+      margin-bottom: 0;
+    }
+
+    .section-{{ section.id }} .ss-step-content {
+      flex: 1;
+      padding: {{ section.settings.step_content_padding_desktop }}px;
+    }
+
+    .section-{{ section.id }} .ss-number-badge {
+      font-size: {{ section.settings.number_font_size_desktop }}px;
+    }
+
+    .section-{{ section.id }} .ss-step-heading {
+      font-size: {{ section.settings.step_heading_size_desktop }}px;
+    }
+
+    .section-{{ section.id }} .ss-step-text {
+      font-size: {{ section.settings.step_text_size_desktop }}px;
+    }
+
+  }
+
+  /* Custom SVG & Google Icons */
+  .section-{{ section.id }} .ss-custom-svg svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  {% for block in section.blocks %}
+    {% if block.type == 'step' %}
+      .section-{{ section.id }} .ss-slide[data-slide-index="{{ forloop.index }}"] .ss-custom-svg svg {
+        {% if block.settings.icon_fill_enabled %}
+          fill: {{ block.settings.icon_fill_color }};
+        {% else %}
+          fill: none;
+        {% endif %}
+        {% if block.settings.icon_outline_enabled %}
+          stroke: {{ block.settings.icon_outline_color }};
+          stroke-width: {{ block.settings.icon_outline_width }}px;
+        {% else %}
+          stroke: none;
+        {% endif %}
+      }
+    {% endif %}
+  {% endfor %}
+
+  .section-{{ section.id }} .ss-number-badge .material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Mobile Responsive Typography */
+  @media screen and (max-width: 749px) {
+    .section-{{ section.id }} .ss-heading {
+      {% if settings.enable_global_typography %}
+        font-size: {{ settings.heading_font_size_mobile }}px;
+      {% else %}
+        font-size: {{ section.settings.heading_font_size_mobile }}px;
+      {% endif %}
+    }
+
+    .section-{{ section.id }} .ss-highlighted-text {
+      {% if settings.enable_global_typography %}
+        font-size: {{ settings.highlighted_text_font_size_mobile }}px;
+      {% else %}
+        font-size: {{ section.settings.highlighted_font_size_mobile }}px;
+      {% endif %}
+    }
+  }
+</style>
+
+<script>
+(function() {
+  const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+  if (!section) return;
+
+  const viewport = section.querySelector('.ss-slider-viewport');
+  const scrollbarThumb = section.querySelector('[data-scrollbar-thumb]');
+  const progressCircles = section.querySelectorAll('.ss-progress-circle');
+  const slides = section.querySelectorAll('.ss-slide');
+  const desktopSteps = section.querySelector('.ss-steps-desktop');
+  const stepItems = desktopSteps ? desktopSteps.querySelectorAll('.ss-step-item') : [];
+
+  const isMobile = window.innerWidth < 750;
+
+  // Mobile: Horizontal Slider & Scrollbar Sync
+  if (isMobile && viewport && scrollbarThumb && slides.length > 0) {
+    
+    function updateScrollbar() {
+      const scrollPercentage = viewport.scrollLeft / (viewport.scrollWidth - viewport.clientWidth);
+      const thumbWidth = (viewport.clientWidth / viewport.scrollWidth) * 100;
+      const thumbPosition = scrollPercentage * (100 - thumbWidth);
+      
+      scrollbarThumb.style.width = thumbWidth + '%';
+      scrollbarThumb.style.left = thumbPosition + '%';
+    }
+
+    const progressConnectors = section.querySelectorAll('.ss-progress-connector');
+    
+    function updateProgressCircles() {
+      const scrollLeft = viewport.scrollLeft;
+      const slideWidth = slides[0].offsetWidth;
+      const currentIndex = Math.round(scrollLeft / slideWidth);
+      
+      progressCircles.forEach((circle, index) => {
+        if (index <= currentIndex) {
+          circle.classList.add('ss-active');
+        } else {
+          circle.classList.remove('ss-active');
+        }
+      });
+      
+      progressConnectors.forEach((connector, index) => {
+        if (index < currentIndex) {
+          connector.classList.add('ss-active');
+        } else {
+          connector.classList.remove('ss-active');
+        }
+      });
+    }
+
+    viewport.addEventListener('scroll', () => {
+      updateScrollbar();
+      updateProgressCircles();
+    });
+
+    // Initial update
+    updateScrollbar();
+    updateProgressCircles();
+
+    // Update on resize
+    window.addEventListener('resize', () => {
+      updateScrollbar();
+      updateProgressCircles();
+    });
+    
+    // Click handlers for mobile progress circles
+    progressCircles.forEach((circle, index) => {
+      circle.addEventListener('click', () => {
+        const targetSlide = slides[index];
+        if (targetSlide) {
+          targetSlide.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'nearest',
+            inline: 'start'
+          });
+        }
+      });
+    });
+  }
+
+  // Desktop: Step Switcher with Progress Update
+  if (!isMobile && desktopSteps && stepItems.length > 0) {
+    const desktopProgressCircles = section.querySelectorAll('.ss-desktop-progress-circle');
+    const desktopConnectors = section.querySelectorAll('.ss-desktop-progress-connector');
+    let currentStepIndex = 0;
+
+    // Calculate and set container height based on first step
+    function setContainerHeight() {
+      if (stepItems.length > 0) {
+        const firstStep = stepItems[0];
+        const stepHeight = firstStep.offsetHeight;
+        const containerPadding = parseInt(getComputedStyle(desktopSteps).paddingTop) +
+                                 parseInt(getComputedStyle(desktopSteps).paddingBottom);
+        const totalHeight = stepHeight + containerPadding;
+
+        desktopSteps.style.maxHeight = totalHeight + 'px';
+        desktopSteps.style.height = totalHeight + 'px';
+      }
+    }
+
+    // Set initial height after DOM is fully rendered
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        setContainerHeight();
+      }, 100);
+    });
+
+    // Recalculate on window resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (window.innerWidth >= 750) {
+          setContainerHeight();
+        }
+      }, 250);
+    });
+
+    // Track scroll position and update progress
+    desktopSteps.addEventListener('scroll', () => {
+      const scrollTop = desktopSteps.scrollTop;
+
+      // Find which step is currently in view
+      let currentIndex = 0;
+      let minDistance = Infinity;
+
+      stepItems.forEach((step, index) => {
+        const stepTop = step.offsetTop - desktopSteps.offsetTop;
+        const distance = Math.abs(scrollTop - stepTop);
+        if (distance < minDistance) {
+          minDistance = distance;
+          currentIndex = index;
+        }
+      });
+
+      // Update progress circles based on scroll position
+      desktopProgressCircles.forEach((circle, i) => {
+        if (i <= currentIndex) {
+          circle.classList.add('ss-active');
+        } else {
+          circle.classList.remove('ss-active');
+        }
+      });
+
+      // Update progress connectors
+      desktopConnectors.forEach((connector, i) => {
+        if (i < currentIndex) {
+          connector.classList.add('ss-active');
+        } else {
+          connector.classList.remove('ss-active');
+        }
+      });
+    });
+
+    function showStep(index) {
+      // Hide all steps
+      stepItems.forEach(step => {
+        step.classList.remove('ss-active-step');
+      });
+
+      // Show target step
+      if (stepItems[index]) {
+        stepItems[index].classList.add('ss-active-step');
+        currentStepIndex = index;
+      }
+
+      // Update progress circles
+      desktopProgressCircles.forEach((circle, i) => {
+        if (i <= index) {
+          circle.classList.add('ss-active');
+        } else {
+          circle.classList.remove('ss-active');
+        }
+      });
+
+      // Update progress connectors
+      desktopConnectors.forEach((connector, i) => {
+        if (i < index) {
+          connector.classList.add('ss-active');
+        } else {
+          connector.classList.remove('ss-active');
+        }
+      });
+    }
+
+    // Click handlers for progress circles - scroll to step
+    desktopProgressCircles.forEach((circle, index) => {
+      circle.addEventListener('click', () => {
+        if (stepItems[index]) {
+          stepItems[index].scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Show first step initially
+    showStep(0);
+  }
+})();
+</script>
+
+{% schema %}
+{"name":"Step Slider","tag":"section","class":"section-step-slider","settings": [
+ {"type":"checkbox","id":"use_theme_colors","label":"Use Theme Background Color","default": true
+ },
+ {"type":"header","content":"Section Heading"},
+ {"type":"text","id":"heading_before","label":"Heading Text (Before Highlight)","default":"add your"},
+ {"type":"text","id":"highlighted_text","label":"Highlighted Text","default":"title here"},
+ {"type":"text","id":"heading_after","label":"Heading Text (After Highlight)"},
+ {"type":"select","id":"highlight_position","label":"Highlight Position","options": [
+ {"value":"inline_first","label":"Inline (First)"},
+ {"value":"inline_second","label":"Inline (Second)"},
+ {"value":"above","label":"Above Heading"},
+ {"value":"below","label":"Below Heading"}
+ ],"default":"inline_second"},
+ {"type":"select","id":"heading_tag","label":"Heading Tag","options": [
+ {"value":"h1","label":"H1"},
+ {"value":"h2","label":"H2"},
+ {"value":"h3","label":"H3"},
+ {"value":"h4","label":"H4"},
+ {"value":"h5","label":"H5"},
+ {"value":"h6","label":"H6"}
+ ],"default":"h2"},
+ {"type":"select","id":"heading_text_align","label":"Heading Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"header","content":"Heading Typography"},
+ {"type":"color","id":"heading_color","label":"Heading Color","default":"#ffffff","info":"Used when 'Use Theme Background Color' is OFF. Falls back to global heading color when ON and global typography is enabled."},
+ {"type":"range","id":"heading_font_size_desktop","min": 24,"max": 96,"step": 2,"unit":"px","label":"Heading Font Size (Desktop)","default": 48,"info":"Used when global typography is OFF. Falls back to global setting when ON."},
+ {"type":"range","id":"heading_font_size_mobile","min": 20,"max": 60,"step": 2,"unit":"px","label":"Heading Font Size (Mobile)","default": 32,"info":"Used when global typography is OFF. Falls back to global setting when ON."},
+ {"type":"select","id":"heading_font_weight","label":"Heading Font Weight","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"},
+ {"value":"900","label":"Black"}
+ ],"default":"500","info":"Used when global typography is OFF. Falls back to global setting when ON."},
+ {"type":"range","id":"heading_margin_bottom","min": 0,"max": 60,"step": 4,"unit":"px","label":"Heading Bottom Margin","default": 16
+ },
+ {"type":"header","content":"Highlighted Text Settings"},
+ {"type":"checkbox","id":"highlighted_gradient_enabled","label":"Enable Highlight Gradient","default": false
+ },
+ {"type":"color","id":"highlighted_color","label":"Highlight Color","default":"#fdfdfd"},
+ {"type":"color_background","id":"highlighted_gradient","label":"Highlight Gradient","default":"linear-gradient(90deg, rgba(239, 68, 68, 1), rgba(249, 115, 22, 1) 100%)"},
+ {"type":"range","id":"highlighted_font_size_desktop","min": 24,"max": 96,"step": 2,"unit":"px","label":"Highlight Font Size (Desktop)","default": 48,"info":"Used when global typography is OFF."},
+ {"type":"range","id":"highlighted_font_size_mobile","min": 20,"max": 60,"step": 2,"unit":"px","label":"Highlight Font Size (Mobile)","default": 32,"info":"Used when global typography is OFF."},
+ {"type":"select","id":"highlighted_font_weight","label":"Highlight Font Weight","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"},
+ {"value":"900","label":"Black"}
+ ],"default":"500","info":"Used when global typography is OFF."},
+ {"type":"range","id":"highlighted_spacing","min": 0,"max": 20,"step": 2,"unit":"px","label":"Highlight Spacing","default": 8
+ },
+ {"type":"header","content":"Subtext"},
+ {"type":"textarea","id":"subtext","label":"Subtext","default":"add your intro text here"},
+ {"type":"color","id":"subtext_color","label":"Subtext Color","default":"#ffffff"},
+ {"type":"range","id":"subtext_font_size_mobile","min": 12,"max": 24,"step": 1,"unit":"px","label":"Subtext Font Size (Mobile)","default": 14
+ },
+ {"type":"range","id":"subtext_font_size_desktop","min": 14,"max": 28,"step": 1,"unit":"px","label":"Subtext Font Size (Desktop)","default": 16
+ },
+ {"type":"range","id":"subtext_margin_bottom","min": 0,"max": 60,"step": 4,"unit":"px","label":"Subtext Bottom Margin","default": 32
+ },
+ {"type":"header","content":"Progress Circles (Mobile & Desktop)"},
+ {"type":"range","id":"progress_spacing_mobile","min": 10,"max": 60,"step": 2,"unit":"px","label":"Progress Indicator Bottom Spacing (Mobile)","default": 24
+ },
+ {"type":"color","id":"progress_circle_inactive_bg","label":"Circle Background (Inactive)","default":"#ffffff"},
+ {"type":"color","id":"progress_circle_active_bg","label":"Circle Background (Active)","default":"#000000"},
+ {"type":"color","id":"progress_circle_text_color","label":"Circle Text Color (Inactive)","default":"#000000"},
+ {"type":"color","id":"progress_circle_active_text_color","label":"Circle Text Color (Active)","default":"#ffffff"},
+ {"type":"range","id":"progress_circle_border_width","min": 0,"max": 5,"step": 1,"unit":"px","label":"Circle Border Width","default": 2
+ },
+ {"type":"color","id":"progress_circle_border_color","label":"Circle Border Color (Inactive)","default":"#dddddd"},
+ {"type":"color","id":"progress_circle_active_border_color","label":"Circle Border Color (Active)","default":"#ffffff"},
+ {"type":"range","id":"progress_line_height","min": 1,"max": 10,"step": 1,"unit":"px","label":"Connecting Line Height","default": 3
+ },
+ {"type":"color","id":"progress_line_color","label":"Connecting Line Color (Inactive)","default":"#c8c8c8"},
+ {"type":"color","id":"progress_line_color_active","label":"Connecting Line Color (Active)","default":"#000000"},
+ {"type":"range","id":"progress_connector_width","min": 10,"max": 80,"step": 5,"unit":"px","label":"Connector Line Width (Mobile)","default": 30,"info":"Width of line connecting circles on mobile"},
+ {"type":"range","id":"progress_connector_spacing","min": 0,"max": 20,"step": 2,"unit":"px","label":"Connector Spacing","default": 8,"info":"Space on left and right of connector line"},
+ {"type":"header","content":"Mobile Slider"},
+ {"type":"range","id":"slide_width_mobile","min": 70,"max": 100,"step": 5,"unit":"%","label":"Slide Width (Mobile)","default": 85
+ },
+ {"type":"range","id":"slide_gap_mobile","min": 0,"max": 40,"step": 4,"unit":"px","label":"Slide Gap (Mobile)","default": 16
+ },
+ {"type":"range","id":"scrollbar_spacing","min": 8,"max": 40,"step": 2,"unit":"px","label":"Scrollbar Top Spacing","default": 8
+ },
+ {"type":"range","id":"scrollbar_height","min": 2,"max": 12,"step": 1,"unit":"px","label":"Scrollbar Height","default": 2
+ },
+ {"type":"color","id":"scrollbar_track_color","label":"Scrollbar Track Color","default":"#e0e0e0"},
+ {"type":"color","id":"scrollbar_thumb_color","label":"Scrollbar Thumb Color","default":"#000000"},
+ {"type":"range","id":"scrollbar_border_radius","min": 0,"max": 100,"step": 1,"unit":"px","label":"Scrollbar Border Radius","default": 59
+ },
+ {"type":"header","content":"️ Desktop Vertical Slider"},
+ {"type":"range","id":"desktop_slider_width","min": 50,"max": 100,"step": 5,"unit":"%","label":"Desktop Slider Width","default": 80,"info":"Width of the steps container"},
+ {"type":"range","id":"desktop_scrollbar_width","min": 4,"max": 16,"step": 2,"unit":"px","label":"Scrollbar Width","default": 8
+ },
+ {"type":"color","id":"desktop_scrollbar_track_color","label":"Scrollbar Track Color","default":"#e0e0e0"},
+ {"type":"color","id":"desktop_scrollbar_thumb_color","label":"Scrollbar Thumb Color","default":"#000000"},
+ {"type":"range","id":"desktop_scrollbar_border_radius","min": 0,"max": 10,"step": 1,"unit":"px","label":"Scrollbar Border Radius","default": 4
+ },
+ {"type":"range","id":"progress_to_content_gap","min": 10,"max": 80,"step": 5,"unit":"px","label":"Gap Between Progress and Slider","default": 30,"info":"Space between horizontal progress circles and content slider"},
+ {"type":"range","id":"desktop_connector_width","min": 10,"max": 80,"step": 5,"unit":"px","label":"Connector Line Width (Desktop)","default": 30,"info":"Width of horizontal line connecting circles on desktop"},
+ {"type":"range","id":"desktop_connector_spacing","min": 0,"max": 30,"step": 2,"unit":"px","label":"Connector Spacing","default": 12,"info":"Space on left and right of horizontal connector line"},
+ {"type":"header","content":"Circle Size & Typography"},
+ {"type":"range","id":"desktop_circle_size","min": 24,"max": 100,"step": 2,"unit":"px","label":"Circle Size (Mobile & Desktop)","default": 42,"info":"Mobile default: 40px, Desktop default: 60px"},
+ {"type":"range","id":"desktop_circle_font_size","min": 10,"max": 40,"step": 1,"unit":"px","label":"Circle Font Size (Mobile & Desktop)","default": 18,"info":"Mobile default: 14px, Desktop default: 24px"},
+ {"type":"select","id":"desktop_circle_font_weight","label":"Circle Font Weight (Mobile & Desktop)","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"700"},
+ {"type":"header","content":"️ Desktop Container"},
+ {"type":"range","id":"desktop_container_padding","min": 0,"max": 60,"step": 4,"unit":"px","label":"Container Padding","default": 16
+ },
+ {"type":"range","id":"desktop_container_border_width","min": 0,"max": 5,"step": 1,"unit":"px","label":"Container Border Width","default": 0
+ },
+ {"type":"color","id":"desktop_container_border_color","label":"Container Border Color","default":"#e0e0e0"},
+ {"type":"range","id":"desktop_container_border_radius","min": 0,"max": 30,"step": 2,"unit":"px","label":"Container Border Radius","default": 12
+ },
+ {"type":"range","id":"step_spacing_desktop","min": 0,"max": 100,"step": 5,"unit":"px","label":"Spacing Between Steps","default": 35
+ },
+ {"type":"header","content":"️ Desktop Content Layout"},
+ {"type":"range","id":"desktop_content_gap","min": 10,"max": 60,"step": 5,"unit":"px","label":"Gap Between Image and Text","default": 25
+ },
+ {"type":"select","id":"desktop_content_alignment","label":"Content Vertical Alignment","options": [
+ {"value":"flex-start","label":"Top"},
+ {"value":"center","label":"Center"},
+ {"value":"flex-end","label":"Bottom"}
+ ],"default":"center"},
+ {"type":"header","content":"️ Image Settings"},
+ {"type":"select","id":"image_aspect_ratio","label":"Image Aspect Ratio","options": [
+ {"value":"1/1","label":"Square (1:1)"},
+ {"value":"4/3","label":"Standard (4:3)"},
+ {"value":"16/9","label":"Widescreen (16:9)"},
+ {"value":"21/9","label":"Ultrawide (21:9)"},
+ {"value":"3/4","label":"Portrait (3:4)"},
+ {"value":"2/3","label":"Vertical (2:3)"},
+ {"value":"auto","label":"Auto (Original)"}
+ ],"default":"4/3"},
+ {"type":"range","id":"image_border_radius","min": 0,"max": 30,"step": 2,"unit":"px","label":"Image Border Radius","default": 8
+ },
+ {"type":"range","id":"image_spacing_mobile","min": 8,"max": 40,"step": 2,"unit":"px","label":"Image Bottom Spacing (Mobile)","default": 16
+ },
+ {"type":"range","id":"image_width_desktop","min": 30,"max": 60,"step": 5,"unit":"%","label":"Image Width (Desktop)","default": 45
+ },
+ {"type":"header","content":"Number Badge Styling"},
+ {"type":"range","id":"number_size","min": 20,"max": 60,"step": 1,"unit":"px","label":"Badge Size","default": 40
+ },
+ {"type":"range","id":"number_font_size_desktop","min": 16,"max": 48,"step": 2,"unit":"px","label":"Number Font Size (Desktop)","default": 28
+ },
+ {"type":"range","id":"number_font_size_mobile","min": 12,"max": 36,"step": 2,"unit":"px","label":"Number Font Size (Mobile)","default": 20
+ },
+ {"type":"select","id":"number_font_weight","label":"Number Font Weight","options": [
+ {"value":"400","label":"Regular (400)"},
+ {"value":"500","label":"Medium (500)"},
+ {"value":"600","label":"Semi-Bold (600)"},
+ {"value":"700","label":"Bold (700)"},
+ {"value":"800","label":"Extra Bold (800)"}
+ ],"default":"700"},
+ {"type":"color","id":"number_background","label":"Badge Background","default":"#6366f1"},
+ {"type":"color","id":"number_text_color","label":"Number Text Color","default":"#ffffff"},
+ {"type":"range","id":"number_border_width","min": 0,"max": 5,"step": 1,"unit":"px","label":"Border Width","default": 0
+ },
+ {"type":"color","id":"number_border_color","label":"Border Color","default":"#e5e7eb"},
+ {"type":"range","id":"number_border_radius","min": 0,"max": 50,"step": 1,"unit":"%","label":"Border Radius","default": 50
+ },
+ {"type":"range","id":"number_spacing","min": 0,"max": 30,"step": 2,"unit":"px","label":"Spacing Between Number and Title","default": 16
+ },
+ {"type":"header","content":"Step Content"},
+ {"type":"color","id":"step_heading_color","label":"Step Heading Color","default":"#ffffff"},
+ {"type":"range","id":"step_heading_size_mobile","min": 16,"max": 32,"step": 2,"unit":"px","label":"Step Heading Size (Mobile)","default": 20
+ },
+ {"type":"range","id":"step_heading_size_desktop","min": 18,"max": 40,"step": 2,"unit":"px","label":"Step Heading Size (Desktop)","default": 24
+ },
+ {"type":"select","id":"step_heading_weight","label":"Step Heading Weight","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"600"},
+ {"type":"range","id":"step_heading_spacing","min": 4,"max": 30,"step": 2,"unit":"px","label":"Step Heading Bottom Spacing","default": 12
+ },
+ {"type":"color","id":"step_text_color","label":"Step Text Color","default":"#ffffff"},
+ {"type":"range","id":"step_text_size_mobile","min": 12,"max": 20,"step": 1,"unit":"px","label":"Step Text Size (Mobile)","default": 14
+ },
+ {"type":"range","id":"step_text_size_desktop","min": 14,"max": 24,"step": 1,"unit":"px","label":"Step Text Size (Desktop)","default": 16
+ },
+ {"type":"color","id":"step_content_bg","label":"Step Content Background","default":"rgba(0,0,0,0)"},
+ {"type":"range","id":"step_content_padding_mobile","min": 0,"max": 30,"step": 2,"unit":"px","label":"Step Content Padding (Mobile)","default": 12
+ },
+ {"type":"range","id":"step_content_padding_desktop","min": 0,"max": 40,"step": 4,"unit":"px","label":"Step Content Padding (Desktop)","default": 16
+ },
+ {"type":"range","id":"step_content_border_radius","min": 0,"max": 20,"step": 2,"unit":"px","label":"Step Content Border Radius","default": 8
+ },
+ {"type":"header","content":"Section Background"},
+ {"type":"color","id":"background_color","label":"Background Color","default":"#ffffff"},
+ {"type":"checkbox","id":"enable_gradient_background","label":"Enable Gradient Background","default": true
+ },
+ {"type":"color_background","id":"gradient_background","label":"Gradient Background","default":"linear-gradient(180deg, rgba(19, 72, 105, 1) 26%, rgba(19, 72, 105, 1) 100%)"},
+ {"type":"header","content":"Section Padding"},
+ {"type":"range","id":"section_padding_top_mobile","min": 0,"max": 100,"step": 4,"unit":"px","label":"Top Padding (Mobile)","default": 36
+ },
+ {"type":"range","id":"section_padding_bottom_mobile","min": 0,"max": 100,"step": 4,"unit":"px","label":"Bottom Padding (Mobile)","default": 36
+ },
+ {"type":"range","id":"section_padding_top_desktop","min": 0,"max": 150,"step": 5,"unit":"px","label":"Top Padding (Desktop)","default": 60
+ },
+ {"type":"range","id":"section_padding_bottom_desktop","min": 0,"max": 150,"step": 5,"unit":"px","label":"Bottom Padding (Desktop)","default": 60
+ }
+ ],"blocks": [
+ {"type":"step","name":"Step","settings": [
+ {"type":"image_picker","id":"image","label":"Step Image"},
+ {"type":"header","content":"Number Badge / Icon"},
+ {"type":"paragraph","content":"Priority: Custom SVG > Google Icon > Number. If Custom SVG is filled, it takes priority. If Google Icon is filled, it takes priority over Number."},
+ {"type":"checkbox","id":"enable_number","label":"Enable Number Badge / Icon","default": false
+ },
+ {"type":"number","id":"number_value","label":"Number to Display","default": 1,"info":"Enter the number you want to show in the circle (e.g., 1, 2, 3). Lowest priority."},
+ {"type":"text","id":"google_icon","label":"Google Material Icon Name","info":"Enter Material Icon name (e.g., 'check_circle', 'star'). See https://fonts.google.com/icons. Takes priority over Number."},
+ {"type":"html","id":"custom_svg","label":"Custom SVG Code","info":"Paste your custom SVG code here. Takes priority over Google Icon and Number."},
+ {"type":"color","id":"custom_svg_color","label":"Custom SVG Icon Color","default":"#FFFFFF","info":"Color for custom SVG. Takes priority over general icon color."},
+ {"type":"range","id":"icon_size","min":16,"max":64,"step":2,"unit":"px","label":"Icon Size","default":24,"info":"Size for Google Icon or Custom SVG"},
+ {"type":"color","id":"icon_color","label":"Icon / Number Color","default":"#FFFFFF","info":"Color for Google Icon or Number text"},
+ {"type":"checkbox","id":"icon_fill_enabled","label":"Enable Icon Fill","default":true,"info":"Apply fill color to icon"},
+ {"type":"color","id":"icon_fill_color","label":"Icon Fill Color","default":"#FFFFFF","info":"Fill color for icon (when enabled)"},
+ {"type":"checkbox","id":"icon_outline_enabled","label":"Enable Icon Outline","default":false,"info":"Apply stroke/outline to icon"},
+ {"type":"color","id":"icon_outline_color","label":"Icon Outline Color","default":"#000000","info":"Outline color for icon"},
+ {"type":"range","id":"icon_outline_width","min":0,"max":5,"step":0.5,"unit":"px","label":"Icon Outline Width","default":1,"info":"Stroke width for icon outline"},
+ {"type":"text","id":"step_heading","label":"Step Heading","default":"Step 1: Choose Your Product"},
+ {"type":"richtext","id":"step_text","label":"Step Description","default":"<p>Browse our collection and select the perfect product for your needs. </p><p></p>"},
+ {"type":"html","id":"custom_html","label":"Custom HTML","info":"Optional custom HTML content displayed below the description"}
+ ]
+ },
+ {"type":"custom_html","name":"Custom HTML","settings": [
+ {"type":"html","id":"html_content","label":"HTML Content","default":"<div style=\"padding: 20px; text-align: center;\"><p>Add your custom HTML here</p></div>"}
+ ]
+ }
+ ],"presets": [
+ {"name":"Step Slider","settings": {"use_theme_colors": true,"heading_before":"add your","highlighted_text":"title here","heading_after":"","highlight_position":"inline_second","heading_tag":"h2","heading_text_align":"center","heading_color":"#ffffff","heading_font_size_desktop": 48,"heading_font_size_mobile": 32,"heading_font_weight":"500","heading_margin_bottom": 16,"highlighted_gradient_enabled": false,"highlighted_color":"#fdfdfd","highlighted_gradient":"linear-gradient(90deg, rgba(239, 68, 68, 1), rgba(249, 115, 22, 1) 100%)","highlighted_font_size_desktop": 48,"highlighted_font_size_mobile": 32,"highlighted_font_weight":"500","highlighted_spacing": 8,"subtext":"add your intro text here","subtext_color":"#ffffff","subtext_font_size_mobile": 14,"subtext_font_size_desktop": 16,"subtext_margin_bottom": 32,"progress_spacing_mobile": 24,"progress_circle_inactive_bg":"#ffffff","progress_circle_active_bg":"#000000","progress_circle_text_color":"#000000","progress_circle_active_text_color":"#ffffff","progress_circle_border_width": 2,"progress_circle_border_color":"#dddddd","progress_circle_active_border_color":"#ffffff","progress_line_height": 3,"progress_line_color":"#c8c8c8","progress_line_color_active":"#000000","progress_connector_width": 30,"progress_connector_spacing": 8,"slide_width_mobile": 85,"slide_gap_mobile": 16,"scrollbar_spacing": 8,"scrollbar_height": 2,"scrollbar_track_color":"#e0e0e0","scrollbar_thumb_color":"#000000","scrollbar_border_radius": 59,"desktop_slider_width": 80,"desktop_scrollbar_width": 8,"desktop_scrollbar_track_color":"#e0e0e0","desktop_scrollbar_thumb_color":"#000000","desktop_scrollbar_border_radius": 4,"progress_to_content_gap": 30,"desktop_connector_width": 30,"desktop_connector_spacing": 12,"desktop_circle_size": 42,"desktop_circle_font_size": 18,"desktop_circle_font_weight":"700","desktop_container_padding": 16,"desktop_container_border_width": 0,"desktop_container_border_color":"#e0e0e0","desktop_container_border_radius": 12,"step_spacing_desktop": 35,"desktop_content_gap": 25,"desktop_content_alignment":"center","image_aspect_ratio":"4/3","image_border_radius": 8,"image_spacing_mobile": 16,"image_width_desktop": 45,"number_size": 40,"number_font_size_desktop": 28,"number_font_size_mobile": 20,"number_font_weight":"700","number_background":"#6366f1","number_text_color":"#ffffff","number_border_width": 0,"number_border_color":"#e5e7eb","number_border_radius": 50,"number_spacing": 16,"step_heading_color":"#ffffff","step_heading_size_mobile": 20,"step_heading_size_desktop": 24,"step_heading_weight":"600","step_heading_spacing": 12,"step_text_color":"#ffffff","step_text_size_mobile": 14,"step_text_size_desktop": 16,"step_content_bg":"rgba(0,0,0,0)","step_content_padding_mobile": 12,"step_content_padding_desktop": 16,"step_content_border_radius": 8,"background_color":"#ffffff","enable_gradient_background": true,"gradient_background":"linear-gradient(180deg, rgba(19, 72, 105, 1) 26%, rgba(19, 72, 105, 1) 100%)","section_padding_top_mobile": 36,"section_padding_bottom_mobile": 36,"section_padding_top_desktop": 60,"section_padding_bottom_desktop": 60
+ },"blocks": [
+ {"type":"step","settings": {"image":"shopify://shop_images/Light-blue-aura-effect-nails_jpg.webp","enable_number": false,"number_value": 1,"step_heading":"Step 1: Choose Your Product","step_text":"<p>Browse our collection and select the perfect product for your needs. </p><p></p>","custom_html":""}
+ },
+ {"type":"step","settings": {"enable_number": false,"number_value": 1,"step_heading":"Step 2: Customize Options","step_text":"<p>Select your preferred size, color, and any additional customizations.</p>","custom_html":""}
+ },
+ {"type":"step","settings": {"enable_number": false,"number_value": 1,"step_heading":"Step 3: Add to Cart","step_text":"<p>Review your selections and add the item to your shopping cart.</p>","custom_html":""}
+ },
+ {"type":"step","settings": {"enable_number": false,"number_value": 1,"step_heading":"Step 4: Checkout Securely","step_text":"<p>Complete your purchase with our secure checkout process.</p>","custom_html":""}
+ }
+ ],"category":"Content"}
+ ]
+}
+{% endschema %}
+

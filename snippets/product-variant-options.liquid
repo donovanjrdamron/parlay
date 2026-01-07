@@ -1,0 +1,245 @@
+{% comment %}
+  Renders product variant options
+
+  Accepts:
+  - product: {Object} product object.
+  - option: {Object} current product_option object.
+  - block: {Object} block object.
+  - type: {String}
+
+
+  Usage:
+  {% render 'product-variant-options',
+    product: product,
+    option: option,
+    block: block,
+    type: type
+  %}
+{% endcomment %}
+{%- liquid
+  assign variants_available_arr = product.variants | map: 'available'
+  assign variants_option1_arr = product.variants | map: 'option1'
+  assign variants_option2_arr = product.variants | map: 'option2'
+  assign variants_option3_arr = product.variants | map: 'option3'
+
+  assign product_form_id = 'product-form-' | append: section.id
+  if custom_product_form_id != blank
+    assign product_form_id = custom_product_form_id
+  endif
+
+  # Current option name for matching
+  assign current_option_name = option.name | downcase | strip
+
+  # Override settings
+  assign override_1_option_name = block.settings.pills_override_1_option_name | downcase | strip
+  assign override_1_hide_text = block.settings.pills_override_1_hide_variant_text | default: false
+  assign override_1_custom_urls_raw = block.settings.pills_override_1_custom_urls | default: ''
+
+  assign override_2_option_name = block.settings.pills_override_2_option_name | downcase | strip
+  assign override_2_hide_text = block.settings.pills_override_2_hide_variant_text | default: false
+  assign override_2_custom_urls_raw = block.settings.pills_override_2_custom_urls | default: ''
+
+  assign override_3_option_name = block.settings.pills_override_3_option_name | downcase | strip
+  assign override_3_hide_text = block.settings.pills_override_3_hide_variant_text | default: false
+  assign override_3_custom_urls_raw = block.settings.pills_override_3_custom_urls | default: ''
+
+  # Determine which settings to use based on option name
+  assign use_override = false
+  assign active_custom_urls_raw = ''
+  assign active_hide_text = false
+
+  if override_1_option_name != blank and current_option_name == override_1_option_name
+    assign use_override = true
+    assign active_custom_urls_raw = override_1_custom_urls_raw
+    assign active_hide_text = override_1_hide_text
+  elsif override_2_option_name != blank and current_option_name == override_2_option_name
+    assign use_override = true
+    assign active_custom_urls_raw = override_2_custom_urls_raw
+    assign active_hide_text = override_2_hide_text
+  elsif override_3_option_name != blank and current_option_name == override_3_option_name
+    assign use_override = true
+    assign active_custom_urls_raw = override_3_custom_urls_raw
+    assign active_hide_text = override_3_hide_text
+  else
+    # Use main pill settings if no override matches
+    assign pills_use_custom_urls = block.settings.pills_use_custom_urls | default: false
+    assign pills_image_only_mode = block.settings.pills_image_only_mode | default: false
+    assign pills_hide_variant_text = block.settings.pills_hide_variant_text | default: false
+    assign active_custom_urls_raw = block.settings.pills_custom_image_urls | default: ''
+    assign active_hide_text = pills_hide_variant_text
+  endif
+
+  # Clean up URLs by stripping whitespace
+  assign pills_custom_image_urls_temp = active_custom_urls_raw | split: ','
+  assign pills_custom_image_urls = ''
+  for url in pills_custom_image_urls_temp
+    assign clean_url = url | strip
+    if clean_url != blank
+      if pills_custom_image_urls == ''
+        assign pills_custom_image_urls = clean_url
+      else
+        assign pills_custom_image_urls = pills_custom_image_urls | append: ',' | append: clean_url
+      endif
+    endif
+  endfor
+  assign pills_custom_image_urls = pills_custom_image_urls | split: ','
+-%}
+
+{%- for value in option.values -%}
+  {%- liquid
+    assign option_class = ''
+    assign option_disabled = true
+    assign option_index = forloop.index0
+    assign option_exists = false
+
+    for option1_name in variants_option1_arr
+      case option.position
+        when 1
+          if variants_option1_arr[forloop.index0] == value
+            assign option_exists = true
+            if variants_available_arr[forloop.index0]
+              assign option_disabled = false
+            endif
+          endif
+        when 2
+          if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value
+            assign option_exists = true
+            if variants_available_arr[forloop.index0]
+              assign option_disabled = false
+            endif
+          endif
+        when 3
+          if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value
+            assign option_exists = true
+            if variants_available_arr[forloop.index0]
+              assign option_disabled = false
+            endif
+          endif
+      endcase
+    endfor
+
+    if option_exists == false
+      assign option_class = 'non-existent'
+    elsif option_disabled == true
+      assign option_class = 'unavailable'
+    endif
+     
+    assign currentVariant = nil
+
+    for variant in product.variants
+      case option.position
+        when 1
+          if variant.option1 == value
+            assign currentVariant = variant
+            break
+          endif
+        when 2
+          if variant.option1 == product.selected_or_first_available_variant.option1 and variant.option2 == value
+            assign currentVariant = variant
+            break
+          endif
+        when 3
+          if variant.option1 == product.selected_or_first_available_variant.option1 and variant.option2 == product.selected_or_first_available_variant.option2 and variant.option3 == value
+            assign currentVariant = variant
+            break
+          endif
+      endcase
+    endfor
+  -%}
+
+  {% case type %}
+    {%- when 'pills' -%}
+      {% comment %}Calculate cumulative pill index using the offset passed from parent{% endcomment %}
+      {% assign pill_url_offset_value = pill_url_offset | default: 0 %}
+      {% assign pill_index = pill_url_offset_value | plus: forloop.index0 %}
+      <div class="variant-pill-wrapper" style="flex-shrink:0;">
+        <input
+          type="radio"
+          id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+          name="{{ option.name }}{{ custom_name_identifier }}"
+          value="{{ value | escape }}"
+          form="{{ product_form_id }}"
+          {% if option.selected_value == value %}
+            checked
+          {% endif %}
+          class="{{ option_class }}{% if option_disabled %} disabled{% endif %}"
+        >
+        <label class="{% if use_override %}{% if pills_custom_image_urls.size > 0 %} variant-pill--with-image{% endif %}{% elsif pills_use_custom_urls and pills_custom_image_urls.size > 0 %}{% if pills_image_only_mode %} variant-pill--image-only{% else %} variant-pill--with-image{% endif %}{% endif %}" for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
+          {% if use_override %}
+            {% comment %}Override: Use override URLs directly{% endcomment %}
+            {% if forloop.index0 < pills_custom_image_urls.size %}
+              {% assign pill_img_url = pills_custom_image_urls[forloop.index0] | strip %}
+              {% if pill_img_url != blank and pill_img_url != 'blank' %}
+                {% assign first_char = pill_img_url | slice: 0 %}
+                {% if first_char == '#' %}
+                  <span class="variant-pill__image variant-pill__color-swatch">
+                    <span class="variant-pill__color" style="background-color: {{ pill_img_url }}; width: 100%; height: 100%; display: block; border-radius: inherit;"></span>
+                  </span>
+                {% else %}
+                  <span class="variant-pill__image">
+                    <img src="{{ pill_img_url }}" alt="{{ value }}" loading="lazy">
+                  </span>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% elsif pills_use_custom_urls and pills_custom_image_urls.size > 0 %}
+            {% comment %}Main pills: Use cumulative index{% endcomment %}
+            {% if pill_index < pills_custom_image_urls.size %}
+              {% assign pill_img_url = pills_custom_image_urls[pill_index] | strip %}
+              {% if pill_img_url != blank and pill_img_url != 'blank' %}
+                {% assign first_char = pill_img_url | slice: 0 %}
+                {% if first_char == '#' %}
+                  <span class="variant-pill__image variant-pill__color-swatch">
+                    <span class="variant-pill__color" style="background-color: {{ pill_img_url }}; width: 100%; height: 100%; display: block; border-radius: inherit;"></span>
+                  </span>
+                {% else %}
+                  <span class="variant-pill__image">
+                    <img src="{{ pill_img_url }}" alt="{{ value }}" loading="lazy">
+                  </span>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% endif %}
+          {% if use_override %}
+            {% comment %}Override: Show text unless hide text is enabled{% endcomment %}
+            {% unless active_hide_text %}
+              <span class="variant-pill__text">{{ value -}}</span>
+            {% endunless %}
+          {% else %}
+            {% comment %}Main pills: Use image-only mode logic{% endcomment %}
+            {% if pills_image_only_mode %}
+              <span class="visually-hidden">{{ value -}}</span>
+            {% else %}
+              <span class="variant-pill__text">{{ value -}}</span>
+            {% endif %}
+          {% endif %}
+          <span class="visually-hidden">{{ 'products.product.variant_sold_out_or_unavailable' | t }}</span>
+        </label>
+        {% if use_override %}
+          {% if active_hide_text %}
+            <span class="variant-pill__label-below">{{ value }}</span>
+          {% endif %}
+        {% else %}
+          {% if pills_image_only_mode and pills_use_custom_urls and pills_custom_image_urls.size > 0 %}
+            <span class="variant-pill__label-below">{{ value }}</span>
+          {% elsif pills_hide_variant_text %}
+            <span class="variant-pill__label-below">{{ value }}</span>
+          {% endif %}
+        {% endif %}
+      </div>
+    {%- when 'dropdown' -%}
+      <option
+        value="{{ value | escape }}"
+        {% if option.selected_value == value %}
+          selected="selected"
+        {% endif %}
+        class="{{ option_class }}"
+      >
+        {% if option_disabled -%}
+          {{- 'products.product.value_unavailable' | t: option_value: value -}}
+        {%- else -%}
+          {{- value -}}
+        {%- endif %}
+      </option>
+  {% endcase %}
+{%- endfor -%}

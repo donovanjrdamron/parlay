@@ -1,0 +1,211 @@
+{% comment %}
+  Product Info Accordion Block
+  Renders up to 6 FAQ items in accordion style
+{% endcomment %}
+
+{% if block.settings.question_1 != blank and block.settings.answer_1 != blank
+   or block.settings.question_2 != blank and block.settings.answer_2 != blank
+   or block.settings.question_3 != blank and block.settings.answer_3 != blank
+   or block.settings.question_4 != blank and block.settings.answer_4 != blank
+   or block.settings.question_5 != blank and block.settings.answer_5 != blank
+   or block.settings.question_6 != blank and block.settings.answer_6 != blank %}
+
+<div class="product-info-accordion" data-product-accordion="{{ block.id }}" {{ block.shopify_attributes }} style="--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;">
+
+  {% comment %} Heading {% endcomment %}
+  {% if block.settings.heading != blank %}
+    <h3 class="product-accordion-heading">{{ block.settings.heading }}</h3>
+  {% endif %}
+
+  <div class="product-accordion-items">
+    {% for i in (1..6) %}
+      {% assign question_key = 'question_' | append: i %}
+      {% assign answer_key = 'answer_' | append: i %}
+      {% assign open_key = 'open_' | append: i %}
+
+      {% assign question = block.settings[question_key] %}
+      {% assign answer = block.settings[answer_key] %}
+      {% assign open_default = block.settings[open_key] %}
+
+      {% if question != blank and answer != blank %}
+        <div class="product-accordion-item" data-accordion-item>
+          <button
+            class="product-accordion-question"
+            type="button"
+            aria-expanded="{% if open_default %}true{% else %}false{% endif %}"
+            data-accordion-trigger
+          >
+            <span class="product-accordion-question-text">{{ question }}</span>
+            <span class="product-accordion-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+          <div class="product-accordion-answer" data-accordion-content>
+            <div class="product-accordion-answer-inner rte">
+              {{ answer }}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  /* Product Info Accordion */
+  .product-info-accordion {
+    width: 100%;
+    margin-top: var(--margin-top, 2rem);
+    margin-bottom: var(--margin-bottom, 2rem);
+  }
+
+  .product-accordion-heading {
+    font-size: {{ block.settings.heading_font_size }}px;
+    font-weight: {{ block.settings.heading_font_weight }};
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 {{ block.settings.heading_margin_bottom }}px 0;
+    line-height: 1.3;
+  }
+
+  .product-accordion-items {
+    width: 100%;
+  }
+
+  .product-accordion-item {
+    {% if block.settings.border_width > 0 %}
+      border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    {% endif %}
+    border-radius: {{ block.settings.border_radius }}px;
+    margin-bottom: {{ block.settings.item_gap }}px;
+    overflow: hidden;
+  }
+
+  .product-accordion-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .product-accordion-question {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background: {{ block.settings.question_bg_color }};
+    color: {{ block.settings.question_text_color }};
+    border: none;
+    text-align: left;
+    padding: {{ block.settings.question_padding_vertical_desktop }}px {{ block.settings.question_padding_horizontal_desktop }}px;
+    font-size: {{ block.settings.question_font_size }}px;
+    font-weight: {{ block.settings.question_font_weight }};
+    transition: all 0.3s ease;
+  }
+
+  .product-accordion-question:hover {
+    background: {{ block.settings.question_bg_color_hover }};
+  }
+
+  .product-accordion-question[aria-expanded="true"] {
+    background: {{ block.settings.question_bg_color_active }};
+    color: {{ block.settings.question_text_color_active }};
+  }
+
+  .product-accordion-question-text {
+    flex: 1;
+  }
+
+  .product-accordion-icon {
+    flex-shrink: 0;
+    margin-left: 1rem;
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+  }
+
+  .product-accordion-question[aria-expanded="true"] .product-accordion-icon {
+    transform: rotate(180deg);
+  }
+
+  .product-accordion-answer {
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+  }
+
+  .product-accordion-answer-inner {
+    padding: {{ block.settings.answer_padding_vertical_desktop }}px {{ block.settings.answer_padding_horizontal_desktop }}px;
+    font-size: {{ block.settings.answer_font_size }}px;
+    font-weight: {{ block.settings.answer_font_weight }};
+    color: {{ block.settings.answer_text_color }};
+    background-color: {{ block.settings.answer_bg_color }};
+    line-height: 1.6;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-accordion-heading {
+      font-size: {{ block.settings.heading_font_size_mobile }}px;
+    }
+
+    .product-accordion-question {
+      font-size: {{ block.settings.question_font_size_mobile }}px;
+      padding: {{ block.settings.question_padding_vertical_mobile }}px {{ block.settings.question_padding_horizontal_mobile }}px;
+    }
+
+    .product-accordion-answer-inner {
+      font-size: {{ block.settings.answer_font_size_mobile }}px;
+      padding: {{ block.settings.answer_padding_vertical_mobile }}px {{ block.settings.answer_padding_horizontal_mobile }}px;
+    }
+  }
+</style>
+
+<script>
+(function() {
+  function initProductAccordion(accordionId) {
+    const accordion = document.querySelector(`[data-product-accordion="${accordionId}"]`);
+    if (!accordion || accordion.dataset.initialized) return;
+
+    accordion.dataset.initialized = 'true';
+    const items = accordion.querySelectorAll('[data-accordion-item]');
+
+    items.forEach(item => {
+      const trigger = item.querySelector('[data-accordion-trigger]');
+      const content = item.querySelector('[data-accordion-content]');
+
+      if (trigger && content) {
+        trigger.addEventListener('click', () => {
+          const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+
+          if (isOpen) {
+            trigger.setAttribute('aria-expanded', 'false');
+            content.style.maxHeight = content.scrollHeight + 'px';
+            requestAnimationFrame(() => {
+              content.style.maxHeight = '0';
+            });
+          } else {
+            trigger.setAttribute('aria-expanded', 'true');
+            content.style.maxHeight = content.scrollHeight + 'px';
+          }
+        });
+
+        // Set initial state
+        if (trigger.getAttribute('aria-expanded') === 'true') {
+          content.style.maxHeight = content.scrollHeight + 'px';
+        } else {
+          content.style.maxHeight = '0';
+        }
+      }
+    });
+  }
+
+  // Initialize on load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initProductAccordion('{{ block.id }}');
+    });
+  } else {
+    initProductAccordion('{{ block.id }}');
+  }
+})();
+</script>
+
+{% endif %}

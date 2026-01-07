@@ -1,0 +1,654 @@
+{% comment %}
+  Free Gifts Row - Compact display with individual quantity unlocks per product
+  Usage: {% render 'free-gifts-row', block: block, product_form_id: product_form_id %}
+{% endcomment %}
+
+{% liquid
+  assign products_count = 0
+  if block.settings.gift_product_1 != blank
+    assign products_count = products_count | plus: 1
+  endif
+  if block.settings.gift_product_2 != blank
+    assign products_count = products_count | plus: 1
+  endif
+  if block.settings.gift_product_3 != blank
+    assign products_count = products_count | plus: 1
+  endif
+  if block.settings.gift_product_4 != blank
+    assign products_count = products_count | plus: 1
+  endif
+%}
+
+<style>
+  .free-gifts-row-{{ block.id }} {
+    margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;
+    margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;
+    padding: {{ block.settings.padding | divided_by: 10.0 }}rem;
+    background: {{ block.settings.bg_color }};
+    border-radius: {{ block.settings.corner_radius }}px;
+  }
+
+  .free-gifts-row__title {
+    text-align: {{ block.settings.title_alignment }};
+    font-size: {{ block.settings.title_size_mobile }}px;
+    font-weight: {{ block.settings.title_font_weight }};
+    color: {{ block.settings.title_color }};
+    margin-bottom: 0.75rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .free-gifts-row__title {
+      font-size: {{ block.settings.title_size_desktop }}px;
+    }
+  }
+
+  .free-gifts-row__products {
+    display: flex;
+    flex-direction: row;
+    gap: {{ block.settings.products_gap }}px;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    {% unless block.settings.equal_card_width %}
+    justify-content: flex-start;
+    {% endunless %}
+  }
+
+  @media screen and (max-width: 749px) {
+    .free-gifts-row__products {
+      flex-wrap: wrap;
+      {% if block.settings.equal_card_width %}
+      justify-content: center;
+      {% else %}
+      justify-content: flex-start;
+      {% endif %}
+    }
+  }
+
+  .free-gifts-row__product {
+    {% if block.settings.equal_card_width %}
+    flex: 1;
+    min-width: 0;
+    {% else %}
+    flex: 0 0 {{ block.settings.custom_card_width }}px;
+    width: {{ block.settings.custom_card_width }}px;
+    {% endif %}
+    border: {{ block.settings.product_border_width }}px solid {{ block.settings.product_border_color }};
+    border-radius: {{ block.settings.product_corner_radius }}px;
+    padding: {{ block.settings.product_padding }}px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    background: {{ block.settings.product_bg_color }};
+  }
+
+  .free-gifts-row__product.locked {
+    opacity: 0.6;
+  }
+
+  .free-gifts-row__product.unlocked {
+    border-color: {{ block.settings.product_unlocked_border_color }};
+    background: {{ block.settings.product_unlocked_bg_color }};
+  }
+
+  .free-gifts-row__product-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: {{ block.settings.locked_overlay_color }};
+    border-radius: {{ block.settings.product_corner_radius }}px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+    z-index: 1;
+  }
+
+  .free-gifts-row__product.unlocked .free-gifts-row__product-overlay {
+    display: none;
+  }
+
+  .free-gifts-row__lock-icon {
+    font-size: 28px;
+    color: {{ block.settings.lock_icon_color }};
+    margin-bottom: 4px;
+  }
+
+  .free-gifts-row__unlock-text {
+    font-size: 11px;
+    color: {{ block.settings.lock_icon_color }};
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .free-gifts-row__product-image {
+    width: {{ block.settings.product_image_width }}%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: {{ block.settings.image_corner_radius }}px;
+    margin-bottom: {{ block.settings.image_margin_bottom }}px;
+    {% if block.settings.product_image_width < 100 %}
+    margin-left: auto;
+    margin-right: auto;
+    {% endif %}
+  }
+
+  .free-gifts-row__product-title {
+    font-size: {{ block.settings.product_title_size }}px;
+    font-weight: {{ block.settings.product_title_weight }};
+    color: {{ block.settings.product_title_color }};
+    margin-top: {{ block.settings.product_title_margin_top }}px;
+    margin-bottom: {{ block.settings.product_title_margin_bottom }}px;
+    line-height: 1.2;
+  }
+
+  .free-gifts-row__product-price {
+    font-size: {{ block.settings.product_price_size }}px;
+    color: {{ block.settings.product_price_color }};
+    text-decoration: line-through;
+    margin-top: {{ block.settings.product_price_margin_top }}px;
+    margin-bottom: {{ block.settings.product_price_margin_bottom }}px;
+  }
+
+  {% if block.settings.hide_price %}
+  .free-gifts-row__product-price {
+    display: none;
+  }
+  {% endif %}
+
+  .free-gifts-row__product-free {
+    font-size: {{ block.settings.free_text_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.free_text_color }};
+    margin-top: {{ block.settings.free_text_margin_top }}px;
+    margin-bottom: {{ block.settings.free_text_margin_bottom }}px;
+  }
+
+</style>
+
+<div class="free-gifts-row free-gifts-row-{{ block.id }}" {{ block.shopify_attributes }} data-block-id="{{ block.id }}" data-unlock-type="{{ block.settings.unlock_type }}">
+  {% if block.settings.title != blank %}
+    <h3 class="free-gifts-row__title">{{ block.settings.title }}</h3>
+  {% endif %}
+
+  <div class="free-gifts-row__products">
+    {% if block.settings.gift_product_1 != blank %}
+      {% assign gift_1 = block.settings.gift_product_1 %}
+      <div class="free-gifts-row__product locked"
+           data-product-index="1"
+           data-variant-id="{{ gift_1.selected_or_first_available_variant.id }}"
+           data-unlock-qty="{{ block.settings.gift_1_quantity_to_unlock }}"
+           data-add-qty="{{ block.settings.gift_1_quantity_to_add }}">
+        {% if block.settings.gift_1_custom_image != blank %}
+          <img
+            src="{{ block.settings.gift_1_custom_image | image_url: width: 250 }}"
+            alt="{{ block.settings.gift_1_custom_title | default: gift_1.title | escape }}"
+            class="free-gifts-row__product-image"
+            loading="lazy"
+          >
+        {% elsif gift_1.featured_image %}
+          <img
+            src="{{ gift_1.featured_image | image_url: width: 250 }}"
+            alt="{{ gift_1.featured_image.alt | escape }}"
+            class="free-gifts-row__product-image"
+            loading="lazy"
+          >
+        {% endif %}
+        <h4 class="free-gifts-row__product-title">
+          {% if block.settings.gift_1_custom_title != blank %}
+            {{ block.settings.gift_1_custom_title }}
+          {% else %}
+            {{ gift_1.title }}
+          {% endif %}
+        </h4>
+        <p class="free-gifts-row__product-price">{{ gift_1.price | money }}</p>
+        <p class="free-gifts-row__product-free">{{ block.settings.free_text }}</p>
+        <div class="free-gifts-row__product-overlay">
+          <span class="free-gifts-row__lock-icon material-symbols-outlined">lock</span>
+          {% if block.settings.unlock_type == 'none' %}
+            <span class="free-gifts-row__unlock-text">Free gift included</span>
+          {% elsif block.settings.unlock_type == 'quantity' %}
+            <span class="free-gifts-row__unlock-text">{{ block.settings.gift_1_quantity_to_unlock }}+ to unlock</span>
+          {% else %}
+            <span class="free-gifts-row__unlock-text">Subscribe to unlock</span>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if block.settings.gift_product_2 != blank %}
+      {% assign gift_2 = block.settings.gift_product_2 %}
+      <div class="free-gifts-row__product locked"
+           data-product-index="2"
+           data-variant-id="{{ gift_2.selected_or_first_available_variant.id }}"
+           data-unlock-qty="{{ block.settings.gift_2_quantity_to_unlock }}"
+           data-add-qty="{{ block.settings.gift_2_quantity_to_add }}">
+        {% if block.settings.gift_2_custom_image != blank %}
+          <img
+            src="{{ block.settings.gift_2_custom_image | image_url: width: 250 }}"
+            alt="{{ block.settings.gift_2_custom_title | default: gift_2.title | escape }}"
+            class="free-gifts-row__product-image"
+            loading="lazy"
+          >
+        {% elsif gift_2.featured_image %}
+          <img
+            src="{{ gift_2.featured_image | image_url: width: 250 }}"
+            alt="{{ gift_2.featured_image.alt | escape }}"
+            class="free-gifts-row__product-image"
+            loading="lazy"
+          >
+        {% endif %}
+        <h4 class="free-gifts-row__product-title">
+          {% if block.settings.gift_2_custom_title != blank %}
+            {{ block.settings.gift_2_custom_title }}
+          {% else %}
+            {{ gift_2.title }}
+          {% endif %}
+        </h4>
+        <p class="free-gifts-row__product-price">{{ gift_2.price | money }}</p>
+        <p class="free-gifts-row__product-free">{{ block.settings.free_text }}</p>
+        <div class="free-gifts-row__product-overlay">
+          <span class="free-gifts-row__lock-icon material-symbols-outlined">lock</span>
+          {% if block.settings.unlock_type == 'none' %}
+            <span class="free-gifts-row__unlock-text">Free gift included</span>
+          {% elsif block.settings.unlock_type == 'quantity' %}
+            <span class="free-gifts-row__unlock-text">{{ block.settings.gift_2_quantity_to_unlock }}+ to unlock</span>
+          {% else %}
+            <span class="free-gifts-row__unlock-text">Subscribe to unlock</span>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if block.settings.gift_product_3 != blank %}
+      {% assign gift_3 = block.settings.gift_product_3 %}
+      <div class="free-gifts-row__product locked"
+           data-product-index="3"
+           data-variant-id="{{ gift_3.selected_or_first_available_variant.id }}"
+           data-unlock-qty="{{ block.settings.gift_3_quantity_to_unlock }}"
+           data-add-qty="{{ block.settings.gift_3_quantity_to_add }}">
+        {% if block.settings.gift_3_custom_image != blank %}
+          <img
+            src="{{ block.settings.gift_3_custom_image | image_url: width: 250 }}"
+            alt="{{ block.settings.gift_3_custom_title | default: gift_3.title | escape }}"
+            class="free-gifts-row__product-image"
+            loading="lazy"
+          >
+        {% elsif gift_3.featured_image %}
+          <img
+            src="{{ gift_3.featured_image | image_url: width: 250 }}"
+            alt="{{ gift_3.featured_image.alt | escape }}"
+            class="free-gifts-row__product-image"
+            loading="lazy"
+          >
+        {% endif %}
+        <h4 class="free-gifts-row__product-title">
+          {% if block.settings.gift_3_custom_title != blank %}
+            {{ block.settings.gift_3_custom_title }}
+          {% else %}
+            {{ gift_3.title }}
+          {% endif %}
+        </h4>
+        <p class="free-gifts-row__product-price">{{ gift_3.price | money }}</p>
+        <p class="free-gifts-row__product-free">{{ block.settings.free_text }}</p>
+        <div class="free-gifts-row__product-overlay">
+          <span class="free-gifts-row__lock-icon material-symbols-outlined">lock</span>
+          {% if block.settings.unlock_type == 'none' %}
+            <span class="free-gifts-row__unlock-text">Free gift included</span>
+          {% elsif block.settings.unlock_type == 'quantity' %}
+            <span class="free-gifts-row__unlock-text">{{ block.settings.gift_3_quantity_to_unlock }}+ to unlock</span>
+          {% else %}
+            <span class="free-gifts-row__unlock-text">Subscribe to unlock</span>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+(function() {
+  const blockId = '{{ block.id }}';
+  const unlockType = '{{ block.settings.unlock_type }}';
+  const multiplyByQuantity = {{ block.settings.multiply_gifts_by_quantity | default: false }};
+
+  // Use event delegation pattern like upsell-block
+  const initFreeGifts = function() {
+    const container = document.querySelector(`[data-block-id="${blockId}"]`);
+    if (!container) return;
+
+    const productCards = container.querySelectorAll('.free-gifts-row__product');
+    if (!productCards.length) return;
+
+    function unlockGifts(quantity) {
+      // Just update UI state - don't add to cart yet
+      productCards.forEach((card, index) => {
+        const unlockQty = parseInt(card.getAttribute('data-unlock-qty') || 1);
+        const variantId = String(card.getAttribute('data-variant-id'));
+
+        const shouldBeUnlocked = quantity >= unlockQty;
+
+        if (shouldBeUnlocked) {
+          card.classList.add('unlocked');
+          card.classList.remove('locked');
+          card.dataset.unlocked = 'true';
+        } else {
+          card.classList.remove('unlocked');
+          card.classList.add('locked');
+          card.dataset.unlocked = 'false';
+        }
+      });
+    }
+
+    // Get unlocked gifts to add with main product
+    function getUnlockedGifts(mainProductQuantity = 1, hasSubscription = false) {
+      const unlockedGifts = [];
+      productCards.forEach(card => {
+        if (card.dataset.unlocked === 'true') {
+          const variantId = card.getAttribute('data-variant-id');
+          const baseQty = parseInt(card.getAttribute('data-add-qty') || 1);
+
+          // Multiply ONLY if:
+          // 1. Setting is enabled AND
+          // 2. Customer selected subscription AND
+          // 3. Unlock type is "subscription" (not "quantity")
+          const shouldMultiply = multiplyByQuantity && hasSubscription && unlockType === 'subscription';
+          const finalQty = shouldMultiply ? (baseQty * mainProductQuantity) : baseQty;
+
+          unlockedGifts.push({
+            id: variantId,
+            quantity: finalQty,
+            properties: { '_free_gift': 'true' }
+          });
+        }
+      });
+      return unlockedGifts;
+    }
+
+    // Store reference to gifts globally so main ATC can access them
+    window.freeGiftsData = window.freeGiftsData || {};
+    window.freeGiftsData[blockId] = {
+      getUnlockedGifts: getUnlockedGifts
+    };
+
+    // Event listeners based on unlock type (subscription or quantity)
+    if (unlockType === 'subscription') {
+      function checkSubscription() {
+        const checkedRadio = document.querySelector('input[name="purchase-plan"]:checked');
+        let isSubscriptionSelected = false;
+
+        if (checkedRadio) {
+          const value = checkedRadio.value || '';
+          isSubscriptionSelected = value !== 'onetime-single' && value !== '';
+        }
+
+        // Unlock all if subscription, lock all if not
+        unlockGifts(isSubscriptionSelected ? 999 : 0);
+      }
+
+      // Use event delegation on document body
+      document.body.addEventListener('change', (e) => {
+        if (e.target.name === 'purchase-plan') {
+          setTimeout(checkSubscription, 100);
+        }
+      });
+
+      document.body.addEventListener('click', (e) => {
+        if (e.target.closest('.plan-option')) {
+          setTimeout(checkSubscription, 200);
+        }
+      });
+
+      // Initial check
+      setTimeout(checkSubscription, 800);
+
+    } else if (unlockType === 'quantity') {
+      // Use event delegation on document body (like upsell pattern)
+      document.body.addEventListener('click', (e) => {
+        const qbOption = e.target.closest('.qb-option');
+        if (qbOption) {
+          setTimeout(() => {
+            const activeQb = document.querySelector('.qb-option.qb-active');
+            if (activeQb) {
+              const qty = parseInt(activeQb.getAttribute('data-qty') || 1);
+              unlockGifts(qty);
+            }
+          }, 100);
+        }
+      });
+
+
+      // Listen for custom quantity events (fallback)
+      document.addEventListener('quantity-update', (e) => {
+        if (e.detail && e.detail.quantity) {
+          unlockGifts(e.detail.quantity);
+        }
+      });
+
+      // Fallback: manual quantity input
+      const quantityInput = document.querySelector('input[name="quantity"]');
+      if (quantityInput) {
+        quantityInput.addEventListener('change', () => {
+          const qty = parseInt(quantityInput.value || 1);
+          unlockGifts(qty);
+        });
+      }
+
+      // Initial load - check for active QB option
+      setTimeout(() => {
+        const activeQb = document.querySelector('.qb-option.qb-active');
+        const qty = activeQb ? parseInt(activeQb.getAttribute('data-qty') || 1) : 1;
+        unlockGifts(qty);
+      }, 500);
+
+    } else if (unlockType === 'none') {
+      // No condition - unlock all gifts immediately
+      unlockGifts(999); // Unlock all by passing high quantity
+    }
+  };
+
+  // Initialize on DOM ready (like upsell pattern)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFreeGifts);
+  } else {
+    initFreeGifts();
+  }
+
+  // Intercept main product ATC button to add free gifts (using event delegation like upsell)
+  if (!document.body.dataset.freeGiftsAtcHandlerBound) {
+    document.body.dataset.freeGiftsAtcHandlerBound = 'true';
+
+    document.body.addEventListener('click', function(e) {
+      // Check if it's any add to cart button (submit button OR sticky ATC button with form attribute)
+      let button = e.target.closest('button[type="submit"][name="add"]');
+      if (!button) {
+        // Check for sticky ATC button (type="button" with form attribute)
+        button = e.target.closest('button[type="button"][form]');
+        if (!button) return;
+      }
+
+      // Find the form first to get main product quantity
+      let form = button.closest('form');
+      if (!form) {
+        const formId = button.getAttribute('form');
+        if (formId) form = document.getElementById(formId);
+      }
+      if (!form) {
+        form = button.closest('product-form')?.querySelector('form');
+      }
+
+      if (!form) {
+        console.error('Free Gifts: Could not find form');
+        return;
+      }
+
+      // Get main product quantity
+      const formData = new FormData(form);
+      let mainProductQuantity = 1;
+
+      // Calculate total main product quantity
+      if (window.qbBundleData && window.qbBundleData.items && window.qbBundleData.items.length > 0) {
+        // Sum up QB bundle quantities
+        mainProductQuantity = window.qbBundleData.items.reduce((sum, item) => {
+          return sum + (item.quantity || 0);
+        }, 0);
+      } else {
+        mainProductQuantity = parseInt(formData.get('quantity') || 1);
+      }
+
+      // Check if customer selected subscription
+      const sellingPlan = formData.get('selling_plan');
+      const hasSubscription = sellingPlan && sellingPlan !== '';
+
+      // Get all unlocked free gifts from all free gift blocks, passing main quantity AND subscription status
+      let allFreeGifts = [];
+      if (window.freeGiftsData) {
+        Object.values(window.freeGiftsData).forEach(giftBlock => {
+          const gifts = giftBlock.getUnlockedGifts(mainProductQuantity, hasSubscription);
+          allFreeGifts = allFreeGifts.concat(gifts);
+        });
+      }
+
+      // If no free gifts are unlocked, let normal behavior happen
+      if (allFreeGifts.length === 0) {
+        return;
+      }
+
+      // Prevent default and intercept
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+
+      // Build items array with main product + free gifts
+      let items = [];
+
+      // Check if QB bundle exists (like upsell pattern)
+      if (window.qbBundleData && window.qbBundleData.items && window.qbBundleData.items.length > 0) {
+        items = window.qbBundleData.items.map(item => {
+          // Create clean item with ONLY id and quantity
+          // IMPORTANT: Ensure ID is a NUMBER not string for Shopify cart stacking
+          const cartItem = {
+            id: parseInt(item.id),
+            quantity: parseInt(item.quantity)
+          };
+          // Add selling_plan if subscription selected
+          if (sellingPlan) {
+            cartItem.selling_plan = sellingPlan;
+          }
+          // Never add any other properties to ensure stacking works
+          return cartItem;
+        });
+      } else {
+        // No QB, just main product
+        const mainVariantId = parseInt(formData.get('id'));
+
+        if (!mainVariantId) {
+          console.error('Free Gifts: No variant ID found');
+          return;
+        }
+
+        const mainItem = {
+          id: mainVariantId,
+          quantity: mainProductQuantity
+        };
+
+        // Add selling_plan to main product if subscription is selected
+        if (sellingPlan) {
+          mainItem.selling_plan = sellingPlan;
+        }
+
+        items = [mainItem];
+      }
+
+      // Add all free gifts to items array (gifts never have selling_plan)
+      items = items.concat(allFreeGifts);
+
+
+      // Show loading
+      button.classList.add('loading');
+      button.disabled = true;
+      const spinner = button.querySelector('.loading-overlay__spinner');
+      if (spinner) spinner.classList.remove('hidden');
+
+      // Add all items together
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-Free-Gift-Bundle': 'true' // Tell subscription widget we're handling it
+        },
+        body: JSON.stringify({ items: items })
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(err => {
+            throw new Error(err.description || `HTTP ${response.status}`);
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Refresh cart sections
+        const sectionsUrl = `?sections=cart-drawer,cart-icon-bubble&timestamp=${Date.now()}`;
+        return fetch(sectionsUrl);
+      })
+      .then(res => res.json())
+      .then(sections => {
+        // Update cart drawer
+        if (sections['cart-drawer']) {
+          const cartDrawer = document.querySelector('cart-drawer');
+          if (cartDrawer) {
+            cartDrawer.innerHTML = sections['cart-drawer'];
+            cartDrawer.classList.remove('is-empty');
+            cartDrawer.classList.add('is-loaded');
+          }
+        }
+
+        // Update cart icon bubble
+        if (sections['cart-icon-bubble']) {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(sections['cart-icon-bubble'], 'text/html');
+          const newBubble = doc.querySelector('.cart-count-bubble');
+          const cartIconBubble = document.querySelector('#cart-icon-bubble');
+          const existingBubble = cartIconBubble ? cartIconBubble.querySelector('.cart-count-bubble') : null;
+
+          if (cartIconBubble) {
+            if (newBubble && existingBubble) {
+              existingBubble.innerHTML = newBubble.innerHTML;
+            } else if (newBubble && !existingBubble) {
+              cartIconBubble.appendChild(newBubble.cloneNode(true));
+            } else if (!newBubble && existingBubble) {
+              existingBubble.remove();
+            }
+          }
+        }
+
+        // Remove loading state
+        button.classList.remove('loading');
+        button.disabled = false;
+        if (spinner) spinner.classList.add('hidden');
+
+        // Open cart drawer
+        const cartTrigger = document.querySelector('#cart-icon-bubble');
+        if (cartTrigger) {
+          cartTrigger.click();
+        }
+
+        document.dispatchEvent(new CustomEvent('cart:updated', { bubbles: true }));
+      })
+      .catch(error => {
+        console.error('Free Gifts: Error:', error);
+        alert('Failed to add items: ' + error.message);
+        button.classList.remove('loading');
+        button.disabled = false;
+        if (spinner) spinner.classList.add('hidden');
+      });
+
+      return false;
+    }, true); // Use capture phase like upsell
+  }
+})();
+</script>

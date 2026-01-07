@@ -1,0 +1,295 @@
+{% comment %}
+  UNIFIED PRICE CONTROLLER - DISABLED
+  Buy button now handles all price calculations
+  This file is disabled and no longer active
+{% endcomment %}
+
+<script>
+(function() {
+  'use strict';
+
+  // UNIFIED PRICE CONTROLLER: DISABLED - buy button now handles all prices
+  return; // Exit immediately, do nothing
+
+  // ============================================================================
+  // STATE MANAGEMENT
+  // ============================================================================
+
+  const state = {
+    currentVariantId: null,
+    currentQuantity: 1,
+    qbDiscount: 0,
+    qbOption: null,
+    subscriptionSelected: false,
+    subscriptionDiscount: {{ section.settings.sub_widget_subscription_discount | default: 10 }},
+    basePrice: null,
+    baseComparePrice: null,
+    lastUpdate: 0
+  };
+
+  // Get variant data
+  const variantData = JSON.parse(
+    document.querySelector('.subscription-widget__variants-json')?.textContent || '[]'
+  );
+
+  // ============================================================================
+  // HELPERS
+  // ============================================================================
+
+  function formatPrice(price) {
+    return new Intl.NumberFormat('{{ shop.locale }}', {
+      style: 'currency',
+      currency: '{{ shop.currency }}',
+      minimumFractionDigits: 2,
+    }).format(price / 100);
+  }
+
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  // ============================================================================
+  // STATE GETTERS - Get current state from DOM
+  // ============================================================================
+
+  function getCurrentVariantId() {
+    const form = document.querySelector('form[action*="/cart/add"]');
+    const variantInput = form?.querySelector('input[name="id"]');
+    return variantInput?.value;
+  }
+
+  function getQBState() {
+    const qbActive = document.querySelector('.qb-wrapper .qb-option.qb-active');
+    if (!qbActive) {
+      return { active: false, quantity: 1, discount: 0, option: null };
+    }
+
+    const quantity = parseInt(qbActive.dataset.qty) || 1;
+    const optionNum = parseInt(qbActive.dataset.option) || 1;
+
+    // Get QB discount settings from section blocks
+    {%- assign qb2_discount = 10 -%}
+    {%- assign qb3_discount = 15 -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'qb_row_no_variant' -%}
+        {%- assign qb2_discount = block.settings.qb2_discount | default: 10 -%}
+        {%- assign qb3_discount = block.settings.qb3_discount | default: 15 -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    let discount = 0;
+    switch(optionNum) {
+      case 1: discount = 0; break;
+      case 2: discount = {{ qb2_discount }}; break;
+      case 3: discount = {{ qb3_discount }}; break;
+    }
+
+    return { active: true, quantity, discount, option: optionNum };
+  }
+
+  function getSubscriptionState() {
+    const selectedPlan = document.querySelector('.plan-option.selected');
+    const isSubscription = selectedPlan?.getAttribute('data-plan')?.includes('subscription');
+    return {
+      active: isSubscription || false,
+      discount: {{ section.settings.sub_widget_subscription_discount | default: 10 }}
+    };
+  }
+
+  function getQuantity() {
+    // Priority: QB > quantity input
+    const qbState = getQBState();
+    if (qbState.active) {
+      return qbState.quantity;
+    }
+
+    const qtyInput = document.querySelector('input[name="quantity"]');
+    return parseInt(qtyInput?.value) || 1;
+  }
+
+  // ============================================================================
+  // PRICE CALCULATION - Single source of truth
+  // ============================================================================
+
+  function calculatePrices() {
+    const variantId = getCurrentVariantId();
+    const variant = variantData.find(v => v.id == variantId);
+
+    if (!variant) {
+      return null;
+    }
+
+    // Get current state
+    const qbState = getQBState();
+    const subState = getSubscriptionState();
+    const quantity = getQuantity();
+
+    // Start with base variant price
+    let perUnitPrice = variant.price;
+    let perUnitComparePrice = variant.compare_at_price;
+
+    // Apply QB discount if active
+    if (qbState.active && qbState.discount > 0) {
+      const discountMultiplier = (100 - qbState.discount) / 100;
+      perUnitPrice = Math.round(perUnitPrice * discountMultiplier);
+      if (perUnitComparePrice) {
+        perUnitComparePrice = Math.round(perUnitComparePrice * discountMultiplier);
+      }
+    }
+
+    // Calculate total prices
+    let totalPrice = perUnitPrice * quantity;
+    let totalComparePrice = perUnitComparePrice ? perUnitComparePrice * quantity : null;
+
+    // Apply subscription discount if active
+    let displayPrice = totalPrice;
+    if (subState.active) {
+      const subMultiplier = (100 - subState.discount) / 100;
+      displayPrice = Math.round(totalPrice * subMultiplier);
+    }
+
+    const result = {
+      perUnitPrice,
+      perUnitComparePrice,
+      totalPrice,
+      totalComparePrice,
+      displayPrice,
+      quantity,
+      qbDiscount: qbState.active ? qbState.discount : 0,
+      subDiscount: subState.active ? subState.discount : 0
+    };
+
+    return result;
+  }
+
+  // ============================================================================
+  // DOM UPDATE - Update all price elements
+  // ============================================================================
+
+  function updateDOM(prices) {
+    if (!prices) return;
+
+    const formattedPrice = formatPrice(prices.displayPrice);
+    const formattedCompare = prices.totalComparePrice ? formatPrice(prices.totalComparePrice) : null;
+
+    // Update main price
+    const mainPriceSelectors = [
+      '.price-item--sale.main-price',
+      '.price-item--regular.main-price',
+      '[id^="main-atc-price-"]'
+    ];
+
+    mainPriceSelectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(el => {
+        if (!el.closest('.price__compare-price') && !el.classList.contains('main-comapre-price')) {
+          el.textContent = formattedPrice;
+        }
+      });
+    });
+
+    // Update compare price
+    if (formattedCompare && prices.totalComparePrice > prices.displayPrice) {
+      document.querySelectorAll('.price__compare-price .price-item').forEach(el => {
+        el.textContent = formattedCompare;
+        el.style.display = '';
+        if (el.closest('.price__compare-price')) {
+          el.closest('.price__compare-price').style.display = '';
+        }
+      });
+    } else {
+      document.querySelectorAll('.price__compare-price').forEach(el => {
+        el.style.display = 'none';
+      });
+    }
+
+    // Update sticky ATC
+    const stickyPrice = document.querySelector('[id^="sticky-atc-price-"]');
+    if (stickyPrice) {
+      stickyPrice.textContent = formattedPrice;
+    }
+
+    // Update quantity input
+    const qtyInput = document.querySelector('input[name="quantity"]');
+    if (qtyInput && parseInt(qtyInput.value) !== prices.quantity) {
+      qtyInput.value = prices.quantity;
+    }
+  }
+
+  // ============================================================================
+  // MAIN UPDATE FUNCTION
+  // ============================================================================
+
+  const updatePrices = debounce(function() {
+    const now = Date.now();
+
+    const prices = calculatePrices();
+    if (prices) {
+      updateDOM(prices);
+    }
+
+    state.lastUpdate = now;
+  }, 50); // Debounce by 50ms
+
+  // ============================================================================
+  // EVENT LISTENERS
+  // ============================================================================
+
+  // QB option clicked
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.qb-option')) {
+      setTimeout(updatePrices, 100); // Wait for QB to update state
+    }
+  });
+
+  // Subscription plan clicked
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.plan-option')) {
+      setTimeout(updatePrices, 50);
+    }
+  });
+
+  // Variant changed - TEMPORARILY DISABLED
+  /*
+  const form = document.querySelector('form[action*="/cart/add"]');
+  const variantInput = form?.querySelector('input[name="id"]');
+  if (variantInput) {
+    const observer = new MutationObserver(() => {
+      updatePrices();
+    });
+    observer.observe(variantInput, { attributes: true, attributeFilter: ['value'] });
+  }
+  */
+
+  // Quantity changed (manual input)
+  document.addEventListener('change', (e) => {
+    if (e.target.matches('input[name="quantity"]')) {
+      updatePrices();
+    }
+  });
+
+  // ============================================================================
+  // INITIALIZATION
+  // ============================================================================
+
+  // Initial update
+  setTimeout(() => {
+    updatePrices();
+  }, 200);
+
+  // Expose to window for external access if needed
+  window.UnifiedPriceController = {
+    update: updatePrices,
+    getState: () => ({ ...state }),
+    calculatePrices: calculatePrices
+  };
+
+})();
+</script>

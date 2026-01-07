@@ -1,0 +1,336 @@
+{% comment %}
+  Renders a column of icons beside the product image gallery
+
+  Accepts:
+  - enabled: {Boolean} Whether to show the icon column
+  - icon_1: {String} First icon SVG or Google icon name
+  - icon_1_text: {String} Text under first icon
+  - icon_2: {String} Second icon SVG or Google icon name
+  - icon_2_text: {String} Text under second icon
+  - icon_3: {String} Third icon SVG or Google icon name
+  - icon_3_text: {String} Text under third icon
+  - position: {String} Position of icon column (left or right)
+  - bg_color: {String} Background color for icon containers
+  - text_color: {String} Text and icon color
+  - icon_size: {String} Size of icons (small, medium, large)
+
+  Usage:
+  {% render 'product-image-icons',
+    enabled: section.settings.enable_image_icons,
+    icon_1: section.settings.icon_1,
+    icon_1_text: section.settings.icon_1_text
+  %}
+{% endcomment %}
+
+{%- if enabled -%}
+  <div class="product-image-icons product-image-icons--{{ position | default: 'left' }} {% if hide_icons_desktop %}product-image-icons--hide-desktop{% endif %}"
+       style="--icon-bg-color: {{ bg_color | default: '#1e3a5f' }}; --icon-text-color: {{ text_color | default: '#ffffff' }}; --icon-box-border-radius: {{ icon_box_border_radius | default: 12 }}px; --icon-size-desktop: {{ icon_size_desktop | default: 56 }}px; --icon-text-font-size-desktop: {{ icon_text_font_size_desktop | default: 14 }}px; --icon-size-mobile: {{ icon_size_mobile | default: 40 }}px; --icon-text-font-size-mobile: {{ icon_text_font_size_mobile | default: 11 }}px; --icon-text-font-weight: {{ icon_text_font_weight | default: 600 }}; {% if icon_column_gradient != blank %}background: {{ icon_column_gradient }};{% else %}background-color: {{ icon_column_bg_color | default: 'rgba(0,0,0,0)' }};{% endif %} border: {{ icon_column_border_width | default: 0 }}px solid {{ icon_column_border_color | default: 'rgba(0,0,0,0)' }}; border-radius: {{ icon_column_border_radius | default: 0 }}px;">
+
+    {%- if icon_1 != blank -%}
+      <div class="product-image-icon-item">
+        <div class="product-image-icon-wrapper product-image-icon-wrapper-1"
+             style="{% if icon_1_gradient != blank %}background: {{ icon_1_gradient }};{% else %}background-color: {{ icon_1_bg_color | default: bg_color | default: '#1e3a5f' }};{% endif %} border: {{ icon_1_border_width | default: 0 }}px solid {{ icon_1_border_color | default: 'rgba(0,0,0,0)' }};">
+          <div class="product-image-icon-content" style="--icon-text-color: {{ icon_1_text_color | default: text_color | default: '#ffffff' }};">
+            {%- if icon_1 contains '<svg' -%}
+              {{ icon_1 }}
+            {%- else -%}
+              <span class="material-icons">{{ icon_1 }}</span>
+            {%- endif -%}
+            {%- if icon_1_text != blank -%}
+              <span class="product-image-icon-text">{{ icon_1_text }}</span>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if icon_2 != blank -%}
+      <div class="product-image-icon-item">
+        <div class="product-image-icon-wrapper product-image-icon-wrapper-2"
+             style="{% if icon_2_gradient != blank %}background: {{ icon_2_gradient }};{% else %}background-color: {{ icon_2_bg_color | default: bg_color | default: '#1e3a5f' }};{% endif %} border: {{ icon_2_border_width | default: 0 }}px solid {{ icon_2_border_color | default: 'rgba(0,0,0,0)' }};">
+          <div class="product-image-icon-content" style="--icon-text-color: {{ icon_2_text_color | default: text_color | default: '#ffffff' }};">
+            {%- if icon_2 contains '<svg' -%}
+              {{ icon_2 }}
+            {%- else -%}
+              <span class="material-icons">{{ icon_2 }}</span>
+            {%- endif -%}
+            {%- if icon_2_text != blank -%}
+              <span class="product-image-icon-text">{{ icon_2_text }}</span>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if icon_3 != blank -%}
+      <div class="product-image-icon-item">
+        <div class="product-image-icon-wrapper product-image-icon-wrapper-3"
+             style="{% if icon_3_gradient != blank %}background: {{ icon_3_gradient }};{% else %}background-color: {{ icon_3_bg_color | default: bg_color | default: '#1e3a5f' }};{% endif %} border: {{ icon_3_border_width | default: 0 }}px solid {{ icon_3_border_color | default: 'rgba(0,0,0,0)' }};">
+          <div class="product-image-icon-content" style="--icon-text-color: {{ icon_3_text_color | default: text_color | default: '#ffffff' }};">
+            {%- if icon_3 contains '<svg' -%}
+              {{ icon_3 }}
+            {%- else -%}
+              <span class="material-icons">{{ icon_3 }}</span>
+            {%- endif -%}
+            {%- if icon_3_text != blank -%}
+              <span class="product-image-icon-text">{{ icon_3_text }}</span>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+
+  </div>
+
+  <style>
+    .product-icons-and-viewer {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .product-icons-and-viewer media-gallery {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Ensure thumbnails display properly with inherited variables */
+    .product-icons-and-viewer ~ slider-component.thumbnail-slider {
+      display: flex !important;
+      align-items: center !important;
+      width: 100% !important;
+      --desktop-thumbnails: var(--desktop-thumbnails, 4);
+      --mobile-thumbnails: var(--mobile-thumbnails, 3);
+      position: relative;
+    }
+
+    /* Fix thumbnail arrow positioning - left and right sides */
+    .product-icons-and-viewer ~ slider-component.thumbnail-slider button.slider-button {
+      position: relative !important;
+      top: auto !important;
+      bottom: auto !important;
+      transform: none !important;
+    }
+
+    .product-icons-and-viewer ~ slider-component.thumbnail-slider button.slider-button[name="previous"] {
+      order: -1 !important;
+    }
+
+    .product-icons-and-viewer ~ slider-component.thumbnail-slider button.slider-button[name="next"] {
+      order: 999 !important;
+    }
+
+    media-gallery slider-component.thumbnail-slider {
+      display: block !important;
+      width: 100% !important;
+    }
+
+    .product-image-icons {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0;
+      width: var(--icon-column-width, 20%);
+      height: 100%;
+      gap: var(--icon-gap, 1rem);
+      opacity: 0;
+      transition: opacity 0.2s ease-in;
+    }
+
+    .product-image-icons.loaded {
+      opacity: 1;
+    }
+
+    /* Fix slider margins when icons are enabled */
+    .product-icons-and-viewer slider-component:not(.thumbnail-slider--no-slide) {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+
+    /* For icons on left - remove left margin only */
+    .product-icons-and-viewer:has(.product-image-icons--left) slider-component:not(.thumbnail-slider--no-slide) {
+      margin-left: 0 !important;
+      margin-right: -1.5rem;
+    }
+
+    /* For icons on right - remove right margin only */
+    .product-icons-and-viewer:has(.product-image-icons--right) slider-component:not(.thumbnail-slider--no-slide) {
+      margin-left: -1.5rem;
+      margin-right: 0 !important;
+    }
+
+    .product-image-icons--left {
+      order: -1;
+      margin-right: var(--icon-gap, 1rem);
+    }
+
+    .product-image-icons--right {
+      order: 1;
+      margin-left: var(--icon-gap, 1rem);
+    }
+
+    .product-image-icon-item {
+      width: 100%;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-image-icon-wrapper {
+      border-radius: var(--icon-box-border-radius, 12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .product-image-icon-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      height: 100%;
+    }
+
+    .product-image-icon-wrapper svg,
+    .product-image-icon-wrapper .material-icons {
+      width: auto;
+      height: auto;
+      max-width: 60%;
+      max-height: 60%;
+      flex-shrink: 0;
+      color: var(--icon-text-color);
+      fill: var(--icon-text-color);
+      font-size: var(--icon-size-desktop, 56px);
+    }
+
+    .product-image-icon-text {
+      font-size: var(--icon-text-font-size-desktop, 14px);
+      font-weight: var(--icon-text-font-weight, 600);
+      color: var(--icon-text-color);
+      text-align: center;
+      width: 100%;
+      line-height: 1.3;
+      white-space: normal;
+      word-wrap: break-word;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .product-image-icons--hide-desktop {
+      display: none !important;
+    }
+
+    @media screen and (max-width: 749px) {
+      .product-image-icons--hide-desktop {
+        display: flex !important;
+      }
+    }
+
+      .product-image-icon-wrapper {
+        padding: 0 !important;
+      }
+
+      .product-image-icon-content {
+        gap: 0.3rem !important;
+      }
+
+      .product-image-icon-text {
+        font-size: var(--icon-text-font-size-mobile, 11px) !important;
+        -webkit-line-clamp: 3 !important;
+      }
+
+      .product-image-icon-wrapper svg,
+      .product-image-icon-wrapper .material-icons {
+        font-size: var(--icon-size-mobile, 40px) !important;
+        max-width: 50% !important;
+        max-height: 50% !important;
+      }
+    }
+  </style>
+
+  <script>
+    (function() {
+      function syncIconHeight() {
+        const iconColumn = document.querySelector('.product-image-icons');
+        if (!iconColumn) return;
+
+        const mediaGallery = document.querySelector('.product__media-wrapper media-gallery, media-gallery');
+        if (!mediaGallery) return;
+
+        // Try to get active image, fallback to first image
+        let activeImage = mediaGallery.querySelector('.is-active img');
+        if (!activeImage) {
+          activeImage = mediaGallery.querySelector('img');
+        }
+        if (!activeImage) return;
+
+        const setHeight = function() {
+          const imageHeight = activeImage.offsetHeight;
+          if (imageHeight > 0) {
+            iconColumn.style.height = imageHeight + 'px';
+            iconColumn.classList.add('loaded');
+          }
+        };
+
+        // Wait for image to load before showing icons
+        if (activeImage.complete && activeImage.naturalHeight > 0) {
+          setHeight();
+        } else {
+          activeImage.addEventListener('load', setHeight);
+        }
+      }
+
+      // Sync on load
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', syncIconHeight);
+      } else {
+        syncIconHeight();
+      }
+
+      // Sync on window resize
+      let resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(syncIconHeight, 250);
+      });
+
+      // Sync when variant changes
+      document.addEventListener('variant:change', syncIconHeight);
+
+      // Watch for media gallery changes
+      const observer = new MutationObserver(syncIconHeight);
+      const mediaGallery = document.querySelector('media-gallery');
+      if (mediaGallery) {
+        observer.observe(mediaGallery, { attributes: true, childList: true, subtree: true });
+      }
+    })();
+  </script>
+
+  <style>
+    /* When image icons are enabled, hide thumbnails on desktop (respect mobile setting) */
+    @media screen and (min-width: 750px) {
+      slider-component[id*="GalleryThumbnails"] {
+        display: none !important;
+      }
+    }
+
+    /* On mobile, only hide if mobile_thumbnails setting is 'hide' (has small-hide class) */
+    @media screen and (max-width: 749px) {
+      slider-component[id*="GalleryThumbnails"].small-hide {
+        display: none !important;
+      }
+    }
+  </style>
+
+{%- endif -%}

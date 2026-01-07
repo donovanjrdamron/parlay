@@ -1,0 +1,1879 @@
+{% comment %}
+  Product Upsell Block
+  Renders a product upsell with variants and add to cart functionality
+{% endcomment %}
+
+{%- liquid
+  # If upsell_product is passed in (from cart-drawer loop), use it
+  if upsell_product == blank
+    # Otherwise, get the first product from product_list
+    if block.settings.product_list and block.settings.product_list.size > 0
+      assign upsell_product = block.settings.product_list | first
+    endif
+
+    # Upsell product will come from product_list only
+  endif
+
+  # Check if cart is empty
+  assign cart_is_empty = false
+  if type == 'cart-drawer' and cart.item_count == 0
+    assign cart_is_empty = true
+  endif
+
+  # Check if product is already in cart
+  assign product_in_cart = false
+  if type == 'cart-drawer' and upsell_product
+    for item in cart.items
+      if item.product.id == upsell_product.id
+        assign product_in_cart = true
+        break
+      endif
+    endfor
+  endif
+
+  # Determine which upsell this is (1, 2, or 3) based on block index
+  assign upsell_index = 0
+  for b in section.blocks
+    if b.type == 'product_upsell'
+      assign upsell_index = upsell_index | plus: 1
+      if b.id == block.id
+        break
+      endif
+    endif
+  endfor
+
+  # ATC Button settings
+  if block.settings.use_theme_colors == true
+    # Find the main buy button block to use its colors
+    for b in section.blocks
+      if b.type == 'buy_buttons'
+        assign atc_btn_bg = b.settings.button_background_color | default: '#1d1e3a'
+        assign atc_btn_bg_gradient = b.settings.button_background_gradient
+        assign atc_btn_text = b.settings.button_text_color | default: '#FFFFFF'
+        assign atc_btn_border = b.settings.button_border_color | default: '#1d1e3a'
+        assign atc_btn_border_width = b.settings.button_border_width | default: 0
+        assign atc_btn_border_radius = b.settings.button_border_radius | default: 4
+
+        # Create gradient background if gradient color is set
+        if atc_btn_bg_gradient != blank
+          assign atc_btn_background = 'linear-gradient(135deg, ' | append: atc_btn_bg | append: ' 0%, ' | append: atc_btn_bg_gradient | append: ' 100%)'
+        else
+          assign atc_btn_background = atc_btn_bg
+        endif
+        break
+      endif
+    endfor
+  else
+    # Use custom upsell button colors
+    assign atc_btn_bg = block.settings.atc_button_bg | default: '#1d1e3a'
+    assign atc_btn_bg_gradient = block.settings.atc_button_bg_gradient
+    assign atc_btn_text = block.settings.atc_button_text | default: '#FFFFFF'
+    assign atc_btn_border = block.settings.atc_button_border | default: '#1d1e3a'
+    assign atc_btn_border_width = block.settings.atc_button_border_width | default: 0
+    assign atc_btn_border_radius = block.settings.atc_button_border_radius | default: 4
+
+    # Create gradient background if gradient color is set
+    if atc_btn_bg_gradient != blank
+      assign atc_btn_background = 'linear-gradient(135deg, ' | append: atc_btn_bg | append: ' 0%, ' | append: atc_btn_bg_gradient | append: ' 100%)'
+    else
+      assign atc_btn_background = atc_btn_bg
+    endif
+  endif
+
+  # Use global settings directly
+  assign final_bg = block.settings.upsell_bg_color | default: '#FFFFFF'
+  assign final_border_color = block.settings.upsell_border_color | default: '#E5E5E5'
+  assign final_border_width = block.settings.upsell_border_width | default: 1
+  assign final_border_radius = block.settings.upsell_border_radius | default: 8
+  assign final_toggle_inactive_bg = block.settings.toggle_inactive_bg | default: '#cccccc'
+  assign final_toggle_inactive_border = block.settings.toggle_inactive_border | default: '#E5E5E5'
+  assign final_toggle_inactive_title = block.settings.toggle_inactive_title | default: '#000000'
+  assign final_toggle_inactive_price = block.settings.toggle_inactive_price | default: '#666666'
+  assign final_toggle_inactive_compare_price = block.settings.toggle_inactive_compare_price | default: '#999999'
+  assign final_toggle_inactive_variant_bg = block.settings.toggle_inactive_variant_bg | default: '#FFFFFF'
+  assign final_toggle_inactive_variant_text = block.settings.toggle_inactive_variant_text | default: '#000000'
+  assign final_toggle_inactive_variant_border = block.settings.toggle_inactive_variant_border | default: '#E5E5E5'
+  assign final_toggle_active_upsell_bg = block.settings.toggle_active_upsell_bg
+  assign final_toggle_active_bg = block.settings.toggle_active_bg | default: '#22c55e'
+  assign final_toggle_active_slider_circle = block.settings.toggle_active_slider_circle | default: '#FFFFFF'
+  assign final_toggle_active_border = block.settings.toggle_active_border | default: '#22c55e'
+  assign final_toggle_active_title = block.settings.toggle_active_title | default: '#000000'
+  assign final_toggle_active_price = block.settings.toggle_active_price | default: '#22c55e'
+  assign final_toggle_active_compare_price = block.settings.toggle_active_compare_price | default: '#999999'
+  assign final_toggle_active_variant_bg = block.settings.toggle_active_variant_bg | default: '#FFFFFF'
+  assign final_toggle_active_variant_text = block.settings.toggle_active_variant_text | default: '#000000'
+  assign final_toggle_active_variant_border = block.settings.toggle_active_variant_border | default: '#22c55e'
+-%}
+
+{%- if upsell_product and product_in_cart == false and cart_is_empty == false -%}
+<div class="product-upsell-container upsell-{{ upsell_index }}"
+     data-product-id="{{ upsell_product.id }}"
+     data-variant-id="{{ upsell_product.selected_or_first_available_variant.id }}"
+     {{ block.shopify_attributes }}
+     data-upsell-index="{{ upsell_index }}"
+     data-upsell-type="{{ type | default: 'product-page' }}"
+     style="
+       --upsell-bg: {{ final_bg }};
+       --upsell-border-color: {{ final_border_color }};
+       --upsell-border-width: {{ final_border_width }}px;
+       --upsell-border-radius: {{ final_border_radius }}px;
+       --image-to-info-gap: {{ block.settings.image_to_info_gap | default: 12 }}px;
+       --card-padding-vertical: {{ block.settings.card_padding_vertical | default: 20 }}px;
+       --card-padding-horizontal: {{ block.settings.card_padding_horizontal | default: 24 }}px;
+       --image-width: {{ block.settings.image_width | default: 120 }}px;
+       --image-height: {{ block.settings.image_height | default: 120 }}px;
+       --toggle-inactive-bg: {{ final_toggle_inactive_bg }};
+       --toggle-inactive-border: {{ final_toggle_inactive_border }};
+       --toggle-inactive-title: {{ final_toggle_inactive_title }};
+       --toggle-inactive-price: {{ final_toggle_inactive_price }};
+       --toggle-inactive-compare-price: {{ final_toggle_inactive_compare_price }};
+       --toggle-inactive-variant-bg: {{ final_toggle_inactive_variant_bg }};
+       --toggle-inactive-variant-text: {{ final_toggle_inactive_variant_text }};
+       --toggle-inactive-variant-border: {{ final_toggle_inactive_variant_border }};
+       --toggle-active-upsell-bg: {{ final_toggle_active_upsell_bg }};
+       --toggle-active-bg: {{ final_toggle_active_bg }};
+       --toggle-active-slider-circle: {{ final_toggle_active_slider_circle }};
+       --toggle-active-border: {{ final_toggle_active_border }};
+       --toggle-active-title: {{ final_toggle_active_title }};
+       --toggle-active-price: {{ final_toggle_active_price }};
+       --toggle-active-compare-price: {{ final_toggle_active_compare_price }};
+       --toggle-active-variant-bg: {{ final_toggle_active_variant_bg }};
+       --toggle-active-variant-text: {{ final_toggle_active_variant_text }};
+       --toggle-active-variant-border: {{ final_toggle_active_variant_border }};
+       --atc-btn-bg: {{ atc_btn_background }};
+       --atc-btn-text: {{ atc_btn_text }};
+       --atc-btn-border: {{ atc_btn_border }};
+       --atc-btn-border-width: {{ atc_btn_border_width }}px;
+       --atc-btn-border-radius: {{ atc_btn_border_radius }}px;
+       --card-bg: {{ block.settings.card_background_color | default: '#fcf9e6' }};
+       --card-radius: {{ block.settings.card_border_radius | default: 10 }}px;
+       --margin-top: {{ block.settings.margin_top | default: 0 }}px;
+       --margin-bottom: {{ block.settings.margin_bottom | default: 0 }}px;
+       --border-style: {{ block.settings.border_style | default: 'solid' }};
+       --title-font-size: {{ block.settings.title_font_size | default: 16 }}px;
+       {%- if type == 'cart-drawer' -%}
+         --title-color: {{ block.settings.title_text_color | default: '#000000' }};
+       {%- endif -%}
+     ">
+
+    <div class="upsell-wrapper">
+      <div class="upsell-loading-overlay hidden">
+        <div class="loading-overlay__spinner">
+          <svg aria-hidden="true" focusable="false" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+            <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+          </svg>
+        </div>
+      </div>
+      <!-- Product Image (outside card) -->
+      <div class="upsell-image" style="--img-bg: {{ block.settings.product_image_background_color | default: '#fcf9e6' }}; --img-radius: {{ block.settings.image_border_radius | default: 4 }}px;">
+        {%- if block.settings.product_1_image -%}
+          {{ block.settings.product_1_image | image_url: width: 120 | image_tag: loading: 'lazy', width: 120, height: 120 }}
+        {%- elsif upsell_product.featured_image -%}
+          {{ upsell_product.featured_image | image_url: width: 120 | image_tag: loading: 'lazy', width: 120, height: 120 }}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+
+        {%- if block.settings.show_best_seller_tag -%}
+          <div class="best-seller-tag"
+               style="
+                 --tag-bg: {{ block.settings.best_seller_tag_color | default: '#e18942' }};
+                 --tag-color: {{ block.settings.best_seller_tag_text_color | default: '#FFFFFF' }};
+               ">
+            {%- if block.settings.custom_bestseller_svg != blank -%}
+              {{ block.settings.custom_bestseller_svg }}
+            {%- else -%}
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                <path d="M6 0l1.854 3.755L12 4.362l-3 2.923.708 4.127L6 9.465l-3.708 1.947L3 6.285 0 3.362l4.146-.607z"/>
+              </svg>
+            {%- endif -%}
+            <span>{{ block.settings.best_seller_text | default: 'BEST SELLER' }}</span>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- Upsell Card (contains info and button) -->
+      <div class="upsell-card">
+        <!-- Product Content -->
+        <div class="upsell-content" data-clickable="{{ block.settings.toggle_element | default: 'button' }}">
+          <div class="upsell-main-layout">
+            <!-- Product Info -->
+          <div class="upsell-info">
+            {%- liquid
+              assign current_variant = upsell_product.selected_or_first_available_variant
+              assign show_compare = false
+              assign savings_percent = 0
+
+              if current_variant.compare_at_price > current_variant.price
+                assign show_compare = true
+                assign price_diff = current_variant.compare_at_price | minus: current_variant.price
+                assign savings_percent = price_diff | times: 100 | divided_by: current_variant.compare_at_price
+              endif
+
+              assign show_save_badge_setting = false
+              if block.settings.show_save_badge == true or block.settings.show_save_badge == nil
+                assign show_save_badge_setting = true
+              endif
+            -%}
+
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0;">
+              <h3 class="upsell-title" style="margin: 0; flex: 1 1 auto; min-width: 0; font-size: {{ block.settings.title_font_size | default: 16 }}px; font-weight: {{ block.settings.title_font_weight | default: 700 }};">
+                {%- if block.settings.make_title_clickable -%}
+                  <a href="{{ upsell_product.url }}">
+                    {{ upsell_product.title }}
+                  </a>
+                {%- else -%}
+                  {{ upsell_product.title }}
+                {%- endif -%}
+              </h3>
+
+              {%- if show_save_badge_setting and show_compare -%}
+                {%- liquid
+                  if block.settings.savings_badge_use_theme_colors
+                    assign badge_text_color = settings.badge_text_color | default: '#FFFFFF'
+                    assign badge_bg_color = settings.badge_bg_color | default: '#FF0000'
+                    assign badge_border_color = settings.badge_border_color | default: '#000000'
+                    assign badge_font_size = settings.badge_font_size | default: 12
+                    assign badge_font_weight = settings.badge_font_weight | default: '600'
+                    assign badge_padding_v = settings.badge_padding_vertical | default: 4
+                    assign badge_padding_h = settings.badge_padding_horizontal | default: 8
+                    assign badge_border_width = settings.badge_border_width | default: 1
+                    assign badge_border_radius = settings.badge_border_radius | default: 4
+                    assign badge_text_template = settings.badge_text | default: 'Save [percentage]%'
+                  else
+                    assign badge_text_color = block.settings.savings_badge_text_color
+                    assign badge_bg_color = block.settings.savings_badge_bg_color
+                    assign badge_border_color = block.settings.savings_badge_border_color
+                    assign badge_font_size = block.settings.savings_badge_font_size
+                    assign badge_font_weight = block.settings.savings_badge_font_weight
+                    assign badge_padding_v = block.settings.savings_badge_padding_vertical
+                    assign badge_padding_h = block.settings.savings_badge_padding_horizontal
+                    assign badge_border_width = block.settings.savings_badge_border_width
+                    assign badge_border_radius = block.settings.savings_badge_border_radius
+                    assign badge_text_template = block.settings.savings_badge_text | default: 'Save [percentage]%'
+                  endif
+
+                  assign price_savings_formatted = price_diff | money_without_trailing_zeros
+                  assign badge_display_text = badge_text_template | replace: '[percentage]', savings_percent | replace: '[price]', price_savings_formatted
+                -%}
+                <div class="upsell-savings-badge" style="
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 4px;
+                  padding: {{ badge_padding_v }}px {{ badge_padding_h }}px;
+                  background-color: {{ badge_bg_color }};
+                  border: {{ badge_border_width }}px solid {{ badge_border_color }};
+                  border-radius: {{ badge_border_radius }}px;
+                  font-size: {{ badge_font_size }}px;
+                  font-weight: {{ badge_font_weight }};
+                  color: {{ badge_text_color }};
+                  white-space: nowrap;
+                ">
+                  {{ badge_display_text }}
+                </div>
+              {%- endif -%}
+            </div>
+
+            {%- if block.settings.show_description -%}
+              <p class="upsell-description" style="--desc-color: {{ block.settings.description_color | default: '#333333' }};">
+                {%- if block.settings.product_1_desc != blank -%}
+                  {{ block.settings.product_1_desc }}
+                {%- else -%}
+                  {{ block.settings.description_text | default: upsell_product.description | truncate: 100 }}
+                {%- endif -%}
+              </p>
+            {%- endif -%}
+
+            {%- assign show_price_setting = block.settings.show_price | default: true -%}
+
+            {%- if show_price_setting -%}
+              <div class="upsell-price-wrapper">
+                <div class="upsell-price" style="font-size: {{ block.settings.upsell_price_font_size | default: 18 }}px; font-weight: 700;">
+                  {{ current_variant.price | money }}
+                </div>
+                {%- if show_compare and block.settings.show_compare_price == false -%}
+                  <div class="upsell-compare-price" style="font-size: {{ block.settings.upsell_compare_price_font_size | default: 14 }}px; text-decoration: line-through;">
+                    {{ current_variant.compare_at_price | money }}
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            <!-- Variant Selector -->
+            {%- if upsell_product.has_only_default_variant == false -%}
+              <div class="upsell-variants">
+                <select class="upsell-variant-select"
+                        data-product-id="{{ upsell_product.id }}"
+                        style="
+                          --variant-bg: {{ block.settings.variant_background_color | default: '#FFFFFF' }};
+                          --variant-color: {{ block.settings.variant_text_color | default: '#000000' }};
+                          --variant-border: {{ block.settings.variant_border_color | default: '#e0e0e0' }};
+                        ">
+                  {%- for variant in upsell_product.variants -%}
+                    {%- liquid
+                      if variant.image
+                        assign variant_image = variant.image | image_url: width: 120
+                      elsif variant.featured_image
+                        assign variant_image = variant.featured_image | image_url: width: 120
+                      else
+                        assign variant_image = upsell_product.featured_image | image_url: width: 120
+                      endif
+                    -%}
+                    <option value="{{ variant.id }}"
+                            data-price="{{ variant.price }}"
+                            data-price-formatted="{{ variant.price | money }}"
+                            data-compare-price="{{ variant.compare_at_price }}"
+                            data-compare-price-formatted="{{ variant.compare_at_price | money }}"
+                            data-image="{{ variant_image }}"
+                            {% if variant.id == current_variant.id %}selected{% endif %}
+                            {% unless variant.available %}disabled{% endunless %}>
+                      {{ variant.title }}{% unless variant.available %} - Sold Out{% endunless %}
+                    </option>
+                  {%- endfor -%}
+                </select>
+              </div>
+            {%- endif -%}
+          </div>
+
+          <!-- Toggle Switch or Add Button -->
+          {% if block.settings.silent_add_to_cart %}
+            <label class="upsell-toggle-switch">
+              <input type="checkbox"
+                     class="upsell-toggle-input"
+                     data-product-id="{{ upsell_product.id }}"
+                     data-variant-id="{{ upsell_product.selected_or_first_available_variant.id }}">
+              <span class="upsell-toggle-slider">
+                <span class="toggle-spinner"></span>
+              </span>
+            </label>
+          {% else %}
+            <button type="button"
+                    class="upsell-add-btn"
+                    data-product-id="{{ upsell_product.id }}"
+                    data-variant-id="{{ upsell_product.selected_or_first_available_variant.id }}"
+                    data-silent-mode="false">
+              <span class="btn-spinner"></span>
+              <span class="btn-text">{{ block.settings.button_text | default: block.settings.add_btn_label | default: 'Add' }}</span>
+            </button>
+          {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <style>
+    .product-upsell-container {
+      margin-top: var(--margin-top);
+      margin-bottom: var(--margin-bottom);
+    }
+
+    /* Wrapper that contains both image and card */
+    .upsell-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      gap: var(--image-to-info-gap);
+      border: var(--upsell-border-width) var(--border-style, solid) var(--toggle-inactive-border);
+      border-radius: var(--upsell-border-radius);
+      background: var(--upsell-bg);
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+      flex-shrink: 0;
+      height: max-content;
+      position: relative;
+    }
+
+    .upsell-loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      border-radius: var(--upsell-border-radius);
+    }
+
+    .upsell-loading-overlay.hidden {
+      display: none;
+    }
+
+    .upsell-loading-overlay .loading-overlay__spinner {
+      width: 1.8rem;
+      display: inline-block;
+      animation: rotator 1.4s linear infinite;
+    }
+
+    @keyframes rotator {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(270deg);
+      }
+    }
+
+    .upsell-loading-overlay .spinner {
+      animation: rotator 1.4s linear infinite;
+    }
+
+    .upsell-loading-overlay .spinner .path {
+      stroke-dasharray: 280;
+      stroke-dashoffset: 0;
+      transform-origin: center;
+      stroke: rgb(var(--color-foreground));
+      animation: dash 1.4s ease-in-out infinite;
+    }
+
+    @keyframes dash {
+      0% {
+        stroke-dashoffset: 280;
+      }
+      50% {
+        stroke-dashoffset: 75;
+        transform: rotate(135deg);
+      }
+      100% {
+        stroke-dashoffset: 280;
+        transform: rotate(450deg);
+      }
+    }
+
+    /* Active state when toggle is checked */
+    .product-upsell-container:has(.upsell-toggle-input:checked) .upsell-wrapper {
+      border-color: var(--toggle-active-border);
+      background: var(--toggle-active-upsell-bg, var(--upsell-bg));
+    }
+
+    /* Image container (outside card, no padding affecting it) */
+    .upsell-image {
+      position: relative;
+      width: var(--image-width);
+      height: var(--image-height);
+      background: transparent;
+      border-radius: var(--img-radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .upsell-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--img-radius);
+    }
+
+    /* Card contains only info and button with padding */
+    .upsell-card {
+      flex: 1;
+      padding: var(--card-padding-vertical) var(--card-padding-horizontal);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .upsell-content {
+      width: 100%;
+    }
+
+    .upsell-main-layout {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 1.25rem;
+      width: 100%;
+    }
+
+    .best-seller-tag {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--tag-bg);
+      color: var(--tag-color);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .best-seller-tag svg {
+      width: 10px;
+      height: 10px;
+    }
+
+    .upsell-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+
+    .upsell-title {
+      {% if type == 'cart-drawer' %}
+      color: var(--title-color, #000000);
+      {% else %}
+      color: var(--toggle-inactive-title);
+      {% endif %}
+      font-size: var(--title-font-size, 16px);
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.2;
+      transition: color 0.3s ease;
+    }
+
+    .product-upsell-container:has(.upsell-toggle-input:checked) .upsell-title {
+      color: var(--toggle-active-title);
+    }
+
+    .upsell-title a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .upsell-title a:hover {
+      text-decoration: underline;
+    }
+
+    .upsell-description {
+      color: var(--desc-color);
+      font-size: 0.875rem;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .upsell-price-wrapper {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: nowrap;
+    }
+
+    .upsell-price {
+      font-weight: 700;
+      color: var(--toggle-inactive-price);
+      transition: color 0.3s ease;
+    }
+
+    .product-upsell-container:has(.upsell-toggle-input:checked) .upsell-price {
+      color: var(--toggle-active-price);
+    }
+
+    .upsell-compare-price {
+      text-decoration: line-through;
+      opacity: 0.6;
+      color: var(--toggle-inactive-compare-price);
+      transition: color 0.3s ease;
+    }
+
+    .product-upsell-container:has(.upsell-toggle-input:checked) .upsell-compare-price {
+      color: var(--toggle-active-compare-price);
+    }
+
+    .upsell-variants {
+      margin: 0;
+    }
+
+    .upsell-variant-select {
+      background: var(--toggle-inactive-variant-bg);
+      color: var(--toggle-inactive-variant-text);
+      border: 1px solid var(--toggle-inactive-variant-border);
+      padding: 0.625rem 0.875rem;
+      border-radius: 6px;
+      font-size: 0.9375rem;
+      width: max-content;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .product-upsell-container:has(.upsell-toggle-input:checked) .upsell-variant-select {
+      background: var(--toggle-active-variant-bg);
+      color: var(--toggle-active-variant-text);
+      border-color: var(--toggle-active-variant-border);
+    }
+
+    .plus-button {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid currentColor;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .plus-button:hover {
+      background: rgba(0,0,0,0.05);
+    }
+
+    .plus-button.active {
+      background: var(--active-bg, #000);
+      color: white;
+      transform: rotate(45deg);
+    }
+
+    .upsell-add-btn {
+      background: var(--atc-btn-bg);
+      color: var(--atc-btn-text);
+      border: var(--atc-btn-border-width) solid var(--atc-btn-border);
+      border-radius: var(--atc-btn-border-radius);
+      padding: 0.875rem 2.25rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+      width: 50px;
+      height: fit-content;
+    }
+
+    .upsell-add-btn:hover {
+      opacity: 0.85;
+      transform: scale(1.02);
+    }
+
+    .upsell-add-btn.added {
+      background: var(--btn-bg-added) !important;
+      color: var(--btn-color-added) !important;
+    }
+
+    .upsell-add-btn.added-silent {
+      background: var(--btn-bg-added) !important;
+      color: var(--btn-color-added) !important;
+      pointer-events: auto;
+    }
+
+    .upsell-add-btn.loading {
+      opacity: 0.7;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+
+    .upsell-add-btn {
+      position: relative;
+    }
+
+    .upsell-add-btn .btn-spinner {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 18px;
+      height: 18px;
+      margin: -9px 0 0 -9px;
+      border: 2.5px solid rgba(255, 255, 255, 0.3);
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: smooth-spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      box-sizing: border-box;
+    }
+
+    .upsell-add-btn.loading .btn-spinner {
+      display: block;
+    }
+
+    .upsell-add-btn.loading .btn-text {
+      opacity: 0;
+    }
+
+    @keyframes smooth-spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Toggle Switch Styles */
+    .upsell-toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+
+    .upsell-toggle-input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .upsell-toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--toggle-inactive-bg);
+      transition: .3s;
+      border-radius: 26px;
+    }
+
+    .upsell-toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    .upsell-toggle-input:checked + .upsell-toggle-slider {
+      background-color: var(--toggle-active-bg);
+    }
+
+    .upsell-toggle-input:checked + .upsell-toggle-slider:before {
+      transform: translateX(24px);
+      background-color: var(--toggle-active-slider-circle);
+    }
+
+    .upsell-toggle-input:disabled + .upsell-toggle-slider {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .upsell-toggle-slider.loading::before {
+      opacity: 0;
+    }
+
+    .upsell-toggle-slider .toggle-spinner {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 16px;
+      height: 16px;
+      margin: -8px 0 0 -8px;
+      border: 2.5px solid rgba(255, 255, 255, 0.3);
+      border-top-color: var(--toggle-active-slider-circle);
+      border-radius: 50%;
+      animation: smooth-spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      z-index: 10;
+      box-sizing: border-box;
+    }
+
+    .upsell-toggle-slider.loading .toggle-spinner {
+      display: block;
+    }
+
+    .upsell-checkbox.style-checkbox_1,
+    .upsell-checkbox.style-checkbox_2 {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    /* Active state styles */
+    .upsell-card.selected {
+      border: 2px solid var(--selected-border, #000);
+      background: var(--selected-bg, #fff);
+    }
+
+    @media screen and (max-width: 749px) {
+      .upsell-main-layout {
+        flex-direction: row;
+        gap: 1rem;
+      }
+
+      .upsell-image {
+        width: var(--image-width);
+        height: var(--image-height);
+      }
+
+      .upsell-info {
+        gap: 0.25rem;
+      }
+
+      .upsell-title {
+        font-size: 1rem;
+      }
+
+      .upsell-variant-select {
+        max-width: 150px;
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+      }
+
+      .upsell-add-btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9375rem;
+        width: 50px;
+      }
+    }
+  </style>
+
+  <script>
+    (function() {
+      const blockId = '{{ block.id }}';
+      const productId = '{{ upsell_product.id }}';
+
+      const initUpsell = function() {
+        // More specific selector to find this exact block's container
+        const upsellContainer = document.querySelector('.product-upsell-container[data-product-id="' + productId + '"]');
+
+        if (!upsellContainer) {
+          return;
+        }
+
+        const checkbox = upsellContainer.querySelector('.upsell-checkbox');
+        const plusButton = upsellContainer.querySelector('.plus-button');
+        const addButton = upsellContainer.querySelector('.upsell-add-btn');
+        const toggleInput = upsellContainer.querySelector('.upsell-toggle-input');
+        const variantSelect = upsellContainer.querySelector('.upsell-variant-select');
+        const card = upsellContainer.querySelector('.upsell-card');
+
+      // Handle variant changes with event delegation
+      if (!document.body.dataset.upsellVariantHandlerBound) {
+        document.body.dataset.upsellVariantHandlerBound = 'true';
+
+        document.body.addEventListener('change', function(e) {
+          if (!e.target.classList.contains('upsell-variant-select')) return;
+
+          const variantSelect = e.target;
+          const upsellContainer = variantSelect.closest('.product-upsell-container');
+          if (!upsellContainer) return;
+
+          const selectedOption = variantSelect.options[variantSelect.selectedIndex];
+          const priceFormatted = selectedOption.dataset.priceFormatted;
+          const price = parseInt(selectedOption.dataset.price);
+          const comparePrice = parseInt(selectedOption.dataset.comparePrice);
+          const comparePriceFormatted = selectedOption.dataset.comparePriceFormatted;
+          const variantImage = selectedOption.dataset.image;
+
+          // Update product image
+          const imageWrapper = upsellContainer.querySelector('.upsell-image');
+          const imageEl = imageWrapper ? imageWrapper.querySelector('img') : null;
+
+          if (imageEl && variantImage) {
+            imageEl.src = variantImage;
+            imageEl.srcset = variantImage;
+          }
+
+          // Update main price display
+          const mainPriceEl = upsellContainer.querySelector('.upsell-price');
+          if (mainPriceEl) {
+            mainPriceEl.textContent = priceFormatted;
+          }
+
+          // Update compare price
+          const comparePriceEl = upsellContainer.querySelector('.upsell-compare-price');
+          if (comparePrice && comparePrice > price) {
+            if (comparePriceEl) {
+              comparePriceEl.textContent = comparePriceFormatted;
+              comparePriceEl.style.display = '';
+            }
+          } else {
+            if (comparePriceEl) {
+              comparePriceEl.style.display = 'none';
+            }
+          }
+
+          // Update all other price elements (button prices, etc)
+          const otherPriceElements = upsellContainer.querySelectorAll('.btn-price, .upsell-price-below');
+          otherPriceElements.forEach(el => {
+            if (el) el.textContent = priceFormatted;
+          });
+
+          // Update container variant ID (this is what gets added to cart)
+          upsellContainer.dataset.variantId = variantSelect.value;
+
+          // Update toggle/button variant ID
+          const toggleInput = upsellContainer.querySelector('.upsell-toggle-input');
+          if (toggleInput) {
+            toggleInput.dataset.variantId = variantSelect.value;
+          }
+
+          const addButton = upsellContainer.querySelector('.upsell-add-btn');
+          if (addButton) {
+            addButton.dataset.variantId = variantSelect.value;
+          }
+        });
+      }
+
+      // Add to cart function for toggle
+      function addToCart() {
+        const variantId = parseInt(upsellContainer.dataset.variantId);
+        if (!variantId) {
+          return;
+        }
+
+        // If there's an add button, click it
+        if (addButton) {
+          addButton.click();
+          return;
+        }
+
+        // Otherwise, add to cart directly (for toggle mode)
+        const toggleSlider = upsellContainer.querySelector('.upsell-toggle-slider');
+        if (toggleSlider) toggleSlider.classList.add('loading');
+        if (toggleInput) toggleInput.disabled = true;
+
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-Upsell-Add': 'true'
+          },
+          body: JSON.stringify({
+            items: [{
+              id: variantId,
+              quantity: 1,
+              properties: {
+                '_skip_subscription': 'true'
+              }
+            }]
+          })
+        })
+        .then(response => {
+          if (!response.ok) {
+            return response.json().then(err => {
+              console.error('Add to cart error:', err);
+              throw new Error(err.description || `HTTP ${response.status}`);
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Fetch cart data and sections
+          const sectionsUrl = `?sections=cart-drawer,cart-icon-bubble&timestamp=${Date.now()}`;
+          return Promise.all([
+            fetch('/cart.js').then(res => res.json()),
+            fetch(sectionsUrl).then(res => res.json())
+          ]);
+        })
+        .then(([cart, sections]) => {
+          // Update cart drawer HTML if it exists
+          if (sections['cart-drawer']) {
+            const cartDrawer = document.querySelector('cart-drawer');
+            if (cartDrawer) {
+              const wasOpen = cartDrawer.classList.contains('active') ||
+                              cartDrawer.querySelector('.drawer.active');
+
+              cartDrawer.innerHTML = sections['cart-drawer'];
+              cartDrawer.classList.remove('is-empty');
+              cartDrawer.classList.add('is-loaded');
+
+              // Keep drawer closed if it was closed
+              if (!wasOpen) {
+                cartDrawer.classList.remove('active');
+                const drawer = cartDrawer.querySelector('.drawer');
+                if (drawer) drawer.classList.remove('active');
+                document.body.classList.remove('overflow-hidden');
+              } else {
+                // Keep it open if it was open
+                cartDrawer.classList.add('active');
+                const drawer = cartDrawer.querySelector('.drawer');
+                if (drawer) drawer.classList.add('active');
+                document.body.classList.add('overflow-hidden');
+              }
+            }
+          }
+
+          // Update cart icon bubble
+          if (sections['cart-icon-bubble']) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(sections['cart-icon-bubble'], 'text/html');
+            const newBubble = doc.querySelector('.cart-count-bubble');
+            const cartIconBubble = document.querySelector('#cart-icon-bubble');
+            const existingBubble = cartIconBubble ? cartIconBubble.querySelector('.cart-count-bubble') : null;
+
+            if (cartIconBubble) {
+              if (newBubble && existingBubble) {
+                existingBubble.innerHTML = newBubble.innerHTML;
+              } else if (newBubble && !existingBubble) {
+                cartIconBubble.appendChild(newBubble.cloneNode(true));
+              } else if (!newBubble && existingBubble) {
+                existingBubble.remove();
+              }
+            }
+          }
+
+          if (toggleSlider) toggleSlider.classList.remove('loading');
+          if (toggleInput) toggleInput.disabled = false;
+
+          // Dispatch events for cart updates
+          document.dispatchEvent(new CustomEvent('cart:updated', { detail: cart, bubbles: true }));
+          document.dispatchEvent(new CustomEvent('cart:refresh', { detail: cart, bubbles: true }));
+        })
+        .catch(error => {
+          alert('Failed: ' + error.message);
+          if (toggleSlider) toggleSlider.classList.remove('loading');
+          if (toggleInput) {
+            toggleInput.disabled = false;
+            toggleInput.checked = false;
+          }
+        });
+      }
+
+      // Handle toggle/checkbox selection
+      function handleSelection(isSelected) {
+        if (isSelected) {
+          card.classList.add('selected');
+          card.style.setProperty('--selected-border', '{{ block.settings.selected_border_color | default: "#000000" }}');
+          card.style.setProperty('--selected-bg', '{{ block.settings.selected_background_color | default: "#ffffff" }}');
+        } else {
+          card.classList.remove('selected');
+        }
+
+        // Add to cart if selected
+        if (isSelected) {
+          addToCart();
+        }
+      }
+
+      if (checkbox) {
+        checkbox.addEventListener('change', function() {
+          handleSelection(this.checked);
+        });
+      }
+
+      if (plusButton) {
+        plusButton.addEventListener('click', function() {
+          this.classList.toggle('active');
+          handleSelection(this.classList.contains('active'));
+        });
+      }
+
+      // Handle container click if enabled
+      if ('{{ block.settings.toggle_element }}' === 'container') {
+        const content = upsellContainer.querySelector('.upsell-content');
+        content.addEventListener('click', function(e) {
+          if (!e.target.closest('.upsell-variant-select') && !e.target.closest('.upsell-add-btn')) {
+            if (checkbox) {
+              checkbox.checked = !checkbox.checked;
+              handleSelection(checkbox.checked);
+            } else if (plusButton) {
+              plusButton.classList.toggle('active');
+              handleSelection(plusButton.classList.contains('active'));
+            }
+          }
+        });
+      }
+
+      // Helper function to format money
+      function formatMoney(cents) {
+        const dollars = (cents / 100).toFixed(2);
+        return '{{ cart.currency.symbol | default: "$" }}' + dollars;
+      }
+
+
+      // Use event delegation on document for cart drawer upsells so it works after HTML refresh
+      if (!document.body.dataset.cartUpsellHandlerBound) {
+        document.body.dataset.cartUpsellHandlerBound = 'true';
+
+        document.body.addEventListener('change', function(e) {
+          const toggleInput = e.target;
+
+          // Check if this is a cart upsell toggle
+          if (!toggleInput.classList.contains('upsell-toggle-input')) return;
+
+          const upsellContainer = toggleInput.closest('.product-upsell-container');
+          if (!upsellContainer) return;
+
+          // Check if this is a cart-drawer upsell - if so, use original behavior
+          const upsellType = upsellContainer.dataset.upsellType;
+          const isCartDrawer = upsellType === 'cart-drawer';
+
+          const variantId = parseInt(upsellContainer.dataset.variantId);
+
+          // Always add to cart immediately for all upsell types
+          // (removed product page skip logic)
+
+          // Get loading elements
+          const loading = upsellContainer.querySelector('.upsell-loading-overlay');
+          const toggleSlider = upsellContainer.querySelector('.upsell-toggle-slider');
+
+          // Show loading state
+          if (loading) loading.classList.remove('hidden');
+          if (toggleSlider) toggleSlider.classList.add('loading');
+          toggleInput.disabled = true;
+
+          if (toggleInput.checked) {
+            fetch('/cart/add.js', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-Upsell-Add': 'true'
+              },
+              body: JSON.stringify({
+                items: [{
+                  id: variantId,
+                  quantity: 1
+                  // Removed properties to allow stacking with same variant (subscription handled by header)
+                }]
+              })
+            })
+            .then(response => {
+              if (!response.ok) {
+                return response.json().then(err => {
+                  throw new Error(err.description || `HTTP ${response.status}`);
+                });
+              }
+              return response.json();
+            })
+            .then(data => {
+              const sectionsUrl = `?sections=cart-drawer,cart-icon-bubble&timestamp=${Date.now()}`;
+              return fetch(sectionsUrl).then(res => res.json());
+            })
+            .then(sections => {
+              // Update cart drawer HTML
+              if (sections['cart-drawer']) {
+                const cartDrawer = document.querySelector('cart-drawer');
+                if (cartDrawer) {
+                  const wasOpen = cartDrawer.classList.contains('active') ||
+                                  cartDrawer.querySelector('.drawer.active');
+
+                  cartDrawer.innerHTML = sections['cart-drawer'];
+                  cartDrawer.classList.remove('is-empty');
+                  cartDrawer.classList.add('is-loaded');
+
+                  // Keep drawer closed for product page, open for cart drawer upsells
+                  if (wasOpen || isCartDrawer) {
+                    cartDrawer.classList.add('active');
+                    const drawer = cartDrawer.querySelector('.drawer');
+                    if (drawer) drawer.classList.add('active');
+                    document.body.classList.add('overflow-hidden');
+                  } else {
+                    // Keep closed for product page upsells
+                    cartDrawer.classList.remove('active');
+                    const drawer = cartDrawer.querySelector('.drawer');
+                    if (drawer) drawer.classList.remove('active');
+                    document.body.classList.remove('overflow-hidden');
+                  }
+                }
+              }
+              if (sections['cart-icon-bubble']) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(sections['cart-icon-bubble'], 'text/html');
+                const newBubble = doc.querySelector('.cart-count-bubble');
+                const cartIconBubble = document.querySelector('#cart-icon-bubble');
+                const existingBubble = cartIconBubble ? cartIconBubble.querySelector('.cart-count-bubble') : null;
+
+                if (cartIconBubble) {
+                  if (newBubble && existingBubble) {
+                    existingBubble.innerHTML = newBubble.innerHTML;
+                  } else if (newBubble && !existingBubble) {
+                    cartIconBubble.appendChild(newBubble.cloneNode(true));
+                  } else if (!newBubble && existingBubble) {
+                    existingBubble.remove();
+                  }
+                }
+              }
+
+              // Remove loading state
+              if (loading) loading.classList.add('hidden');
+              if (toggleSlider) toggleSlider.classList.remove('loading');
+              toggleInput.disabled = false;
+
+              // Dispatch cart updated event
+              document.dispatchEvent(new CustomEvent('cart:updated', { bubbles: true }));
+            })
+            .catch(error => {
+              alert('Failed: ' + error.message);
+              toggleInput.checked = false;
+              if (loading) loading.classList.add('hidden');
+              if (toggleSlider) toggleSlider.classList.remove('loading');
+              toggleInput.disabled = false;
+            });
+          } else {
+            if (loading) loading.classList.add('hidden');
+            if (toggleSlider) toggleSlider.classList.remove('loading');
+            toggleInput.disabled = false;
+          }
+        });
+
+        // Function to handle add to cart with upsells
+        function handleUpsellAddToCart(button, selectedUpsells, event) {
+          // Find the form - try multiple methods
+          let form = button.closest('form');
+          if (!form) {
+            const formId = button.getAttribute('form');
+            if (formId) {
+              form = document.getElementById(formId);
+            }
+          }
+          if (!form) {
+            form = button.closest('product-form')?.querySelector('form');
+          }
+
+          if (!form) {
+            return;
+          }
+
+          // Rebuild bundle data with latest selections before adding to cart (for QB logic)
+          if (typeof buildCombinedBundle === 'function') {
+            buildCombinedBundle();
+          }
+
+          // Check if quantity breaks bundle exists (for QB + subscription logic)
+          let items = [];
+
+          if (window.qbBundleData && window.qbBundleData.items && window.qbBundleData.items.length > 0) {
+            // Use the quantity breaks bundle items (includes all QB items, subscriptions, etc)
+            items = window.qbBundleData.items.map(item => ({
+              id: item.id,
+              quantity: item.quantity,
+              properties: item.properties || {}
+            }));
+          } else {
+            // No quantity breaks, just use main product from form
+            const formData = new FormData(form);
+            const mainVariantId = parseInt(formData.get('id'));
+            const mainQuantity = parseInt(formData.get('quantity') || 1);
+
+            if (!mainVariantId) {
+              return;
+            }
+
+            items = [{
+              id: mainVariantId,
+              quantity: mainQuantity
+            }];
+          }
+
+          // Now add all selected upsells to the items array
+          selectedUpsells.forEach(toggle => {
+            const container = toggle.closest('.product-upsell-container');
+            const upsellVariantId = parseInt(container.dataset.variantId);
+            items.push({
+              id: upsellVariantId,
+              quantity: 1,
+              properties: {
+                '_skip_subscription': 'true'
+              }
+            });
+          });
+
+          // Show loading state on button
+          button.classList.add('loading');
+          button.disabled = true;
+          const spinner = button.querySelector('.loading-overlay__spinner');
+          if (spinner) spinner.classList.remove('hidden');
+
+          // Add all items together
+          fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ items: items })
+          })
+          .then(response => {
+            if (!response.ok) {
+              return response.json().then(err => {
+                throw new Error(err.description || `HTTP ${response.status}`);
+              });
+            }
+            return response.json();
+          })
+          .then(data => {
+            // Update cart and open drawer
+            const sectionsUrl = `?sections=cart-drawer,cart-icon-bubble&timestamp=${Date.now()}`;
+            return fetch(sectionsUrl);
+          })
+          .then(res => res.json())
+          .then(sections => {
+            // Update cart icon bubble
+            if (sections['cart-icon-bubble']) {
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(sections['cart-icon-bubble'], 'text/html');
+              const newBubble = doc.querySelector('.cart-count-bubble');
+              const cartIconBubble = document.querySelector('#cart-icon-bubble');
+              const existingBubble = cartIconBubble ? cartIconBubble.querySelector('.cart-count-bubble') : null;
+
+              if (cartIconBubble) {
+                if (newBubble && existingBubble) {
+                  existingBubble.innerHTML = newBubble.innerHTML;
+                } else if (newBubble && !existingBubble) {
+                  cartIconBubble.appendChild(newBubble.cloneNode(true));
+                } else if (!newBubble && existingBubble) {
+                  existingBubble.remove();
+                }
+              }
+            }
+
+            // Update cart drawer
+            if (sections['cart-drawer']) {
+              const cartDrawer = document.querySelector('cart-drawer');
+              if (cartDrawer) {
+                cartDrawer.innerHTML = sections['cart-drawer'];
+                cartDrawer.classList.remove('is-empty');
+                cartDrawer.classList.add('is-loaded');
+              }
+            }
+
+            // Remove loading state
+            button.classList.remove('loading');
+            button.disabled = false;
+            const spinnerEnd = button.querySelector('.loading-overlay__spinner');
+            if (spinnerEnd) spinnerEnd.classList.add('hidden');
+
+            // Open cart drawer
+            const cartTrigger = document.querySelector('#cart-icon-bubble');
+            if (cartTrigger) {
+              cartTrigger.click();
+            }
+
+            // Dispatch success event
+            document.dispatchEvent(new CustomEvent('cart:updated', { bubbles: true }));
+          })
+          .catch(error => {
+            alert('Failed to add items: ' + error.message);
+            button.classList.remove('loading');
+            button.disabled = false;
+            const spinnerError = button.querySelector('.loading-overlay__spinner');
+            if (spinnerError) spinnerError.classList.add('hidden');
+          });
+        }
+
+        // Intercept main product buy button click BEFORE anything else
+        document.body.addEventListener('click', function(e) {
+          const button = e.target.closest('.main-product-atc');
+
+          if (!button) {
+            // Check if it's any button that might be the add to cart
+            const anyAtcButton = e.target.closest('button[type="submit"]');
+            if (anyAtcButton && anyAtcButton.name === 'add') {
+              // Use this button instead!
+              const selectedUpsells = document.querySelectorAll('.product-upsell-container[data-upsell-type="product-info"] .upsell-toggle-input:checked, .product-upsell-container[data-upsell-type="product-page"] .upsell-toggle-input:checked');
+
+              if (selectedUpsells.length > 0) {
+                // Stop the event
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+
+                // Process it
+                handleUpsellAddToCart(anyAtcButton, selectedUpsells, e);
+                return false;
+              }
+            }
+            return;
+          }
+
+          // Find all selected product page upsells (check both product-page and product-info)
+          const selectedUpsells = document.querySelectorAll('.product-upsell-container[data-upsell-type="product-info"] .upsell-toggle-input:checked, .product-upsell-container[data-upsell-type="product-page"] .upsell-toggle-input:checked');
+
+          if (selectedUpsells.length === 0) {
+            return; // Let normal behavior happen
+          }
+
+          // Prevent ALL default behaviors
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+
+          // Use the shared handler
+          handleUpsellAddToCart(button, selectedUpsells, e);
+          return false;
+        }, true); // Use capture phase to intercept BEFORE any other handlers
+
+        // Add button handler with event delegation
+        document.body.addEventListener('click', function(e) {
+          // Check if clicked element or its parent is the add button
+          const addButton = e.target.closest('.upsell-add-btn');
+
+          // If not an upsell add button, return
+          if (!addButton) return;
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          const upsellContainer = addButton.closest('.product-upsell-container');
+          if (!upsellContainer) return;
+
+          // Check if this is a cart-drawer upsell - if so, use original behavior
+          const upsellType = upsellContainer.dataset.upsellType;
+          const isCartDrawer = upsellType === 'cart-drawer';
+
+          const variantId = parseInt(upsellContainer.dataset.variantId);
+
+          const btnText = addButton.querySelector('.btn-text');
+          const originalText = btnText ? btnText.textContent : 'Add';
+          const loading = upsellContainer.querySelector('.upsell-loading-overlay');
+
+          // Show loading state
+          if (isCartDrawer && loading) {
+            loading.classList.remove('hidden');
+          } else {
+            addButton.classList.add('loading');
+            addButton.disabled = true;
+          }
+
+          fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest',
+              'X-Upsell-Add': 'true'
+            },
+            body: JSON.stringify({
+              items: [{
+                id: variantId,
+                quantity: 1
+                // Removed properties to allow stacking with same variant (subscription handled by header)
+              }]
+            })
+          })
+          .then(response => {
+            if (!response.ok) {
+              return response.json().then(err => {
+                throw new Error(err.description || `HTTP ${response.status}`);
+              });
+            }
+            return response.json();
+          })
+          .then(data => {
+            // Always refresh cart drawer sections for all upsell types
+            const sectionsUrl = `?sections=cart-drawer,cart-icon-bubble&timestamp=${Date.now()}`;
+            return fetch(sectionsUrl).then(res => res.json());
+          })
+          .then(result => {
+            // Update cart drawer HTML for all upsell types
+            const sections = result;
+            if (sections['cart-drawer']) {
+              const cartDrawer = document.querySelector('cart-drawer');
+              if (cartDrawer) {
+                const wasOpen = cartDrawer.classList.contains('active') ||
+                                cartDrawer.querySelector('.drawer.active');
+
+                cartDrawer.innerHTML = sections['cart-drawer'];
+                cartDrawer.classList.remove('is-empty');
+                cartDrawer.classList.add('is-loaded');
+
+                // Keep drawer closed for product page upsells, open for cart drawer upsells
+                if (wasOpen || isCartDrawer) {
+                  cartDrawer.classList.add('active');
+                  const drawer = cartDrawer.querySelector('.drawer');
+                  if (drawer) drawer.classList.add('active');
+                  document.body.classList.add('overflow-hidden');
+                } else {
+                  // Keep drawer closed for product page
+                  cartDrawer.classList.remove('active');
+                  const drawer = cartDrawer.querySelector('.drawer');
+                  if (drawer) drawer.classList.remove('active');
+                  document.body.classList.remove('overflow-hidden');
+                }
+              }
+            }
+            if (sections['cart-icon-bubble']) {
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(sections['cart-icon-bubble'], 'text/html');
+              const newBubble = doc.querySelector('.cart-count-bubble');
+              const cartIconBubble = document.querySelector('#cart-icon-bubble');
+              const existingBubble = cartIconBubble ? cartIconBubble.querySelector('.cart-count-bubble') : null;
+
+              if (cartIconBubble) {
+                if (newBubble && existingBubble) {
+                  existingBubble.innerHTML = newBubble.innerHTML;
+                } else if (newBubble && !existingBubble) {
+                  cartIconBubble.appendChild(newBubble.cloneNode(true));
+                  } else if (!newBubble && existingBubble) {
+                    existingBubble.remove();
+                  }
+                }
+              }
+
+            // Remove loading state
+            if (isCartDrawer && loading) {
+              loading.classList.add('hidden');
+            } else {
+              addButton.classList.remove('loading');
+              addButton.classList.add('added');
+              if (btnText) {
+                btnText.textContent = 'Added';
+              }
+
+              // Reset after 2 seconds
+              setTimeout(() => {
+                addButton.classList.remove('added');
+                addButton.disabled = false;
+                if (btnText) {
+                  btnText.textContent = originalText;
+                }
+              }, 2000);
+            }
+
+            // Dispatch cart updated event
+            document.dispatchEvent(new CustomEvent('cart:updated', { bubbles: true }));
+          })
+          .catch(error => {
+            alert('Failed: ' + error.message);
+            if (loading) loading.classList.add('hidden');
+            addButton.classList.remove('loading');
+            addButton.disabled = false;
+          });
+        });
+      }
+
+      // Add both main product and upsell to cart
+      function addBothToCart(mainVariantId, mainQuantity, upsellVariantId) {
+        if (!mainVariantId || !upsellVariantId) {
+          alert('Error: Missing product information');
+          return;
+        }
+
+        // Disable toggle during request and show loading
+        const toggleSlider = upsellContainer.querySelector('.upsell-toggle-slider');
+        if (toggleInput) {
+          toggleInput.disabled = true;
+          if (toggleSlider) toggleSlider.classList.add('loading');
+        }
+
+        // Add both items using items array
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({
+            items: [
+              {
+                id: mainVariantId,
+                quantity: mainQuantity
+              },
+              {
+                id: upsellVariantId,
+                quantity: 1
+              }
+            ]
+          })
+        })
+        .then(response => {
+          if (!response.ok) {
+            return response.json().then(err => {
+              throw new Error(err.description || `HTTP ${response.status}`);
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Re-enable toggle and remove loading
+          const toggleSlider = upsellContainer.querySelector('.upsell-toggle-slider');
+          if (toggleInput) {
+            toggleInput.disabled = false;
+            if (toggleSlider) toggleSlider.classList.remove('loading');
+          }
+
+          // Open cart drawer
+          return refreshUpsellCart();
+        })
+        .catch(error => {
+          alert('Failed to add items: ' + error.message);
+
+          // Re-enable toggle and remove loading
+          const toggleSlider = upsellContainer.querySelector('.upsell-toggle-slider');
+          if (toggleInput) {
+            toggleInput.disabled = false;
+            if (toggleSlider) toggleSlider.classList.remove('loading');
+          }
+        });
+      }
+
+      // Normal mode add to cart (for add button)
+      function addToCartNormal(variantId) {
+        if (!variantId) {
+          alert('Error: No variant selected');
+          return;
+        }
+
+        // Show loading state
+        if (addButton) {
+          addButton.classList.add('loading');
+          addButton.disabled = true;
+        }
+
+        // Add to cart via AJAX
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({
+            id: variantId,
+            quantity: 1
+          })
+        })
+        .then(response => {
+          if (!response.ok) {
+            return response.json().then(err => {
+              throw new Error(err.description || `HTTP ${response.status}`);
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+
+          if (addButton) {
+            const btnText = addButton.querySelector('.btn-text');
+
+            // Remove loading state
+            addButton.classList.remove('loading');
+            addButton.disabled = false;
+
+            // Normal mode - show feedback and open cart
+            addButton.classList.add('added');
+            if (btnText) {
+              const originalText = btnText.innerHTML;
+              btnText.textContent = 'Added!';
+              setTimeout(() => {
+                btnText.innerHTML = originalText;
+                addButton.classList.remove('added');
+              }, 2000);
+            }
+
+            // Open cart drawer
+            return refreshUpsellCart();
+          }
+        })
+        .then(() => {
+        })
+        .catch(error => {
+
+          // Remove loading state on error
+          if (addButton) {
+            addButton.classList.remove('loading');
+            addButton.disabled = false;
+          }
+
+          alert('Failed to add item to cart: ' + error.message);
+        });
+      }
+
+      // Update cart quietly
+      function updateCartQuietly() {
+        // Trigger Shopify's cart update
+        fetch('/cart.js')
+          .then(res => res.json())
+          .then(cart => {
+            // Dispatch event for theme to handle
+            document.documentElement.dispatchEvent(
+              new CustomEvent('cart:refresh', {
+                bubbles: true,
+                detail: cart
+              })
+            );
+          });
+      }
+
+      function refreshUpsellCartSilent() {
+        return new Promise((resolve) => {
+          // Only update cart counts, don't open drawer
+          fetch('/cart.js')
+            .then(response => response.json())
+            .then(cart => {
+              updateUpsellCartCounts(cart.item_count);
+              dispatchUpsellCartEvents(cart);
+              // DO NOT open cart drawer
+              resolve(cart);
+            })
+            .catch(error => {
+              resolve(null);
+            });
+        });
+      }
+
+      function refreshUpsellCart() {
+        return new Promise((resolve) => {
+          const sectionsUrl = `?sections=cart-drawer,cart-icon-bubble&timestamp=${Date.now()}`;
+
+          fetch(sectionsUrl)
+            .then(response => response.json())
+            .then(sections => {
+              if (sections['cart-drawer']) {
+                const cartDrawer = document.querySelector('cart-drawer');
+                if (cartDrawer) {
+                  cartDrawer.innerHTML = sections['cart-drawer'];
+                  cartDrawer.classList.remove('is-empty');
+                  cartDrawer.classList.add('is-loaded');
+                }
+              }
+
+              if (sections['cart-icon-bubble']) {
+                // Parse the new section HTML to extract just the cart count bubble
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(sections['cart-icon-bubble'], 'text/html');
+                const newBubble = doc.querySelector('.cart-count-bubble');
+
+                const cartIconBubble = document.querySelector('#cart-icon-bubble');
+                const existingBubble = cartIconBubble ? cartIconBubble.querySelector('.cart-count-bubble') : null;
+
+                if (cartIconBubble) {
+                  if (newBubble && existingBubble) {
+                    // Replace only the cart count bubble, keep the icon
+                    existingBubble.innerHTML = newBubble.innerHTML;
+                  } else if (newBubble && !existingBubble) {
+                    // Add the bubble if it doesn't exist
+                    cartIconBubble.appendChild(newBubble.cloneNode(true));
+                  } else if (!newBubble && existingBubble) {
+                    // Remove the bubble if cart is empty
+                    existingBubble.remove();
+                  }
+                }
+              }
+
+              return fetch('/cart.js');
+            })
+            .then(response => response.json())
+            .then(cart => {
+              updateUpsellCartCounts(cart.item_count);
+              dispatchUpsellCartEvents(cart);
+
+              // Open drawer immediately
+              openUpsellCartDrawer();
+              resolve(cart);
+            })
+            .catch(error => {
+              resolve(null);
+            });
+        });
+      }
+
+      function dispatchUpsellCartEvents(cart) {
+        const events = ['cart:updated', 'cart:refresh', 'cart:change'];
+        events.forEach(eventName => {
+          document.dispatchEvent(new CustomEvent(eventName, { detail: cart, bubbles: true }));
+        });
+      }
+
+      function updateUpsellCartCounts(itemCount) {
+        const selectors = ['[data-cart-count]', '.cart-count', '#cart-icon-bubble .count'];
+        selectors.forEach(selector => {
+          document.querySelectorAll(selector).forEach(el => {
+            el.textContent = itemCount;
+            el.setAttribute('data-cart-count', itemCount);
+          });
+        });
+      }
+
+      function openUpsellCartDrawer() {
+        const cartDrawer = document.querySelector('cart-drawer');
+        if (cartDrawer) {
+          cartDrawer.classList.remove('is-empty');
+          cartDrawer.classList.add('is-loaded');
+        }
+
+        const triggers = [
+          '[data-cart-drawer-trigger]',
+          '.header__icon--cart',
+          '#cart-icon-bubble'
+        ];
+
+        for (const selector of triggers) {
+          const trigger = document.querySelector(selector);
+          if (trigger) {
+            trigger.click();
+            return;
+          }
+        }
+      }
+      };
+
+      // Monitor cart changes and reset upsell states when products are removed (product page only)
+      const monitorCartChanges = () => {
+        document.addEventListener('cart:updated', (event) => {
+          const cart = event.detail;
+          if (!cart || !cart.items) return;
+
+          // Get all variant IDs currently in cart
+          const cartVariantIds = cart.items.map(item => item.variant_id);
+
+          // Check only product-page upsell containers
+          const upsellContainers = document.querySelectorAll('.product-upsell-container[data-upsell-type="product-page"]');
+          upsellContainers.forEach(container => {
+            const variantId = parseInt(container.dataset.variantId);
+            const isInCart = cartVariantIds.includes(variantId);
+
+            // Get toggle and button
+            const toggleInput = container.querySelector('.upsell-toggle-input');
+            const addButton = container.querySelector('.upsell-add-btn');
+            const btnText = addButton ? addButton.querySelector('.btn-text') : null;
+
+            // If product was removed from cart, reset state
+            if (!isInCart) {
+              // Uncheck toggle if checked
+              if (toggleInput && toggleInput.checked) {
+                toggleInput.checked = false;
+              }
+
+              // Reset button if it shows "Added"
+              if (addButton && addButton.classList.contains('added')) {
+                addButton.classList.remove('added');
+                addButton.disabled = false;
+                if (btnText) {
+                  const originalText = '{{ block.settings.button_text | default: block.settings.add_btn_label | default: "Add" }}';
+                  btnText.textContent = originalText;
+                }
+              }
+            }
+          });
+        });
+      };
+
+      // Sync image heights with upsell-card heights (includes padding)
+      const syncImageHeights = () => {
+        const upsellContainers = document.querySelectorAll('.product-upsell-container');
+        upsellContainers.forEach(container => {
+          const upsellCard = container.querySelector('.upsell-card');
+          const upsellImage = container.querySelector('.upsell-image');
+
+          if (upsellCard && upsellImage) {
+            const cardHeight = upsellCard.offsetHeight;
+            upsellImage.style.height = cardHeight + 'px';
+          }
+        });
+      };
+
+      // Initialize on DOMContentLoaded or immediately if DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          initUpsell();
+          syncImageHeights();
+          monitorCartChanges();
+        });
+      } else {
+        initUpsell();
+        syncImageHeights();
+        monitorCartChanges();
+      }
+
+      // Re-sync heights after cart updates
+      document.addEventListener('cart-drawer:updated', () => {
+        setTimeout(syncImageHeights, 100);
+      });
+
+      // Re-sync on window resize
+      window.addEventListener('resize', syncImageHeights);
+    })();
+  </script>
+</div>
+{%- elsif upsell_product == blank -%}
+<div class="product-upsell-container" {{ block.shopify_attributes }}>
+  <div style="padding: 20px; text-align: center; color: #666;">
+    <p>Please select a product in the block settings or enable dynamic recommendations.</p>
+  </div>
+</div>
+{%- endif -%}

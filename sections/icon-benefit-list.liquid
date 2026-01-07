@@ -1,0 +1,844 @@
+{{ 'section-icon-benefit-list.css' | asset_url | stylesheet_tag }}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --image-width-desktop: {{ section.settings.image_width_desktop }}%;
+    --vertical-alignment: {{ section.settings.vertical_alignment }};
+    --icon-size: {{ section.settings.icon_size }}px;
+    --icon-size-mobile: {{ section.settings.icon_size_mobile }}px;
+    --icon-border-radius: {{ section.settings.icon_border_radius }}px;
+    --icon-padding: {{ section.settings.icon_padding }}px;
+    --icon-alignment: {{ section.settings.icon_alignment }};
+    --title-font-size: {{ section.settings.title_font_size }}px;
+    --text-font-size-desktop: {{ section.settings.text_font_size_desktop }}px;
+    --text-font-size-mobile: {{ section.settings.text_font_size_mobile }}px;
+    --content-border-width-desktop: {{ section.settings.content_border_width_desktop }}px;
+    --content-border-width-mobile: {{ section.settings.content_border_width_mobile }}px;
+    --content-border-color: {{ section.settings.content_border_color }};
+    --content-border-radius: {{ section.settings.content_border_radius }}px;
+    --content-padding-horizontal-desktop: {{ section.settings.content_padding_horizontal_desktop }}px;
+    --content-padding-vertical-desktop: {{ section.settings.content_padding_vertical_desktop }}px;
+    --content-padding-horizontal-mobile: {{ section.settings.content_padding_horizontal_mobile }}px;
+    --content-padding-vertical-mobile: {{ section.settings.content_padding_vertical_mobile }}px;
+    --gap-between-items: {{ section.settings.gap_between_items }}px;
+
+    {%- comment -%} Header Styling {%- endcomment -%}
+    --heading-color: {% if section.settings.use_theme_colors %}{{ settings.colors_text }}{% else %}{{ section.settings.heading_color }}{% endif %};
+    --heading-font-size-desktop: {{ section.settings.heading_font_size_desktop }}px;
+    --heading-font-size-mobile: {{ section.settings.heading_font_size_mobile }}px;
+    --heading-font-weight: {{ section.settings.heading_font_weight }};
+    --heading-line-height: {{ section.settings.heading_line_height }};
+    --heading-spacing-desktop: {{ section.settings.heading_spacing_desktop }}px;
+    --heading-spacing-mobile: {{ section.settings.heading_spacing_mobile }}px;
+
+    --highlight-font-size-desktop: {{ section.settings.highlight_font_size_desktop }}px;
+    --highlight-font-size-mobile: {{ section.settings.highlight_font_size_mobile }}px;
+    --highlight-font-weight: {{ section.settings.highlight_font_weight }};
+    --highlight-margin-top: {{ section.settings.highlight_margin_top }}px;
+    --highlight-margin-bottom: {{ section.settings.highlight_margin_bottom }}px;
+
+    --subheading-color: {% if section.settings.use_theme_colors %}{{ settings.colors_text }}{% else %}{{ section.settings.subheading_color }}{% endif %};
+    --subheading-font-size-desktop: {{ section.settings.subheading_font_size_desktop }}px;
+    --subheading-font-size-mobile: {{ section.settings.subheading_font_size_mobile }}px;
+    --subheading-font-weight: {{ section.settings.subheading_font_weight }};
+  }
+
+  {%- comment -%} Highlighted Text Color {%- endcomment -%}
+  #shopify-section-{{ section.id }} .ibl-highlighted-text {
+    {% if section.settings.use_theme_colors %}
+      {% if settings.highlighted_text_gradient_enabled %}
+        background: {{ settings.highlighted_text_gradient }};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      {% else %}
+        color: {{ settings.highlighted_text_color }};
+      {% endif %}
+    {% elsif section.settings.highlighted_gradient_enabled %}
+      background: {{ section.settings.highlighted_gradient }};
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    {% else %}
+      color: {{ section.settings.highlighted_color }};
+    {% endif %}
+  }
+
+  {%- comment -%} Section Background {%- endcomment -%}
+  #shopify-section-{{ section.id }} .icon-benefit-section {
+    {% unless section.settings.use_theme_colors %}
+      background-color: {{ section.settings.section_background_color }};
+    {% endunless %}
+  }
+
+  /* Button Block Styles */
+  {% for block in section.blocks %}
+    {% if block.type == 'button' %}
+      #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] {
+        margin-top: {{ block.settings.margin_top | default: 0 }}px;
+        margin-bottom: {{ block.settings.margin_bottom | default: 24 }}px;
+        text-align: {{ block.settings.alignment_desktop | default: 'left' }};
+        {% if block.settings.full_width %}
+          width: 100%;
+        {% endif %}
+      }
+
+      /* Hide on desktop */
+      @media (min-width: 769px) {
+        #shopify-section-{{ section.id }} .ibl-button-hide-desktop {
+          display: none !important;
+        }
+      }
+
+      {% if block.settings.use_custom_styles %}
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button--custom-styles {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: {{ block.settings.button_icon_gap | default: 8 }}px;
+          text-decoration: none;
+          cursor: pointer;
+          text-align: center;
+          line-height: 1;
+          {% if block.settings.use_custom_width %}
+            width: {{ block.settings.custom_width_desktop | default: 300 }}px;
+            max-width: 100%;
+          {% else %}
+            width: auto;
+          {% endif %}
+          box-shadow: none;
+          transform: none;
+          color: {{ block.settings.button_text_color | default: '#FFFFFF' }};
+          {% if block.settings.use_gradient %}
+            background: {{ block.settings.button_gradient }};
+          {% else %}
+            background-color: {{ block.settings.button_bg_color | default: '#000000' }};
+          {% endif %}
+          border: {{ block.settings.border_width | default: 0 }}px solid {{ block.settings.border_color | default: '#000000' }};
+          border-radius: {{ block.settings.border_radius | default: 4 }}px;
+          font-size: {{ block.settings.font_size_desktop | default: 16 }}px;
+          font-weight: {{ block.settings.font_weight | default: '600' }};
+          text-transform: {{ block.settings.text_transform | default: 'uppercase' }};
+          letter-spacing: {{ block.settings.letter_spacing | default: 1 }}px;
+          padding: {{ block.settings.padding_vertical | default: 12 }}px {{ block.settings.padding_horizontal | default: 24 }}px;
+          transition: all 0.3s ease;
+        }
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: {{ block.settings.button_icon_size | default: 20 }}px;
+          color: {{ block.settings.button_icon_color | default: '#FFFFFF' }};
+          line-height: 1;
+          flex-shrink: 0;
+        }
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button-icon svg,
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button-icon .material-icon {
+          width: 1em;
+          height: 1em;
+          font-size: inherit;
+          color: inherit;
+          display: block;
+        }
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button-icon svg {
+          fill: currentColor;
+        }
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button-text {
+          line-height: 1;
+        }
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button--custom-styles:hover {
+          color: {{ block.settings.button_text_color_hover | default: '#FFFFFF' }};
+          {% unless block.settings.use_gradient %}
+            background-color: {{ block.settings.button_bg_color_hover | default: '#333333' }};
+          {% endunless %}
+          transform: none;
+          box-shadow: none;
+        }
+        @media (max-width: 768px) {
+          #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button--custom-styles {
+            font-size: {{ block.settings.font_size_mobile | default: 14 }}px;
+            {% if block.settings.use_custom_width %}
+              width: {{ block.settings.custom_width_mobile | default: 280 }}px;
+              max-width: 100%;
+            {% endif %}
+          }
+        }
+      {% endif %}
+
+      {% unless block.settings.use_custom_styles %}
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button,
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .theme-button {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: {{ block.settings.button_icon_gap | default: 8 }}px !important;
+          line-height: 1 !important;
+          width: auto !important;
+        }
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: {{ block.settings.button_icon_size | default: 20 }}px;
+          color: {{ block.settings.button_icon_color | default: '#FFFFFF' }};
+          line-height: 1;
+          flex-shrink: 0;
+        }
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button-icon svg,
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button-icon .material-icon {
+          width: 1em;
+          height: 1em;
+          color: inherit;
+          display: block;
+        }
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button-icon svg {
+          fill: currentColor;
+        }
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button-text {
+          line-height: 1;
+        }
+      {% endunless %}
+
+      {% if block.settings.use_custom_width and block.settings.use_custom_styles == false %}
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button,
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .theme-button {
+          width: {{ block.settings.custom_width_desktop | default: 300 }}px;
+          max-width: 100%;
+        }
+      {% endif %}
+
+      {% if block.settings.full_width %}
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] {
+          width: 100%;
+          display: block;
+        }
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button,
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .theme-button {
+          width: 100%;
+          display: block;
+          text-align: center;
+          max-width: none;
+        }
+      {% endif %}
+
+      @media (max-width: 768px) {
+        #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] {
+          text-align: {{ block.settings.alignment_mobile | default: 'center' }};
+        }
+        {% if block.settings.use_custom_width and block.settings.use_custom_styles == false %}
+          #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button,
+          #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .theme-button {
+            width: {{ block.settings.custom_width_mobile | default: 280 }}px;
+            max-width: 100%;
+          }
+        {% endif %}
+        {% if block.settings.full_width_mobile_only %}
+          #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] {
+            width: 100%;
+            display: block;
+          }
+          #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .ibl-button,
+          #shopify-section-{{ section.id }} .ibl-button-wrapper[data-block-id="{{ block.id }}"] .theme-button {
+            width: 100%;
+            display: block;
+            text-align: center;
+            max-width: none;
+          }
+        {% endif %}
+      }
+    {% endif %}
+  {% endfor %}
+</style>
+
+<div class="icon-benefit-section{% unless section.settings.use_theme_colors %} custom-bg{% endunless %}">
+  <div class="page-width">
+
+    {%- comment -%} Custom HTML - Above Heading (Mobile) {%- endcomment -%}
+    {%- if section.settings.custom_html_above_heading != blank -%}
+      <div class="ibl-custom-html-above-heading ibl-custom-html-mobile" style="margin-bottom: {{ section.settings.custom_html_above_heading_spacing }}px;">
+        {{ section.settings.custom_html_above_heading }}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Section Heading {%- endcomment -%}
+    {%- if section.settings.heading_before != blank or section.settings.highlighted_text != blank or section.settings.heading_after != blank -%}
+      <div class="ibl-header-wrapper ibl-align-{{ section.settings.heading_text_align_mobile }}">
+        {%- case section.settings.highlight_position -%}
+          {%- when 'above' -%}
+            {%- if section.settings.highlighted_text != blank -%}
+              <span class="ibl-highlighted-text ibl-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+            {%- endif -%}
+            <{{ section.settings.heading_tag }} class="ibl-heading {{ section.settings.heading_tag }}">
+              {{ section.settings.heading_before }}
+              {{ section.settings.heading_after }}
+            </{{ section.settings.heading_tag }}>
+          {%- when 'below' -%}
+            <{{ section.settings.heading_tag }} class="ibl-heading {{ section.settings.heading_tag }}">
+              {{ section.settings.heading_before }}
+              {{ section.settings.heading_after }}
+            </{{ section.settings.heading_tag }}>
+            {%- if section.settings.highlighted_text != blank -%}
+              <span class="ibl-highlighted-text ibl-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+            {%- endif -%}
+          {%- when 'inline_first' -%}
+            <{{ section.settings.heading_tag }} class="ibl-heading {{ section.settings.heading_tag }}">
+              {%- if section.settings.highlighted_text != blank -%}
+                <span class="ibl-highlighted-text">{{ section.settings.highlighted_text }}</span>
+              {%- endif -%}
+              {%- if section.settings.heading_before != blank -%}{{ " " }}{{ section.settings.heading_before }}{%- endif -%}
+              {%- if section.settings.heading_after != blank -%}{{ " " }}{{ section.settings.heading_after }}{%- endif -%}
+            </{{ section.settings.heading_tag }}>
+          {%- when 'inline_second' -%}
+            <{{ section.settings.heading_tag }} class="ibl-heading {{ section.settings.heading_tag }}">
+              {%- if section.settings.heading_before != blank -%}{{ section.settings.heading_before }}{{ " " }}{%- endif -%}
+              {%- if section.settings.highlighted_text != blank -%}
+                <span class="ibl-highlighted-text">{{ section.settings.highlighted_text }}</span>
+              {%- endif -%}
+              {%- if section.settings.heading_after != blank -%}{{ " " }}{{ section.settings.heading_after }}{%- endif -%}
+            </{{ section.settings.heading_tag }}>
+        {%- endcase -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Custom HTML - Below Heading (Mobile) {%- endcomment -%}
+    {%- if section.settings.custom_html_below_heading != blank -%}
+      <div class="ibl-custom-html-below-heading ibl-custom-html-mobile" style="margin-bottom: {{ section.settings.custom_html_below_heading_spacing }}px;">
+        {{ section.settings.custom_html_below_heading }}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Subheading (Mobile) {%- endcomment -%}
+    {%- if section.settings.subheading != blank -%}
+      <div class="ibl-subheading-wrapper ibl-subheading-mobile" style="text-align: {{ section.settings.subheading_text_align_mobile }};">
+        <p class="ibl-subheading">{{ section.settings.subheading }}</p>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Custom HTML - Below Subtext (Mobile) {%- endcomment -%}
+    {%- if section.settings.custom_html_below_subtext != blank -%}
+      <div class="ibl-custom-html-below-subtext ibl-custom-html-mobile" style="margin-bottom: {{ section.settings.custom_html_below_subtext_spacing }}px;">
+        {{ section.settings.custom_html_below_subtext }}
+      </div>
+    {%- endif -%}
+
+    <div class="icon-benefit-container icon-benefit-container--{{ section.settings.image_position }}">
+
+      {%- comment -%} Image Side {%- endcomment -%}
+      <div class="icon-benefit-image-wrapper{% if section.settings.hide_image_mobile %} hide-mobile{% endif %}">
+        {%- if section.settings.image != blank -%}
+          <img
+            src="{{ section.settings.image | image_url: width: 800 }}"
+            alt="{{ section.settings.image.alt | escape }}"
+            loading="lazy"
+            width="{{ section.settings.image.width }}"
+            height="{{ section.settings.image.height }}"
+            class="icon-benefit-image"
+          >
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'icon-benefit-image placeholder-svg' }}
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Wrapper for Main Heading + Content Box {%- endcomment -%}
+      <div class="icon-benefit-content-wrapper">
+        {%- comment -%} Custom HTML - Above Heading (Desktop) {%- endcomment -%}
+        {%- if section.settings.custom_html_above_heading != blank -%}
+          <div class="ibl-custom-html-above-heading ibl-custom-html-desktop" style="margin-bottom: {{ section.settings.custom_html_above_heading_spacing }}px;">
+            {{ section.settings.custom_html_above_heading }}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Main Section Heading (appears above content box on desktop) {%- endcomment -%}
+        {%- if section.settings.heading_before != blank or section.settings.highlighted_text != blank or section.settings.heading_after != blank -%}
+          <div class="ibl-header-wrapper-desktop ibl-align-{{ section.settings.heading_text_align_desktop }}">
+            {%- case section.settings.highlight_position -%}
+              {%- when 'above' -%}
+                {%- if section.settings.highlighted_text != blank -%}
+                  <span class="ibl-highlighted-text ibl-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+                {%- endif -%}
+                <{{ section.settings.heading_tag }} class="ibl-heading {{ section.settings.heading_tag }}">
+                  {{ section.settings.heading_before }}
+                  {{ section.settings.heading_after }}
+                </{{ section.settings.heading_tag }}>
+              {%- when 'below' -%}
+                <{{ section.settings.heading_tag }} class="ibl-heading {{ section.settings.heading_tag }}">
+                  {{ section.settings.heading_before }}
+                  {{ section.settings.heading_after }}
+                </{{ section.settings.heading_tag }}>
+                {%- if section.settings.highlighted_text != blank -%}
+                  <span class="ibl-highlighted-text ibl-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+                {%- endif -%}
+              {%- when 'inline_first' -%}
+                <{{ section.settings.heading_tag }} class="ibl-heading {{ section.settings.heading_tag }}">
+                  {%- if section.settings.highlighted_text != blank -%}
+                    <span class="ibl-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                  {%- endif -%}
+                  {%- if section.settings.heading_before != blank -%}{{ " " }}{{ section.settings.heading_before }}{%- endif -%}
+                  {%- if section.settings.heading_after != blank -%}{{ " " }}{{ section.settings.heading_after }}{%- endif -%}
+                </{{ section.settings.heading_tag }}>
+              {%- when 'inline_second' -%}
+                <{{ section.settings.heading_tag }} class="ibl-heading {{ section.settings.heading_tag }}">
+                  {%- if section.settings.heading_before != blank -%}{{ section.settings.heading_before }}{{ " " }}{%- endif -%}
+                  {%- if section.settings.highlighted_text != blank -%}
+                    <span class="ibl-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                  {%- endif -%}
+                  {%- if section.settings.heading_after != blank -%}{{ " " }}{{ section.settings.heading_after }}{%- endif -%}
+                </{{ section.settings.heading_tag }}>
+            {%- endcase -%}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Custom HTML - Below Heading (Desktop) {%- endcomment -%}
+        {%- if section.settings.custom_html_below_heading != blank -%}
+          <div class="ibl-custom-html-below-heading ibl-custom-html-desktop" style="margin-bottom: {{ section.settings.custom_html_below_heading_spacing }}px;">
+            {{ section.settings.custom_html_below_heading }}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Subheading (Desktop - appears under heading) {%- endcomment -%}
+        {%- if section.settings.subheading != blank -%}
+          <div class="ibl-subheading-wrapper ibl-subheading-desktop" style="text-align: {{ section.settings.subheading_text_align_desktop }};">
+            <p class="ibl-subheading">{{ section.settings.subheading }}</p>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Custom HTML - Below Subtext (Desktop) {%- endcomment -%}
+        {%- if section.settings.custom_html_below_subtext != blank -%}
+          <div class="ibl-custom-html-below-subtext ibl-custom-html-desktop" style="margin-bottom: {{ section.settings.custom_html_below_subtext_spacing }}px;">
+            {{ section.settings.custom_html_below_subtext }}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Content Box {%- endcomment -%}
+        <div class="icon-benefit-content">
+            <ul class="icon-benefit-list">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'benefit_item' -%}
+                <li class="icon-benefit-item" {{ block.shopify_attributes }} style="
+                  --item-icon-bg: {{ block.settings.icon_bg_color }};
+                  --item-icon-color: {{ block.settings.icon_color }};
+                  --item-text-color: {{ block.settings.text_color }};
+                ">
+                  <div class="icon-benefit-item__icon">
+                    {%- if block.settings.custom_svg != blank -%}
+                      {%- comment -%} Custom SVG Override {%- endcomment -%}
+                      {{ block.settings.custom_svg }}
+                    {%- elsif block.settings.material_icon != blank -%}
+                      {%- comment -%} Google Material Icon {%- endcomment -%}
+                      <span class="material-icons">{{ block.settings.material_icon }}</span>
+                    {%- else -%}
+                      {%- comment -%} Default Icon {%- endcomment -%}
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                      </svg>
+                    {%- endif -%}
+                  </div>
+                  <div class="icon-benefit-item__text">
+                    {%- if block.settings.title != blank -%}
+                      <h3 class="icon-benefit-item__title" style="color: {{ block.settings.title_color }};">
+                        {{ block.settings.title }}
+                      </h3>
+                    {%- endif -%}
+                    {%- if block.settings.description != blank -%}
+                      <div class="icon-benefit-item__description">
+                        {{ block.settings.description }}
+                      </div>
+                    {%- endif -%}
+                  </div>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+            </ul>
+        </div>
+
+        {%- comment -%} Render buttons outside .icon-benefit-content {%- endcomment -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'button' -%}
+              {%- if block.settings.button_text != blank -%}
+                <div class="ibl-button-wrapper{% if block.settings.hide_on_desktop %} ibl-button-hide-desktop{% endif %}" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+                  {%- if block.settings.scroll_to_section != blank -%}
+                    <a href="#" class="{% unless block.settings.use_custom_styles %}theme-button {% endunless %}ibl-button{% if block.settings.use_custom_styles %} ibl-button--custom-styles{% endif %} scroll-to-section" data-scroll-target="{{ block.settings.scroll_to_section }}">
+                      {%- if block.settings.icon_position == 'left' -%}
+                        {%- if block.settings.button_custom_icon != blank or block.settings.button_icon != blank -%}
+                          <span class="ibl-button-icon ibl-button-icon--left">
+                            {%- if block.settings.button_custom_icon != blank -%}
+                              {{ block.settings.button_custom_icon }}
+                            {%- elsif block.settings.button_icon != blank -%}
+                              {% render 'material-icon', icon: block.settings.button_icon, filled: block.settings.button_icon_filled %}
+                            {%- endif -%}
+                          </span>
+                        {%- endif -%}
+                      {%- endif -%}
+                      <span class="ibl-button-text">{{- block.settings.button_text -}}</span>
+                      {%- if block.settings.icon_position == 'right' -%}
+                        {%- if block.settings.button_custom_icon != blank or block.settings.button_icon != blank -%}
+                          <span class="ibl-button-icon ibl-button-icon--right">
+                            {%- if block.settings.button_custom_icon != blank -%}
+                              {{ block.settings.button_custom_icon }}
+                            {%- elsif block.settings.button_icon != blank -%}
+                              {% render 'material-icon', icon: block.settings.button_icon, filled: block.settings.button_icon_filled %}
+                            {%- endif -%}
+                          </span>
+                        {%- endif -%}
+                      {%- endif -%}
+                    </a>
+                  {%- else -%}
+                    <a href="{{ block.settings.button_link }}" class="{% unless block.settings.use_custom_styles %}theme-button {% endunless %}ibl-button{% if block.settings.use_custom_styles %} ibl-button--custom-styles{% endif %}">
+                      {%- if block.settings.icon_position == 'left' -%}
+                        {%- if block.settings.button_custom_icon != blank or block.settings.button_icon != blank -%}
+                          <span class="ibl-button-icon ibl-button-icon--left">
+                            {%- if block.settings.button_custom_icon != blank -%}
+                              {{ block.settings.button_custom_icon }}
+                            {%- elsif block.settings.button_icon != blank -%}
+                              {% render 'material-icon', icon: block.settings.button_icon, filled: block.settings.button_icon_filled %}
+                            {%- endif -%}
+                          </span>
+                        {%- endif -%}
+                      {%- endif -%}
+                      <span class="ibl-button-text">{{- block.settings.button_text -}}</span>
+                      {%- if block.settings.icon_position == 'right' -%}
+                        {%- if block.settings.button_custom_icon != blank or block.settings.button_icon != blank -%}
+                          <span class="ibl-button-icon ibl-button-icon--right">
+                            {%- if block.settings.button_custom_icon != blank -%}
+                              {{ block.settings.button_custom_icon }}
+                            {%- elsif block.settings.button_icon != blank -%}
+                              {% render 'material-icon', icon: block.settings.button_icon, filled: block.settings.button_icon_filled %}
+                            {%- endif -%}
+                          </span>
+                        {%- endif -%}
+                      {%- endif -%}
+                    </a>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{"name":"Icon Benefit List","tag":"section","class":"section-icon-benefit-list","settings": [
+ {"type":"checkbox","id":"use_theme_colors","label":"Use Theme Colors","default": true,"info":"Use theme heading color and background color"},
+ {"type":"color","id":"section_background_color","label":"Section Background Color","default":"#ffffff","info":"Only used when 'Use Theme Colors' is disabled"},
+ {"type":"header","content":"Section Heading"},
+ {"type":"text","id":"heading_before","label":"Heading Text (Before Highlight)","default":"add your"},
+ {"type":"text","id":"highlighted_text","label":"Highlighted Text","default":"title here"},
+ {"type":"text","id":"heading_after","label":"Heading Text (After Highlight)"},
+ {"type":"select","id":"highlight_position","label":"Highlight Position","options": [
+ {"value":"above","label":"Above Heading"},
+ {"value":"below","label":"Below Heading"},
+ {"value":"inline_first","label":"Inline - First"},
+ {"value":"inline_second","label":"Inline - Second"}
+ ],"default":"inline_second"},
+ {"type":"select","id":"heading_tag","label":"Heading Tag","options": [
+ {"value":"h1","label":"H1"},
+ {"value":"h2","label":"H2"},
+ {"value":"h3","label":"H3"},
+ {"value":"h4","label":"H4"}
+ ],"default":"h2"},
+ {"type":"select","id":"heading_text_align_desktop","label":"Heading Alignment (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left"},
+ {"type":"select","id":"heading_text_align_mobile","label":"Heading Alignment (Mobile)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"header","content":"Heading Styling"},
+ {"type":"color","id":"heading_color","label":"Heading Color","default":"#000000"},
+ {"type":"range","id":"heading_font_size_desktop","min": 24,"max": 80,"step": 2,"unit":"px","label":"Desktop Font Size","default": 40
+ },
+ {"type":"range","id":"heading_font_size_mobile","min": 20,"max": 50,"step": 2,"unit":"px","label":"Mobile Font Size","default": 32
+ },
+ {"type":"select","id":"heading_font_weight","label":"Font Weight","options": [
+ {"value":"300","label":"Light (300)"},
+ {"value":"400","label":"Regular (400)"},
+ {"value":"500","label":"Medium (500)"},
+ {"value":"600","label":"Semi-Bold (600)"},
+ {"value":"700","label":"Bold (700)"},
+ {"value":"800","label":"Extra Bold (800)"}
+ ],"default":"500"},
+ {"type":"range","id":"heading_line_height","min": 1,"max": 2,"step": 0.1,"label":"Line Height","default": 1.2
+ },
+ {"type":"range","id":"heading_spacing_desktop","min": 10,"max": 80,"step": 5,"unit":"px","label":"Desktop Spacing Below","default": 30
+ },
+ {"type":"range","id":"heading_spacing_mobile","min": 10,"max": 60,"step": 5,"unit":"px","label":"Mobile Spacing Below","default": 20
+ },
+ {"type":"header","content":"Highlighted Text"},
+ {"type":"checkbox","id":"highlighted_gradient_enabled","label":"Enable Gradient for Highlight","default": false
+ },
+ {"type":"color","id":"highlighted_color","label":"Highlight Color (Solid)","default":"#000000"},
+ {"type":"color_background","id":"highlighted_gradient","label":"Highlight Gradient","info":"Only applies if gradient is enabled","default":"linear-gradient(180deg, rgba(255, 145, 129, 1), rgba(254, 91, 124, 1) 49%, rgba(255, 140, 162, 1) 100%)"},
+ {"type":"range","id":"highlight_font_size_desktop","min": 24,"max": 80,"step": 2,"unit":"px","label":"Desktop Font Size","default": 40
+ },
+ {"type":"range","id":"highlight_font_size_mobile","min": 20,"max": 50,"step": 2,"unit":"px","label":"Mobile Font Size","default": 32
+ },
+ {"type":"select","id":"highlight_font_weight","label":"Font Weight","options": [
+ {"value":"300","label":"Light (300)"},
+ {"value":"400","label":"Regular (400)"},
+ {"value":"500","label":"Medium (500)"},
+ {"value":"600","label":"Semi-Bold (600)"},
+ {"value":"700","label":"Bold (700)"},
+ {"value":"800","label":"Extra Bold (800)"}
+ ],"default":"500"},
+ {"type":"range","id":"highlight_margin_top","min": 0,"max": 40,"step": 2,"unit":"px","label":"Top Margin","default": 0,"info":"Only applies when positioned above/below"},
+ {"type":"range","id":"highlight_margin_bottom","min": 0,"max": 40,"step": 2,"unit":"px","label":"Bottom Margin","default": 10,"info":"Only applies when positioned above/below"},
+ {"type":"header","content":"Subheading"},
+ {"type":"textarea","id":"subheading","label":"Subheading Text","default":"add your title here"},
+ {"type":"color","id":"subheading_color","label":"Subheading Color","default":"#666666"},
+ {"type":"range","id":"subheading_font_size_desktop","min": 14,"max": 28,"step": 1,"unit":"px","label":"Desktop Font Size","default": 16
+ },
+ {"type":"range","id":"subheading_font_size_mobile","min": 12,"max": 22,"step": 1,"unit":"px","label":"Mobile Font Size","default": 14
+ },
+ {"type":"select","id":"subheading_font_weight","label":"Font Weight","options": [
+ {"value":"300","label":"Light (300)"},
+ {"value":"400","label":"Regular (400)"},
+ {"value":"500","label":"Medium (500)"},
+ {"value":"600","label":"Semi-Bold (600)"}
+ ],"default":"400"},
+ {"type":"select","id":"subheading_text_align_desktop","label":"Alignment (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left"},
+ {"type":"select","id":"subheading_text_align_mobile","label":"Alignment (Mobile)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"header","content":"Custom HTML"},
+ {"type":"html","id":"custom_html_above_heading","label":"Custom HTML Above Heading"},
+ {"type":"range","id":"custom_html_above_heading_spacing","min": 0,"max": 60,"step": 4,"unit":"px","label":"Spacing Below","default": 0
+ },
+ {"type":"html","id":"custom_html_below_heading","label":"Custom HTML Below Heading"},
+ {"type":"range","id":"custom_html_below_heading_spacing","min": 0,"max": 60,"step": 4,"unit":"px","label":"Spacing Below","default": 20
+ },
+ {"type":"html","id":"custom_html_below_subtext","label":"Custom HTML Below Subheading"},
+ {"type":"range","id":"custom_html_below_subtext_spacing","min": 0,"max": 60,"step": 4,"unit":"px","label":"Spacing Below","default": 20
+ },
+ {"type":"header","content":"Layout"},
+ {"type":"select","id":"image_position","label":"Image position","options": [
+ {"value":"left","label":"Left"},
+ {"value":"right","label":"Right"}
+ ],"default":"left"},
+ {"type":"select","id":"vertical_alignment","label":"Vertical Alignment (Desktop)","options": [
+ {"value":"flex-start","label":"Top"},
+ {"value":"center","label":"Center"},
+ {"value":"flex-end","label":"Bottom"}
+ ],"default":"center","info":"Align image and content vertically on desktop"},
+ {"type":"image_picker","id":"image","label":"Image"},
+ {"type":"range","id":"image_width_desktop","min": 30,"max": 100,"step": 5,"unit":"%","label":"Image width (Desktop only)","default": 100,"info":"Image is always 100% width on mobile"},
+ {"type":"checkbox","id":"hide_image_mobile","label":"Hide image on mobile","default": false
+ },
+ {"type":"range","id":"padding_top","min": 0,"max": 100,"step": 4,"unit":"px","label":"Section padding top","default": 40
+ },
+ {"type":"range","id":"padding_bottom","min": 0,"max": 100,"step": 4,"unit":"px","label":"Section padding bottom","default": 40
+ },
+ {"type":"header","content":"Content Area Border"},
+ {"type":"range","id":"content_border_width_desktop","min": 0,"max": 10,"step": 1,"unit":"px","label":"Border Width (Desktop)","default": 0
+ },
+ {"type":"range","id":"content_border_width_mobile","min": 0,"max": 10,"step": 1,"unit":"px","label":"Border Width (Mobile)","default": 0
+ },
+ {"type":"color","id":"content_border_color","label":"Border color","default":"#000000"},
+ {"type":"range","id":"content_border_radius","min": 0,"max": 30,"step": 2,"unit":"px","label":"Border radius","default": 8
+ },
+ {"type":"header","content":"Content Area Padding"},
+ {"type":"range","id":"content_padding_horizontal_desktop","min": 0,"max": 80,"step": 4,"unit":"px","label":"Horizontal Padding (Desktop)","default": 24
+ },
+ {"type":"range","id":"content_padding_vertical_desktop","min": 0,"max": 80,"step": 4,"unit":"px","label":"Vertical Padding (Desktop)","default": 24
+ },
+ {"type":"range","id":"content_padding_horizontal_mobile","min": 0,"max": 60,"step": 2,"unit":"px","label":"Horizontal Padding (Mobile)","default": 14
+ },
+ {"type":"range","id":"content_padding_vertical_mobile","min": 0,"max": 60,"step": 2,"unit":"px","label":"Vertical Padding (Mobile)","default": 14
+ },
+ {"type":"header","content":"Icon Settings"},
+ {"type":"range","id":"icon_size","min": 20,"max": 80,"step": 2,"unit":"px","label":"Icon size (Desktop)","default": 38
+ },
+ {"type":"range","id":"icon_size_mobile","min": 16,"max": 60,"step": 2,"unit":"px","label":"Icon size (Mobile)","default": 24
+ },
+ {"type":"range","id":"icon_border_radius","min": 0,"max": 50,"step": 2,"unit":"px","label":"Icon border radius","default": 50
+ },
+ {"type":"range","id":"icon_padding","min": 4,"max": 30,"step": 2,"unit":"px","label":"Icon padding","default": 10
+ },
+ {"type":"select","id":"icon_alignment","label":"Icon vertical alignment","options": [
+ {"value":"flex-start","label":"Top"},
+ {"value":"center","label":"Center"},
+ {"value":"flex-end","label":"Bottom"}
+ ],"default":"center"},
+ {"type":"header","content":"Text Settings"},
+ {"type":"range","id":"title_font_size","min": 12,"max": 28,"step": 1,"unit":"px","label":"Item title font size","default": 18
+ },
+ {"type":"range","id":"text_font_size_desktop","min": 12,"max": 24,"step": 1,"unit":"px","label":"Description font size (Desktop)","default": 16
+ },
+ {"type":"range","id":"text_font_size_mobile","min": 11,"max": 20,"step": 1,"unit":"px","label":"Description font size (Mobile)","default": 14
+ },
+ {"type":"header","content":"List Spacing"},
+ {"type":"range","id":"gap_between_items","min": 8,"max": 40,"step": 2,"unit":"px","label":"Gap between items","default": 20
+ }
+ ],"blocks": [
+ {"type":"benefit_item","name":"Benefit Item","settings": [
+ {"type":"header","content":"Icon"},
+ {"type":"text","id":"material_icon","label":"Google Material Icon name","info":"Enter icon name from https://fonts.google.com/icons (e.g., 'check_circle', 'local_shipping', 'verified')","default":"check_circle"},
+ {"type":"html","id":"custom_svg","label":"Custom SVG (overrides Material Icon)","info":"Paste your custom SVG code here. This will override the Material Icon if provided."},
+ {"type":"color","id":"icon_color","label":"Icon color","default":"#ffffff"},
+ {"type":"color","id":"icon_bg_color","label":"Icon background color","default":"#000000"},
+ {"type":"header","content":"Content"},
+ {"type":"text","id":"title","label":"Title","default":"Benefit Title"},
+ {"type":"color","id":"title_color","label":"Title color","default":"#1a1a1a"},
+ {"type":"textarea","id":"description","label":"Description","default":"Add a description for this benefit"},
+ {"type":"color","id":"text_color","label":"Description text color","default":"#666666"}
+ ]
+ },
+ {"type":"button","name":"Button","settings": [
+ {"type":"paragraph","content":"**Call-to-Action Button**"},
+ {"type":"text","id":"button_text","label":"Button Text","default":"SHOP NOW"},
+ {"type":"url","id":"button_link","label":"Button Link"},
+ {"type":"text","id":"scroll_to_section","label":"Scroll to Section Class","default":"product","info":"Enter class name WITHOUT the dot (e.g., 'product-info' NOT '.product-info'). Leave button link empty when using this."},
+ {"type":"checkbox","id":"hide_on_desktop","label":"Hide on Desktop","default": false,"info":"Hide this button on desktop devices"},
+ {"type":"header","content":"Icon Settings"},
+ {"type":"text","id":"button_icon","label":"Google Icon Name","default":"arrow_right_alt","info":"Enter icon name like: shopping_cart, local_shipping, favorite. Use underscores between words. [View all icons](https://fonts.google.com/icons?icon.set=Material+Symbols&icon.platform=web)"},
+ {"type":"checkbox","id":"button_icon_filled","label":"Filled icon","default": false},
+ {"type":"html","id":"button_custom_icon","label":"Custom SVG Icon Code","info":"If provided, this custom SVG will be used instead of the Google Material Icon. Paste your SVG code here."},
+ {"type":"select","id":"icon_position","label":"Icon Position","options": [
+ {"value":"left","label":"Left of text"},
+ {"value":"right","label":"Right of text"}
+ ],"default":"right"},
+ {"type":"range","id":"button_icon_size","min": 12,"max": 48,"step": 2,"unit":"px","label":"Icon Size","default": 20},
+ {"type":"range","id":"button_icon_gap","min": 0,"max": 30,"step": 2,"unit":"px","label":"Gap Between Icon & Text","default": 8},
+ {"type":"color","id":"button_icon_color","label":"Icon Color","default":"#FFFFFF","info":"Leave as white if using custom styles, or match your theme button color"},
+ {"type":"header","content":"Alignment"},
+ {"type":"select","id":"alignment_desktop","label":"Alignment (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"select","id":"alignment_mobile","label":"Alignment (Mobile)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"header","content":"Style Settings"},
+ {"type":"checkbox","id":"use_custom_styles","label":"Use Custom Styles","default": true,"info":"Enable to override theme button styles with custom settings below"},
+ {"type":"header","content":"Colors"},
+ {"type":"color","id":"button_text_color","label":"Text Color","default":"#FFFFFF"},
+ {"type":"color","id":"button_bg_color","label":"Background Color","default":"#000000"},
+ {"type":"checkbox","id":"use_gradient","label":"Use Gradient Background","default": false},
+ {"type":"color_background","id":"button_gradient","label":"Gradient Background","default":"linear-gradient(54deg, rgba(114, 255, 179, 1) 14%, rgba(255, 250, 99, 1) 85%)"},
+ {"type":"color","id":"button_text_color_hover","label":"Text Color (Hover)","default":"#FFFFFF"},
+ {"type":"color","id":"button_bg_color_hover","label":"Background Color (Hover)","default":"#333333"},
+ {"type":"header","content":"Border"},
+ {"type":"range","id":"border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Border Width","default": 0},
+ {"type":"color","id":"border_color","label":"Border Color","default":"#000000"},
+ {"type":"range","id":"border_radius","min": 0,"max": 50,"step": 1,"unit":"px","label":"Border Radius","default": 4},
+ {"type":"header","content":"Typography"},
+ {"type":"range","id":"font_size_desktop","min": 12,"max": 32,"step": 1,"unit":"px","label":"Font Size (Desktop)","default": 16},
+ {"type":"range","id":"font_size_mobile","min": 12,"max": 28,"step": 1,"unit":"px","label":"Font Size (Mobile)","default": 14},
+ {"type":"select","id":"font_weight","label":"Font Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"},
+ {"value":"800","label":"Extra Bold"}
+ ],"default":"600"},
+ {"type":"select","id":"text_transform","label":"Text Transform","options": [
+ {"value":"none","label":"None"},
+ {"value":"uppercase","label":"Uppercase"},
+ {"value":"lowercase","label":"Lowercase"},
+ {"value":"capitalize","label":"Capitalize"}
+ ],"default":"uppercase"},
+ {"type":"range","id":"letter_spacing","min": -2,"max": 10,"step": 0.5,"unit":"px","label":"Letter Spacing","default": 1},
+ {"type":"header","content":"Padding"},
+ {"type":"range","id":"padding_vertical","min": 0,"max": 40,"step": 2,"unit":"px","label":"Vertical Padding","default": 16},
+ {"type":"range","id":"padding_horizontal","min": 0,"max": 80,"step": 2,"unit":"px","label":"Horizontal Padding","default": 24},
+ {"type":"header","content":"Layout"},
+ {"type":"checkbox","id":"full_width","label":"Full Width Button","default": false},
+ {"type":"checkbox","id":"full_width_mobile_only","label":"Full Width on Mobile Only","default": true},
+ {"type":"checkbox","id":"use_custom_width","label":"Use Custom Width","default": false,"info":"Enable to set custom button width instead of auto"},
+ {"type":"range","id":"custom_width_desktop","min": 100,"max": 800,"step": 10,"unit":"px","label":"Custom Width (Desktop)","default": 300},
+ {"type":"range","id":"custom_width_mobile","min": 100,"max": 500,"step": 10,"unit":"px","label":"Custom Width (Mobile)","default": 280},
+ {"type":"range","id":"margin_top","min": -20,"max": 40,"step": 2,"unit":"px","label":"Top Margin","default": 14},
+ {"type":"range","id":"margin_bottom","min": -20,"max": 40,"step": 2,"unit":"px","label":"Bottom Margin","default": 24}
+ ]
+ }
+ ],"presets": [
+ {"name":"Icon Benefit List","blocks": [
+ {"type":"benefit_item","settings": {"material_icon":"check_circle","custom_svg":"","icon_color":"#ffffff","icon_bg_color":"#000000","title":"Benefit Title","title_color":"#1a1a1a","description":"Add a description for this benefit","text_color":"#666666"}
+ },
+ {"type":"benefit_item","settings": {"material_icon":"check_circle","custom_svg":"","icon_color":"#ffffff","icon_bg_color":"#000000","title":"Benefit Title","title_color":"#1a1a1a","description":"Add a description for this benefit","text_color":"#666666"}
+ },
+ {"type":"benefit_item","settings": {"material_icon":"check_circle","custom_svg":"","icon_color":"#ffffff","icon_bg_color":"#000000","title":"Benefit Title","title_color":"#1a1a1a","description":"Add a description for this benefit","text_color":"#666666"}
+ },
+ {"type":"benefit_item","settings": {"material_icon":"check_circle","custom_svg":"","icon_color":"#ffffff","icon_bg_color":"#000000","title":"Benefit Title","title_color":"#1a1a1a","description":"Add a description for this benefit","text_color":"#666666"}
+ },
+ {"type":"button","settings": {"button_text":"SHOP NOW","button_link":"","scroll_to_section":"product","hide_on_desktop": false,"button_icon":"arrow_right_alt","button_icon_filled": false,"button_custom_icon":"","icon_position":"right","button_icon_size": 20,"button_icon_gap": 8,"button_icon_color":"#ffffff","alignment_desktop":"center","alignment_mobile":"center","use_custom_styles": true,"button_text_color":"#ffffff","button_bg_color":"#000000","use_gradient": false,"button_gradient":"linear-gradient(54deg, rgba(114, 255, 179, 1) 14%, rgba(255, 250, 99, 1) 85%)","button_text_color_hover":"#ffffff","button_bg_color_hover":"#333333","border_width": 0,"border_color":"#000000","border_radius": 4,"font_size_desktop": 16,"font_size_mobile": 14,"font_weight":"600","text_transform":"uppercase","letter_spacing": 1,"padding_vertical": 16,"padding_horizontal": 24,"full_width": false,"full_width_mobile_only": true,"use_custom_width": false,"custom_width_desktop": 300,"custom_width_mobile": 280,"margin_top": 14,"margin_bottom": 24}
+ }
+ ],"category":"Features"}
+ ]
+}
+{% endschema %}
+
+<script>
+// Smooth scroll to section functionality
+(function() {
+  function initScrollButtons() {
+    const scrollButtons = document.querySelectorAll('.scroll-to-section');
+
+    scrollButtons.forEach(button => {
+      button.removeEventListener('click', handleScrollClick);
+      button.addEventListener('click', handleScrollClick);
+    });
+  }
+
+  function handleScrollClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const targetClass = this.getAttribute('data-scroll-target');
+
+    if (!targetClass) {
+      console.warn('No scroll target specified');
+      return;
+    }
+
+    let targetElement = document.querySelector('.' + targetClass);
+
+    if (!targetElement && targetClass.startsWith('.')) {
+      targetElement = document.querySelector(targetClass);
+    }
+
+    if (!targetElement) {
+      targetElement = document.getElementById(targetClass);
+    }
+
+    if (targetElement) {
+      const yOffset = -20;
+      const y = targetElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+      window.scrollTo({
+        top: y,
+        behavior: 'smooth'
+      });
+    } else {
+      console.warn('Scroll target not found:', targetClass);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScrollButtons);
+  } else {
+    initScrollButtons();
+  }
+
+  document.addEventListener('shopify:section:load', function() {
+    setTimeout(initScrollButtons, 100);
+  });
+})();
+</script>

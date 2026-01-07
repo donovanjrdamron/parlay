@@ -1,0 +1,1125 @@
+{% comment %}
+  Blog Post List Section
+  Displays blog posts in a grid or slider layout with featured images and metadata
+{% endcomment %}
+
+<section class="blog-post-list section-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="container page-width">
+    <div class="bpl-content-wrapper">
+
+      {% comment %} Heading {% endcomment %}
+      {% if section.settings.heading_before != blank or section.settings.highlighted_text != blank or section.settings.heading_after != blank %}
+        <div class="bpl-header-wrapper bpl-align-{{ section.settings.heading_text_align }}">
+          {% case section.settings.highlight_position %}
+            {% when 'above' %}
+              {% if section.settings.highlighted_text != blank %}
+                <span class="bpl-highlighted-text bpl-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+              <{{ section.settings.heading_tag }} class="bpl-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+            {% when 'below' %}
+              <{{ section.settings.heading_tag }} class="bpl-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+              {% if section.settings.highlighted_text != blank %}
+                <span class="bpl-highlighted-text bpl-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+            {% when 'inline_first' %}
+              <{{ section.settings.heading_tag }} class="bpl-heading">
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="bpl-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_before != blank %}{{ " " }}{{ section.settings.heading_before }}{% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+            {% when 'inline_second' %}
+              <{{ section.settings.heading_tag }} class="bpl-heading">
+                {% if section.settings.heading_before != blank %}{{ section.settings.heading_before }}{{ " " }}{% endif %}
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="bpl-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+          {% endcase %}
+        </div>
+      {% endif %}
+
+      {% comment %} Subheading {% endcomment %}
+      {% if section.settings.subheading != blank %}
+        <div class="bpl-subheading bpl-align-{{ section.settings.heading_text_align }}">
+          {{ section.settings.subheading }}
+        </div>
+      {% endif %}
+
+      {% comment %} Blog Post Grid or Slider {% endcomment %}
+      {% if section.blocks.size > 0 %}
+        <div class="bpl-layout-wrapper bpl-layout-mobile-{{ section.settings.layout_mobile }} bpl-layout-desktop-{{ section.settings.layout_desktop }}">
+          <div class="bpl-slider" data-slider-container>
+            <div class="bpl-slider-viewport" data-slider-viewport>
+              <div class="bpl-slider-track" data-slider-track>
+
+          {% for block in section.blocks %}
+            {% if block.type == 'blog_post' %}
+              {% comment %} Determine content source based on type {% endcomment %}
+              {% case block.settings.content_type %}
+                {% when 'article' %}
+                  {% assign content_item = articles[block.settings.article] %}
+                  {% assign content_url = content_item.url %}
+                  {% assign default_image = content_item.image %}
+                  {% assign default_title = content_item.title %}
+                  {% assign default_excerpt = content_item.excerpt_or_content | strip_html | truncatewords: 20 %}
+                  {% assign content_author = content_item.author %}
+                  {% assign content_date = content_item.published_at %}
+                {% when 'advertorial' %}
+                  {% assign content_url = block.settings.advertorial_url %}
+                  {% assign default_image = null %}
+                  {% assign default_title = null %}
+                  {% assign default_excerpt = null %}
+                  {% assign content_author = null %}
+                  {% assign content_date = null %}
+                {% when 'listicle' %}
+                  {% assign content_url = block.settings.listicle_url %}
+                  {% assign default_image = null %}
+                  {% assign default_title = null %}
+                  {% assign default_excerpt = null %}
+                  {% assign content_author = null %}
+                  {% assign content_date = null %}
+              {% endcase %}
+
+              {% assign post_image = block.settings.post_image %}
+              {% comment %} Use custom image if provided, otherwise use content item image {% endcomment %}
+              {% if post_image == blank and default_image %}
+                {% assign post_image = default_image %}
+              {% endif %}
+
+              {% assign post_title = block.settings.post_title_override %}
+              {% if post_title == blank %}
+                {% assign post_title = default_title %}
+              {% endif %}
+
+              {% assign post_excerpt = block.settings.post_excerpt_override %}
+              {% if post_excerpt == blank %}
+                {% assign post_excerpt = default_excerpt %}
+              {% endif %}
+
+              {% comment %} Determine which date to display {% endcomment %}
+              {% if block.settings.custom_date != blank %}
+                {% assign display_date = block.settings.custom_date %}
+              {% elsif content_date %}
+                {% assign display_date = content_date | date: "%b %d, %Y" %}
+              {% else %}
+                {% assign display_date = null %}
+              {% endif %}
+
+              <div class="bpl-item" data-slider-slide {{ block.shopify_attributes }}>
+                <a href="{{ content_url | default: '#' }}" class="bpl-card">
+                  {% comment %} Author Card Above Card (Top of card, inside link) {% endcomment %}
+                  {% if block.settings.show_author_card and section.settings.author_card_position == 'above_card' %}
+                    <div class="bpl-author-card bpl-author-above">
+                      {% if block.settings.author_profile_pic %}
+                        <img src="{{ block.settings.author_profile_pic | image_url: width: 80 }}" alt="{{ block.settings.author_name }}" class="bpl-author-pic" loading="lazy">
+                      {% else %}
+                        <div class="bpl-author-pic bpl-author-pic-placeholder">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                          </svg>
+                        </div>
+                      {% endif %}
+                      <div class="bpl-author-info">
+                        <div class="bpl-author-name-wrapper">
+                          <span class="bpl-author-name">{{ block.settings.author_name }}</span>
+                          {% if block.settings.show_verified_badge %}
+                            <svg class="bpl-verified-badge" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                          {% endif %}
+                        </div>
+                        {% if block.settings.show_date and block.settings.date_position == 'under_author' and display_date %}
+                          <span class="bpl-date">{{ display_date }}</span>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% endif %}
+
+                  <div class="bpl-image-wrapper">
+                    {% if post_image != blank %}
+                      <img
+                        srcset="
+                          {%- if post_image.width >= 165 -%}{{ post_image | image_url: width: 165 }} 165w,{%- endif -%}
+                          {%- if post_image.width >= 360 -%}{{ post_image | image_url: width: 360 }} 360w,{%- endif -%}
+                          {%- if post_image.width >= 533 -%}{{ post_image | image_url: width: 533 }} 533w,{%- endif -%}
+                          {%- if post_image.width >= 720 -%}{{ post_image | image_url: width: 720 }} 720w,{%- endif -%}
+                          {%- if post_image.width >= 940 -%}{{ post_image | image_url: width: 940 }} 940w,{%- endif -%}
+                          {%- if post_image.width >= 1066 -%}{{ post_image | image_url: width: 1066 }} 1066w,{%- endif -%}
+                          {{ post_image | image_url }} {{ post_image.width }}w
+                        "
+                        src="{{ post_image | image_url: width: 533 }}"
+                        sizes="(min-width: 750px) calc((100vw - 10rem) / 2), calc(100vw - 3rem)"
+                        alt="{{ post_image.alt | escape }}"
+                        loading="lazy"
+                        width="{{ post_image.width }}"
+                        height="{{ post_image.height }}"
+                        class="bpl-image"
+                      >
+                    {% else %}
+                      <div class="bpl-image-placeholder">
+                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                      </div>
+                    {% endif %}
+
+                    {% if section.settings.text_position == 'overlay' %}
+                      {% comment %} Fade Mask Bottom {% endcomment %}
+                      {% if section.settings.enable_fade_mask %}
+                        <div class="bpl-fade-mask"></div>
+                      {% endif %}
+
+                      {% comment %} Author Card at Top (Overlay) {% endcomment %}
+                      {% if block.settings.show_author_card and section.settings.author_card_position == 'top_overlay' %}
+                        <div class="bpl-author-card bpl-author-top">
+                          {% if block.settings.author_profile_pic %}
+                            <img src="{{ block.settings.author_profile_pic | image_url: width: 80 }}" alt="{{ block.settings.author_name }}" class="bpl-author-pic" loading="lazy">
+                          {% else %}
+                            <div class="bpl-author-pic bpl-author-pic-placeholder">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                              </svg>
+                            </div>
+                          {% endif %}
+                          <div class="bpl-author-info">
+                            <div class="bpl-author-name-wrapper">
+                              <span class="bpl-author-name">{{ block.settings.author_name }}</span>
+                              {% if block.settings.show_verified_badge %}
+                                <svg class="bpl-verified-badge" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                              {% endif %}
+                            </div>
+                            {% if block.settings.show_date and block.settings.date_position == 'under_author' and display_date %}
+                              <span class="bpl-date">{{ display_date }}</span>
+                            {% endif %}
+                          </div>
+                        </div>
+                      {% endif %}
+
+                      {% comment %} Post Title and Arrow (Overlay) {% endcomment %}
+                      <div class="bpl-info bpl-info-overlay">
+                        <div class="bpl-overlay-content">
+                          <div class="bpl-name-arrow-wrapper">
+                            <span class="bpl-post-title">{{ post_title }}</span>
+                            <svg class="bpl-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </div>
+                          {% if post_excerpt != blank %}
+                            <p class="bpl-post-excerpt">{{ post_excerpt }}</p>
+                          {% endif %}
+                          {% if block.settings.show_date and block.settings.date_position == 'under_excerpt' and display_date %}
+                            <span class="bpl-date">{{ display_date }}</span>
+                          {% endif %}
+                        </div>
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  {% if section.settings.text_position == 'below' %}
+                    {% comment %} Post Info (Below Card) {% endcomment %}
+                    <div class="bpl-info bpl-info-below">
+                      <div class="bpl-name-arrow-wrapper">
+                        <span class="bpl-post-title">{{ post_title }}</span>
+                        <svg class="bpl-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                      {% if post_excerpt != blank %}
+                        <p class="bpl-post-excerpt">{{ post_excerpt }}</p>
+                      {% endif %}
+                      {% if block.settings.show_date and block.settings.date_position == 'under_excerpt' and display_date %}
+                        <span class="bpl-date">{{ display_date }}</span>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </a>
+              </div>
+            {% endif %}
+          {% endfor %}
+
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .blog-post-list.section-{{ section.id }} {
+    {% if section.settings.use_theme_colors %}
+      background: {{ settings.section_background_color }};
+    {% else %}
+      {% if section.settings.use_section_gradient %}
+        background: {{ section.settings.section_gradient_background }};
+      {% else %}
+        background-color: {{ section.settings.section_background_color }};
+      {% endif %}
+    {% endif %}
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-heading,
+  .blog-post-list.section-{{ section.id }} .bpl-subheading {
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.heading_color }};
+    {% else %}
+      color: {{ section.settings.section_text_color }};
+    {% endif %}
+  }
+
+  .blog-post-list.section-{{ section.id }} .container {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .container {
+      padding-top: {{ section.settings.padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    }
+  }
+
+  /* Heading Styles */
+  .blog-post-list.section-{{ section.id }} .bpl-header-wrapper {
+    margin-bottom: 1.6rem;
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-heading {
+    font-family: var(--font-heading-family);
+    font-size: 3.2rem;
+    font-weight: var(--font-heading-weight);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .bpl-heading {
+      font-size: 4.8rem;
+    }
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-highlighted-text {
+    {% if section.settings.use_theme_colors %}
+      {% if settings.highlighted_text_gradient_enabled %}
+        background: {{ settings.highlighted_text_gradient }};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: inline-block;
+      {% else %}
+        color: {{ settings.highlighted_text_solid_color }};
+      {% endif %}
+    {% else %}
+      {% if section.settings.use_highlight_gradient %}
+        background: {{ section.settings.highlight_gradient }};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: inline-block;
+      {% else %}
+        color: {{ section.settings.highlight_color }};
+      {% endif %}
+    {% endif %}
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-highlighted-separate {
+    display: block;
+    margin-bottom: 0.8rem;
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-subheading {
+    font-size: 1.6rem;
+    line-height: 1.5;
+    margin-top: 1.2rem;
+    margin-bottom: 3.2rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .bpl-subheading {
+      font-size: 1.8rem;
+      margin-bottom: 4.8rem;
+    }
+  }
+
+  /* Alignment */
+  .blog-post-list.section-{{ section.id }} .bpl-align-left {
+    text-align: left;
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-align-center {
+    text-align: center;
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-align-right {
+    text-align: right;
+  }
+
+  /* Layout Wrapper - Default as slider structure */
+  .blog-post-list.section-{{ section.id }} .bpl-layout-wrapper {
+    /* Default structure is slider for both */
+  }
+
+  /* Mobile Grid Layout */
+  @media screen and (max-width: 749px) {
+    .blog-post-list.section-{{ section.id }} .bpl-layout-mobile-grid .bpl-slider {
+      display: grid !important;
+      grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
+      gap: {{ section.settings.grid_gap_mobile }}px;
+      overflow: visible !important;
+      {% if section.settings.equal_height_cards %}
+        align-items: stretch;
+      {% endif %}
+    }
+
+    .blog-post-list.section-{{ section.id }} .bpl-layout-mobile-grid .bpl-slider-viewport,
+    .blog-post-list.section-{{ section.id }} .bpl-layout-mobile-grid .bpl-slider-track {
+      display: contents !important;
+      overflow: visible !important;
+    }
+
+    /* Disable slider behavior on mobile when grid is active */
+    .blog-post-list.section-{{ section.id }} .bpl-layout-mobile-grid .bpl-slider-viewport {
+      overflow: visible !important;
+    }
+
+    .blog-post-list.section-{{ section.id }} .bpl-layout-mobile-grid .bpl-item {
+      flex: none !important;
+      width: auto !important;
+    }
+  }
+
+  /* Desktop Grid Layout */
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-grid .bpl-slider {
+      display: grid !important;
+      grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+      gap: {{ section.settings.grid_gap_desktop }}px;
+      overflow: visible !important;
+      {% if section.settings.equal_height_cards %}
+        align-items: stretch;
+      {% endif %}
+    }
+
+    .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-grid .bpl-slider-viewport,
+    .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-grid .bpl-slider-track {
+      display: contents !important;
+      overflow: visible !important;
+    }
+
+    /* Disable slider behavior on desktop when grid is active */
+    .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-grid .bpl-slider-viewport {
+      overflow: visible !important;
+    }
+
+    .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-grid .bpl-item {
+      flex: none !important;
+      width: auto !important;
+    }
+  }
+
+  /* Equal Height Cards for Grid Mode */
+  {% if section.settings.equal_height_cards %}
+    @media screen and (max-width: 749px) {
+      .blog-post-list.section-{{ section.id }} .bpl-layout-mobile-grid .bpl-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .blog-post-list.section-{{ section.id }} .bpl-layout-mobile-grid .bpl-card {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .blog-post-list.section-{{ section.id }} .bpl-layout-mobile-grid .bpl-image-wrapper {
+        flex-shrink: 0;
+      }
+
+      .blog-post-list.section-{{ section.id }} .bpl-layout-mobile-grid .bpl-info-below {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+    }
+
+    @media screen and (min-width: 750px) {
+      .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-grid .bpl-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-grid .bpl-card {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-grid .bpl-image-wrapper {
+        flex-shrink: 0;
+      }
+
+      .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-grid .bpl-info-below {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+    }
+  {% endif %}
+
+  /* Blog Post Card */
+  .blog-post-list.section-{{ section.id }} .bpl-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    border-radius: {{ section.settings.card_border_radius }}px;
+    {% if section.settings.card_border_width > 0 %}
+      border: {{ section.settings.card_border_width }}px solid {{ section.settings.card_border_color }};
+    {% endif %}
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-image-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    border-radius: {{ section.settings.card_border_radius }}px;
+    {% if section.settings.image_aspect_ratio == 'square' %}
+      aspect-ratio: 1 / 1;
+    {% elsif section.settings.image_aspect_ratio == 'portrait' %}
+      aspect-ratio: 3 / 4;
+    {% elsif section.settings.image_aspect_ratio == 'landscape' %}
+      aspect-ratio: 4 / 3;
+    {% elsif section.settings.image_aspect_ratio == 'wide' %}
+      aspect-ratio: 16 / 9;
+    {% elsif section.settings.image_aspect_ratio == 'custom' %}
+      padding-bottom: {{ section.settings.custom_aspect_ratio_mobile }}%;
+    {% endif %}
+    display: flex;
+  }
+
+  {% if section.settings.image_aspect_ratio == 'custom' %}
+    @media screen and (min-width: 750px) {
+      .blog-post-list.section-{{ section.id }} .bpl-image-wrapper {
+        padding-bottom: {{ section.settings.custom_aspect_ratio_desktop }}%;
+      }
+    }
+  {% endif %}
+
+  /* When author card is above, remove top border radius from image */
+  .blog-post-list.section-{{ section.id }} .bpl-card:has(.bpl-author-above) .bpl-image-wrapper {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-image,
+  .blog-post-list.section-{{ section.id }} .bpl-image-placeholder {
+    {% if section.settings.image_aspect_ratio == 'custom' %}
+      position: absolute;
+      top: 0;
+      left: 0;
+    {% else %}
+      position: relative;
+      z-index: 0;
+    {% endif %}
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-card:hover .bpl-image {
+    transform: scale(1.05);
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-image-placeholder svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  /* Fade Mask */
+  .blog-post-list.section-{{ section.id }} .bpl-fade-mask {
+    position: absolute !important;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: {{ 100 | minus: section.settings.fade_height_mobile }}%;
+    background: linear-gradient(to top, {{ section.settings.fade_color }} 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+    content: '';
+    display: block;
+  }
+
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .bpl-fade-mask {
+      top: {{ 100 | minus: section.settings.fade_height_desktop }}%;
+    }
+  }
+
+  /* Ensure image wrapper creates stacking context for absolute children */
+  .blog-post-list.section-{{ section.id }} .bpl-image-wrapper {
+    transform: translateZ(0);
+  }
+
+  /* Post Info - Overlay */
+  .blog-post-list.section-{{ section.id }} .bpl-info-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: {{ section.settings.info_padding_mobile }}px;
+    z-index: 2;
+  }
+
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .bpl-info-overlay {
+      padding: {{ section.settings.info_padding_desktop }}px;
+    }
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-overlay-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-info-overlay .bpl-name-arrow-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Post Info - Below Card */
+  .blog-post-list.section-{{ section.id }} .bpl-info-below {
+    padding-top: {{ section.settings.info_padding_mobile }}px;
+    padding-left: {{ section.settings.info_padding_mobile }}px;
+    padding-right: {{ section.settings.info_padding_mobile }}px;
+    padding-bottom: {{ section.settings.info_padding_mobile }}px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .bpl-info-below {
+      padding-top: {{ section.settings.info_padding_desktop }}px;
+      padding-left: {{ section.settings.info_padding_desktop }}px;
+      padding-right: {{ section.settings.info_padding_desktop }}px;
+      padding-bottom: {{ section.settings.info_padding_desktop }}px;
+    }
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-info-below .bpl-name-arrow-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  /* Post Title Styling */
+  .blog-post-list.section-{{ section.id }} .bpl-post-title {
+    font-size: {{ section.settings.post_title_size_mobile }}px;
+    font-weight: {{ section.settings.post_title_weight }};
+    line-height: 1.2;
+  }
+
+  /* Post Title Color for Overlay */
+  .blog-post-list.section-{{ section.id }} .bpl-info-overlay .bpl-post-title {
+    color: {{ section.settings.post_title_color }};
+  }
+
+  /* Post Title and Arrow Color for Below Position */
+  .blog-post-list.section-{{ section.id }} .bpl-info-below .bpl-post-title,
+  .blog-post-list.section-{{ section.id }} .bpl-info-below .bpl-arrow {
+    color: {{ section.settings.post_title_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .bpl-post-title {
+      font-size: {{ section.settings.post_title_size_desktop }}px;
+    }
+  }
+
+  /* Post Excerpt */
+  .blog-post-list.section-{{ section.id }} .bpl-post-excerpt {
+    font-size: {{ section.settings.excerpt_size_mobile }}px;
+    line-height: {{ section.settings.excerpt_line_height_mobile }};
+    font-weight: {{ section.settings.excerpt_font_weight }};
+    color: {{ section.settings.excerpt_color }};
+    margin: 0 0 {{ section.settings.excerpt_margin_bottom }}px 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .bpl-post-excerpt {
+      font-size: {{ section.settings.excerpt_size_desktop }}px;
+      line-height: {{ section.settings.excerpt_line_height_desktop }};
+    }
+  }
+
+  /* Date Styling */
+  .blog-post-list.section-{{ section.id }} .bpl-date {
+    font-size: {{ section.settings.date_size_mobile }}px;
+    color: {{ section.settings.date_color }};
+    display: block;
+  }
+
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .bpl-date {
+      font-size: {{ section.settings.date_size_desktop }}px;
+    }
+  }
+
+  /* Author Card Styling */
+  .blog-post-list.section-{{ section.id }} .bpl-author-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Author Card - Top Overlay Position */
+  .blog-post-list.section-{{ section.id }} .bpl-author-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: {{ section.settings.info_padding_mobile }}px;
+    z-index: 3;
+  }
+
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .bpl-author-top {
+      padding: {{ section.settings.info_padding_desktop }}px;
+    }
+  }
+
+  /* Author Card - Above Card Position (Below the card visually) */
+  .blog-post-list.section-{{ section.id }} .bpl-author-above {
+    padding-top: {{ section.settings.author_card_padding_vertical }}px;
+    padding-bottom: {{ section.settings.author_card_padding_vertical }}px;
+    padding-left: {{ section.settings.author_card_padding_horizontal }}px;
+    padding-right: {{ section.settings.author_card_padding_horizontal }}px;
+  }
+
+  /* Author Profile Picture */
+  .blog-post-list.section-{{ section.id }} .bpl-author-pic {
+    width: {{ section.settings.author_profile_size }}px;
+    height: {{ section.settings.author_profile_size }}px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  /* Author Profile Picture Placeholder */
+  .blog-post-list.section-{{ section.id }} .bpl-author-pic-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: {{ section.settings.author_name_color }};
+    opacity: 0.6;
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-author-pic-placeholder svg {
+    width: 60%;
+    height: 60%;
+  }
+
+  /* Author Info Container */
+  .blog-post-list.section-{{ section.id }} .bpl-author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  /* Author Name Wrapper with Badge */
+  .blog-post-list.section-{{ section.id }} .bpl-author-name-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Author Name */
+  .blog-post-list.section-{{ section.id }} .bpl-author-name {
+    font-size: {{ section.settings.author_name_size_mobile }}px;
+    font-weight: 600;
+    color: {{ section.settings.author_name_color }};
+    line-height: 1.2;
+  }
+
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .bpl-author-name {
+      font-size: {{ section.settings.author_name_size_desktop }}px;
+    }
+  }
+
+  /* Verified Badge */
+  .blog-post-list.section-{{ section.id }} .bpl-verified-badge {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: {{ section.settings.verified_badge_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .bpl-verified-badge {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-info-overlay .bpl-arrow {
+    color: {{ section.settings.arrow_color }};
+    width: {{ section.settings.arrow_size_mobile }}px;
+    height: {{ section.settings.arrow_size_mobile }}px;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-info-below .bpl-arrow {
+    width: {{ section.settings.arrow_size_mobile }}px;
+    height: {{ section.settings.arrow_size_mobile }}px;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .bpl-arrow {
+      width: {{ section.settings.arrow_size_desktop }}px;
+      height: {{ section.settings.arrow_size_desktop }}px;
+    }
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-card:hover .bpl-arrow {
+    transform: translateX(4px);
+  }
+
+  /* Slider Styles */
+  .blog-post-list.section-{{ section.id }} .bpl-slider {
+    position: relative;
+  }
+
+  /* Mobile Slider Specific Styles */
+  .blog-post-list.section-{{ section.id }} .bpl-layout-mobile-slider .bpl-slider-viewport {
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 1rem;
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-layout-mobile-slider .bpl-slider-viewport::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-layout-mobile-slider .bpl-slider-viewport::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.08);
+    border-radius: 999px;
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-layout-mobile-slider .bpl-slider-viewport::-webkit-scrollbar-thumb {
+    background: rgba(15, 23, 42, 0.3);
+    border-radius: 999px;
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-layout-mobile-slider .bpl-slider-track {
+    display: flex;
+    gap: {{ section.settings.grid_gap_mobile }}px;
+    min-width: 100%;
+  }
+
+  .blog-post-list.section-{{ section.id }} .bpl-layout-mobile-slider .bpl-item {
+    flex: 0 0 calc({{ section.settings.slide_width_mobile }}% - {{ section.settings.grid_gap_mobile }}px);
+    min-width: calc({{ section.settings.slide_width_mobile }}% - {{ section.settings.grid_gap_mobile }}px);
+    scroll-snap-align: start;
+    box-sizing: border-box;
+  }
+
+  /* Desktop Slider Specific Styles */
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-slider .bpl-slider-viewport {
+      overflow-x: auto;
+      overflow-y: visible;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 1rem;
+    }
+
+    .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-slider .bpl-slider-viewport::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-slider .bpl-slider-viewport::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.08);
+      border-radius: 999px;
+    }
+
+    .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-slider .bpl-slider-viewport::-webkit-scrollbar-thumb {
+      background: rgba(15, 23, 42, 0.3);
+      border-radius: 999px;
+    }
+
+    .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-slider .bpl-slider-track {
+      display: flex;
+      gap: {{ section.settings.grid_gap_desktop }}px;
+      min-width: 100%;
+    }
+
+    .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-slider .bpl-item {
+      flex: 0 0 calc({{ section.settings.slide_width_tablet }}% - {{ section.settings.grid_gap_desktop }}px);
+      min-width: calc({{ section.settings.slide_width_tablet }}% - {{ section.settings.grid_gap_desktop }}px);
+      scroll-snap-align: start;
+      box-sizing: border-box;
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+    .blog-post-list.section-{{ section.id }} .bpl-layout-desktop-slider .bpl-item {
+      flex: 0 0 calc({{ section.settings.slide_width_desktop }}% - {{ section.settings.grid_gap_desktop }}px);
+      min-width: calc({{ section.settings.slide_width_desktop }}% - {{ section.settings.grid_gap_desktop }}px);
+    }
+  }
+
+  /* Page Width Connection */
+  .blog-post-list.section-{{ section.id }} .page-width {
+    max-width: var(--page-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .blog-post-list.section-{{ section.id }} .page-width {
+      padding-left: 5rem;
+      padding-right: 5rem;
+    }
+  }
+</style>
+
+{% schema %}
+{"name":"Blog Post List","class":"section","settings": [
+ {"type":"header","content":"Use Theme Colors"},
+ {"type":"checkbox","id":"use_theme_colors","label":"Use theme colors","default": true,"info":"Enable to use theme default colors. Disable to customize section colors."},
+ {"type":"header","content":"Section Background"},
+ {"type":"color","id":"section_background_color","label":"Background Color","default":"#ffffff"},
+ {"type":"color","id":"section_text_color","label":"Text Color","default":"#000000"},
+ {"type":"checkbox","id":"use_section_gradient","label":"Use gradient background","default": false
+ },
+ {"type":"color_background","id":"section_gradient_background","label":"Gradient Background","info":"Applied when 'Use gradient background' is enabled"},
+ {"type":"header","content":"Section Padding"},
+ {"type":"range","id":"padding_top_mobile","min": 0,"max": 100,"step": 4,"unit":"px","label":"Top padding (mobile)","default": 36
+ },
+ {"type":"range","id":"padding_bottom_mobile","min": 0,"max": 100,"step": 4,"unit":"px","label":"Bottom padding (mobile)","default": 36
+ },
+ {"type":"range","id":"padding_top_desktop","min": 0,"max": 200,"step": 4,"unit":"px","label":"Top padding (desktop)","default": 52
+ },
+ {"type":"range","id":"padding_bottom_desktop","min": 0,"max": 200,"step": 4,"unit":"px","label":"Bottom padding (desktop)","default": 52
+ },
+ {"type":"header","content":"Heading"},
+ {"type":"text","id":"heading_before","label":"Heading text (before highlight)","default":"Latest"},
+ {"type":"text","id":"highlighted_text","label":"Highlighted text","default":"Blog Posts"},
+ {"type":"text","id":"heading_after","label":"Heading text (after highlight)"},
+ {"type":"select","id":"highlight_position","label":"Highlight position","options": [
+ {"value":"inline_first","label":"Inline (highlight first)"},
+ {"value":"inline_second","label":"Inline (highlight second)"},
+ {"value":"above","label":"Above heading"},
+ {"value":"below","label":"Below heading"}
+ ],"default":"inline_second"},
+ {"type":"select","id":"heading_tag","label":"Heading tag","options": [
+ {"value":"h1","label":"H1"},
+ {"value":"h2","label":"H2"},
+ {"value":"h3","label":"H3"},
+ {"value":"h4","label":"H4"}
+ ],"default":"h2"},
+ {"type":"select","id":"heading_text_align","label":"Heading alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"text","id":"subheading","label":"Subheading","default":"Add your subtitle here"},
+ {"type":"header","content":"Highlight Styling"},
+ {"type":"checkbox","id":"use_highlight_gradient","label":"Use gradient for highlight","default": false
+ },
+ {"type":"color","id":"highlight_color","label":"Highlight color","default":"#ff6b6b"},
+ {"type":"color_background","id":"highlight_gradient","label":"Highlight gradient","info":"Applied when 'Use gradient for highlight' is enabled"},
+ {"type":"header","content":"Layout Settings"},
+ {"type":"select","id":"layout_mobile","label":"Layout (mobile)","options": [
+ {"value":"grid","label":"Grid"},
+ {"value":"slider","label":"Slider"}
+ ],"default":"slider","info":"Choose layout for mobile devices"},
+ {"type":"select","id":"layout_desktop","label":"Layout (desktop)","options": [
+ {"value":"grid","label":"Grid"},
+ {"value":"slider","label":"Slider"}
+ ],"default":"grid","info":"Choose layout for desktop devices"},
+ {"type":"range","id":"columns_mobile","min": 1,"max": 3,"step": 1,"label":"Columns (mobile) - Grid mode","default": 2
+ },
+ {"type":"range","id":"columns_desktop","min": 2,"max": 6,"step": 1,"label":"Columns (desktop) - Grid mode","default": 3
+ },
+ {"type":"range","id":"slide_width_mobile","min": 60,"max": 100,"step": 1,"unit":"%","label":"Slide width (mobile) - Slider mode","default": 60
+ },
+ {"type":"range","id":"slide_width_tablet","min": 25,"max": 100,"step": 1,"unit":"%","label":"Slide width (tablet) - Slider mode","default": 45
+ },
+ {"type":"range","id":"slide_width_desktop","min": 20,"max": 100,"step": 1,"unit":"%","label":"Slide width (desktop) - Slider mode","default": 30
+ },
+ {"type":"range","id":"grid_gap_mobile","min": 0,"max": 50,"step": 2,"unit":"px","label":"Grid gap (mobile)","default": 6
+ },
+ {"type":"range","id":"grid_gap_desktop","min": 0,"max": 100,"step": 4,"unit":"px","label":"Grid gap (desktop)","default": 24
+ },
+ {"type":"checkbox","id":"equal_height_cards","label":"Make all cards equal height","default": false,"info":"Forces all cards to have the same height in grid mode"},
+ {"type":"header","content":"️ Image Settings"},
+ {"type":"select","id":"image_aspect_ratio","label":"Image aspect ratio","options": [
+ {"value":"square","label":"Square (1:1)"},
+ {"value":"portrait","label":"Portrait (3:4)"},
+ {"value":"landscape","label":"Landscape (4:3)"},
+ {"value":"wide","label":"Wide (16:9)"},
+ {"value":"custom","label":"Custom"}
+ ],"default":"portrait"},
+ {"type":"range","id":"custom_aspect_ratio_mobile","min": 50,"max": 200,"step": 5,"unit":"%","label":"Custom aspect ratio (mobile)","default": 100,"info":"Only applies when 'Custom' is selected. 100% = square, 75% = landscape, 133% = portrait"},
+ {"type":"range","id":"custom_aspect_ratio_desktop","min": 50,"max": 200,"step": 5,"unit":"%","label":"Custom aspect ratio (desktop)","default": 100,"info":"Only applies when 'Custom' is selected. 100% = square, 75% = landscape, 133% = portrait"},
+ {"type":"header","content":"Card Settings"},
+ {"type":"range","id":"card_border_radius","min": 0,"max": 40,"step": 2,"unit":"px","label":"Card border radius","default": 8
+ },
+ {"type":"range","id":"card_border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Card border width","default": 1
+ },
+ {"type":"color","id":"card_border_color","label":"Card border color","default":"#000000"},
+ {"type":"header","content":"Text Position"},
+ {"type":"select","id":"text_position","label":"Post info position","options": [
+ {"value":"overlay","label":"On card (overlay)"},
+ {"value":"below","label":"Below card"}
+ ],"default":"overlay","info":"Choose whether text appears on top of the image or below it"},
+ {"type":"header","content":"Fade Mask Settings"},
+ {"type":"paragraph","content":"Fade mask only applies when text is positioned as overlay"},
+ {"type":"checkbox","id":"enable_fade_mask","label":"Enable fade mask","default": true,"info":"Show gradient overlay at bottom of post images"},
+ {"type":"color","id":"fade_color","label":"Fade color","default":"#000000","info":"Color that fades from solid to transparent"},
+ {"type":"range","id":"fade_height_mobile","min": 10,"max": 80,"step": 5,"unit":"%","label":"Fade height (mobile)","default": 50
+ },
+ {"type":"range","id":"fade_height_desktop","min": 10,"max": 80,"step": 5,"unit":"%","label":"Fade height (desktop)","default": 35
+ },
+ {"type":"header","content":"Post Title Settings"},
+ {"type":"color","id":"post_title_color","label":"Post title color","default":"#ffffff"},
+ {"type":"range","id":"post_title_size_mobile","min": 14,"max": 32,"step": 2,"unit":"px","label":"Title size (mobile)","default": 18
+ },
+ {"type":"range","id":"post_title_size_desktop","min": 16,"max": 48,"step": 2,"unit":"px","label":"Title size (desktop)","default": 24
+ },
+ {"type":"select","id":"post_title_weight","label":"Title font weight","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"600"},
+ {"type":"header","content":"️ Arrow Settings"},
+ {"type":"color","id":"arrow_color","label":"Arrow color","default":"#ffffff"},
+ {"type":"range","id":"arrow_size_mobile","min": 16,"max": 40,"step": 2,"unit":"px","label":"Arrow size (mobile)","default": 20
+ },
+ {"type":"range","id":"arrow_size_desktop","min": 20,"max": 60,"step": 2,"unit":"px","label":"Arrow size (desktop)","default": 28
+ },
+ {"type":"header","content":"Excerpt Settings"},
+ {"type":"color","id":"excerpt_color","label":"Excerpt color","default":"#a7a7a7"},
+ {"type":"range","id":"excerpt_size_mobile","min": 10,"max": 24,"step": 1,"unit":"px","label":"Excerpt size (mobile)","default": 14
+ },
+ {"type":"range","id":"excerpt_size_desktop","min": 12,"max": 32,"step": 1,"unit":"px","label":"Excerpt size (desktop)","default": 16
+ },
+ {"type":"range","id":"excerpt_line_height_mobile","min": 1.0,"max": 2.5,"step": 0.1,"label":"Excerpt line height (mobile)","default": 1.5
+ },
+ {"type":"range","id":"excerpt_line_height_desktop","min": 1.0,"max": 2.5,"step": 0.1,"label":"Excerpt line height (desktop)","default": 1.5
+ },
+ {"type":"select","id":"excerpt_font_weight","label":"Excerpt font weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"400"},
+ {"type":"range","id":"excerpt_margin_bottom","min": 0,"max": 40,"step": 2,"unit":"px","label":"Excerpt bottom margin","default": 0
+ },
+ {"type":"header","content":"Date Styling"},
+ {"type":"color","id":"date_color","label":"Date color","default":"#000000"},
+ {"type":"range","id":"date_size_mobile","min": 10,"max": 20,"step": 1,"unit":"px","label":"Date size (mobile)","default": 10
+ },
+ {"type":"range","id":"date_size_desktop","min": 12,"max": 24,"step": 1,"unit":"px","label":"Date size (desktop)","default": 12
+ },
+ {"type":"header","content":"Author Card Styling"},
+ {"type":"select","id":"author_card_position","label":"Author card position","options": [
+ {"value":"top_overlay","label":"Top of card (overlay)"},
+ {"value":"above_card","label":"Above card"}
+ ],"default":"above_card","info":"Choose where to display the author card"},
+ {"type":"color","id":"author_name_color","label":"Author name color","default":"#000000"},
+ {"type":"color","id":"verified_badge_color","label":"Verified badge color","default":"#1da1f2"},
+ {"type":"range","id":"author_profile_size","min": 24,"max": 60,"step": 2,"unit":"px","label":"Profile picture size","default": 32
+ },
+ {"type":"range","id":"author_name_size_mobile","min": 12,"max": 20,"step": 1,"unit":"px","label":"Author name size (mobile)","default": 13
+ },
+ {"type":"range","id":"author_name_size_desktop","min": 14,"max": 24,"step": 1,"unit":"px","label":"Author name size (desktop)","default": 16
+ },
+ {"type":"range","id":"author_card_padding_vertical","min": 0,"max": 40,"step": 2,"unit":"px","label":"Author card padding (vertical)","default": 8,"info":"Top and bottom padding for author card when positioned below card"},
+ {"type":"range","id":"author_card_padding_horizontal","min": 0,"max": 60,"step": 2,"unit":"px","label":"Author card padding (horizontal)","default": 8,"info":"Left and right padding for author card when positioned below card"},
+ {"type":"header","content":"Info Positioning"},
+ {"type":"range","id":"info_padding_mobile","min": 8,"max": 40,"step": 2,"unit":"px","label":"Info padding (mobile)","default": 16
+ },
+ {"type":"range","id":"info_padding_desktop","min": 12,"max": 60,"step": 2,"unit":"px","label":"Info padding (desktop)","default": 24
+ }
+ ],"blocks": [
+ {"type":"blog_post","name":"Content Item","settings": [
+ {"type":"select","id":"content_type","label":"Content type","options": [
+ {"value":"article","label":"Blog Article"},
+ {"value":"advertorial","label":"Advertorial Page"},
+ {"value":"listicle","label":"Listicle Page"}
+ ],"default":"advertorial","info":"Choose the type of content to display"},
+ {"type":"article","id":"article","label":"Blog post","info":"Select a blog article (only used when Content type is 'Blog Article')"},
+ {"type":"url","id":"advertorial_url","label":"Advertorial URL","info":"Enter the URL for the advertorial page (only used when Content type is 'Advertorial Page')"},
+ {"type":"url","id":"listicle_url","label":"Listicle URL","info":"Enter the URL for the listicle page (only used when Content type is 'Listicle Page')"},
+ {"type":"image_picker","id":"post_image","label":"Custom image","info":"Optional. Uses content item's featured image if not set."},
+ {"type":"text","id":"post_title_override","label":"Title override","default":"blog","info":"Optional. Uses content item's title if not set."},
+ {"type":"textarea","id":"post_excerpt_override","label":"Excerpt override","default":"blog description here","info":"Optional. Uses auto-generated excerpt from content if not set."},
+ {"type":"header","content":"Author Card"},
+ {"type":"checkbox","id":"show_author_card","label":"Show author card","default": true,"info":"Display author card with profile picture and name"},
+ {"type":"image_picker","id":"author_profile_pic","label":"Author profile picture","info":"Upload author's profile picture"},
+ {"type":"text","id":"author_name","label":"Author name","default":"John Smith","info":"Name to display on the author card"},
+ {"type":"checkbox","id":"show_verified_badge","label":"Show verified badge","default": true,"info":"Display a verified checkmark next to author name"},
+ {"type":"header","content":"Date"},
+ {"type":"checkbox","id":"show_date","label":"Show date","default": true,"info":"Display publish date"},
+ {"type":"select","id":"date_position","label":"Date position","options": [
+ {"value":"under_author","label":"Under author name"},
+ {"value":"under_excerpt","label":"Under excerpt"}
+ ],"default":"under_author","info":"Choose where to display the date"},
+ {"type":"text","id":"custom_date","label":"Custom date text","default":"Jan 15th 2025","info":"Optional. For advertorials/listicles, enter custom date text (e.g., 'Jan 15, 2024'). Leave blank to use article publish date."}
+ ]
+ }
+ ],"presets": [
+ {"name":"Blog Post List","category":"Blog","blocks": [
+ {"type":"blog_post","settings": {"content_type":"advertorial","post_title_override":"blog","post_excerpt_override":"blog description here","show_author_card": true,"author_name":"John Smith","show_verified_badge": true,"show_date": true,"date_position":"under_author","custom_date":"Jan 15th 2025"}
+ },
+ {"type":"blog_post","settings": {"content_type":"advertorial","post_title_override":"blog","post_excerpt_override":"blog description here","show_author_card": true,"author_name":"John Smith","show_verified_badge": true,"show_date": true,"date_position":"under_author","custom_date":"Jan 15th 2025"}
+ },
+ {"type":"blog_post","settings": {"content_type":"advertorial","post_title_override":"blog","post_excerpt_override":"blog description here","show_author_card": true,"author_name":"John Smith","show_verified_badge": true,"show_date": true,"date_position":"under_author","custom_date":"Jan 15th 2025"}
+ },
+ {"type":"blog_post","settings": {"content_type":"advertorial","post_title_override":"blog","post_excerpt_override":"blog description here","show_author_card": true,"author_name":"John Smith","show_verified_badge": true,"show_date": true,"date_position":"under_author","custom_date":"Jan 15th 2025"}
+ }
+ ],"settings": {"layout_mobile":"slider","layout_desktop":"grid","columns_desktop": 3,"grid_gap_desktop": 24,"grid_gap_mobile": 6,"text_position":"overlay","enable_fade_mask": true,"fade_height_mobile": 50,"fade_height_desktop": 35,"author_card_position":"above_card","author_card_padding_vertical": 8,"author_card_padding_horizontal": 8,"date_size_mobile": 10,"date_size_desktop": 12
+ }
+ }
+ ]
+}
+{% endschema %}

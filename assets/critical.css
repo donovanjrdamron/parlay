@@ -1,0 +1,234 @@
+/* Critical CSS - Inline in <head> for fast initial render */
+
+/* Reset and base styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  font-size: 1.5rem;
+  line-height: var(--font-body-scale, 1.5);
+  color: rgb(var(--color-foreground, 18 18 18));
+  background-color: rgb(var(--color-background, 255 255 255));
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Layout essentials */
+.page-width {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Header styles */
+.header {
+  position: relative;
+  background: rgb(var(--color-background));
+}
+
+.header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+
+.header__icon {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+/* Logo */
+.header__heading-link {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.header__heading-logo {
+  height: auto;
+  width: auto;
+  max-height: var(--logo-height);
+}
+
+/* Navigation critical */
+.header__inline-menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media screen and (max-width: 989px) {
+  .header__inline-menu {
+    display: none;
+  }
+}
+
+/* Hero/Banner critical styles */
+.banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 40rem;
+}
+
+.banner__media {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.banner__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.banner__content {
+  position: relative;
+  z-index: 1;
+  padding: 4rem 0;
+}
+
+.banner__heading {
+  margin: 0 0 2rem;
+  font-size: calc(var(--font-heading-scale) * 4rem);
+  line-height: 1.2;
+}
+
+/* Product grid critical */
+.collection {
+  padding: 2rem 0;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+  gap: 2rem;
+}
+
+.card-wrapper {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card__media {
+  position: relative;
+  padding-bottom: 100%;
+  overflow: hidden;
+}
+
+.card__media img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Button critical styles */
+.button {
+  display: inline-block;
+  padding: 1.2rem 3rem;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  font-size: 1.5rem;
+  background-color: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+  transition: opacity 0.3s;
+}
+
+.button:hover {
+  opacity: 0.8;
+}
+
+/* Utility classes */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Loading states */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+}
+
+.loading-overlay--active {
+  display: block;
+}
+
+/* Prevent layout shift */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mobile menu button */
+@media screen and (max-width: 989px) {
+  .header__icon--menu {
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .header__icon--menu {
+    display: none;
+  }
+}
+
+/* Cart icon */
+.cart-count-bubble {
+  position: absolute;
+  top: -0.4rem;
+  right: -0.6rem;
+  width: 1.8rem;
+  height: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+  border-radius: 50%;
+  font-size: 1rem;
+}
+
+/* Ensure text is immediately visible */
+.banner__heading,
+.banner__text,
+.card__heading,
+.price {
+  font-display: swap;
+}

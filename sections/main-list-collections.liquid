@@ -1,0 +1,258 @@
+<div class="page-width">
+  {% comment %} Heading {% endcomment %}
+  {% if section.settings.heading_before != blank or section.settings.highlighted_text != blank or section.settings.heading_after != blank %}
+    <div class="collection-list-header crs-header-wrapper crs-align-{{ section.settings.heading_text_align }}">
+      {% case section.settings.highlight_position %}
+        {% when 'above' %}
+          {% if section.settings.highlighted_text != blank %}
+            <span class="crs-highlighted-text crs-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+          {% endif %}
+          <{{ section.settings.heading_tag }} class="crs-heading">
+            {{ section.settings.heading_before }}
+            {{ section.settings.heading_after }}
+          </{{ section.settings.heading_tag }}>
+        {% when 'below' %}
+          <{{ section.settings.heading_tag }} class="crs-heading">
+            {{ section.settings.heading_before }}
+            {{ section.settings.heading_after }}
+          </{{ section.settings.heading_tag }}>
+          {% if section.settings.highlighted_text != blank %}
+            <span class="crs-highlighted-text crs-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+          {% endif %}
+        {% when 'inline_first' %}
+          <{{ section.settings.heading_tag }} class="crs-heading">
+            {% if section.settings.highlighted_text != blank %}
+              <span class="crs-highlighted-text">{{ section.settings.highlighted_text }}</span>
+            {% endif %}
+            {% if section.settings.heading_before != blank %}{{ " " }}{{ section.settings.heading_before }}{% endif %}
+            {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+          </{{ section.settings.heading_tag }}>
+        {% when 'inline_second' %}
+          <{{ section.settings.heading_tag }} class="crs-heading">
+            {% if section.settings.heading_before != blank %}{{ section.settings.heading_before }}{{ " " }}{% endif %}
+            {% if section.settings.highlighted_text != blank %}
+              <span class="crs-highlighted-text">{{ section.settings.highlighted_text }}</span>
+            {% endif %}
+            {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+          </{{ section.settings.heading_tag }}>
+      {% endcase %}
+    </div>
+  {% endif %}
+  {%- liquid
+    case section.settings.sort
+      when 'products_high', 'products_low'
+        assign collections = collections | sort: 'all_products_count'
+      when 'date', 'date_reversed'
+        assign collections = collections | sort: 'published_at'
+    endcase
+
+    if section.settings.sort == 'products_high' or section.settings.sort == 'date_reversed' or section.settings.sort == 'alphabetical_reversed'
+      assign collections = collections | reverse
+    endif
+
+    assign moduloResult = 28 | modulo: section.settings.columns_desktop
+    assign paginate_by = 30
+    if moduloResult == 0
+      assign paginate_by = 28
+    endif
+  -%}
+  {%- paginate collections by paginate_by -%}
+    <ul
+      class="collection-list main-collection-list grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down"
+      role="list"
+    >
+      {%- for collection in collections -%}
+        <li class="collection-list__item grid__item">
+          {% render 'card-collection',
+            card_collection: collection,
+            media_aspect_ratio: section.settings.image_ratio,
+            columns: 3
+          %}
+        </li>
+      {%- endfor -%}
+    </ul>
+    {% render 'pagination', paginate: paginate %}
+  {%- endpaginate -%}
+</div>
+{% schema %}
+{
+  "name": "t:sections.main-list-collections.name",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading_before",
+      "label": "Heading (Before Highlight)",
+      "default": "Collections"
+    },
+    {
+      "type": "text",
+      "id": "highlighted_text",
+      "label": "Highlight"
+    },
+    {
+      "type": "text",
+      "id": "heading_after",
+      "label": "Heading (After Highlight)"
+    },
+    {
+      "type": "select",
+      "id": "highlight_position",
+      "label": "Highlight Position",
+      "options": [
+        {
+          "value": "inline_second",
+          "label": "Inline (Middle)"
+        },
+        {
+          "value": "inline_first",
+          "label": "Inline (First)"
+        },
+        {
+          "value": "above",
+          "label": "Above Heading"
+        },
+        {
+          "value": "below",
+          "label": "Below Heading"
+        }
+      ],
+      "default": "inline_second"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading Tag",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "p",
+          "label": "Paragraph"
+        }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "select",
+      "id": "heading_text_align",
+      "label": "Heading Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "sort",
+      "options": [
+        {
+          "value": "alphabetical",
+          "label": "t:sections.main-list-collections.settings.sort.options__1.label"
+        },
+        {
+          "value": "alphabetical_reversed",
+          "label": "t:sections.main-list-collections.settings.sort.options__2.label"
+        },
+        {
+          "value": "date_reversed",
+          "label": "t:sections.main-list-collections.settings.sort.options__3.label"
+        },
+        {
+          "value": "date",
+          "label": "t:sections.main-list-collections.settings.sort.options__4.label"
+        },
+        {
+          "value": "products_high",
+          "label": "t:sections.main-list-collections.settings.sort.options__5.label"
+        },
+        {
+          "value": "products_low",
+          "label": "t:sections.main-list-collections.settings.sort.options__6.label"
+        }
+      ],
+      "default": "alphabetical",
+      "label": "t:sections.main-list-collections.settings.sort.label"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.main-list-collections.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.main-list-collections.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.main-list-collections.settings.image_ratio.options__3.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.main-list-collections.settings.image_ratio.label",
+      "info": "t:sections.main-list-collections.settings.image_ratio.info"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 3,
+      "label": "t:sections.main-list-collections.settings.columns_desktop.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-list-collections.settings.header_mobile.content"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:sections.main-list-collections.settings.columns_mobile.options__1.label"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.main-list-collections.settings.columns_mobile.options__2.label"
+        }
+      ],
+      "default": "2",
+      "label": "t:sections.main-list-collections.settings.columns_mobile.label"
+    }
+  ]
+}
+{% endschema %}

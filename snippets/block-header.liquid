@@ -1,0 +1,157 @@
+{% comment %}
+  Block Header Snippet
+  Usage: {% render 'block-header', block: block, section_id: section.id %}
+{% endcomment %}
+
+<div class="block-header block-{{ block.id }}" {{ block.shopify_attributes }}>
+  <div class="header-wrapper header-wrapper--{{ block.settings.heading_text_align }}">
+    {% case block.settings.highlight_position %}
+      {% when 'above' %}
+        {% if block.settings.highlighted_text != blank %}
+          <span class="highlighted-text highlighted-text-separate">{{ block.settings.highlighted_text }}</span>
+        {% endif %}
+        <{{ block.settings.heading_tag }} class="header-content">
+          {% if block.settings.heading_before != blank %}
+            {{ block.settings.heading_before }}
+          {% endif %}
+          {% if block.settings.heading_after != blank %}
+            {{ block.settings.heading_after }}
+          {% endif %}
+        </{{ block.settings.heading_tag }}>
+
+      {% when 'below' %}
+        <{{ block.settings.heading_tag }} class="header-content">
+          {% if block.settings.heading_before != blank %}
+            {{ block.settings.heading_before }}
+          {% endif %}
+          {% if block.settings.heading_after != blank %}
+            {{ block.settings.heading_after }}
+          {% endif %}
+        </{{ block.settings.heading_tag }}>
+        {% if block.settings.highlighted_text != blank %}
+          <span class="highlighted-text highlighted-text-separate">{{ block.settings.highlighted_text }}</span>
+        {% endif %}
+
+      {% when 'inline_first' %}
+        <{{ block.settings.heading_tag }} class="header-content">
+          {% if block.settings.highlighted_text != blank %}
+            <span class="highlighted-text">{{ block.settings.highlighted_text }}</span>
+          {% endif %}
+          {% if block.settings.heading_before != blank %}
+            {{ block.settings.heading_before }}
+          {% endif %}
+          {% if block.settings.heading_after != blank %}
+            {{ block.settings.heading_after }}
+          {% endif %}
+        </{{ block.settings.heading_tag }}>
+
+      {% when 'inline_second' %}
+        <{{ block.settings.heading_tag }} class="header-content">
+          {% if block.settings.heading_before != blank %}
+            {{ block.settings.heading_before }}
+          {% endif %}
+          {% if block.settings.highlighted_text != blank %}
+            <span class="highlighted-text">{{ block.settings.highlighted_text }}</span>
+          {% endif %}
+          {% if block.settings.heading_after != blank %}
+            {{ block.settings.heading_after }}
+          {% endif %}
+        </{{ block.settings.heading_tag }}>
+    {% endcase %}
+  </div>
+</div>
+
+<style>
+  .block-{{ block.id }} .header-content {
+    text-align: {{ block.settings.heading_text_align }};
+    letter-spacing: {{ settings.heading_letter_spacing | divided_by: 1000.0 }}em;
+    text-transform: {{ settings.heading_text_transform }};
+
+    {% if block.settings.override_theme_settings and block.settings.font_color != blank %}
+      color: {{ block.settings.font_color }};
+    {% else %}
+      color: {{ settings.heading_color }};
+    {% endif %}
+
+    {% if block.settings.override_theme_settings and block.settings.heading_font_size_desktop != blank %}
+      font-size: {{ block.settings.heading_font_size_desktop }}px;
+    {% elsif block.settings.override_theme_settings and block.settings.font_size_desktop != blank %}
+      font-size: {{ block.settings.font_size_desktop }}px;
+    {% else %}
+      font-size: {{ settings.heading_font_size_desktop }}px;
+    {% endif %}
+
+    {% if block.settings.override_theme_settings and block.settings.heading_font_weight != blank %}
+      font-weight: {{ block.settings.heading_font_weight }};
+    {% elsif block.settings.override_theme_settings and block.settings.font_weight != blank %}
+      font-weight: {{ block.settings.font_weight }};
+    {% else %}
+      font-weight: {{ settings.heading_font_weight }};
+    {% endif %}
+
+    {% if block.settings.override_theme_settings and block.settings.font_style != blank %}
+      font-style: {{ block.settings.font_style }};
+    {% else %}
+      font-style: normal;
+    {% endif %}
+  }
+
+  .block-{{ block.id }} .header-wrapper {
+    margin-top: {{ block.settings.heading_margin_top }}px;
+    margin-bottom: {{ block.settings.heading_margin_bottom }}px;
+  }
+
+  .block-{{ block.id }} .highlighted-text {
+    {% if block.settings.highlight_margin_top > 0 or block.settings.highlight_margin_bottom > 0 %}
+      display: inline-block;
+    {% endif %}
+    margin-top: {{ block.settings.highlight_margin_top }}px;
+    margin-bottom: {{ block.settings.highlight_margin_bottom }}px;
+  }
+
+  {% if block.settings.highlighted_override %}
+    .block-{{ block.id }} .highlighted-text {
+      display: inline-block !important;
+      {% if block.settings.highlighted_gradient_enabled %}
+        background: {{ block.settings.highlighted_gradient }} !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        text-fill-color: transparent !important;
+      {% else %}
+        background: none !important;
+        -webkit-background-clip: initial !important;
+        -webkit-text-fill-color: initial !important;
+        background-clip: initial !important;
+        text-fill-color: initial !important;
+        color: {{ block.settings.highlighted_solid_color }} !important;
+      {% endif %}
+      {% if block.settings.highlighted_font_size_desktop != blank %}
+        font-size: {{ block.settings.highlighted_font_size_desktop }}px !important;
+      {% endif %}
+      {% if block.settings.highlighted_font_weight != blank %}
+        font-weight: {{ block.settings.highlighted_font_weight }} !important;
+      {% endif %}
+      {% if block.settings.highlighted_font_style != blank %}
+        font-style: {{ block.settings.highlighted_font_style }} !important;
+      {% endif %}
+    }
+  {% endif %}
+
+  @media screen and (max-width: 749px) {
+    .block-{{ block.id }} .header-content {
+      {% if block.settings.override_theme_settings and block.settings.heading_font_size_mobile != blank %}
+        font-size: {{ block.settings.heading_font_size_mobile }}px;
+      {% elsif block.settings.override_theme_settings and block.settings.font_size_mobile != blank %}
+        font-size: {{ block.settings.font_size_mobile }}px;
+      {% else %}
+        font-size: {{ settings.heading_font_size_mobile }}px;
+      {% endif %}
+    }
+    {% if block.settings.highlighted_override and block.settings.highlighted_font_size_mobile != blank %}
+      .block-{{ block.id }} .highlighted-text {
+        font-size: {{ block.settings.highlighted_font_size_mobile }}px !important;
+      }
+    {% endif %}
+  }
+</style>

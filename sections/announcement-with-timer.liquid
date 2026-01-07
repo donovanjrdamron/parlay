@@ -1,0 +1,660 @@
+{% comment %}
+  Announcement with Timer Section
+  Displays an announcement bar with countdown timer
+{% endcomment %}
+
+<style>
+/********** General Styles **********/
+.section-{{ section.id }} .announcement-section-1 {
+    {% if section.settings.gradient_enabled %}
+      background: {{ section.settings.background_gradient }};
+      background-size: 400% 400%;
+      animation: primaryGradient-{{ section.id }} {{ section.settings.animation_speed }}s ease infinite;
+    {% else %}
+      background: {{ section.settings.background_color }};
+    {% endif %}
+    color: {{ section.settings.text_color }};
+    text-align: center;
+    padding: {{ section.settings.padding_vertical }}px 0;
+}
+
+.section-{{ section.id }} .announcement-wrapper {
+    font-size: {{ section.settings.font_size_desktop }}px;
+    font-weight: {{ section.settings.font_weight }};
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: {{ section.settings.element_gap }}px;
+    flex-wrap: wrap;
+}
+
+.section-{{ section.id }} .clock-down_text {
+    {% if section.settings.show_text %}
+      display: inline;
+    {% else %}
+      display: none;
+    {% endif %}
+}
+
+.section-{{ section.id }} .holiday-clock {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: {{ section.settings.timer_text_color }};
+    border-radius: 3px;
+}
+
+.section-{{ section.id }} .box-3 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: {{ section.settings.timer_box_bg }};
+    border-radius: {{ section.settings.timer_box_radius }}px;
+    width: {{ section.settings.timer_box_width }}px;
+    height: {{ section.settings.timer_box_height }}px;
+    margin: 0 {{ section.settings.timer_box_spacing }}px;
+    padding: 3px;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.section-{{ section.id }} .clock-number-2 {
+    font-size: {{ section.settings.timer_number_size }}px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.section-{{ section.id }} .clock-label-2 {
+    font-size: {{ section.settings.timer_label_size }}px;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.section-{{ section.id }} .text-block-countdown {
+    color: {{ section.settings.separator_color }};
+    padding: 0 {{ section.settings.separator_spacing }}px;
+    font-weight: 800;
+}
+
+/********** Keyframes **********/
+{% if section.settings.gradient_enabled %}
+@keyframes primaryGradient-{{ section.id }} {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+{% endif %}
+
+/********** Media Queries **********/
+@media (max-width: 749px) {
+    .section-{{ section.id }} .announcement-wrapper {
+        font-size: {{ section.settings.font_size_mobile }}px;
+        gap: {{ section.settings.element_gap_mobile }}px;
+    }
+
+    .section-{{ section.id }} .clock-number-2 {
+        font-size: {{ section.settings.timer_number_size_mobile }}px !important;
+    }
+
+    .section-{{ section.id }} .clock-label-2 {
+        font-size: {{ section.settings.timer_label_size_mobile }}px !important;
+    }
+
+    .section-{{ section.id }} .box-3 {
+        width: {{ section.settings.timer_box_width_mobile }}px;
+        height: {{ section.settings.timer_box_height_mobile }}px;
+        margin: 0 {{ section.settings.timer_box_spacing_mobile }}px;
+    }
+
+    .section-{{ section.id }} .text-block-countdown {
+        padding: 0 {{ section.settings.separator_spacing_mobile }}px;
+    }
+}
+</style>
+
+<div class="section-{{ section.id }}">
+  <div class='announcement-section-1'>
+    <div class='container'>
+      <div class='announcement-wrapper'>
+        <span class='clock-down_text'>{{ section.settings.announcement_text }}</span>
+        <div class='holiday-clock' id='js-clock-{{ section.id }}'>
+          {% if section.settings.show_days %}
+          <div class='box-3'>
+            <div class='clock-number-2' id='js-clock-days-{{ section.id }}'>00</div>
+            <div class='clock-label-2'>{{ section.settings.days_label }}</div>
+          </div>
+          <div class='text-block-countdown'>:</div>
+          {% endif %}
+          <div class='box-3'>
+            <div class='clock-number-2' id='js-clock-hours-{{ section.id }}'>00</div>
+            <div class='clock-label-2'>{{ section.settings.hours_label }}</div>
+          </div>
+          <div class='text-block-countdown'>:</div>
+          <div class='box-3'>
+            <div class='clock-number-2' id='js-clock-minutes-{{ section.id }}'>00</div>
+            <div class='clock-label-2'>{{ section.settings.minutes_label }}</div>
+          </div>
+          <div class='text-block-countdown'>:</div>
+          <div class='box-3'>
+            <div class='clock-number-2' id='js-clock-seconds-{{ section.id }}'>00</div>
+            <div class='clock-label-2'>{{ section.settings.seconds_label }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Countdown Timer Script with LocalStorage Caching and Auto-Reset
+(function() {
+    const sectionId = '{{ section.id }}';
+    const showDays = {{ section.settings.show_days }};
+    const endedMessage = '{{ section.settings.ended_message }}';
+    const autoReset = {{ section.settings.auto_reset | default: true }};
+
+    const storageKey = 'announcement-timer-' + sectionId;
+    const settingsKey = 'announcement-timer-settings-' + sectionId;
+
+    // Create a hash of settings to detect changes
+    const currentSettings = '{{ section.settings.manual_days }}-{{ section.settings.manual_hours }}-{{ section.settings.manual_minutes }}-{{ section.settings.manual_seconds }}';
+
+    let endTime;
+
+    // Calculate end time from manual duration
+    function calculateEndTime() {
+        const now = new Date().getTime();
+        const daysMs = {{ section.settings.manual_days | default: 0 }} * 24 * 60 * 60 * 1000;
+        const hoursMs = {{ section.settings.manual_hours | default: 0 }} * 60 * 60 * 1000;
+        const minutesMs = {{ section.settings.manual_minutes | default: 0 }} * 60 * 1000;
+        const secondsMs = {{ section.settings.manual_seconds | default: 0 }} * 1000;
+
+        return now + daysMs + hoursMs + minutesMs + secondsMs;
+    }
+
+    // Try to get cached end time from localStorage
+    try {
+        const cached = localStorage.getItem(storageKey);
+        const cachedSettings = localStorage.getItem(settingsKey);
+
+        // Check if settings have changed
+        if (cachedSettings !== currentSettings) {
+            // Settings changed - recalculate timer
+            endTime = calculateEndTime();
+            localStorage.setItem(storageKey, endTime.toString());
+            localStorage.setItem(settingsKey, currentSettings);
+        } else if (cached) {
+            endTime = parseInt(cached, 10);
+            // If cached time is in the past and auto-reset is enabled, recalculate
+            if (endTime < new Date().getTime() && autoReset) {
+                endTime = calculateEndTime();
+                localStorage.setItem(storageKey, endTime.toString());
+            }
+        } else {
+            // No cache, calculate new end time
+            endTime = calculateEndTime();
+            localStorage.setItem(storageKey, endTime.toString());
+            localStorage.setItem(settingsKey, currentSettings);
+        }
+    } catch (e) {
+        // LocalStorage not available, just calculate
+        endTime = calculateEndTime();
+    }
+
+    function updateTimer() {
+        const now = new Date().getTime();
+        const timeLeft = endTime - now;
+
+        if (timeLeft < 0) {
+            // Timer ended
+            if (autoReset) {
+                // Auto-reset timer
+                endTime = calculateEndTime();
+                try {
+                    localStorage.setItem(storageKey, endTime.toString());
+                } catch (e) {
+                    // Ignore localStorage errors
+                }
+                // Continue with new timer
+                updateTimer();
+                return;
+            } else {
+                // Show ended message
+                document.getElementById('js-clock-' + sectionId).innerHTML = '<span>' + endedMessage + '</span>';
+                return;
+            }
+        }
+
+        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        if (showDays) {
+            const daysEl = document.getElementById('js-clock-days-' + sectionId);
+            if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+        }
+
+        const hoursEl = document.getElementById('js-clock-hours-' + sectionId);
+        const minutesEl = document.getElementById('js-clock-minutes-' + sectionId);
+        const secondsEl = document.getElementById('js-clock-seconds-' + sectionId);
+
+        if (hoursEl) hoursEl.textContent = String(showDays ? hours : hours + (days * 24)).padStart(2, '0');
+        if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+        if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer(); // Initial call to avoid delay
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Announcement with Timer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_text",
+      "label": "Show Announcement Text",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Announcement Text",
+      "default": "New Year Sale Ends In"
+    },
+    {
+      "type": "header",
+      "content": "Timer Duration Settings"
+    },
+    {
+      "type": "range",
+      "id": "manual_days",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "d",
+      "label": "Days",
+      "default": 0,
+      "info": "Number of days for the countdown (0-30 days)"
+    },
+    {
+      "type": "range",
+      "id": "manual_hours",
+      "min": 0,
+      "max": 23,
+      "step": 1,
+      "unit": "h",
+      "label": "Hours",
+      "default": 0,
+      "info": "Number of hours for the countdown"
+    },
+    {
+      "type": "range",
+      "id": "manual_minutes",
+      "min": 0,
+      "max": 59,
+      "step": 1,
+      "unit": "m",
+      "label": "Minutes",
+      "default": 30,
+      "info": "Number of minutes for the countdown"
+    },
+    {
+      "type": "range",
+      "id": "manual_seconds",
+      "min": 0,
+      "max": 59,
+      "step": 1,
+      "unit": "s",
+      "label": "Seconds",
+      "default": 0,
+      "info": "Number of seconds for the countdown"
+    },
+    {
+      "type": "text",
+      "id": "ended_message",
+      "label": "Message After Timer Ends",
+      "default": "Sale Ended"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_reset",
+      "label": "Auto-Reset Timer",
+      "default": true,
+      "info": "Automatically restart the timer when it reaches zero"
+    },
+    {
+      "type": "header",
+      "content": "Timer Display"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_days",
+      "label": "Show Days",
+      "default": false,
+      "info": "Show days counter in the timer"
+    },
+    {
+      "type": "text",
+      "id": "days_label",
+      "label": "Days Label",
+      "default": "Days"
+    },
+    {
+      "type": "text",
+      "id": "hours_label",
+      "label": "Hours Label",
+      "default": "Hrs"
+    },
+    {
+      "type": "text",
+      "id": "minutes_label",
+      "label": "Minutes Label",
+      "default": "Min"
+    },
+    {
+      "type": "text",
+      "id": "seconds_label",
+      "label": "Seconds Label",
+      "default": "Sec"
+    },
+    {
+      "type": "header",
+      "content": "Background Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "gradient_enabled",
+      "label": "Enable Gradient Background",
+      "default": true
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background Gradient",
+      "default": "linear-gradient(45deg, #BDE6FF, #6A93AC, #174059)"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color (if gradient disabled)",
+      "default": "#174059"
+    },
+    {
+      "type": "range",
+      "id": "animation_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Gradient Animation Speed",
+      "default": 5,
+      "info": "Only applies when gradient is enabled"
+    },
+    {
+      "type": "header",
+      "content": "Text Styling"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "font_size_desktop",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size (Desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        },
+        {
+          "value": "800",
+          "label": "Extra Bold"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "header",
+      "content": "Timer Box Styling"
+    },
+    {
+      "type": "color",
+      "id": "timer_box_bg",
+      "label": "Timer Box Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "timer_text_color",
+      "label": "Timer Text Color",
+      "default": "#2a2552"
+    },
+    {
+      "type": "range",
+      "id": "timer_box_width",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Timer Box Width (Desktop)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "timer_box_height",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Timer Box Height (Desktop)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "timer_box_width_mobile",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Timer Box Width (Mobile)",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "timer_box_height_mobile",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Timer Box Height (Mobile)",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "timer_box_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Timer Box Border Radius",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "timer_box_spacing",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Timer Box Spacing (Desktop)",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "timer_box_spacing_mobile",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Timer Box Spacing (Mobile)",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "timer_number_size",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Timer Number Size (Desktop)",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "timer_number_size_mobile",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Timer Number Size (Mobile)",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "timer_label_size",
+      "min": 6,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Timer Label Size (Desktop)",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "timer_label_size_mobile",
+      "min": 6,
+      "max": 14,
+      "step": 1,
+      "unit": "px",
+      "label": "Timer Label Size (Mobile)",
+      "default": 7
+    },
+    {
+      "type": "header",
+      "content": "Separator Styling"
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator Color (:)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "separator_spacing",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Separator Spacing (Desktop)",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "separator_spacing_mobile",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Separator Spacing (Mobile)",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "element_gap",
+      "min": 4,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap Between Elements (Desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "element_gap_mobile",
+      "min": 4,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Gap Between Elements (Mobile)",
+      "default": 7
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement with Timer",
+      "category": "Announcement"
+    }
+  ]
+}
+{% endschema %}

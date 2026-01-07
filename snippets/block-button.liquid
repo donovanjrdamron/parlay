@@ -1,0 +1,57 @@
+{% comment %}
+  Block Button Snippet
+  Usage: {% render 'block-button', block: block, section_id: section.id %}
+{% endcomment %}
+
+{% if block.settings.button_label != blank %}
+  <div class="block-button block-{{ block.id }}" {{ block.shopify_attributes }}>
+    <div class="button-wrapper">
+      <a href="{{ block.settings.button_link | default: '#' }}"
+         class="button"
+         {% if block.settings.button_new_tab %}target="_blank" rel="noopener"{% endif %}>
+        {{ block.settings.button_label }}
+      </a>
+    </div>
+  </div>
+
+  <style>
+    .block-{{ block.id }} {
+      margin-top: {{ block.settings.button_margin_top }}px;
+      margin-bottom: {{ block.settings.button_margin_bottom }}px;
+    }
+
+    {% if block.settings.override_button_style %}
+      .block-{{ block.id }} .button {
+        background-color: {{ block.settings.button_background_color }} !important;
+        color: {{ block.settings.button_text_color }} !important;
+        font-size: {{ block.settings.button_font_size_desktop }}px !important;
+        font-weight: {{ block.settings.button_font_weight }} !important;
+        padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px !important;
+        border: {{ block.settings.button_border_width }}px solid {{ block.settings.button_border_color }} !important;
+        border-radius: {{ block.settings.button_border_radius }}px !important;
+      }
+
+      @media screen and (max-width: 749px) {
+        .block-{{ block.id }} .button {
+          font-size: {{ block.settings.button_font_size_mobile }}px !important;
+        }
+      }
+    {% else %}
+      .block-{{ block.id }} .button {
+        background-color: {{ settings.button_background_color }};
+        color: {{ settings.button_text_color }};
+        font-size: {{ settings.button_font_size_desktop }}px;
+        font-weight: {{ settings.button_font_weight }};
+        padding: {{ settings.button_padding_vertical }}px {{ settings.button_padding_horizontal }}px;
+        border: {{ settings.button_border_width }}px solid {{ settings.button_border_color }};
+        border-radius: {{ settings.button_border_radius }}px;
+      }
+
+      @media screen and (max-width: 749px) {
+        .block-{{ block.id }} .button {
+          font-size: {{ settings.button_font_size_mobile }}px;
+        }
+      }
+    {% endif %}
+  </style>
+{% endif %}

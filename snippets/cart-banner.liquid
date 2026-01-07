@@ -1,0 +1,648 @@
+{% comment %}
+  Cart Banner - Full width image banner for cart drawer
+  Usage: Add as a block in Cart drawer section
+{% endcomment %}
+
+<div class="cart-banner{% if block.settings.full_width %} cart-banner--full-width{% endif %}{% if countdown_block or social_proof_block or checkpoints_block %} cart-banner--has-overlay{% endif %}{% if countdown_block and social_proof_block %} cart-banner--has-both-overlays{% endif %}" {{ block.shopify_attributes }}>
+  {% if block.settings.banner_image != blank %}
+    {% if block.settings.banner_link != blank %}
+      <a href="{{ block.settings.banner_link }}" class="cart-banner__link">
+        <img
+          src="{{ block.settings.banner_image | image_url: width: 800 }}"
+          srcset="{{ block.settings.banner_image | image_url: width: 400 }} 400w,
+                  {{ block.settings.banner_image | image_url: width: 600 }} 600w,
+                  {{ block.settings.banner_image | image_url: width: 800 }} 800w"
+          sizes="100vw"
+          alt="{{ block.settings.banner_image.alt | escape }}"
+          class="cart-banner__image"
+          loading="lazy"
+          width="{{ block.settings.banner_image.width }}"
+          height="{{ block.settings.banner_image.height }}"
+        >
+      </a>
+    {% else %}
+      <img
+        src="{{ block.settings.banner_image | image_url: width: 800 }}"
+        srcset="{{ block.settings.banner_image | image_url: width: 400 }} 400w,
+                {{ block.settings.banner_image | image_url: width: 600 }} 600w,
+                {{ block.settings.banner_image | image_url: width: 800 }} 800w"
+        sizes="100vw"
+        alt="{{ block.settings.banner_image.alt | escape }}"
+        class="cart-banner__image"
+        loading="lazy"
+        width="{{ block.settings.banner_image.width }}"
+        height="{{ block.settings.banner_image.height }}"
+      >
+    {% endif %}
+  {% else %}
+    <div class="cart-banner__placeholder">
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg cart-banner__image' }}
+      <div class="cart-banner__placeholder-text">
+        Cart Banner - Upload an image
+      </div>
+    </div>
+  {% endif %}
+
+  {%- comment -%} Countdown Timer Overlay {%- endcomment -%}
+  {% if countdown_block %}
+    {% if countdown_block.settings.show_boxed_timer %}
+      {%- comment -%} Boxed timer with text {%- endcomment -%}
+      {% capture boxed_timer %}
+        <span class="holiday-clock">
+          {% unless countdown_block.settings.hide_hours %}
+            <span class="box-3">
+              <span class="clock-number-2" data-timer-hours>00</span>
+              <span class="clock-label-2">Hrs</span>
+            </span>
+            <span class="text-block-countdown">:</span>
+          {% endunless %}
+          <span class="box-3">
+            <span class="clock-number-2" data-timer-minutes>00</span>
+            <span class="clock-label-2">Min</span>
+          </span>
+          <span class="text-block-countdown">:</span>
+          <span class="box-3">
+            <span class="clock-number-2" data-timer-seconds>00</span>
+            <span class="clock-label-2">Sec</span>
+          </span>
+        </span>
+      {% endcapture %}
+
+      <div
+        class="cart-banner__countdown-overlay cart-banner__countdown-overlay--{{ countdown_block.settings.overlay_position | default: 'bottom' }}{% if countdown_block.settings.overlay_use_container %} cart-banner__countdown-overlay--container{% endif %}"
+        style="
+          --overlay-bg: {{ countdown_block.settings.overlay_background | default: '#000000' }};
+          --overlay-text-color: {{ countdown_block.settings.overlay_text_color | default: '#ffffff' }};
+          --font-size: {{ countdown_block.settings.font_size | default: 1.4 }}rem;
+          --text-font-size: {{ countdown_block.settings.text_font_size | default: 14 }}px;
+          --overlay-blur: {{ countdown_block.settings.overlay_blur | default: 0 }}px;
+          --overlay-opacity: {{ countdown_block.settings.overlay_bg_opacity | default: 70 | divided_by: 100.0 }};
+          --overlay-padding-vertical: {{ countdown_block.settings.overlay_padding_vertical | default: 10 }}px;
+          --overlay-padding-horizontal: {{ countdown_block.settings.overlay_padding_horizontal | default: 15 }}px;
+          --overlay-border-width: {{ countdown_block.settings.overlay_border_width | default: 0 }}px;
+          --overlay-border-color: {{ countdown_block.settings.overlay_border_color | default: '#ffffff' }};
+          --overlay-border-radius: {{ countdown_block.settings.overlay_border_radius | default: 0 }}px;
+          --overlay-margin-top: {{ countdown_block.settings.overlay_margin_top | default: 0 }}px;
+          --overlay-margin-bottom: {{ countdown_block.settings.overlay_margin_bottom | default: 0 }}px;
+          --timer-box-bg: {{ countdown_block.settings.timer_box_bg_color | default: '#ffffff' }};
+          --timer-number-color: {{ countdown_block.settings.timer_number_color | default: '#2a2552' }};
+          --timer-number-size: {{ countdown_block.settings.timer_number_font_size | default: 14 }}px;
+          --timer-number-weight: {{ countdown_block.settings.timer_number_font_weight | default: 900 }};
+          --timer-label-size: {{ countdown_block.settings.timer_label_font_size | default: 8 }}px;
+        "
+        {{ countdown_block.shopify_attributes }}
+        data-timer-duration="{{ countdown_block.settings.timer_duration }}"
+        data-boxed-timer="true"
+      >
+        {{ countdown_block.settings.timer_text | replace: '[timer]', boxed_timer }}
+      </div>
+    {% else %}
+      {%- comment -%} Old countdown-timer element {%- endcomment -%}
+      {% capture timer %}
+        <countdown-timer data-duration="{{ countdown_block.settings.timer_duration }}"></countdown-timer>
+      {% endcapture %}
+
+      <div
+        class="cart-banner__countdown-overlay cart-banner__countdown-overlay--{{ countdown_block.settings.overlay_position | default: 'bottom' }}{% if countdown_block.settings.overlay_use_container %} cart-banner__countdown-overlay--container{% endif %}"
+        style="
+          --overlay-bg: {{ countdown_block.settings.overlay_background | default: '#000000' }};
+          --overlay-text-color: {{ countdown_block.settings.overlay_text_color | default: '#ffffff' }};
+          --font-size: {{ countdown_block.settings.font_size | default: 1.4 }}rem;
+          --text-font-size: {{ countdown_block.settings.text_font_size | default: 14 }}px;
+          --timer-font-size: {{ countdown_block.settings.timer_font_size | default: 18 }}px;
+          --overlay-blur: {{ countdown_block.settings.overlay_blur | default: 0 }}px;
+          --overlay-opacity: {{ countdown_block.settings.overlay_bg_opacity | default: 70 | divided_by: 100.0 }};
+          --overlay-padding-vertical: {{ countdown_block.settings.overlay_padding_vertical | default: 10 }}px;
+          --overlay-padding-horizontal: {{ countdown_block.settings.overlay_padding_horizontal | default: 15 }}px;
+          --overlay-border-width: {{ countdown_block.settings.overlay_border_width | default: 0 }}px;
+          --overlay-border-color: {{ countdown_block.settings.overlay_border_color | default: '#ffffff' }};
+          --overlay-border-radius: {{ countdown_block.settings.overlay_border_radius | default: 0 }}px;
+          --overlay-margin-top: {{ countdown_block.settings.overlay_margin_top | default: 0 }}px;
+          --overlay-margin-bottom: {{ countdown_block.settings.overlay_margin_bottom | default: 0 }}px;
+        "
+        {{ countdown_block.shopify_attributes }}
+      >
+        {{ countdown_block.settings.timer_text | replace: '[timer]', timer }}
+      </div>
+    {% endif %}
+  {% endif %}
+
+  {%- comment -%} Social Proof Overlay {%- endcomment -%}
+  {% if social_proof_block %}
+    <div
+      class="cart-banner__social-proof-overlay cart-banner__social-proof-overlay--{{ social_proof_block.settings.banner_position | default: 'bottom' }}"
+      style="
+        --bg-color: {{ social_proof_block.settings.background_color }};
+        --bg-opacity: {{ social_proof_block.settings.bg_opacity | default: 100 | divided_by: 100.0 }};
+        --backdrop-blur: {{ social_proof_block.settings.backdrop_blur | default: 0 }}px;
+        --padding-vertical: {{ social_proof_block.settings.padding_vertical }}px;
+        --border-radius: {{ social_proof_block.settings.border_radius }}px;
+        --text-color: {{ social_proof_block.settings.text_color }};
+        --icon-color: {{ social_proof_block.settings.icon_color }};
+        --icon-size: {{ social_proof_block.settings.icon_size }}px;
+        --font-size: {{ social_proof_block.settings.font_size }}px;
+        --font-weight: {{ social_proof_block.settings.font_weight }};
+        --alignment: {{ social_proof_block.settings.alignment }};
+      "
+      {{ social_proof_block.shopify_attributes }}
+    >
+      <div class="social-proof-bar__content">
+        <span class="social-proof-bar__icon">
+          {% case social_proof_block.settings.icon_type %}
+            {% when 'star' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+              </svg>
+            {% when 'users' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+              </svg>
+            {% when 'lock' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+              </svg>
+            {% when 'heart' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            {% when 'trophy' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
+              </svg>
+            {% when 'verified' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"/>
+              </svg>
+            {% when 'thumbs_up' %}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+              </svg>
+            {% when 'custom' %}
+              {% if social_proof_block.settings.custom_svg != blank %}
+                {{ social_proof_block.settings.custom_svg }}
+              {% endif %}
+          {% endcase %}
+        </span>
+        <span class="social-proof-bar__text">{{ social_proof_block.settings.text }}</span>
+      </div>
+    </div>
+  {% endif %}
+
+  {%- comment -%} Checkpoints Bar Overlay {%- endcomment -%}
+  {% if checkpoints_block %}
+    {% assign overlay_position = checkpoints_block.settings.position | replace: 'banner_overlay_', '' %}
+    <div class="cart-banner__checkpoints-overlay cart-banner__checkpoints-overlay--{{ overlay_position }}">
+      {% render 'cart-checkpoints-bar', block: checkpoints_block, items_count: items_count %}
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  .cart-banner {
+    width: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+    position: relative;
+  }
+
+  /* Full width variant - breaks out of cart padding */
+  .cart-banner--full-width {
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    width: calc(100% + 3rem);
+  }
+
+  .cart-banner__link {
+    display: block;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  .cart-banner__image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-height: {{ block.settings.max_height | default: 100 }}px;
+  }
+
+  .cart-banner__placeholder {
+    position: relative;
+    width: 100%;
+    height: {{ block.settings.max_height | default: 100 }}px;
+    background: #f3f3f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cart-banner__placeholder .placeholder-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+  }
+
+  .cart-banner__placeholder-text {
+    position: relative;
+    z-index: 1;
+    color: #999;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    padding: 20px;
+  }
+
+  /* Countdown Timer Overlay */
+  .cart-banner__countdown-overlay {
+    position: absolute;
+    left: var(--overlay-padding-horizontal, 15px);
+    right: var(--overlay-padding-horizontal, 15px);
+    z-index: 10;
+    color: var(--overlay-text-color, #ffffff);
+    padding: var(--overlay-padding-vertical, 10px) 15px;
+    margin-top: var(--overlay-margin-top, 0px);
+    margin-bottom: var(--overlay-margin-bottom, 0px);
+    text-align: center;
+    font-size: var(--text-font-size, 14px);
+    line-height: 1.4;
+    backdrop-filter: blur(var(--overlay-blur, 0px));
+    -webkit-backdrop-filter: blur(var(--overlay-blur, 0px));
+    border: var(--overlay-border-width, 0px) solid var(--overlay-border-color, #ffffff);
+    border-radius: var(--overlay-border-radius, 0px);
+    overflow: hidden;
+  }
+
+  /* Non-boxed timer font size */
+  .cart-banner__countdown-overlay countdown-timer {
+    font-size: var(--timer-font-size, 18px);
+    font-weight: 700;
+  }
+
+  /* Background layer with opacity - doesn't affect text */
+  .cart-banner__countdown-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--overlay-bg, #000000);
+    opacity: var(--overlay-opacity, 0.7);
+    z-index: -1;
+  }
+
+  /* Container variant - respects cart body padding */
+  .cart-banner__countdown-overlay--container {
+    left: calc(var(--overlay-padding-horizontal, 15px) + 1.5rem);
+    right: calc(var(--overlay-padding-horizontal, 15px) + 1.5rem);
+  }
+
+  /* Full width banner with container overlay */
+  .cart-banner--full-width .cart-banner__countdown-overlay--container {
+    left: calc(var(--overlay-padding-horizontal, 15px) + 1.5rem);
+    right: calc(var(--overlay-padding-horizontal, 15px) + 1.5rem);
+  }
+
+  /* Position variants */
+  .cart-banner__countdown-overlay--top {
+    top: 0;
+  }
+
+  .cart-banner__countdown-overlay--center {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .cart-banner__countdown-overlay--bottom {
+    bottom: 0;
+  }
+
+  /* Style countdown timer within overlay */
+  .cart-banner__countdown-overlay countdown-timer {
+    color: inherit;
+    font-weight: 700;
+  }
+
+  /* Boxed Countdown Timer Styling */
+  .cart-banner__countdown-overlay .holiday-clock {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    vertical-align: middle;
+  }
+
+  .cart-banner__countdown-overlay .box-3 {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--timer-box-bg, #fff);
+    border-radius: 2px;
+    width: 30px;
+    height: 40px;
+    margin: 0 2px;
+    padding: 3px;
+    font-size: 12px;
+    line-height: 20px;
+    color: var(--timer-number-color, #2a2552);
+  }
+
+  .cart-banner__countdown-overlay .clock-number-2 {
+    font-size: var(--timer-number-size, 14px);
+    font-weight: var(--timer-number-weight, 900);
+    line-height: 1;
+    color: var(--timer-number-color, #2a2552);
+  }
+
+  .cart-banner__countdown-overlay .clock-label-2 {
+    font-size: var(--timer-label-size, 8px);
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--timer-number-color, #2a2552);
+  }
+
+  .cart-banner__countdown-overlay .text-block-countdown {
+    color: var(--overlay-text-color, #fff);
+    padding: 0 2.5px;
+    font-weight: 800;
+    font-size: 18px;
+  }
+
+  /* Mobile adjustments */
+  @media screen and (max-width: 749px) {
+    .cart-banner__image {
+      max-height: {{ block.settings.max_height_mobile | default: 100 }}px;
+    }
+
+    .cart-banner__placeholder {
+      height: {{ block.settings.max_height_mobile | default: 100 }}px;
+    }
+
+    /* Adjust full-width margins for mobile if cart has different padding */
+    .cart-banner--full-width {
+      margin-left: -1.5rem;
+      margin-right: -1.5rem;
+      width: calc(100% + 3rem);
+    }
+
+    .cart-banner__countdown-overlay .box-3 {
+      width: 25px;
+      height: 28px;
+    }
+
+    .cart-banner__countdown-overlay .clock-number-2 {
+      font-size: 13px;
+    }
+
+    .cart-banner__countdown-overlay .clock-label-2 {
+      font-size: 7px;
+    }
+  }
+
+  @media screen and (max-width: 379px) {
+    .cart-banner__countdown-overlay .box-3 {
+      width: 22px;
+      height: 32px;
+    }
+
+    .cart-banner__countdown-overlay .text-block-countdown {
+      padding: 0 2px;
+    }
+  }
+
+  /* Social Proof Overlay */
+  .cart-banner__social-proof-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    padding: var(--padding-vertical, 12px) 15px;
+    text-align: center;
+    backdrop-filter: blur(var(--backdrop-blur, 0px));
+    -webkit-backdrop-filter: blur(var(--backdrop-blur, 0px));
+    border-radius: var(--border-radius, 0px);
+    overflow: hidden;
+  }
+
+  .cart-banner__social-proof-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-color, #F5F5F5);
+    opacity: var(--bg-opacity, 1);
+    z-index: -1;
+  }
+
+  .cart-banner__social-proof-overlay--top {
+    top: 0;
+  }
+
+  .cart-banner__social-proof-overlay--center {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .cart-banner__social-proof-overlay--bottom {
+    bottom: 0;
+  }
+
+  .cart-banner__social-proof-overlay .social-proof-bar__content {
+    display: flex;
+    align-items: center;
+    justify-content: var(--alignment, center);
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cart-banner__social-proof-overlay .social-proof-bar__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--icon-size, 20px);
+    height: var(--icon-size, 20px);
+    color: var(--icon-color, #4CAF50);
+    flex-shrink: 0;
+  }
+
+  .cart-banner__social-proof-overlay .social-proof-bar__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .cart-banner__social-proof-overlay .social-proof-bar__text {
+    font-size: var(--font-size, 14px);
+    font-weight: var(--font-weight, 500);
+    color: var(--text-color, #000000);
+    line-height: 1.4;
+  }
+
+  /* Handle when both countdown and social proof overlays exist */
+  /* Strategy: Countdown gets primary position, social proof adjusts around it */
+
+  /* When countdown is at TOP */
+  .cart-banner--has-both-overlays .cart-banner__countdown-overlay--top ~ .cart-banner__social-proof-overlay {
+    top: auto !important;
+    transform: none !important;
+  }
+
+  .cart-banner--has-both-overlays .cart-banner__countdown-overlay--top ~ .cart-banner__social-proof-overlay--top {
+    bottom: auto;
+    margin-top: 70px;
+  }
+
+  .cart-banner--has-both-overlays .cart-banner__countdown-overlay--top ~ .cart-banner__social-proof-overlay--center {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+
+  .cart-banner--has-both-overlays .cart-banner__countdown-overlay--top ~ .cart-banner__social-proof-overlay--bottom {
+    bottom: 0;
+  }
+
+  /* When countdown is at BOTTOM */
+  .cart-banner--has-both-overlays .cart-banner__countdown-overlay--bottom ~ .cart-banner__social-proof-overlay {
+    bottom: auto !important;
+    transform: none !important;
+  }
+
+  .cart-banner--has-both-overlays .cart-banner__countdown-overlay--bottom ~ .cart-banner__social-proof-overlay--bottom {
+    top: auto;
+    margin-bottom: 70px;
+  }
+
+  .cart-banner--has-both-overlays .cart-banner__countdown-overlay--bottom ~ .cart-banner__social-proof-overlay--top {
+    top: 0;
+  }
+
+  .cart-banner--has-both-overlays .cart-banner__countdown-overlay--bottom ~ .cart-banner__social-proof-overlay--center {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+
+  /* When countdown is at CENTER */
+  .cart-banner--has-both-overlays .cart-banner__countdown-overlay--center ~ .cart-banner__social-proof-overlay--top {
+    top: 0;
+    transform: none !important;
+  }
+
+  .cart-banner--has-both-overlays .cart-banner__countdown-overlay--center ~ .cart-banner__social-proof-overlay--bottom {
+    bottom: 0;
+    transform: none !important;
+  }
+
+  .cart-banner--has-both-overlays .cart-banner__countdown-overlay--center ~ .cart-banner__social-proof-overlay--center {
+    top: 50%;
+    margin-top: 40px;
+  }
+
+  /* Checkpoints Bar Overlay */
+  .cart-banner__checkpoints-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    padding: 10px 15px;
+    width: 100%;
+  }
+
+  .cart-banner__checkpoints-overlay--top {
+    top: 0;
+  }
+
+  .cart-banner__checkpoints-overlay--center {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .cart-banner__checkpoints-overlay--bottom {
+    bottom: 0;
+  }
+
+  /* Remove default margins from checkpoints bar when displayed as overlay */
+  .cart-banner__checkpoints-overlay .cart-progress {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Ensure overlay content is visible */
+  .cart-banner__checkpoints-overlay .cart-checkpoints {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+  }
+</style>
+
+<script>
+(function() {
+  'use strict';
+
+  // Initialize boxed countdown timer for cart banner overlay
+  function initCartBannerTimer() {
+    const overlay = document.querySelector('.cart-banner__countdown-overlay[data-boxed-timer="true"]');
+    if (!overlay) return; // Only run if boxed timer is enabled
+
+    const duration = parseInt(overlay.dataset.timerDuration) || 90; // Default to 90 seconds
+    const hoursEl = overlay.querySelector('[data-timer-hours]');
+    const minutesEl = overlay.querySelector('[data-timer-minutes]');
+    const secondsEl = overlay.querySelector('[data-timer-seconds]');
+
+    // Minutes and seconds are required
+    if (!minutesEl || !secondsEl) return;
+
+    let remainingSeconds = duration;
+
+    function formatNumber(num) {
+      return num.toString().padStart(2, '0');
+    }
+
+    function updateTimer() {
+      if (remainingSeconds < 0) {
+        remainingSeconds = 0;
+      }
+
+      const hours = Math.floor(remainingSeconds / 3600);
+      const minutes = Math.floor((remainingSeconds % 3600) / 60);
+      const seconds = remainingSeconds % 60;
+
+      // Update hours only if element exists
+      if (hoursEl) {
+        hoursEl.textContent = formatNumber(hours);
+      }
+      minutesEl.textContent = formatNumber(minutes);
+      secondsEl.textContent = formatNumber(seconds);
+
+      if (remainingSeconds > 0) {
+        remainingSeconds--;
+      }
+    }
+
+    // Initial update
+    updateTimer();
+
+    // Update every second
+    setInterval(updateTimer, 1000);
+  }
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCartBannerTimer);
+  } else {
+    initCartBannerTimer();
+  }
+
+  // Re-initialize when cart drawer opens or refreshes
+  document.addEventListener('cart:refresh', function() {
+    setTimeout(initCartBannerTimer, 100);
+  });
+})();
+</script>

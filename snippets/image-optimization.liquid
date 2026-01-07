@@ -1,0 +1,111 @@
+{% comment %}
+  Optimized Image Loading with Lazy Loading and Dimensions
+  Usage: {% render 'image-optimization' %}
+{% endcomment %}
+
+<script>
+  // Native lazy loading with IntersectionObserver fallback
+  (function() {
+    'use strict';
+
+    // Check for native lazy loading support
+    if ('loading' in HTMLImageElement.prototype) {
+      // Native lazy loading supported
+      const images = document.querySelectorAll('img[loading="lazy"]');
+      images.forEach(img => {
+        // Ensure dimensions are set to prevent CLS
+        if (!img.width && img.dataset.width) {
+          img.width = img.dataset.width;
+        }
+        if (!img.height && img.dataset.height) {
+          img.height = img.dataset.height;
+        }
+      });
+    } else {
+      // Fallback to IntersectionObserver
+      const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+
+      const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            if (img.dataset.src) {
+              img.src = img.dataset.src;
+            }
+            if (img.dataset.srcset) {
+              img.srcset = img.dataset.srcset;
+            }
+            img.classList.add('lazyloaded');
+            observer.unobserve(img);
+          }
+        });
+      }, {
+        rootMargin: '50px 0px',
+        threshold: 0.01
+      });
+
+      lazyImages.forEach(img => imageObserver.observe(img));
+    }
+
+    // Preload critical images
+    const criticalImages = document.querySelectorAll('img[data-priority="high"]');
+    criticalImages.forEach(img => {
+      if (img.dataset.src) {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = img.dataset.src;
+        if (img.dataset.srcset) {
+          link.imageSrcset = img.dataset.srcset;
+        }
+        document.head.appendChild(link);
+      }
+    });
+  })();
+</script>
+
+<style>
+  /* Aspect ratio boxes to prevent CLS - but not for product images */
+  .image-wrapper:not(.product__media) {
+    position: relative;
+    overflow: hidden;
+    background: #f5f5f5;
+  }
+
+  .image-wrapper[data-aspect-ratio="1-1"]:not(.product__media) {
+    aspect-ratio: 1 / 1;
+  }
+
+  .image-wrapper[data-aspect-ratio="4-3"]:not(.product__media) {
+    aspect-ratio: 4 / 3;
+  }
+
+  .image-wrapper[data-aspect-ratio="16-9"]:not(.product__media) {
+    aspect-ratio: 16 / 9;
+  }
+
+  /* Product images should maintain aspect ratio */
+  .product__media img,
+  .product-media-container img {
+    width: 100%;
+    height: auto;
+    object-fit: contain !important;
+  }
+
+  /* Other images can use cover */
+  .image-wrapper:not(.product__media) img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Smooth fade in for lazy loaded images */
+  img.lazyloading {
+    opacity: 0;
+  }
+
+  img.lazyloaded {
+    opacity: 1;
+    transition: opacity 0.3s;
+  }
+</style>

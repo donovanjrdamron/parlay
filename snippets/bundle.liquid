@@ -1,0 +1,928 @@
+{% comment %}Updated by Elevate: 2025-12-20T23:51:10.135Z{% endcomment %}
+{% comment %}
+  Product Bundle Block - Button Selection Style
+  Creates 3 selectable bundle buttons that add products to the main form
+  Product 1: Current product only
+  Product 2+1: Current product + Product 2
+  Product 3+2+1: Current product + Product 2 + Product 3
+{% endcomment %}
+
+{%- liquid
+  assign product_1 = product
+  assign product_2 = block.settings.product_2
+  assign product_3 = block.settings.product_3
+
+  # Try to get products from metafields if direct settings are empty
+  assign bundle2_mf = product.metafields.custom.bundle2
+  assign bundle3_mf = product.metafields.custom.bundle3
+
+  if product_2 == blank and bundle2_mf != blank and bundle2_mf.value != blank
+    assign product_2 = bundle2_mf.value
+  endif
+
+  if product_3 == blank and bundle3_mf != blank and bundle3_mf.value != blank
+    assign product_3 = bundle3_mf.value
+  endif
+
+  # Get custom images - Priority: Setting > Metafield > Product image
+  assign bundle1_image = nil
+  assign bundle2_image = nil
+  assign bundle3_image = nil
+
+  if block.settings.placeholder_1_image != blank
+    assign bundle1_image = block.settings.placeholder_1_image
+  elsif product_1.featured_image
+    assign bundle1_image = product_1.featured_image
+  endif
+
+  if block.settings.placeholder_2_image != blank
+    assign bundle2_image = block.settings.placeholder_2_image
+  elsif product.metafields.custom.bundle2_image != blank
+    assign bundle2_image = product.metafields.custom.bundle2_image
+  elsif product_2.featured_image
+    assign bundle2_image = product_2.featured_image
+  endif
+
+  if block.settings.placeholder_3_image != blank
+    assign bundle3_image = block.settings.placeholder_3_image
+  elsif product.metafields.custom.bundle3_image != blank
+    assign bundle3_image = product.metafields.custom.bundle3_image
+  elsif product_3.featured_image
+    assign bundle3_image = product_3.featured_image
+  endif
+
+  # Get custom titles - Priority: Setting > Metafield > Product title
+  assign bundle1_title = block.settings.bundle_1_custom_title
+  assign bundle2_title = nil
+  assign bundle3_title = nil
+
+  if block.settings.bundle_2_custom_title != blank
+    assign bundle2_title = block.settings.bundle_2_custom_title
+  elsif product.metafields.custom.bundle2_title != blank
+    assign bundle2_title = product.metafields.custom.bundle2_title
+  elsif product_2.title
+    assign bundle2_title = product_1.title | append: ' + ' | append: product_2.title
+  endif
+
+  if block.settings.bundle_3_custom_title != blank
+    assign bundle3_title = block.settings.bundle_3_custom_title
+  elsif product.metafields.custom.bundle3_title != blank
+    assign bundle3_title = product.metafields.custom.bundle3_title
+  elsif product_2.title and product_3.title
+    assign bundle3_title = product_1.title | append: ' + ' | append: product_2.title | append: ' + ' | append: product_3.title
+  elsif product_3.title
+    assign bundle3_title = product_1.title | append: ' + ' | append: product_3.title
+  elsif product_2.title
+    assign bundle3_title = product_1.title | append: ' + ' | append: product_2.title
+  endif
+
+  assign bundle_layout = block.settings.bundle_layout | default: 'all_three'
+  assign layout_mode = block.settings.layout_mode | default: 'column'
+
+  # Bundle 1 badge calculations
+  assign bundle_1_badge_height = block.settings.bundle_1_badge_font_size | default: 11 | plus: block.settings.bundle_1_badge_padding_top | default: 4 | plus: block.settings.bundle_1_badge_padding_bottom | default: 4
+  assign bundle_1_border_width_double = block.settings.bundle_1_badge_border_width | default: 0 | times: 2
+  assign bundle_1_badge_height = bundle_1_badge_height | plus: bundle_1_border_width_double
+  assign bundle_1_badge_top_offset = bundle_1_badge_height | divided_by: 2 | plus: 3
+  assign bundle_1_badge_top_position = bundle_1_badge_top_offset | times: -1
+
+  # Bundle 2 badge calculations
+  assign bundle_2_badge_height = block.settings.bundle_2_badge_font_size | default: 11 | plus: block.settings.bundle_2_badge_padding_top | default: 4 | plus: block.settings.bundle_2_badge_padding_bottom | default: 4
+  assign bundle_2_border_width_double = block.settings.bundle_2_badge_border_width | default: 0 | times: 2
+  assign bundle_2_badge_height = bundle_2_badge_height | plus: bundle_2_border_width_double
+  assign bundle_2_badge_top_offset = bundle_2_badge_height | divided_by: 2 | plus: 3
+  assign bundle_2_badge_top_position = bundle_2_badge_top_offset | times: -1
+
+  # Bundle 3 badge calculations
+  assign bundle_3_badge_height = block.settings.bundle_3_badge_font_size | default: 11 | plus: block.settings.bundle_3_badge_padding_top | default: 4 | plus: block.settings.bundle_3_badge_padding_bottom | default: 4
+  assign bundle_3_border_width_double = block.settings.bundle_3_badge_border_width | default: 0 | times: 2
+  assign bundle_3_badge_height = bundle_3_badge_height | plus: bundle_3_border_width_double
+  assign bundle_3_badge_top_offset = bundle_3_badge_height | divided_by: 2 | plus: 3
+  assign bundle_3_badge_top_position = bundle_3_badge_top_offset | times: -1
+
+  # Bundle 1 discount calculation (discount applies to main product since it's the only one)
+  assign bundle_1_original_price = product_1.price
+  assign bundle_1_final_price = bundle_1_original_price
+  if block.settings.bundle_1_discount_type == 'percentage'
+    assign discount_amount = bundle_1_original_price | times: block.settings.bundle_1_discount_value | divided_by: 100
+    assign bundle_1_final_price = bundle_1_original_price | minus: discount_amount
+  elsif block.settings.bundle_1_discount_type == 'fixed'
+    # Convert fixed discount to cents (multiply by 100)
+    assign discount_in_cents = block.settings.bundle_1_discount_value | times: 100
+    assign bundle_1_final_price = bundle_1_original_price | minus: discount_in_cents
+  endif
+-%}
+
+<div class="product-bundle-selector" data-bundle-id="{{ block.id }}" {{ block.shopify_attributes }}>
+
+  <style>
+    .bundle-selector-{{ block.id }} {
+      display: flex;
+      gap: {{ block.settings.bundles_gap | default: 16 }}px;
+      margin: {{ block.settings.section_margin_top | default: 0 }}px 0 {{ block.settings.section_margin_bottom | default: 20 }}px 0;
+      -webkit-overflow-scrolling: touch;
+      {% unless block.settings.equal_card_width %}
+      justify-content: flex-start;
+      {% endunless %}
+    }
+
+    .bundle-option-{{ block.id }} {
+      {% if block.settings.equal_card_width %}
+      flex: 1;
+      min-width: 0;
+      {% else %}
+      flex: 0 0 {{ block.settings.custom_card_width | default: 200 }}px;
+      width: {{ block.settings.custom_card_width | default: 200 }}px;
+      {% endif %}
+      border: {{ block.settings.border_width | default: 2 }}px solid {{ block.settings.border_color | default: '#e5e5e5' }};
+      border-radius: {{ block.settings.border_radius | default: 12 }}px;
+      padding: {{ block.settings.button_padding_vertical | default: 16 }}px {{ block.settings.button_padding_horizontal | default: 16 }}px;
+      background: {{ block.settings.bg_color | default: '#ffffff' }};
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: visible;
+      display: flex;
+      {% if layout_mode == 'row' %}
+      flex-direction: row;
+      align-items: center;
+      text-align: left;
+      gap: {{ block.settings.image_content_gap | default: 12 }}px;
+      {% else %}
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      {% endif %}
+    }
+
+    .bundle-option-{{ block.id }}:hover {
+      border-color: {{ block.settings.active_border_color | default: '#000000' }};
+    }
+
+    .bundle-option-{{ block.id }}.active {
+      background: {{ block.settings.active_bg_color | default: '#f0f0f0' }};
+      border-color: {{ block.settings.active_border_color | default: '#000000' }};
+    }
+
+    .bundle-option-{{ block.id }} .bundle-placeholders {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      {% if layout_mode == 'column' %}
+      margin-bottom: {{ block.settings.image_content_gap | default: 12 }}px;
+      {% endif %}
+      position: relative;
+      {% if layout_mode == 'row' %}
+      flex-shrink: 0;
+      {% endif %}
+    }
+
+    .bundle-option-{{ block.id }} .bundle-placeholder-wrapper {
+      {% unless block.settings.image_full_width %}
+      width: {{ block.settings.placeholder_size | default: 60 }}px;
+      height: {{ block.settings.placeholder_size | default: 60 }}px;
+      {% else %}
+      width: 100%;
+      {% endunless %}
+      border-radius: {{ block.settings.image_border_radius | default: 8 }}px;
+      overflow: hidden;
+    }
+
+    .bundle-option-{{ block.id }} .bundle-placeholder-wrapper img {
+      width: 100%;
+      {% if block.settings.image_full_width %}
+      height: auto;
+      {% else %}
+      height: 100%;
+      object-fit: cover;
+      {% endif %}
+      display: block;
+    }
+
+    .bundle-option-{{ block.id }} .bundle-label {
+      font-size: {{ block.settings.label_font_size | default: 14 }}px;
+      font-weight: {{ block.settings.label_font_weight | default: 600 }};
+      color: {{ block.settings.label_color | default: '#000000' }};
+      margin-top: {{ block.settings.label_margin_top | default: 0 }}px;
+      margin-bottom: {{ block.settings.label_margin_bottom | default: 8 }}px;
+      transition: color 0.3s ease;
+    }
+
+    .bundle-option-{{ block.id }}.active .bundle-label {
+      color: {{ block.settings.active_label_color | default: '#000000' }};
+    }
+
+    .bundle-option-{{ block.id }} .bundle-price {
+      font-size: {{ block.settings.price_font_size | default: 18 }}px;
+      font-weight: {{ block.settings.price_font_weight | default: 700 }};
+      color: {{ block.settings.price_color | default: '#000000' }};
+      transition: color 0.3s ease;
+    }
+
+    .bundle-option-{{ block.id }}.active .bundle-price {
+      color: {{ block.settings.active_price_color | default: '#000000' }};
+    }
+
+    .bundle-option-{{ block.id }} .bundle-compare-price {
+      font-size: {{ block.settings.compare_price_font_size | default: 14 }}px;
+      color: {{ block.settings.compare_price_color | default: '#999999' }};
+      text-decoration: line-through;
+      {% if layout_mode == 'row' %}
+      margin-left: 8px;
+      {% else %}
+      margin-right: 8px;
+      {% endif %}
+      transition: color 0.3s ease;
+    }
+
+    .bundle-option-{{ block.id }}.active .bundle-compare-price {
+      color: {{ block.settings.active_compare_price_color | default: '#999999' }};
+    }
+
+    .bundle-option-{{ block.id }} .bundle-custom-text {
+      font-size: {{ block.settings.custom_text_font_size | default: 12 }}px;
+      font-weight: {{ block.settings.custom_text_font_weight | default: 400 }};
+      color: {{ block.settings.custom_text_color | default: '#666666' }};
+      margin-top: 4px;
+      transition: color 0.3s ease;
+    }
+
+    .bundle-option-{{ block.id }}.active .bundle-custom-text {
+      color: {{ block.settings.custom_text_active_color | default: '#000000' }};
+    }
+
+    .bundle-option-{{ block.id }} .bundle-badge {
+      position: absolute;
+      z-index: 1;
+      white-space: nowrap;
+    }
+
+    .bundle-option-{{ block.id }} .bundle-badge-top-center:not(.bundle-badge-full-width) {
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .bundle-option-{{ block.id }}.bundle-has-badge {
+      margin-top: -15px;
+      padding-top: calc({{ block.settings.button_padding_vertical | default: 16 }}px + 15px);
+    }
+
+    .bundle-option-{{ block.id }} .bundle-content {
+      {% if layout_mode == 'row' %}
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      {% endif %}
+    }
+
+    .bundle-option-{{ block.id }} .bundle-price-wrapper {
+      {% if layout_mode == 'row' %}
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      {% endif %}
+    }
+  </style>
+
+  <div class="bundle-selector-{{ block.id }}">
+
+    {%- comment -%} Bundle 1: Product 1 Only {%- endcomment -%}
+    <div class="bundle-option-{{ block.id }} bundle-option active{% if block.settings.bundle_1_enable_badge %} bundle-has-badge{% endif %}"
+         data-bundle-type="1"
+         data-products='[]'
+         data-final-price="{{ bundle_1_final_price }}"
+         data-final-compare="{{ product_1.compare_at_price | default: product_1.price }}"
+         style="{% if block.settings.bundle_1_enable_badge and block.settings.bundle_1_badge_full_width == true %}margin-top: -{{ bundle_1_badge_height }}px; padding-top: calc({{ block.settings.button_padding_vertical | default: 16 }}px + {{ bundle_1_badge_height }}px);{% endif %}">
+
+      <div class="bundle-badge bundle-badge-top-center {% if block.settings.bundle_1_badge_full_width == true %}bundle-badge-full-width{% endif %}"
+           style="
+             {% if block.settings.bundle_1_enable_badge == false %}display: none !important;{% endif %}
+             color: {{ block.settings.bundle_1_badge_color | default: '#ffffff' }};
+             font-size: {{ block.settings.bundle_1_badge_font_size | default: 11 }}px;
+             font-weight: {{ block.settings.bundle_1_badge_font_weight | default: 600 }};
+             border: {{ block.settings.bundle_1_badge_border_width | default: 0 }}px solid {{ block.settings.bundle_1_badge_border_color | default: '#ffffff' }};
+             border-radius: {{ block.settings.bundle_1_badge_border_radius | default: 4 }}px;
+             padding: {{ block.settings.bundle_1_badge_padding_top | default: 4 }}px {{ block.settings.bundle_1_badge_padding_right | default: 12 }}px {{ block.settings.bundle_1_badge_padding_bottom | default: 4 }}px {{ block.settings.bundle_1_badge_padding_left | default: 12 }}px;
+             {% if block.settings.bundle_1_badge_full_width == true %}
+               position: absolute !important;
+               top: 0 !important;
+               left: 0 !important;
+               right: 0 !important;
+               transform: none !important;
+               border-radius: calc({{ block.settings.border_radius | default: 12 }}px - {{ block.settings.border_width | default: 2 }}px) calc({{ block.settings.border_radius | default: 12 }}px - {{ block.settings.border_width | default: 2 }}px) 0 0 !important;
+             {% else %}
+               top: {{ bundle_1_badge_top_position }}px !important;
+               right: 12px !important;
+               width: max-content !important;
+               z-index: 1 !important;
+             {% endif %}
+             {% if block.settings.bundle_1_badge_enable_gradient == true %}
+               background: linear-gradient(135deg, {{ block.settings.bundle_1_badge_gradient_start | default: '#ff4444' }}, {{ block.settings.bundle_1_badge_gradient_end | default: '#ff6666' }});
+             {% else %}
+               background: {{ block.settings.bundle_1_badge_bg_color | default: '#ff4444' }};
+             {% endif %}
+           ">{{ block.settings.bundle_1_badge_text | default: 'POPULAR' }}</div>
+
+      <div class="bundle-placeholders">
+        <div class="bundle-placeholder-wrapper">
+          {%- if bundle1_image -%}
+            <img src="{{ bundle1_image | image_url: width: 200 }}" alt="{{ bundle1_title | default: block.settings.bundle_1_label | default: 'Bundle 1' | escape }}">
+          {%- else -%}
+            <svg viewBox="0 0 100 100" style="width: 60%; height: 60%; opacity: 0.3;">
+              <rect x="10" y="10" width="80" height="80" fill="currentColor" rx="8"/>
+              <circle cx="35" cy="40" r="8" fill="{{ block.settings.placeholder_bg_color | default: '#f5f5f5' }}"/>
+              <path d="M15 70 L40 50 L60 65 L85 45 L85 85 L15 85 Z" fill="{{ block.settings.placeholder_bg_color | default: '#f5f5f5' }}"/>
+            </svg>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="bundle-content">
+        <div class="bundle-label">
+          {%- if bundle1_title -%}
+            {{ bundle1_title }}
+          {%- else -%}
+            {{ block.settings.bundle_1_label | default: 'Single' }}
+          {%- endif -%}
+        </div>
+        {%- unless block.settings.hide_prices -%}
+          <div class="bundle-price-wrapper">
+            <div class="bundle-price">{{ bundle_1_final_price | money }}</div>
+            {%- if block.settings.bundle_1_discount_type != 'none' and block.settings.bundle_1_discount_value > 0 -%}
+              <span class="bundle-compare-price">{{ bundle_1_original_price | money }}</span>
+            {%- endif -%}
+          </div>
+        {%- endunless -%}
+        {%- if block.settings.custom_text_1 != blank -%}
+          <div class="bundle-custom-text">{{ block.settings.custom_text_1 }}</div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- comment -%} Bundle 2: Product 1 + 2 {%- endcomment -%}
+    {%- if bundle_layout != 'one_and_three' -%}
+      {%- liquid
+        # Apply Bundle 2 discount ONLY to Product 2 (not main product)
+        if product_2
+          assign product_2_price = product_2.price
+          assign product_2_discounted = product_2_price
+
+          if block.settings.bundle_2_discount_type == 'percentage'
+            assign discount_amount = product_2_price | times: block.settings.bundle_2_discount_value | divided_by: 100
+            assign product_2_discounted = product_2_price | minus: discount_amount
+          elsif block.settings.bundle_2_discount_type == 'fixed'
+            # Convert fixed discount to cents (multiply by 100)
+            assign discount_in_cents = block.settings.bundle_2_discount_value | times: 100
+            assign product_2_discounted = product_2_price | minus: discount_in_cents
+          endif
+
+          # Total = Main product (no discount) + Product 2 (with discount)
+          assign bundle_2_original_price = product_1.price | plus: product_2.price
+          assign bundle_2_price = product_1.price | plus: product_2_discounted
+
+          assign bundle_2_compare = product_1.compare_at_price | default: product_1.price
+          assign p2_compare = product_2.compare_at_price | default: product_2.price
+          assign bundle_2_compare = bundle_2_compare | plus: p2_compare
+          assign bundle_2_savings = bundle_2_compare | minus: bundle_2_price
+          assign bundle_2_savings_percent = bundle_2_savings | times: 100.0 | divided_by: bundle_2_compare | round
+        else
+          # No product 2, use just main product price
+          assign bundle_2_price = product_1.price
+          assign bundle_2_original_price = product_1.price
+          assign bundle_2_compare = product_1.compare_at_price | default: product_1.price
+        endif
+      -%}
+
+      <div class="bundle-option-{{ block.id }} bundle-option{% if block.settings.bundle_2_enable_badge %} bundle-has-badge{% endif %}"
+           data-bundle-type="2"
+           data-products='{% if product_2 %}[{"id": {{ product_2.selected_or_first_available_variant.id }}, "quantity": 1}]{% else %}[]{% endif %}'
+           data-final-price="{{ bundle_2_price }}"
+           data-final-compare="{{ bundle_2_compare }}"
+           style="{% if block.settings.bundle_2_enable_badge and block.settings.bundle_2_badge_full_width == true %}margin-top: -{{ bundle_2_badge_height }}px; padding-top: calc({{ block.settings.button_padding_vertical | default: 16 }}px + {{ bundle_2_badge_height }}px);{% endif %}">
+
+        <div class="bundle-badge bundle-badge-top-center {% if block.settings.bundle_2_badge_full_width == true %}bundle-badge-full-width{% endif %}"
+             style="
+               {% if block.settings.bundle_2_enable_badge == false %}display: none !important;{% endif %}
+               color: {{ block.settings.bundle_2_badge_color | default: '#ffffff' }};
+               font-size: {{ block.settings.bundle_2_badge_font_size | default: 11 }}px;
+               font-weight: {{ block.settings.bundle_2_badge_font_weight | default: 600 }};
+               border: {{ block.settings.bundle_2_badge_border_width | default: 0 }}px solid {{ block.settings.bundle_2_badge_border_color | default: '#ffffff' }};
+               border-radius: {{ block.settings.bundle_2_badge_border_radius | default: 4 }}px;
+               padding: {{ block.settings.bundle_2_badge_padding_top | default: 4 }}px {{ block.settings.bundle_2_badge_padding_right | default: 12 }}px {{ block.settings.bundle_2_badge_padding_bottom | default: 4 }}px {{ block.settings.bundle_2_badge_padding_left | default: 12 }}px;
+               {% if block.settings.bundle_2_badge_full_width == true %}
+                 position: absolute !important;
+                 top: 0 !important;
+                 left: 0 !important;
+                 right: 0 !important;
+                 transform: none !important;
+                 border-radius: calc({{ block.settings.border_radius | default: 12 }}px - {{ block.settings.border_width | default: 2 }}px) calc({{ block.settings.border_radius | default: 12 }}px - {{ block.settings.border_width | default: 2 }}px) 0 0 !important;
+               {% else %}
+                 top: {{ bundle_2_badge_top_position }}px !important;
+                 right: 12px !important;
+                 width: max-content !important;
+                 z-index: 1 !important;
+               {% endif %}
+               {% if block.settings.bundle_2_badge_enable_gradient == true %}
+                 background: linear-gradient(135deg, {{ block.settings.bundle_2_badge_gradient_start | default: '#28a745' }}, {{ block.settings.bundle_2_badge_gradient_end | default: '#34ce57' }});
+               {% else %}
+                 background: {{ block.settings.bundle_2_badge_bg_color | default: '#28a745' }};
+               {% endif %}
+             ">{{ block.settings.bundle_2_badge_text | default: 'BEST VALUE' }}</div>
+
+        <div class="bundle-placeholders">
+          <div class="bundle-placeholder-wrapper">
+            {%- if bundle2_image -%}
+              <img src="{{ bundle2_image | image_url: width: 200 }}" alt="{{ bundle2_title | default: 'Bundle 2' | escape }}">
+            {%- else -%}
+              <svg viewBox="0 0 100 100" style="width: 60%; height: 60%; opacity: 0.3;">
+                <rect x="10" y="10" width="80" height="80" fill="currentColor" rx="8"/>
+                <circle cx="35" cy="40" r="8" fill="{{ block.settings.placeholder_bg_color | default: '#f5f5f5' }}"/>
+                <path d="M15 70 L40 50 L60 65 L85 45 L85 85 L15 85 Z" fill="{{ block.settings.placeholder_bg_color | default: '#f5f5f5' }}"/>
+              </svg>
+            {%- endif -%}
+          </div>
+        </div>
+
+        <div class="bundle-content">
+          <div class="bundle-label">
+            {%- if bundle2_title -%}
+              {{ bundle2_title }}
+            {%- else -%}
+              {{ block.settings.bundle_2_label | default: 'Bundle of 2' }}
+            {%- endif -%}
+          </div>
+          {%- unless block.settings.hide_prices -%}
+            <div class="bundle-price-wrapper">
+              <div class="bundle-price">{{ bundle_2_price | money }}</div>
+              {%- if block.settings.bundle_2_discount_type != 'none' and block.settings.bundle_2_discount_value > 0 -%}
+                <span class="bundle-compare-price">{{ bundle_2_original_price | money }}</span>
+              {%- elsif bundle_2_savings > 0 -%}
+                <span class="bundle-compare-price">{{ bundle_2_compare | money }}</span>
+              {%- endif -%}
+            </div>
+          {%- endunless -%}
+          {%- if block.settings.custom_text_2 != blank -%}
+            <div class="bundle-custom-text">{{ block.settings.custom_text_2 }}</div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Bundle 3: Product 1 + 2 + 3 {%- endcomment -%}
+    {%- if bundle_layout != 'one_and_two' -%}
+      {%- liquid
+        # Apply Bundle 3 discount - handle cases where only some products are set
+        assign additional_products_price = 0
+        assign bundle_3_original_price = product_1.price
+
+        if product_2
+          assign additional_products_price = additional_products_price | plus: product_2.price
+          assign bundle_3_original_price = bundle_3_original_price | plus: product_2.price
+        endif
+
+        if product_3
+          assign additional_products_price = additional_products_price | plus: product_3.price
+          assign bundle_3_original_price = bundle_3_original_price | plus: product_3.price
+        endif
+
+        assign additional_products_discounted = additional_products_price
+
+        if additional_products_price > 0
+          if block.settings.bundle_3_discount_type == 'percentage'
+            assign discount_amount = additional_products_price | times: block.settings.bundle_3_discount_value | divided_by: 100
+            assign additional_products_discounted = additional_products_price | minus: discount_amount
+          elsif block.settings.bundle_3_discount_type == 'fixed'
+            assign discount_in_cents = block.settings.bundle_3_discount_value | times: 100
+            assign additional_products_discounted = additional_products_price | minus: discount_in_cents
+          endif
+        endif
+
+        assign bundle_3_price = product_1.price | plus: additional_products_discounted
+
+        assign bundle_3_compare = product_1.compare_at_price | default: product_1.price
+        if product_2
+          assign p2_compare = product_2.compare_at_price | default: product_2.price
+          assign bundle_3_compare = bundle_3_compare | plus: p2_compare
+        endif
+        if product_3
+          assign p3_compare = product_3.compare_at_price | default: product_3.price
+          assign bundle_3_compare = bundle_3_compare | plus: p3_compare
+        endif
+        assign bundle_3_savings = bundle_3_compare | minus: bundle_3_price
+        assign bundle_3_savings_percent = bundle_3_savings | times: 100.0 | divided_by: bundle_3_compare | round
+      -%}
+
+      <div class="bundle-option-{{ block.id }} bundle-option{% if block.settings.bundle_3_enable_badge %} bundle-has-badge{% endif %}"
+           data-bundle-type="3"
+           data-products='[{% if product_2 %}{"id": {{ product_2.selected_or_first_available_variant.id }}, "quantity": 1}{% if product_3 %},{% endif %}{% endif %}{% if product_3 %}{"id": {{ product_3.selected_or_first_available_variant.id }}, "quantity": 1}{% endif %}]'
+           data-final-price="{{ bundle_3_price }}"
+           data-final-compare="{{ bundle_3_compare }}"
+           style="{% if block.settings.bundle_3_enable_badge and block.settings.bundle_3_badge_full_width == true %}margin-top: -{{ bundle_3_badge_height }}px; padding-top: calc({{ block.settings.button_padding_vertical | default: 16 }}px + {{ bundle_3_badge_height }}px);{% endif %}">
+
+        <div class="bundle-badge bundle-badge-top-center {% if block.settings.bundle_3_badge_full_width == true %}bundle-badge-full-width{% endif %}"
+             style="
+               {% if block.settings.bundle_3_enable_badge == false %}display: none !important;{% endif %}
+               color: {{ block.settings.bundle_3_badge_color | default: '#ffffff' }};
+               font-size: {{ block.settings.bundle_3_badge_font_size | default: 11 }}px;
+               font-weight: {{ block.settings.bundle_3_badge_font_weight | default: 600 }};
+               border: {{ block.settings.bundle_3_badge_border_width | default: 0 }}px solid {{ block.settings.bundle_3_badge_border_color | default: '#ffffff' }};
+               border-radius: {{ block.settings.bundle_3_badge_border_radius | default: 4 }}px;
+               padding: {{ block.settings.bundle_3_badge_padding_top | default: 4 }}px {{ block.settings.bundle_3_badge_padding_right | default: 12 }}px {{ block.settings.bundle_3_badge_padding_bottom | default: 4 }}px {{ block.settings.bundle_3_badge_padding_left | default: 12 }}px;
+               {% if block.settings.bundle_3_badge_full_width == true %}
+                 position: absolute !important;
+                 top: 0 !important;
+                 left: 0 !important;
+                 right: 0 !important;
+                 transform: none !important;
+                 border-radius: calc({{ block.settings.border_radius | default: 12 }}px - {{ block.settings.border_width | default: 2 }}px) calc({{ block.settings.border_radius | default: 12 }}px - {{ block.settings.border_width | default: 2 }}px) 0 0 !important;
+               {% else %}
+                 top: {{ bundle_3_badge_top_position }}px !important;
+                 right: 12px !important;
+                 width: max-content !important;
+                 z-index: 1 !important;
+               {% endif %}
+               {% if block.settings.bundle_3_badge_enable_gradient == true %}
+                 background: linear-gradient(135deg, {{ block.settings.bundle_3_badge_gradient_start | default: '#007bff' }}, {{ block.settings.bundle_3_badge_gradient_end | default: '#0099ff' }});
+               {% else %}
+                 background: {{ block.settings.bundle_3_badge_bg_color | default: '#007bff' }};
+               {% endif %}
+             ">{{ block.settings.bundle_3_badge_text | default: 'SAVE MORE' }}</div>
+
+        <div class="bundle-placeholders">
+          <div class="bundle-placeholder-wrapper">
+            {%- if bundle3_image -%}
+              <img src="{{ bundle3_image | image_url: width: 200 }}" alt="{{ bundle3_title | default: 'Bundle 3' | escape }}">
+            {%- else -%}
+              <svg viewBox="0 0 100 100" style="width: 60%; height: 60%; opacity: 0.3;">
+                <rect x="10" y="10" width="80" height="80" fill="currentColor" rx="8"/>
+                <circle cx="35" cy="40" r="8" fill="{{ block.settings.placeholder_bg_color | default: '#f5f5f5' }}"/>
+                <path d="M15 70 L40 50 L60 65 L85 45 L85 85 L15 85 Z" fill="{{ block.settings.placeholder_bg_color | default: '#f5f5f5' }}"/>
+              </svg>
+            {%- endif -%}
+          </div>
+        </div>
+
+        <div class="bundle-content">
+          <div class="bundle-label">
+            {%- if bundle3_title -%}
+              {{ bundle3_title }}
+            {%- else -%}
+              {{ block.settings.bundle_3_label | default: 'Bundle of 3' }}
+            {%- endif -%}
+          </div>
+          {%- unless block.settings.hide_prices -%}
+            <div class="bundle-price-wrapper">
+              <div class="bundle-price">{{ bundle_3_price | money }}</div>
+              {%- if block.settings.bundle_3_discount_type != 'none' and block.settings.bundle_3_discount_value > 0 -%}
+                <span class="bundle-compare-price">{{ bundle_3_original_price | money }}</span>
+              {%- elsif bundle_3_savings > 0 -%}
+                <span class="bundle-compare-price">{{ bundle_3_compare | money }}</span>
+              {%- endif -%}
+            </div>
+          {%- endunless -%}
+          {%- if block.settings.custom_text_3 != blank -%}
+            <div class="bundle-custom-text">{{ block.settings.custom_text_3 }}</div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  let isProcessing = false;
+  let selectedBundleData = { items: [], finalPrice: 0, comparePrice: 0 };
+  let isFiringBundleEvent = false;
+
+  // ===== GET CURRENT QB STATE =====
+  function getQBState() {
+    const qbActive = document.querySelector('.qb-option.qb-active');
+    if (!qbActive) {
+      return { quantity: 1, qbDiscount: 0 };
+    }
+
+    const quantity = parseInt(qbActive.dataset.qty) || 1;
+    const discount = parseInt(qbActive.dataset.discount) || 0;
+
+    return { quantity, qbDiscount: discount };
+  }
+
+  // ===== FORMAT MONEY =====
+  function formatMoney(cents) {
+    return new Intl.NumberFormat('{{ shop.locale }}', {
+      style: 'currency',
+      currency: '{{ shop.currency }}',
+      minimumFractionDigits: 2
+    }).format(cents / 100);
+  }
+
+  // ===== PRICE UPDATE FUNCTION =====
+  function updateAllPrices(finalPrice, comparePrice) {
+    // The bundle price already includes all products and bundle discounts
+    // We pass qbDiscount: 0 so the buy button shows the bundle price as-is
+    // without applying additional QB discounts (bundle has its own discounts)
+    const qbState = getQBState();
+
+    const eventDetail = {
+      quantity: qbState.quantity,  // Respect QB quantity for cart
+      qbDiscount: 0,  // Don't apply QB discount (bundle has its own pricing)
+      basePrice: finalPrice,  // This is the total bundle price
+      baseComparePrice: comparePrice
+    };
+
+    // Fire event for buy button
+    isFiringBundleEvent = true;
+    document.dispatchEvent(new CustomEvent('qb:state-changed', {
+      detail: eventDetail,
+      bubbles: true
+    }));
+    setTimeout(() => { isFiringBundleEvent = false; }, 50);
+
+    // Also directly update price displays as backup
+    setTimeout(() => {
+      const formattedPrice = formatMoney(finalPrice * qbState.quantity);
+      const formattedCompare = comparePrice > finalPrice ? formatMoney(comparePrice * qbState.quantity) : null;
+
+      // Update main price display
+      document.querySelectorAll('.price-item.main-price, .price-item--sale.main-price').forEach(el => {
+        el.textContent = formattedPrice;
+      });
+
+      // Update all main ATC price elements
+      document.querySelectorAll('[id^="main-atc-price-"]').forEach(el => {
+        el.textContent = formattedPrice;
+      });
+
+      // Update all sticky ATC price elements
+      document.querySelectorAll('[id^="sticky-atc-price-"]').forEach(el => {
+        el.textContent = formattedPrice;
+      });
+
+      // Update compare prices if applicable
+      if (formattedCompare) {
+        document.querySelectorAll('.price__compare-price .price-item').forEach(el => {
+          el.textContent = formattedCompare;
+          el.style.display = '';
+          const parent = el.closest('.price__compare-price');
+          if (parent) parent.style.display = '';
+        });
+      } else {
+        document.querySelectorAll('.price__compare-price').forEach(el => {
+          el.style.display = 'none';
+        });
+      }
+    }, 100);
+  }
+
+  // ===== LISTEN FOR QB CHANGES =====
+  document.addEventListener('qb:state-changed', function(e) {
+    // Ignore if this event was fired by bundle itself
+    if (isFiringBundleEvent) {
+      return;
+    }
+
+    // If we have a selected bundle, re-fire with bundle prices
+    if (selectedBundleData.finalPrice > 0) {
+      updateAllPrices(selectedBundleData.finalPrice, selectedBundleData.comparePrice);
+    }
+  });
+
+  // ===== BUNDLE OPTION CLICK HANDLER =====
+  function handleBundleOptionClick(option) {
+    const bundleSelector = option.closest('[data-bundle-id]');
+    const bundleOptions = bundleSelector.querySelectorAll('.bundle-option');
+
+    bundleOptions.forEach(opt => opt.classList.remove('active'));
+    option.classList.add('active');
+
+    try {
+      const productsData = JSON.parse(option.getAttribute('data-products'));
+      const finalPrice = parseInt(option.dataset.finalPrice);
+      const comparePrice = parseInt(option.dataset.finalCompare);
+
+      selectedBundleData = {
+        items: productsData,
+        finalPrice: finalPrice,
+        comparePrice: comparePrice
+      };
+
+      updateAllPrices(finalPrice, comparePrice);
+    } catch(e) {
+      // Silent error handling
+    }
+  }
+
+  // ===== HANDLE ADD TO CART (copied from upsell) =====
+  function handleBundleClick(e, button) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      if (e.cancelable) {
+        e.returnValue = false;
+      }
+    }
+
+    if (isProcessing) {
+      return false;
+    }
+
+    // Get main product variant and quantity
+    const form = button.closest('form') || document.querySelector('form[action*="/cart/add"]');
+    if (!form) {
+      return false;
+    }
+
+    const variantId = form.querySelector('[name="id"]')?.value;
+    if (!variantId) {
+      return false;
+    }
+
+    // Get quantity from QB if active, otherwise use 1
+    const qbActive = document.querySelector('.qb-option.qb-active');
+    const quantity = qbActive ? parseInt(qbActive.dataset.qty) || 1 : 1;
+
+    // Build items array
+    const itemsToAdd = [{
+      id: parseInt(variantId),
+      quantity: quantity
+    }];
+
+    // Add bundle items with same quantity as main product
+    if (selectedBundleData.items && selectedBundleData.items.length > 0) {
+      selectedBundleData.items.forEach(item => {
+        itemsToAdd.push({
+          id: item.id,
+          quantity: quantity  // Use QB quantity for bundle items too
+        });
+      });
+    }
+
+    isProcessing = true;
+    button.disabled = true;
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: JSON.stringify({ items: itemsToAdd })
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to add items');
+      }
+      return response.json();
+    })
+    .then(result => {
+      // Fetch updated sections
+      return fetch(`?sections=cart-drawer,cart-icon-bubble&timestamp=${Date.now()}`)
+        .then(res => res.json())
+        .then(sections => ({ result, sections }));
+    })
+    .then(({ result, sections }) => {
+      // Update cart content BEFORE opening drawer
+      if (sections && sections['cart-drawer']) {
+        const cartDrawer = document.querySelector('cart-drawer');
+        if (cartDrawer) {
+          // Remove is-empty class immediately
+          cartDrawer.classList.remove('is-empty');
+          cartDrawer.classList.add('is-loaded');
+
+          const parser = new DOMParser();
+          const newDoc = parser.parseFromString(sections['cart-drawer'], 'text/html');
+
+          // Update drawer__inner content specifically
+          const drawerInner = cartDrawer.querySelector('.drawer__inner');
+          const newDrawerInner = newDoc.querySelector('.drawer__inner');
+
+          if (drawerInner && newDrawerInner) {
+            drawerInner.innerHTML = newDrawerInner.innerHTML;
+          }
+
+          // Fire cart events
+          document.documentElement.dispatchEvent(new CustomEvent('cart:refresh', {
+            bubbles: true
+          }));
+          document.dispatchEvent(new CustomEvent('cartQuantityUpdated', { bubbles: true }));
+        }
+      }
+
+      // Update cart icon bubble
+      if (sections && sections['cart-icon-bubble']) {
+        const bubbleContainer = document.querySelector('#cart-icon-bubble');
+        if (bubbleContainer) {
+          const parser = new DOMParser();
+          const newDoc = parser.parseFromString(sections['cart-icon-bubble'], 'text/html');
+          const newBubble = newDoc.querySelector('#cart-icon-bubble');
+          if (newBubble) {
+            bubbleContainer.innerHTML = newBubble.innerHTML;
+          }
+        }
+      }
+
+      // Open cart drawer after content is updated
+      setTimeout(() => {
+        const cartDrawer = document.querySelector('cart-drawer');
+        if (cartDrawer && typeof cartDrawer.open === 'function') {
+          cartDrawer.open();
+        } else if (cartDrawer) {
+          cartDrawer.classList.add('animate', 'active');
+          cartDrawer.setAttribute('open', '');
+          document.body.classList.add('overflow-hidden');
+        }
+      }, 50);
+
+      setTimeout(() => {
+        button.disabled = false;
+      }, 500);
+    })
+    .catch(error => {
+      setTimeout(() => {
+        button.disabled = false;
+      }, 500);
+    })
+    .finally(() => {
+      setTimeout(() => {
+        isProcessing = false;
+      }, 1000);
+    });
+
+    return false;
+  }
+
+  // ===== INITIALIZATION =====
+  function initBundle() {
+    const bundleSelector = document.querySelector('[data-bundle-id="{{ block.id }}"]');
+    if (!bundleSelector) {
+      return;
+    }
+
+    const bundleOptions = bundleSelector.querySelectorAll('.bundle-option');
+
+    const activeOption = bundleSelector.querySelector('.bundle-option.active');
+    if (activeOption) {
+      try {
+        const productsData = JSON.parse(activeOption.getAttribute('data-products'));
+        const finalPrice = parseInt(activeOption.dataset.finalPrice);
+        const comparePrice = parseInt(activeOption.dataset.finalCompare);
+
+        selectedBundleData = {
+          items: productsData,
+          finalPrice: finalPrice,
+          comparePrice: comparePrice
+        };
+
+        updateAllPrices(finalPrice, comparePrice);
+      } catch(e) {
+        // Silent error handling
+      }
+    }
+
+    bundleOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        handleBundleOptionClick(this);
+      });
+    });
+  }
+
+  // Global event delegation (capture phase = highest priority)
+  document.addEventListener('click', function(e) {
+    const submitButton = e.target.closest('button[type="submit"][name="add"]') ||
+                        e.target.closest('button[type="submit"]');
+
+    if (submitButton) {
+      const form = submitButton.closest('form');
+      if (form && form.action && form.action.includes('/cart/add')) {
+        const bundleSelector = document.querySelector('[data-bundle-id="{{ block.id }}"]');
+        if (bundleSelector) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          if (e.cancelable) {
+            e.returnValue = false;
+          }
+
+          handleBundleClick(e, submitButton);
+          return false;
+        }
+      }
+    }
+  }, true);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBundle);
+  } else {
+    initBundle();
+  }
+
+  setTimeout(initBundle, 500);
+})();
+</script>

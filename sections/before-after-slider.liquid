@@ -1,0 +1,908 @@
+{% comment %}
+  Before and After Slider Section
+  A flexible section with heading, text, and interactive before/after image comparison slider
+{% endcomment %}
+
+<section class="before-after-slider section-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="container page-width">
+
+    {% comment %} Custom HTML - Above Title (Desktop/Mobile) {% endcomment %}
+    {% for block in section.blocks %}
+      {% if block.type == 'custom_html' %}
+        <div class="bas-custom-html-block bas-position-above_title bas-position-desktop-{{ block.settings.position_desktop }} bas-position-mobile-{{ block.settings.position_mobile }} {% if block.settings.hide_on_mobile %}hide-mobile{% endif %}" data-position-desktop="{{ block.settings.position_desktop }}" data-position-mobile="{{ block.settings.position_mobile }}" {{ block.shopify_attributes }}>
+          {{ block.settings.html_content }}
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <div class="bas-layout-{{ section.settings.layout }}">
+
+      {% comment %} Content Column (Heading + Text + Custom HTML blocks) {% endcomment %}
+      <div class="bas-content-column">
+
+        {% comment %} Heading {% endcomment %}
+        {% if section.settings.heading != blank or section.settings.highlighted_text != blank %}
+          <div class="bas-header-wrapper bas-align-{{ section.settings.heading_alignment }}">
+            {% if section.settings.highlight_position == 'above' %}
+              {% if section.settings.highlighted_text != blank %}
+                <span class="bas-highlighted-text bas-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+            {% endif %}
+            <{{ section.settings.heading_tag }} class="bas-heading">
+              {% if section.settings.highlight_position == 'inline_first' %}
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="bas-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {{ section.settings.heading }}
+              {% elsif section.settings.highlight_position == 'inline_second' %}
+                {{ section.settings.heading }}
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="bas-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+              {% else %}
+                {{ section.settings.heading }}
+              {% endif %}
+            </{{ section.settings.heading_tag }}>
+            {% if section.settings.highlight_position == 'below' %}
+              {% if section.settings.highlighted_text != blank %}
+                <span class="bas-highlighted-text bas-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% comment %} Custom HTML - Below Title (Desktop/Mobile) {% endcomment %}
+        {% for block in section.blocks %}
+          {% if block.type == 'custom_html' %}
+            <div class="bas-custom-html-block bas-position-below_title bas-position-desktop-{{ block.settings.position_desktop }} bas-position-mobile-{{ block.settings.position_mobile }} {% if block.settings.hide_on_mobile %}hide-mobile{% endif %}" data-position-desktop="{{ block.settings.position_desktop }}" data-position-mobile="{{ block.settings.position_mobile }}" {{ block.shopify_attributes }}>
+              {{ block.settings.html_content }}
+            </div>
+          {% endif %}
+        {% endfor %}
+
+        {% comment %} Body Text {% endcomment %}
+        {% if section.settings.text != blank %}
+          <div class="bas-text bas-align-{{ section.settings.heading_alignment }} rte">
+            {{ section.settings.text }}
+          </div>
+        {% endif %}
+
+      </div>
+
+      {% comment %} Slider Column {% endcomment %}
+      <div class="bas-slider-column">
+        <div class="bas-slider-wrapper" data-auto-slide="{{ section.settings.auto_slide }}" data-auto-speed="{{ section.settings.auto_slide_speed }}">
+          
+          {% comment %} Before Image {% endcomment %}
+          <div class="bas-image-container bas-before">
+            {% if section.settings.before_image != blank %}
+              {{ section.settings.before_image | image_url: width: 1200 | image_tag:
+                loading: 'lazy',
+                class: 'bas-image'
+              }}
+            {% else %}
+              <div class="bas-image-placeholder">
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg bas-image' }}
+              </div>
+            {% endif %}
+          </div>
+
+          {% comment %} After Image (Overlay) {% endcomment %}
+          <div class="bas-image-container bas-after">
+            {% if section.settings.after_image != blank %}
+              {{ section.settings.after_image | image_url: width: 1200 | image_tag:
+                loading: 'lazy',
+                class: 'bas-image'
+              }}
+            {% else %}
+              <div class="bas-image-placeholder">
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg bas-image' }}
+              </div>
+            {% endif %}
+          </div>
+
+          {% comment %} Badges (Outside image containers) {% endcomment %}
+          {% if section.settings.show_labels %}
+            <div class="bas-label bas-label-before">{{ section.settings.badge_before_text }}</div>
+            <div class="bas-label bas-label-after">{{ section.settings.badge_after_text }}</div>
+          {% endif %}
+
+
+          {% comment %} Slider Control {% endcomment %}
+          <div class="bas-slider-control" data-slider-handle>
+            <div class="bas-slider-button">&nbsp;</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    {% comment %} Custom HTML - Below Content (Desktop/Mobile) {% endcomment %}
+    {% for block in section.blocks %}
+      {% if block.type == 'custom_html' %}
+        <div class="bas-custom-html-block bas-position-below_content bas-position-desktop-{{ block.settings.position_desktop }} bas-position-mobile-{{ block.settings.position_mobile }} {% if block.settings.hide_on_mobile %}hide-mobile{% endif %}" data-position-desktop="{{ block.settings.position_desktop }}" data-position-mobile="{{ block.settings.position_mobile }}" {{ block.shopify_attributes }}>
+          {{ block.settings.html_content }}
+        </div>
+      {% endif %}
+    {% endfor %}
+
+  </div>
+</section>
+
+<style>
+  /* Section Container */
+  .section-{{ section.id }} {
+    {% if section.settings.use_theme_colors %}
+      {% if settings.section_gradient_enabled %}
+        background: {{ settings.section_gradient_background }};
+      {% else %}
+        background-color: {{ settings.section_background_color }};
+      {% endif %}
+    {% else %}
+      background-color: {{ section.settings.background_color }};
+      {% if section.settings.gradient_enabled %}
+        background: {{ section.settings.gradient_background }};
+      {% endif %}
+    {% endif %}
+    padding-top: {{ section.settings.padding_top_desktop }}px;
+    padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-{{ section.id }} .page-width {
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }} .page-width {
+      padding: 0 5rem;
+    }
+  }
+
+  /* Layout Styles */
+  .section-{{ section.id }} .bas-layout-top {
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.content_gap }}px;
+  }
+
+  .section-{{ section.id }} .bas-layout-left,
+  .section-{{ section.id }} .bas-layout-right {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ section.settings.content_gap }}px;
+    align-items: center;
+    justify-items: center;
+  }
+
+  .section-{{ section.id }} .bas-layout-right .bas-content-column {
+    order: 2;
+  }
+
+  .section-{{ section.id }} .bas-content-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .section-{{ section.id }} .bas-slider-column {
+    width: {{ section.settings.slider_width_desktop }}%;
+    max-width: 100%;
+  }
+
+  .section-{{ section.id }} .bas-layout-top .bas-slider-column {
+    width: 100%;
+    max-width: {{ section.settings.slider_max_width_top }}px;
+    margin: 0 auto;
+  }
+
+  /* Heading Styles */
+  .section-{{ section.id }} .bas-heading {
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.heading_color }};
+    {% else %}
+      color: {{ section.settings.heading_color }};
+    {% endif %}
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.heading_font_size_desktop }}px;
+      font-weight: {{ settings.heading_font_weight }};
+    {% else %}
+      font-size: {{ section.settings.heading_font_size_desktop }}px;
+      font-weight: {{ section.settings.heading_font_weight }};
+    {% endif %}
+    line-height: 1.2;
+    margin: {{ section.settings.heading_margin_top }}px 0 {{ section.settings.heading_margin_bottom }}px 0;
+  }
+
+  .section-{{ section.id }} .bas-header-wrapper {
+    width: 100%;
+  }
+
+  .section-{{ section.id }} .bas-align-left {
+    text-align: left;
+  }
+
+  .section-{{ section.id }} .bas-align-center {
+    text-align: center;
+  }
+
+  .section-{{ section.id }} .bas-align-right {
+    text-align: right;
+  }
+
+  /* Highlighted Text */
+  .section-{{ section.id }} .bas-highlighted-text {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    display: inline-block; /* Always inline-block to prevent gradient from spreading across full container width */
+    {% if section.settings.use_theme_colors %}
+      {% if settings.highlighted_text_gradient_enabled %}
+        background: {{ settings.highlighted_text_gradient }};
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      {% else %}
+        color: {{ settings.highlighted_text_color }};
+      {% endif %}
+    {% elsif section.settings.highlighted_gradient_enabled %}
+      background: {{ section.settings.highlighted_gradient }};
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    {% else %}
+      color: {{ section.settings.highlighted_color }};
+    {% endif %}
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.heading_font_size_desktop }}px;
+      font-weight: {{ settings.heading_font_weight }};
+    {% else %}
+      font-size: {{ section.settings.highlighted_font_size_desktop }}px;
+      font-weight: {{ section.settings.highlighted_font_weight }};
+    {% endif %}
+  }
+
+  .section-{{ section.id }} .bas-highlighted-separate {
+    display: inline-block;
+    margin-bottom: {{ section.settings.highlighted_spacing }}px;
+  }
+
+  /* Text Styles */
+  .section-{{ section.id }} .bas-text {
+    {% if section.settings.use_theme_colors %}
+      color: {{ settings.body_color }};
+    {% else %}
+      color: {{ section.settings.text_color }};
+    {% endif %}
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.body_font_size_desktop }}px;
+      font-weight: {{ settings.body_font_weight }};
+    {% else %}
+      font-size: {{ section.settings.text_font_size_desktop }}px;
+      font-weight: {{ section.settings.text_font_weight }};
+    {% endif %}
+    line-height: 1.6;
+    margin: {{ section.settings.text_margin_top }}px 0 {{ section.settings.text_margin_bottom }}px 0;
+  }
+
+  /* Custom HTML Block */
+  .section-{{ section.id }} .bas-custom-html-block {
+    width: 100%;
+  }
+
+  /* Slider Wrapper */
+  .section-{{ section.id }} .bas-slider-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ section.settings.slider_border_radius }}px;
+    border: {{ section.settings.slider_border_width }}px solid {{ section.settings.slider_border_color }};
+    user-select: none;
+    touch-action: pan-y pinch-zoom; /* Allow vertical scrolling and pinch zoom on mobile */
+    cursor: ew-resize;
+  }
+
+  .section-{{ section.id }} .bas-slider-wrapper.bas-aspect-original {
+    aspect-ratio: auto;
+  }
+
+  .section-{{ section.id }} .bas-slider-wrapper.bas-aspect-square {
+    aspect-ratio: 1 / 1;
+  }
+
+  .section-{{ section.id }} .bas-slider-wrapper.bas-aspect-portrait {
+    aspect-ratio: 3 / 4;
+  }
+
+  .section-{{ section.id }} .bas-slider-wrapper.bas-aspect-landscape {
+    aspect-ratio: 16 / 9;
+  }
+
+  .section-{{ section.id }} .bas-slider-wrapper.bas-aspect-wide {
+    aspect-ratio: 21 / 9;
+  }
+
+  /* Image Container */
+  .section-{{ section.id }} .bas-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .section-{{ section.id }} .bas-before {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .section-{{ section.id }} .bas-after {
+    z-index: 2;
+    clip-path: inset(0 0 0 50%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .section-{{ section.id }} .bas-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .section-{{ section.id }} .bas-image-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Labels */
+  .section-{{ section.id }} .bas-label {
+    position: absolute;
+    {% if section.settings.badge_position == 'top' %}
+      top: 20px;
+    {% else %}
+      bottom: 20px;
+    {% endif %}
+    padding: {{ section.settings.badge_padding_vertical }}px {{ section.settings.badge_padding_horizontal }}px;
+    background: {{ section.settings.badge_bg_color }};
+    color: {{ section.settings.badge_text_color }};
+    font-size: 14px;
+    font-weight: {{ section.settings.badge_font_weight }};
+    border-radius: {{ section.settings.badge_border_radius }}px;
+    border: {{ section.settings.badge_border_width }}px solid {{ section.settings.badge_border_color }};
+    z-index: 2;
+    pointer-events: none;
+    isolation: isolate;
+  }
+
+  .section-{{ section.id }} .bas-label-before {
+    left: 20px;
+  }
+
+  .section-{{ section.id }} .bas-label-after {
+    right: 20px;
+  }
+
+
+  /* Slider Control */
+  .section-{{ section.id }} .bas-slider-control {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 4px;
+    height: 100%;
+    background: {{ section.settings.button_color }};
+    transform: translateX(-50%);
+    z-index: 2;
+    cursor: ew-resize;
+  }
+
+  .section-{{ section.id }} .bas-slider-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: {{ section.settings.button_size }}px;
+    height: {{ section.settings.button_size }}px;
+    background: transparent;
+    backdrop-filter: blur(10px);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    cursor: grab;
+    z-index: 3;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .section-{{ section.id }} .bas-slider-button:active {
+    cursor: grabbing;
+  }
+
+  /* Add left/right arrows to button */
+  .section-{{ section.id }} .bas-slider-button::before,
+  .section-{{ section.id }} .bas-slider-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border-style: solid;
+  }
+
+  .section-{{ section.id }} .bas-slider-button::before {
+    left: 30%;
+    transform: translate(-50%, -50%);
+    border-width: 6px 8px 6px 0;
+    border-color: transparent {{ section.settings.button_color | default: '#ffffff' }} transparent transparent;
+  }
+
+  .section-{{ section.id }} .bas-slider-button::after {
+    right: 30%;
+    transform: translate(50%, -50%);
+    border-width: 6px 0 6px 8px;
+    border-color: transparent transparent transparent {{ section.settings.button_color | default: '#ffffff' }};
+  }
+
+  /* Mobile Styles */
+  @media screen and (max-width: 989px) {
+    .section-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+
+    .section-{{ section.id }} .bas-layout-left,
+    .section-{{ section.id }} .bas-layout-right {
+      grid-template-columns: 1fr;
+    }
+
+    .section-{{ section.id }} .bas-layout-right .bas-content-column {
+      order: 1;
+    }
+
+    .section-{{ section.id }} .bas-slider-column {
+      width: 100%;
+    }
+
+    .section-{{ section.id }} .bas-heading {
+      {% if settings.enable_global_typography %}
+        font-size: {{ settings.heading_font_size_mobile }}px;
+      {% else %}
+        font-size: {{ section.settings.heading_font_size_mobile }}px;
+      {% endif %}
+    }
+
+    .section-{{ section.id }} .bas-highlighted-text {
+      {% if settings.enable_global_typography %}
+        font-size: {{ settings.heading_font_size_mobile }}px;
+      {% else %}
+        font-size: {{ section.settings.highlighted_font_size_mobile }}px;
+      {% endif %}
+    }
+
+    .section-{{ section.id }} .bas-text {
+      {% if settings.enable_global_typography %}
+        font-size: {{ settings.body_font_size_mobile }}px;
+      {% else %}
+        font-size: {{ section.settings.text_font_size_mobile }}px;
+      {% endif %}
+    }
+
+    .section-{{ section.id }} .hide-mobile {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+// Custom HTML Block Position Handler
+(function() {
+  function positionCustomHtmlBlocks() {
+    const isMobile = window.innerWidth < 769;
+    const blocks = document.querySelectorAll('.section-{{ section.id }} .bas-custom-html-block');
+
+    blocks.forEach(block => {
+      const desktopPos = block.dataset.positionDesktop;
+      const mobilePos = block.dataset.positionMobile;
+      const currentPos = isMobile ? mobilePos : desktopPos;
+
+      // Each block has classes for all positions, but we only show it in its target position
+      const allPositions = ['above_title', 'below_title', 'below_content'];
+
+      // Check if this block's current rendering position matches the target
+      let shouldShow = false;
+      allPositions.forEach(pos => {
+        if (block.classList.contains(`bas-position-${pos}`) && pos === currentPos) {
+          shouldShow = true;
+        }
+      });
+
+      if (shouldShow) {
+        block.style.display = 'block';
+      } else {
+        block.style.display = 'none';
+      }
+    });
+  }
+
+  // Run on load and resize
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', positionCustomHtmlBlocks);
+  } else {
+    positionCustomHtmlBlocks();
+  }
+  window.addEventListener('resize', positionCustomHtmlBlocks);
+})();
+
+// Before/After Slider JavaScript
+(function() {
+  class BeforeAfterSlider {
+    constructor(wrapper) {
+      this.wrapper = wrapper;
+      this.control = wrapper.querySelector('[data-slider-handle]');
+      this.afterImage = wrapper.querySelector('.bas-after');
+      this.isDragging = false;
+      this.autoSlide = wrapper.dataset.autoSlide === 'true';
+      this.autoSpeed = parseInt(wrapper.dataset.autoSpeed) || 3000;
+      this.autoSlideInterval = null;
+      this.touchStartX = 0;
+      this.touchStartY = 0;
+      this.isHorizontalSwipe = false;
+
+      this.init();
+    }
+
+    init() {
+      if (!this.control || !this.afterImage) return;
+
+      // Set aspect ratio class
+      const aspectRatio = '{{ section.settings.slider_aspect_ratio }}';
+      this.wrapper.classList.add(`bas-aspect-${aspectRatio}`);
+
+      // Mouse events - on entire wrapper
+      this.wrapper.addEventListener('mousedown', this.startDrag.bind(this));
+      document.addEventListener('mousemove', this.onDrag.bind(this));
+      document.addEventListener('mouseup', this.stopDrag.bind(this));
+
+      // Touch events - on entire wrapper with improved handling
+      this.wrapper.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: true });
+      this.wrapper.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
+      this.wrapper.addEventListener('touchend', this.handleTouchEnd.bind(this));
+
+      // Click/Tap anywhere to jump to position
+      this.wrapper.addEventListener('click', this.handleClick.bind(this));
+
+      // Auto slide
+      if (this.autoSlide) {
+        this.startAutoSlide();
+
+        // Pause on hover/touch
+        this.wrapper.addEventListener('mouseenter', () => this.stopAutoSlide());
+        this.wrapper.addEventListener('mouseleave', () => this.startAutoSlide());
+      }
+    }
+
+    handleClick(e) {
+      // Only handle click if not from touch (to avoid conflicts)
+      if (e.type === 'click' && e.detail === 0) return; // Skip programmatic clicks
+
+      // Jump slider to clicked position
+      const rect = this.wrapper.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+      this.updateSlider(percentage);
+      this.stopAutoSlide();
+    }
+
+    handleTouchStart(e) {
+      this.touchStartX = e.touches[0].clientX;
+      this.touchStartY = e.touches[0].clientY;
+      this.isHorizontalSwipe = false;
+      this.stopAutoSlide();
+    }
+
+    handleTouchMove(e) {
+      const touchX = e.touches[0].clientX;
+      const touchY = e.touches[0].clientY;
+      const deltaX = Math.abs(touchX - this.touchStartX);
+      const deltaY = Math.abs(touchY - this.touchStartY);
+
+      // Determine if this is a horizontal swipe (slider interaction) or vertical scroll
+      if (!this.isHorizontalSwipe && deltaX < 10 && deltaY < 10) {
+        // Not enough movement yet, don't decide
+        return;
+      }
+
+      if (!this.isHorizontalSwipe) {
+        // First significant movement - determine direction
+        this.isHorizontalSwipe = deltaX > deltaY;
+      }
+
+      if (this.isHorizontalSwipe) {
+        // Horizontal swipe - interact with slider and prevent vertical scroll
+        e.preventDefault();
+        this.isDragging = true;
+
+        const rect = this.wrapper.getBoundingClientRect();
+        const x = touchX - rect.left;
+        const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+        this.updateSlider(percentage);
+      }
+      // If vertical swipe, do nothing and allow default scroll behavior
+    }
+
+    handleTouchEnd(e) {
+      this.isDragging = false;
+      this.isHorizontalSwipe = false;
+      if (this.autoSlide) {
+        this.startAutoSlide();
+      }
+    }
+
+    startDrag(e) {
+      this.isDragging = true;
+      this.stopAutoSlide();
+
+      // Immediately update position on mouse click
+      const rect = this.wrapper.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+      this.updateSlider(percentage);
+    }
+
+    stopDrag() {
+      this.isDragging = false;
+      if (this.autoSlide) {
+        this.startAutoSlide();
+      }
+    }
+
+    onDrag(e) {
+      if (!this.isDragging) return;
+      e.preventDefault();
+
+      const rect = this.wrapper.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+
+      this.updateSlider(percentage);
+    }
+
+    updateSlider(percentage) {
+      this.control.style.left = `${percentage}%`;
+      this.afterImage.style.clipPath = `inset(0 0 0 ${percentage}%)`;
+    }
+
+    startAutoSlide() {
+      this.stopAutoSlide();
+      let direction = 1;
+      let position = 50;
+
+      this.autoSlideInterval = setInterval(() => {
+        position += direction * 0.5;
+
+        if (position >= 100 || position <= 0) {
+          direction *= -1;
+        }
+
+        this.updateSlider(position);
+      }, this.autoSpeed / 100);
+    }
+
+    stopAutoSlide() {
+      if (this.autoSlideInterval) {
+        clearInterval(this.autoSlideInterval);
+        this.autoSlideInterval = null;
+      }
+    }
+  }
+
+  // Initialize function
+  function initSliders() {
+    const sliders = document.querySelectorAll('.before-after-slider .bas-slider-wrapper');
+    sliders.forEach(slider => {
+      if (!slider.dataset.initialized) {
+        slider.dataset.initialized = 'true';
+        new BeforeAfterSlider(slider);
+      }
+    });
+  }
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSliders);
+  } else {
+    initSliders();
+  }
+
+  // Initialize on Shopify section load (for theme editor)
+  document.addEventListener('shopify:section:load', (event) => {
+    const slider = event.target.querySelector('.before-after-slider .bas-slider-wrapper');
+    if (slider) {
+      slider.dataset.initialized = 'false';
+      initSliders();
+    }
+  });
+})();
+</script>
+
+{% schema %}
+{"name":"Before & After Slider","class":"section","settings": [
+ {"type":"header","content":"Section Settings"},
+ {"type":"checkbox","id":"use_theme_colors","label":"Use Theme Colors","default": true,"info":"Override section colors with theme color settings"},
+ {"type":"color","id":"background_color","label":"Background Color","default":"#ffffff"},
+ {"type":"checkbox","id":"gradient_enabled","label":"Enable Gradient Background","default": false
+ },
+ {"type":"color_background","id":"gradient_background","label":"Gradient Background","default":"linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(240, 240, 240, 1) 100%)"},
+ {"type":"header","content":"Section Padding"},
+ {"type":"range","id":"padding_top_desktop","min": 0,"max": 200,"step": 4,"unit":"px","label":"Top Padding - Desktop","default": 60
+ },
+ {"type":"range","id":"padding_bottom_desktop","min": 0,"max": 200,"step": 4,"unit":"px","label":"Bottom Padding - Desktop","default": 60
+ },
+ {"type":"range","id":"padding_top_mobile","min": 0,"max": 100,"step": 2,"unit":"px","label":"Top Padding - Mobile","default": 40
+ },
+ {"type":"range","id":"padding_bottom_mobile","min": 0,"max": 100,"step": 2,"unit":"px","label":"Bottom Padding - Mobile","default": 40
+ },
+ {"type":"header","content":"Layout"},
+ {"type":"select","id":"layout","label":"Desktop Layout","options": [
+ {"value":"top","label":"Content on Top"},
+ {"value":"left","label":"Slider on Right"},
+ {"value":"right","label":"Slider on Left"}
+ ],"default":"left","info":"On mobile, content always appears above slider"},
+ {"type":"range","id":"content_gap","min": 20,"max": 100,"step": 4,"unit":"px","label":"Gap Between Content & Slider","default": 20
+ },
+ {"type":"range","id":"slider_width_desktop","min": 30,"max": 100,"step": 5,"unit":"%","label":"Slider Width (Left/Right Layout)","default": 90,"info":"Width of slider when using side-by-side layout"},
+ {"type":"range","id":"slider_max_width_top","min": 400,"max": 1400,"step": 50,"unit":"px","label":"Slider Max Width (Top Layout)","default": 800,"info":"Maximum width when content is on top"},
+ {"type":"header","content":"Heading"},
+ {"type":"text","id":"heading","label":"Heading Text","default":"add your"},
+ {"type":"text","id":"highlighted_text","label":"Highlighted Text","default":"title here"},
+ {"type":"select","id":"highlight_position","label":"Highlight Position","options": [
+ {"value":"inline_first","label":"Inline (First)"},
+ {"value":"inline_second","label":"Inline (Second)"},
+ {"value":"above","label":"Above Heading"},
+ {"value":"below","label":"Below Heading"}
+ ],"default":"inline_second"},
+ {"type":"select","id":"heading_tag","label":"Heading Tag","options": [
+ {"value":"h1","label":"H1"},
+ {"value":"h2","label":"H2"},
+ {"value":"h3","label":"H3"},
+ {"value":"h4","label":"H4"},
+ {"value":"p","label":"Paragraph"}
+ ],"default":"h2"},
+ {"type":"select","id":"heading_alignment","label":"Text Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"color","id":"heading_color","label":"Heading Color","default":"#000000"},
+ {"type":"range","id":"heading_font_size_desktop","min": 20,"max": 100,"step": 2,"unit":"px","label":"Font Size - Desktop","default": 48
+ },
+ {"type":"range","id":"heading_font_size_mobile","min": 16,"max": 60,"step": 2,"unit":"px","label":"Font Size - Mobile","default": 32
+ },
+ {"type":"select","id":"heading_font_weight","label":"Font Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Regular"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"500"},
+ {"type":"range","id":"heading_margin_top","min": 0,"max": 50,"step": 2,"unit":"px","label":"Margin Top","default": 0
+ },
+ {"type":"range","id":"heading_margin_bottom","min": 0,"max": 50,"step": 2,"unit":"px","label":"Margin Bottom","default": 0
+ },
+ {"type":"header","content":"Highlighted Text"},
+ {"type":"checkbox","id":"highlighted_gradient_enabled","label":"Enable Gradient","default": false
+ },
+ {"type":"color","id":"highlighted_color","label":"Solid Color","default":"#ed122d"},
+ {"type":"color_background","id":"highlighted_gradient","label":"Gradient","default":"linear-gradient(90deg, rgba(237, 18, 45, 1), rgba(255, 107, 107, 1) 100%)"},
+ {"type":"range","id":"highlighted_font_size_desktop","min": 20,"max": 100,"step": 2,"unit":"px","label":"Font Size - Desktop","default": 48
+ },
+ {"type":"range","id":"highlighted_font_size_mobile","min": 16,"max": 60,"step": 2,"unit":"px","label":"Font Size - Mobile","default": 32
+ },
+ {"type":"select","id":"highlighted_font_weight","label":"Font Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Regular"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"500"},
+ {"type":"range","id":"highlighted_spacing","min": 0,"max": 30,"step": 2,"unit":"px","label":"Spacing (Above/Below)","default": 10,"info":"Applies when highlight is above or below heading"},
+ {"type":"header","content":"Body Text"},
+ {"type":"richtext","id":"text","label":"Content","default":"<p>Slide to compare the before and after transformation.</p>"},
+ {"type":"color","id":"text_color","label":"Text Color","default":"#333333"},
+ {"type":"range","id":"text_font_size_desktop","min": 12,"max": 32,"step": 1,"unit":"px","label":"Font Size - Desktop","default": 16
+ },
+ {"type":"range","id":"text_font_size_mobile","min": 12,"max": 24,"step": 1,"unit":"px","label":"Font Size - Mobile","default": 14
+ },
+ {"type":"select","id":"text_font_weight","label":"Font Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Regular"},
+ {"value":"500","label":"Medium"}
+ ],"default":"400"},
+ {"type":"range","id":"text_margin_top","min": 0,"max": 50,"step": 2,"unit":"px","label":"Margin Top","default": 0
+ },
+ {"type":"range","id":"text_margin_bottom","min": 0,"max": 50,"step": 2,"unit":"px","label":"Margin Bottom","default": 0
+ },
+ {"type":"header","content":"️ Slider Images"},
+ {"type":"image_picker","id":"before_image","label":"Before Image"},
+ {"type":"image_picker","id":"after_image","label":"After Image"},
+ {"type":"checkbox","id":"show_labels","label":"Show Before/After Labels","default": true
+ },
+ {"type":"text","id":"before_label","label":"Before Label","default":"Before"},
+ {"type":"text","id":"after_label","label":"After Label","default":"After"},
+ {"type":"header","content":"Badge Styling"},
+ {"type":"text","id":"badge_before_text","label":"Badge Before Text","default":"Before"},
+ {"type":"text","id":"badge_after_text","label":"Badge After Text","default":"After"},
+ {"type":"range","id":"badge_padding_vertical","label":"Badge Vertical Padding","min": 4,"max": 20,"step": 1,"default": 8
+ },
+ {"type":"range","id":"badge_padding_horizontal","label":"Badge Horizontal Padding","min": 8,"max": 32,"step": 1,"default": 16
+ },
+ {"type":"range","id":"badge_border_radius","label":"Badge Border Radius","min": 0,"max": 20,"step": 1,"default": 4
+ },
+ {"type":"color","id":"badge_text_color","label":"Badge Text Color","default":"#ffffff"},
+ {"type":"color","id":"badge_bg_color","label":"Badge Background Color","default":"#000000"},
+ {"type":"range","id":"badge_font_weight","label":"Badge Font Weight","min": 300,"max": 900,"step": 100,"default": 600
+ },
+ {"type":"range","id":"badge_border_width","label":"Badge Border Width","min": 0,"max": 4,"step": 1,"default": 0
+ },
+ {"type":"color","id":"badge_border_color","label":"Badge Border Color","default":"#000000"},
+ {"type":"select","id":"badge_position","label":"Badge Position","options": [
+ {"value":"top","label":"Top"},
+ {"value":"bottom","label":"Bottom"}
+ ],"default":"bottom"},
+ {"type":"header","content":"️ Slider Settings"},
+ {"type":"checkbox","id":"auto_slide","label":"Enable Auto Slide","default": true,"info":"Automatically animates the slider back and forth"},
+ {"type":"range","id":"auto_slide_speed","min": 1000,"max": 8000,"step": 500,"unit":"ms","label":"Auto Slide Speed","default": 3000,"info":"Speed of one complete slide cycle"},
+ {"type":"select","id":"slider_aspect_ratio","label":"Aspect Ratio","options": [
+ {"value":"original","label":"Original"},
+ {"value":"square","label":"Square (1:1)"},
+ {"value":"portrait","label":"Portrait (3:4)"},
+ {"value":"landscape","label":"Landscape (16:9)"},
+ {"value":"wide","label":"Wide (21:9)"}
+ ],"default":"square"},
+ {"type":"range","id":"slider_border_radius","min": 0,"max": 50,"step": 2,"unit":"px","label":"Border Radius","default": 8
+ },
+ {"type":"range","id":"slider_border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Border Width","default": 0
+ },
+ {"type":"color","id":"slider_border_color","label":"Border Color","default":"#000000"},
+ {"type":"range","id":"button_size","min": 30,"max": 80,"step": 5,"unit":"px","label":"Button Size","default": 50
+ },
+ {"type":"color","id":"button_color","label":"Arrow Color","default":"#ffffff"}
+ ],"blocks": [
+ {"type":"custom_html","name":"Custom HTML","settings": [
+ {"type":"html","id":"html_content","label":"HTML Content","default":"<div style='padding: 20px; background: #f9f9f9; border-radius: 8px;'><p>Add your custom HTML here</p></div>"},
+ {"type":"header","content":"Desktop Position"},
+ {"type":"select","id":"position_desktop","label":"Position (Desktop)","options": [
+ {"value":"above_title","label":"Above Title"},
+ {"value":"below_title","label":"Below Title"},
+ {"value":"below_content","label":"Below Content"}
+ ],"default":"below_content"},
+ {"type":"header","content":"Mobile Position"},
+ {"type":"select","id":"position_mobile","label":"Position (Mobile)","options": [
+ {"value":"above_title","label":"Above Title"},
+ {"value":"below_title","label":"Below Title"},
+ {"value":"below_content","label":"Below Content"}
+ ],"default":"below_content"},
+ {"type":"checkbox","id":"hide_on_mobile","label":"Hide on Mobile","default": false
+ }
+ ]
+ }
+ ],"presets": [
+ {"name":"Before & After Slider","category":"Features"}
+ ]
+}
+{% endschema %}
+

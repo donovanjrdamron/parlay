@@ -1,0 +1,1860 @@
+{% comment %}
+  Icon Text Grid Section
+  A customizable grid section with icons and text content
+{% endcomment %}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
+<section class="icon-text-grid section-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="container page-width">
+    
+    {% comment %} Render content based on positioning {% endcomment %}
+    {% assign heading_html = '' %}
+    {% assign subheading_html = '' %}
+    {% assign image_blocks = section.blocks | where: 'type', 'image' %}
+    {% assign icon_blocks = section.blocks | where: 'type', 'icon_text_card' %}
+    {% assign html_blocks = section.blocks | where: 'type', 'custom_html' %}
+    
+    {% comment %} Build heading HTML {% endcomment %}
+    {% if section.settings.heading_before != blank or section.settings.highlighted_text != blank or section.settings.heading_after != blank %}
+      {% capture heading_html %}
+        <div class="itg-header-wrapper itg-align-{{ section.settings.heading_text_align }}">
+          {% case section.settings.highlight_position %}
+            {% when 'above' %}
+              {% if section.settings.highlighted_text != blank %}
+                <span class="itg-highlighted-text itg-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+              <{{ section.settings.heading_tag }} class="itg-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+            {% when 'below' %}
+              <{{ section.settings.heading_tag }} class="itg-heading">
+                {{ section.settings.heading_before }}
+                {{ section.settings.heading_after }}
+              </{{ section.settings.heading_tag }}>
+              {% if section.settings.highlighted_text != blank %}
+                <span class="itg-highlighted-text itg-highlighted-separate">{{ section.settings.highlighted_text }}</span>
+              {% endif %}
+            {% when 'inline_first' %}
+              <{{ section.settings.heading_tag }} class="itg-heading">
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="itg-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_before != blank %}{{ " " }}{{ section.settings.heading_before }}{% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+            {% when 'inline_second' %}
+              <{{ section.settings.heading_tag }} class="itg-heading">
+                {% if section.settings.heading_before != blank %}{{ section.settings.heading_before }}{{ " " }}{% endif %}
+                {% if section.settings.highlighted_text != blank %}
+                  <span class="itg-highlighted-text">{{ section.settings.highlighted_text }}</span>
+                {% endif %}
+                {% if section.settings.heading_after != blank %}{{ " " }}{{ section.settings.heading_after }}{% endif %}
+              </{{ section.settings.heading_tag }}>
+          {% endcase %}
+        </div>
+      {% endcapture %}
+    {% endif %}
+
+    {% comment %} Build subheading HTML {% endcomment %}
+    {% if section.settings.subheading != blank %}
+      {% capture subheading_html %}
+        <div class="itg-subheading-wrapper">
+          <div class="itg-subheading">{{ section.settings.subheading }}</div>
+        </div>
+      {% endcapture %}
+    {% endif %}
+
+    {% comment %} Render based on heading position {% endcomment %}
+    {% if section.settings.heading_position == 'above_content' %}
+      {{ heading_html }}
+      {{ subheading_html }}
+    {% endif %}
+
+    {% comment %} Main Content Wrapper for Desktop Layout {% endcomment %}
+    <div class="itg-main-content">
+
+      {% comment %} Check if image is centered on desktop {% endcomment %}
+      {% assign has_centered_image = false %}
+      {% for block in image_blocks %}
+        {% if block.settings.position_desktop == 'center' %}
+          {% assign has_centered_image = true %}
+          {% assign centered_image_block = block %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+
+      {% if has_centered_image and image_blocks.size > 0 %}
+        {% comment %} Centered layout: Left Icons | Image | Right Icons {% endcomment %}
+        {% assign icons_per_side = icon_blocks.size | divided_by: 2 %}
+
+        {% comment %} Left Icons {% endcomment %}
+        {%- if icon_blocks.size > 0 -%}
+          <div class="itg-icons-column itg-icons-left">
+            {% if section.settings.heading_position == 'above_icons' and forloop.first %}
+              {{ heading_html }}
+              {{ subheading_html }}
+            {% endif %}
+            <div class="itg-grid">
+              {%- for block in icon_blocks limit: icons_per_side -%}
+                <div class="itg-card{% if block.settings.inline_icon_title %} itg-card-inline{% endif %}" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+                  {%- if block.settings.inline_icon_title -%}
+                    <div class="itg-inline-header">
+                      <div class="itg-icon-wrapper">
+                        {%- if block.settings.icon_svg != blank -%}
+                          <div class="itg-icon-svg">
+                            {{ block.settings.icon_svg }}
+                          </div>
+                        {%- elsif block.settings.icon_image != blank -%}
+                          <img
+                            src="{{ block.settings.icon_image | image_url: width: 200 }}"
+                            alt="{{ block.settings.title | escape }}"
+                            width="{{ block.settings.icon_image.width }}"
+                            height="{{ block.settings.icon_image.height }}"
+                            loading="lazy"
+                            class="itg-icon-image"
+                          >
+                        {%- elsif block.settings.icon_name != blank -%}
+                          <span class="{{ block.settings.icon_style | default: 'material-icons' }} itg-material-icon">{{ block.settings.icon_name | default: 'star' }}</span>
+                        {%- else -%}
+                          <div class="itg-icon-placeholder">
+                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                          </div>
+                        {%- endif -%}
+                      </div>
+                      {%- if block.settings.title != blank -%}
+                        <h3 class="itg-card-title">{{ block.settings.title }}</h3>
+                      {%- endif -%}
+                    </div>
+                    {%- if block.settings.content != blank -%}
+                      <div class="itg-card-content">{{ block.settings.content }}</div>
+                    {%- endif -%}
+                  {%- else -%}
+                    <div class="itg-icon-wrapper">
+                      {%- if block.settings.icon_svg != blank -%}
+                        <div class="itg-icon-svg">
+                          {{ block.settings.icon_svg }}
+                        </div>
+                      {%- elsif block.settings.icon_image != blank -%}
+                        <img
+                          src="{{ block.settings.icon_image | image_url: width: 200 }}"
+                          alt="{{ block.settings.title | escape }}"
+                          width="{{ block.settings.icon_image.width }}"
+                          height="{{ block.settings.icon_image.height }}"
+                          loading="lazy"
+                          class="itg-icon-image"
+                        >
+                      {%- elsif block.settings.icon_name != blank -%}
+                        <span class="{{ block.settings.icon_style | default: 'material-icons' }} itg-material-icon">{{ block.settings.icon_name | default: 'star' }}</span>
+                      {%- else -%}
+                        <div class="itg-icon-placeholder">
+                          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                        </div>
+                      {%- endif -%}
+                    </div>
+                    {%- if block.settings.title != blank -%}
+                      <h3 class="itg-card-title">{{ block.settings.title }}</h3>
+                    {%- endif -%}
+                    {%- if block.settings.content != blank -%}
+                      <div class="itg-card-content">{{ block.settings.content }}</div>
+                    {%- endif -%}
+                  {%- endif -%}
+                </div>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+
+        {% comment %} Center Image {% endcomment %}
+        <div class="itg-image-column itg-image-center">
+          {%- for block in image_blocks -%}
+            {% if section.settings.heading_position == 'above_image' and forloop.first %}
+              {{ heading_html }}
+              {{ subheading_html }}
+            {% endif %}
+            <div class="itg-image-block itg-image-block-{{ block.id }}{% if section.settings.hide_image_mobile or block.settings.hide_on_mobile %} itg-hide-mobile{% endif %}" {{ block.shopify_attributes }}>
+              {% if block.settings.hosted_video != blank %}
+                <div class="itg-video-wrapper" style="aspect-ratio: {{ block.settings.aspect_ratio }}; border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }}; border-radius: {{ block.settings.border_radius }}px; overflow: hidden;">
+                  {{- block.settings.hosted_video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, class: 'itg-feature-video', image_size: '1500x' -}}
+                </div>
+              {% elsif block.settings.video_url != blank %}
+                {% if block.settings.video_url.type == 'youtube' %}
+                  <div class="itg-video-wrapper" style="aspect-ratio: {{ block.settings.aspect_ratio }}; border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }}; border-radius: {{ block.settings.border_radius }}px; overflow: hidden;">
+                    <iframe
+                      src="https://www.youtube.com/embed/{{ block.settings.video_url.id }}?autoplay=1&mute=1&loop=1&playlist={{ block.settings.video_url.id }}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&disablekb=1"
+                      class="itg-feature-video itg-feature-iframe"
+                      frameborder="0"
+                      allow="autoplay; encrypted-media"
+                      allowfullscreen
+                    ></iframe>
+                  </div>
+                {% elsif block.settings.video_url.type == 'vimeo' %}
+                  <div class="itg-video-wrapper" style="aspect-ratio: {{ block.settings.aspect_ratio }}; border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }}; border-radius: {{ block.settings.border_radius }}px; overflow: hidden;">
+                    <iframe
+                      src="https://player.vimeo.com/video/{{ block.settings.video_url.id }}?autoplay=1&muted=1&loop=1&background=1&controls=0&playsinline=1"
+                      class="itg-feature-video itg-feature-iframe"
+                      frameborder="0"
+                      allow="autoplay; encrypted-media"
+                      allowfullscreen
+                    ></iframe>
+                  </div>
+                {% endif %}
+              {% elsif block.settings.image != blank %}
+                <img
+                  src="{{ block.settings.image | image_url: width: 1500 }}"
+                  srcset="{{ block.settings.image | image_url: width: 400 }} 400w,
+                          {{ block.settings.image | image_url: width: 800 }} 800w,
+                          {{ block.settings.image | image_url: width: 1200 }} 1200w,
+                          {{ block.settings.image | image_url: width: 1500 }} 1500w"
+                  sizes="(max-width: 749px) 100vw, 1200px"
+                  alt="{{ block.settings.image.alt | escape }}"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.height }}"
+                  loading="lazy"
+                  class="itg-feature-image"
+                  style="aspect-ratio: {{ block.settings.aspect_ratio }}; object-fit: cover; border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }}; border-radius: {{ block.settings.border_radius }}px;"
+                >
+              {% else %}
+                <div class="itg-image-placeholder" style="aspect-ratio: {{ block.settings.aspect_ratio }}; border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }}; border-radius: {{ block.settings.border_radius }}px;">
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+              {% endif %}
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {% comment %} Right Icons {% endcomment %}
+        {%- if icon_blocks.size > 0 -%}
+          <div class="itg-icons-column itg-icons-right">
+            <div class="itg-grid">
+              {%- for block in icon_blocks offset: icons_per_side -%}
+                <div class="itg-card{% if block.settings.inline_icon_title %} itg-card-inline{% endif %}" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+                  {%- if block.settings.inline_icon_title -%}
+                    <div class="itg-inline-header">
+                      <div class="itg-icon-wrapper">
+                        {%- if block.settings.icon_svg != blank -%}
+                          <div class="itg-icon-svg">
+                            {{ block.settings.icon_svg }}
+                          </div>
+                        {%- elsif block.settings.icon_image != blank -%}
+                          <img
+                            src="{{ block.settings.icon_image | image_url: width: 200 }}"
+                            alt="{{ block.settings.title | escape }}"
+                            width="{{ block.settings.icon_image.width }}"
+                            height="{{ block.settings.icon_image.height }}"
+                            loading="lazy"
+                            class="itg-icon-image"
+                          >
+                        {%- elsif block.settings.icon_name != blank -%}
+                          <span class="{{ block.settings.icon_style | default: 'material-icons' }} itg-material-icon">{{ block.settings.icon_name | default: 'star' }}</span>
+                        {%- else -%}
+                          <div class="itg-icon-placeholder">
+                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                          </div>
+                        {%- endif -%}
+                      </div>
+                      {%- if block.settings.title != blank -%}
+                        <h3 class="itg-card-title">{{ block.settings.title }}</h3>
+                      {%- endif -%}
+                    </div>
+                    {%- if block.settings.content != blank -%}
+                      <div class="itg-card-content">{{ block.settings.content }}</div>
+                    {%- endif -%}
+                  {%- else -%}
+                    <div class="itg-icon-wrapper">
+                      {%- if block.settings.icon_svg != blank -%}
+                        <div class="itg-icon-svg">
+                          {{ block.settings.icon_svg }}
+                        </div>
+                      {%- elsif block.settings.icon_image != blank -%}
+                        <img
+                          src="{{ block.settings.icon_image | image_url: width: 200 }}"
+                          alt="{{ block.settings.title | escape }}"
+                          width="{{ block.settings.icon_image.width }}"
+                          height="{{ block.settings.icon_image.height }}"
+                          loading="lazy"
+                          class="itg-icon-image"
+                        >
+                      {%- elsif block.settings.icon_name != blank -%}
+                        <span class="{{ block.settings.icon_style | default: 'material-icons' }} itg-material-icon">{{ block.settings.icon_name | default: 'star' }}</span>
+                      {%- else -%}
+                        <div class="itg-icon-placeholder">
+                          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                        </div>
+                      {%- endif -%}
+                    </div>
+                    {%- if block.settings.title != blank -%}
+                      <h3 class="itg-card-title">{{ block.settings.title }}</h3>
+                    {%- endif -%}
+                    {%- if block.settings.content != blank -%}
+                      <div class="itg-card-content">{{ block.settings.content }}</div>
+                    {%- endif -%}
+                  {%- endif -%}
+                </div>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+
+      {% else %}
+        {% comment %} Original 2-column layout: Image Left/Right | Icons {% endcomment %}
+
+        {% comment %} Image Blocks {% endcomment %}
+        {%- if image_blocks.size > 0 -%}
+          <div class="itg-image-column">
+            {%- for block in image_blocks -%}
+              {% if section.settings.heading_position == 'above_image' and forloop.first %}
+                {{ heading_html }}
+                {{ subheading_html }}
+              {% endif %}
+
+              <div class="itg-image-block itg-image-block-{{ block.id }}{% if section.settings.hide_image_mobile or block.settings.hide_on_mobile %} itg-hide-mobile{% endif %}" {{ block.shopify_attributes }}>
+                {% if block.settings.hosted_video != blank %}
+                  <div class="itg-video-wrapper" style="aspect-ratio: {{ block.settings.aspect_ratio }}; border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }}; border-radius: {{ block.settings.border_radius }}px; overflow: hidden;">
+                    {{- block.settings.hosted_video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, class: 'itg-feature-video', image_size: '1500x' -}}
+                  </div>
+                {% elsif block.settings.video_url != blank %}
+                  {% if block.settings.video_url.type == 'youtube' %}
+                    <div class="itg-video-wrapper" style="aspect-ratio: {{ block.settings.aspect_ratio }}; border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }}; border-radius: {{ block.settings.border_radius }}px; overflow: hidden;">
+                      <iframe
+                        src="https://www.youtube.com/embed/{{ block.settings.video_url.id }}?autoplay=1&mute=1&loop=1&playlist={{ block.settings.video_url.id }}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&disablekb=1"
+                        class="itg-feature-video itg-feature-iframe"
+                        frameborder="0"
+                        allow="autoplay; encrypted-media"
+                        allowfullscreen
+                      ></iframe>
+                    </div>
+                  {% elsif block.settings.video_url.type == 'vimeo' %}
+                    <div class="itg-video-wrapper" style="aspect-ratio: {{ block.settings.aspect_ratio }}; border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }}; border-radius: {{ block.settings.border_radius }}px; overflow: hidden;">
+                      <iframe
+                        src="https://player.vimeo.com/video/{{ block.settings.video_url.id }}?autoplay=1&muted=1&loop=1&background=1&controls=0&playsinline=1"
+                        class="itg-feature-video itg-feature-iframe"
+                        frameborder="0"
+                        allow="autoplay; encrypted-media"
+                        allowfullscreen
+                      ></iframe>
+                    </div>
+                  {% endif %}
+                {% elsif block.settings.image != blank %}
+                  <img
+                    src="{{ block.settings.image | image_url: width: 1500 }}"
+                    srcset="{{ block.settings.image | image_url: width: 400 }} 400w,
+                            {{ block.settings.image | image_url: width: 800 }} 800w,
+                            {{ block.settings.image | image_url: width: 1200 }} 1200w,
+                            {{ block.settings.image | image_url: width: 1500 }} 1500w"
+                    sizes="(max-width: 749px) 100vw, 1200px"
+                    alt="{{ block.settings.image.alt | escape }}"
+                    width="{{ block.settings.image.width }}"
+                    height="{{ block.settings.image.height }}"
+                    loading="lazy"
+                    class="itg-feature-image"
+                    style="aspect-ratio: {{ block.settings.aspect_ratio }}; object-fit: cover; border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }}; border-radius: {{ block.settings.border_radius }}px;"
+                  >
+                {% else %}
+                  <div class="itg-image-placeholder" style="aspect-ratio: {{ block.settings.aspect_ratio }}; border: {{ block.settings.border_width }}px {{ block.settings.border_style }} {{ block.settings.border_color }}; border-radius: {{ block.settings.border_radius }}px;">
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                  </div>
+                {% endif %}
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {% comment %} Icon Grid Column {% endcomment %}
+        <div class="itg-icons-column">
+          {% if section.settings.heading_position == 'above_icons' %}
+            {{ heading_html }}
+            {{ subheading_html }}
+          {% endif %}
+
+          {%- if icon_blocks.size > 0 -%}
+            <div class="itg-grid">
+              {%- for block in icon_blocks -%}
+                <div class="itg-card{% if block.settings.inline_icon_title %} itg-card-inline{% endif %}" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+                  {%- if block.settings.inline_icon_title -%}
+                    <div class="itg-inline-header">
+                      <div class="itg-icon-wrapper">
+                        {%- if block.settings.icon_svg != blank -%}
+                          <div class="itg-icon-svg">
+                            {{ block.settings.icon_svg }}
+                          </div>
+                        {%- elsif block.settings.icon_image != blank -%}
+                          <img
+                            src="{{ block.settings.icon_image | image_url: width: 200 }}"
+                            alt="{{ block.settings.title | escape }}"
+                            width="{{ block.settings.icon_image.width }}"
+                            height="{{ block.settings.icon_image.height }}"
+                            loading="lazy"
+                            class="itg-icon-image"
+                          >
+                        {%- elsif block.settings.icon_name != blank -%}
+                          <span class="{{ block.settings.icon_style | default: 'material-icons' }} itg-material-icon">{{ block.settings.icon_name | default: 'star' }}</span>
+                        {%- else -%}
+                          <div class="itg-icon-placeholder">
+                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                          </div>
+                        {%- endif -%}
+                      </div>
+                      {%- if block.settings.title != blank -%}
+                        <h3 class="itg-card-title">{{ block.settings.title }}</h3>
+                      {%- endif -%}
+                    </div>
+                    {%- if block.settings.content != blank -%}
+                      <div class="itg-card-content">{{ block.settings.content }}</div>
+                    {%- endif -%}
+                  {%- else -%}
+                    <div class="itg-icon-wrapper">
+                      {%- if block.settings.icon_svg != blank -%}
+                        <div class="itg-icon-svg">
+                          {{ block.settings.icon_svg }}
+                        </div>
+                      {%- elsif block.settings.icon_image != blank -%}
+                        <img
+                          src="{{ block.settings.icon_image | image_url: width: 200 }}"
+                          alt="{{ block.settings.title | escape }}"
+                          width="{{ block.settings.icon_image.width }}"
+                          height="{{ block.settings.icon_image.height }}"
+                          loading="lazy"
+                          class="itg-icon-image"
+                        >
+                      {%- elsif block.settings.icon_name != blank -%}
+                        <span class="{{ block.settings.icon_style | default: 'material-icons' }} itg-material-icon">{{ block.settings.icon_name | default: 'star' }}</span>
+                      {%- else -%}
+                        <div class="itg-icon-placeholder">
+                          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                        </div>
+                      {%- endif -%}
+                    </div>
+
+                    {%- if block.settings.title != blank -%}
+                      <h3 class="itg-card-title">{{ block.settings.title }}</h3>
+                    {%- endif -%}
+
+                    {%- if block.settings.content != blank -%}
+                      <div class="itg-card-content">{{ block.settings.content }}</div>
+                    {%- endif -%}
+                  {%- endif -%}
+
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {% endif %}
+
+    </div>
+    {% comment %} End Main Content Wrapper {% endcomment %}
+
+    {% comment %} Custom HTML Blocks {% endcomment %}
+    {%- if html_blocks.size > 0 -%}
+      {%- for block in html_blocks -%}
+        <div class="itg-custom-html" {{ block.shopify_attributes }}>
+          {{ block.settings.html_content }}
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+
+    {% comment %} Render button blocks {% endcomment %}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'button' -%}
+        {%- if block.settings.button_text != blank -%}
+          <div class="itg-button-wrapper" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+            <a
+              href="{% if block.settings.scroll_to_section != blank %}#{% elsif block.settings.button_link != blank %}{{ block.settings.button_link }}{% else %}#{% endif %}"
+              class="itg-button {% if block.settings.use_custom_styles %}itg-button--custom-styles{% endif %}{% if block.settings.scroll_to_section != blank %} scroll-to-section{% endif %}"
+              {% if block.settings.scroll_to_section != blank %}data-scroll-target="{{ block.settings.scroll_to_section }}"{% endif %}
+            >
+              {%- if block.settings.icon_position == 'left' -%}
+                {%- if block.settings.button_custom_icon != blank -%}
+                  <span class="itg-button-icon itg-button-icon--left itg-button-icon--custom">
+                    {{ block.settings.button_custom_icon }}
+                  </span>
+                {%- elsif block.settings.button_icon != blank -%}
+                  <span class="itg-btn-icon-material itg-button-icon itg-button-icon--left{% if block.settings.button_icon_filled %} itg-btn-icon-filled{% endif %}">
+                    {{ block.settings.button_icon }}
+                  </span>
+                {%- endif -%}
+              {%- endif -%}
+
+              <span class="itg-button-text">{{- block.settings.button_text -}}</span>
+
+              {%- if block.settings.icon_position == 'right' -%}
+                {%- if block.settings.button_custom_icon != blank -%}
+                  <span class="itg-button-icon itg-button-icon--right itg-button-icon--custom">
+                    {{ block.settings.button_custom_icon }}
+                  </span>
+                {%- elsif block.settings.button_icon != blank -%}
+                  <span class="itg-btn-icon-material itg-button-icon itg-button-icon--right{% if block.settings.button_icon_filled %} itg-btn-icon-filled{% endif %}">
+                    {{ block.settings.button_icon }}
+                  </span>
+                {%- endif -%}
+              {%- endif -%}
+            </a>
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+  </div>
+</section>
+
+<style>
+/* ===========================
+   Section Background & Padding
+   =========================== */
+.section-{{ section.id }} {
+  {% if section.settings.use_theme_colors %}
+    {% if settings.section_gradient_enabled %}
+      background: {{ settings.section_gradient_background }};
+    {% else %}
+      background-color: {{ settings.section_background_color }};
+    {% endif %}
+    padding-top: {{ settings.section_padding_top_desktop }}px;
+    padding-bottom: {{ settings.section_padding_bottom_desktop }}px;
+  {% else %}
+    {% if section.settings.gradient_enabled %}
+      background: {{ section.settings.gradient_background }};
+    {% else %}
+      background-color: {{ section.settings.background_color }};
+    {% endif %}
+    padding-top: {{ section.settings.padding_top_desktop }}px;
+    padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+  {% endif %}
+}
+
+@media screen and (max-width: 749px) {
+  .section-{{ section.id }} {
+    {% if section.settings.use_theme_colors %}
+      padding-top: {{ settings.section_padding_top_mobile }}px;
+      padding-bottom: {{ settings.section_padding_bottom_mobile }}px;
+    {% else %}
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    {% endif %}
+  }
+}
+
+/* ===========================
+   Page Width Integration
+   =========================== */
+.section-{{ section.id }} .page-width {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }} .page-width {
+    padding: 0 5rem;
+  }
+}
+
+/* ===========================
+   Header Styles
+   =========================== */
+.section-{{ section.id }} .itg-header-wrapper {
+  text-align: {{ section.settings.heading_text_align }};
+  margin-bottom: {{ section.settings.header_spacing }}px;
+}
+
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }} .itg-header-wrapper {
+    text-align: {{ section.settings.heading_text_align_desktop }};
+  }
+}
+
+.section-{{ section.id }} .itg-heading {
+  {% if section.settings.use_theme_colors %}
+    color: {{ settings.heading_color }};
+  {% else %}
+    color: {{ section.settings.heading_color }};
+  {% endif %}
+  {% if settings.enable_global_typography %}
+    font-size: {{ settings.heading_font_size_desktop }}px;
+    font-weight: {{ settings.heading_font_weight }};
+  {% else %}
+    font-size: {{ section.settings.heading_font_size_desktop }}px;
+    font-weight: {{ section.settings.heading_font_weight }};
+  {% endif %}
+  line-height: 1.2;
+  margin: 0;
+}
+
+.section-{{ section.id }} .itg-highlighted-text {
+  display: inline-block; /* Always inline-block to prevent gradient from spreading across full container width */
+  {% if section.settings.use_theme_colors %}
+    {% if settings.highlighted_text_gradient_enabled %}
+      background: {{ settings.highlighted_text_gradient }};
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    {% else %}
+      color: {{ settings.highlighted_text_solid_color }};
+    {% endif %}
+    font-family: {{ settings.highlighted_text_font.family }}, {{ settings.highlighted_text_font.fallback_families }};
+    text-transform: {{ settings.highlighted_text_transform }};
+  {% else %}
+    {% if section.settings.highlighted_gradient_enabled %}
+      background: {{ section.settings.highlighted_gradient }};
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    {% else %}
+      color: {{ section.settings.highlighted_color }};
+    {% endif %}
+  {% endif %}
+  {% if settings.enable_global_typography %}
+    font-size: {{ settings.highlighted_text_font_size_desktop }}px;
+    font-weight: {{ settings.highlighted_text_font_weight }};
+      letter-spacing: {{ settings.highlighted_text_letter_spacing | divided_by: 1000.0 }}em;
+      font-style: {{ settings.highlighted_text_font_style }};
+  {% else %}
+    font-size: {{ section.settings.highlighted_font_size_desktop }}px;
+    font-weight: {{ section.settings.highlighted_font_weight }};
+      letter-spacing: {{ settings.highlighted_text_letter_spacing | divided_by: 1000.0 }}em;
+      font-style: {{ settings.highlighted_text_font_style }};
+  {% endif %}
+}
+
+.section-{{ section.id }} .itg-highlighted-separate {
+  display: block;
+  margin-bottom: {{ section.settings.highlighted_spacing }}px;
+}
+
+.section-{{ section.id }} .itg-subheading-wrapper {
+  text-align: {{ section.settings.heading_text_align }};
+  margin-bottom: {{ section.settings.subheading_spacing }}px;
+}
+
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }} .itg-subheading-wrapper {
+    text-align: {{ section.settings.heading_text_align_desktop }};
+  }
+}
+
+.section-{{ section.id }} .itg-subheading {
+  {% if section.settings.use_theme_colors %}
+    color: {{ settings.body_color }};
+  {% else %}
+    color: {{ section.settings.subheading_color }};
+  {% endif %}
+  {% if settings.enable_global_typography %}
+    font-size: {{ settings.body_font_size_desktop }}px;
+    font-weight: {{ settings.body_font_weight }};
+  {% else %}
+    font-size: {{ section.settings.subheading_font_size_desktop }}px;
+    font-weight: {{ section.settings.subheading_font_weight }};
+  {% endif %}
+  line-height: 1.6;
+}
+
+/* ===========================
+   Grid Layout
+   =========================== */
+.section-{{ section.id }} .itg-grid {
+  display: grid;
+  grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
+  column-gap: {{ section.settings.grid_gap_horizontal_mobile }}px;
+  row-gap: {{ section.settings.grid_gap_vertical_mobile }}px;
+}
+
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }} .itg-grid {
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    column-gap: {{ section.settings.grid_gap_horizontal_desktop }}px;
+    row-gap: {{ section.settings.grid_gap_vertical_desktop }}px;
+  }
+}
+
+/* ===========================
+   Card Styles
+   =========================== */
+.section-{{ section.id }} .itg-card {
+  text-align: {{ section.settings.alignment_mobile }};
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+@media only screen and (min-width: 750px) {
+  .section-{{ section.id }} .itg-card {
+    text-align: {{ section.settings.alignment_desktop }};
+  }
+}
+
+/* Inline layout: icon and title on same line */
+.section-{{ section.id }} .itg-inline-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.section-{{ section.id }} .itg-card-inline .itg-icon-wrapper {
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.section-{{ section.id }} .itg-card-inline .itg-card-title {
+  margin: 0;
+}
+
+/* Border settings per card */
+{%- for block in section.blocks -%}
+  {%- if block.type == 'icon_text_card' -%}
+    #shopify-section-{{ section.id }} .itg-card[data-block-id="{{ block.id }}"] {
+      {% if block.settings.card_border_width > 0 %}
+        border: {{ block.settings.card_border_width }}px {{ block.settings.card_border_style | default: 'solid' }} {{ block.settings.card_border_color | default: '#e5e7eb' }};
+        padding: 20px;
+      {% endif %}
+      border-radius: {{ block.settings.card_border_radius | default: 8 }}px;
+    }
+  {%- endif -%}
+{%- endfor -%}
+
+/* ===========================
+   Icon Styles
+   =========================== */
+.section-{{ section.id }} .itg-icon-wrapper {
+  margin-bottom: {{ section.settings.icon_spacing_mobile }}px;
+  display: flex;
+  {% if section.settings.alignment_mobile == 'left' %}
+    justify-content: flex-start;
+  {% elsif section.settings.alignment_mobile == 'right' %}
+    justify-content: flex-end;
+  {% else %}
+    justify-content: center;
+  {% endif %}
+}
+
+@media only screen and (min-width: 750px) {
+  .section-{{ section.id }} .itg-icon-wrapper {
+    {% if section.settings.alignment_desktop == 'left' %}
+      justify-content: flex-start;
+    {% elsif section.settings.alignment_desktop == 'right' %}
+      justify-content: flex-end;
+    {% else %}
+      justify-content: center;
+    {% endif %}
+  }
+}
+
+.section-{{ section.id }} .itg-icon-svg,
+.section-{{ section.id }} .itg-icon-image,
+.section-{{ section.id }} .itg-icon-placeholder,
+.section-{{ section.id }} .itg-material-icon,
+.section-{{ section.id }} .material-icons,
+.section-{{ section.id }} .material-icons-outlined,
+.section-{{ section.id }} .material-icons-round,
+.section-{{ section.id }} .material-icons-sharp,
+.section-{{ section.id }} .material-icons-two-tone,
+.section-{{ section.id }} .material-symbols-outlined,
+.section-{{ section.id }} .material-symbols-rounded,
+.section-{{ section.id }} .material-symbols-sharp {
+  width: {{ section.settings.icon_size_mobile }}px;
+  height: {{ section.settings.icon_size_mobile }}px;
+  {% if section.settings.enable_icon_background %}
+    {% if section.settings.enable_icon_background_gradient %}
+      background: {{ section.settings.icon_background_gradient }};
+    {% else %}
+      background-color: {{ section.settings.icon_background_color }};
+    {% endif %}
+    padding: {{ section.settings.icon_padding }}px;
+    border-radius: {{ section.settings.icon_border_radius }}px;
+    border: {{ section.settings.icon_border_width }}px {{ section.settings.icon_border_style }} {{ section.settings.icon_border_color }};
+  {% endif %}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-{{ section.id }} .itg-icon-svg svg {
+  width: 100%;
+  height: 100%;
+  {% if section.settings.enable_icon_color %}
+    fill: {{ section.settings.icon_color }} !important;
+    color: {{ section.settings.icon_color }} !important;
+  {% endif %}
+}
+
+.section-{{ section.id }} .itg-icon-svg svg path,
+.section-{{ section.id }} .itg-icon-svg svg circle,
+.section-{{ section.id }} .itg-icon-svg svg rect,
+.section-{{ section.id }} .itg-icon-svg svg polygon,
+.section-{{ section.id }} .itg-icon-svg svg polyline,
+.section-{{ section.id }} .itg-icon-svg svg line,
+.section-{{ section.id }} .itg-icon-svg svg ellipse,
+.section-{{ section.id }} .itg-icon-svg svg * {
+  {% if section.settings.enable_icon_color %}
+    fill: {{ section.settings.icon_color }} !important;
+    stroke: {{ section.settings.icon_color }} !important;
+  {% endif %}
+}
+
+
+.section-{{ section.id }} .itg-icon-image {
+  object-fit: contain;
+}
+
+.section-{{ section.id }} .itg-material-icon {
+  {% if section.settings.enable_icon_background %}
+    font-size: calc({{ section.settings.icon_size_mobile }}px - 20px);
+  {% else %}
+    font-size: {{ section.settings.icon_size_mobile }}px;
+  {% endif %}
+  {% if section.settings.enable_icon_color %}
+    color: {{ section.settings.icon_color }};
+  {% endif %}
+  user-select: none;
+  line-height: 1;
+}
+
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }} .itg-material-icon {
+    {% if section.settings.enable_icon_background %}
+      font-size: calc({{ section.settings.icon_size_desktop }}px - 20px);
+    {% else %}
+      font-size: {{ section.settings.icon_size_desktop }}px;
+    {% endif %}
+  }
+}
+
+.section-{{ section.id }} .itg-icon-placeholder svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+}
+
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }} .itg-icon-wrapper {
+    margin-bottom: {{ section.settings.icon_spacing_desktop }}px;
+  }
+
+  .section-{{ section.id }} .itg-icon-svg,
+  .section-{{ section.id }} .itg-icon-image,
+  .section-{{ section.id }} .itg-icon-placeholder,
+  .section-{{ section.id }} .itg-material-icon,
+  .section-{{ section.id }} .material-icons,
+  .section-{{ section.id }} .material-icons-outlined,
+  .section-{{ section.id }} .material-icons-round,
+  .section-{{ section.id }} .material-icons-sharp,
+  .section-{{ section.id }} .material-icons-two-tone,
+  .section-{{ section.id }} .material-symbols-outlined,
+  .section-{{ section.id }} .material-symbols-rounded,
+  .section-{{ section.id }} .material-symbols-sharp {
+    width: {{ section.settings.icon_size_desktop }}px;
+    height: {{ section.settings.icon_size_desktop }}px;
+  }
+}
+
+/* ===========================
+   Card Text Styles
+   =========================== */
+.section-{{ section.id }} .itg-card-title {
+  font-size: {{ section.settings.title_font_size_mobile }}px;
+  font-weight: {{ section.settings.title_font_weight }};
+  color: {{ section.settings.title_color }};
+  margin: 0 0 {{ section.settings.title_spacing_mobile }}px 0;
+  line-height: {{ section.settings.title_line_height }};
+}
+
+.section-{{ section.id }} .itg-card-content {
+  font-size: {{ section.settings.content_font_size_mobile }}px;
+  font-weight: {{ section.settings.content_font_weight }};
+  color: {{ section.settings.content_color }};
+  margin: 0;
+  line-height: {{ section.settings.content_line_height }};
+}
+
+.section-{{ section.id }} .itg-card-content p {
+  margin: 0;
+}
+
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }} .itg-card-title {
+    font-size: {{ section.settings.title_font_size_desktop }}px;
+    margin-bottom: {{ section.settings.title_spacing_desktop }}px;
+  }
+
+  .section-{{ section.id }} .itg-card-content {
+    font-size: {{ section.settings.content_font_size_desktop }}px;
+  }
+}
+
+/* ===========================
+   Main Content Wrapper (Desktop Layout)
+   =========================== */
+.section-{{ section.id }} .itg-main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Desktop Layout: Side by Side or Centered */
+@media only screen and (min-width: 750px) {
+  .section-{{ section.id }} .itg-main-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: {{ section.settings.desktop_gap }}px;
+  }
+
+  {% comment %} Check if any image block is centered {% endcomment %}
+  {% assign has_centered_block = false %}
+  {% for block in section.blocks %}
+    {% if block.type == 'image' and block.settings.position_desktop == 'center' %}
+      {% assign has_centered_block = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+  {% if has_centered_block %}
+    /* Centered Image Layout: 2 icons | image | 2 icons */
+    .section-{{ section.id }} .itg-icons-column.itg-icons-left {
+      flex: 1;
+      order: 1;
+    }
+
+    .section-{{ section.id }} .itg-image-column.itg-image-center {
+      flex: 0 0 {{ section.settings.image_width_desktop }}%;
+      order: 2;
+    }
+
+    .section-{{ section.id }} .itg-icons-column.itg-icons-right {
+      flex: 1;
+      order: 3;
+    }
+
+    /* Centered layout: Each side grid shows 1 column (vertical stack) */
+    .section-{{ section.id }} .itg-icons-left .itg-grid,
+    .section-{{ section.id }} .itg-icons-right .itg-grid {
+      grid-template-columns: 1fr;
+    }
+  {% else %}
+    /* Original 2-column layout */
+    .section-{{ section.id }} .itg-image-column {
+      flex: 0 0 {{ section.settings.image_width_desktop }}%;
+    }
+
+    .section-{{ section.id }} .itg-icons-column {
+      flex: 1;
+    }
+  {% endif %}
+
+  /* Desktop: Default fade for non-centered images */
+  .section-{{ section.id }} .itg-image-block::after {
+    top: 0;
+    bottom: 0;
+  }
+}
+
+/* ===========================
+   Image Block Styles
+   =========================== */
+.section-{{ section.id }} .itg-image-block {
+  width: 100%;
+  position: relative;
+}
+
+/* Image Fade Overlay */
+.section-{{ section.id }} .itg-image-block::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Mobile: Add spacing below image */
+@media only screen and (max-width: 749px) {
+  .section-{{ section.id }} .itg-main-content {
+    flex-direction: column !important;
+  }
+
+  /* Mobile: Disable centered layout - always use standard vertical layout */
+  /* Reorder elements so image is at top/bottom and icons are together */
+  {% if section.settings.image_position_mobile == 'above' %}
+    .section-{{ section.id }} .itg-image-column.itg-image-center {
+      order: 1 !important;
+    }
+    .section-{{ section.id }} .itg-icons-column.itg-icons-left {
+      order: 2 !important;
+    }
+    .section-{{ section.id }} .itg-icons-column.itg-icons-right {
+      order: 3 !important;
+    }
+  {% else %}
+    .section-{{ section.id }} .itg-icons-column.itg-icons-left {
+      order: 1 !important;
+    }
+    .section-{{ section.id }} .itg-icons-column.itg-icons-right {
+      order: 2 !important;
+    }
+    .section-{{ section.id }} .itg-image-column.itg-image-center {
+      order: 3 !important;
+    }
+  {% endif %}
+
+  .section-{{ section.id }} .itg-icons-column.itg-icons-left,
+  .section-{{ section.id }} .itg-icons-column.itg-icons-right {
+    flex: 1 !important;
+    width: 100% !important;
+  }
+
+  /* Add gap between left and right icon groups to match grid vertical gap */
+  .section-{{ section.id }} .itg-icons-column.itg-icons-left {
+    margin-bottom: {{ section.settings.grid_gap_vertical_mobile }}px !important;
+  }
+
+  .section-{{ section.id }} .itg-icons-left .itg-grid,
+  .section-{{ section.id }} .itg-icons-right .itg-grid {
+    grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr) !important;
+  }
+
+  .section-{{ section.id }} .itg-image-column.itg-image-center {
+    flex: 1 !important;
+  }
+
+  /* Mobile: Also apply order to regular (non-centered) layout */
+  {% if section.settings.image_position_mobile == 'above' %}
+    .section-{{ section.id }} .itg-image-column {
+      order: 1 !important;
+    }
+    .section-{{ section.id }} .itg-icons-column {
+      order: 2 !important;
+    }
+  {% else %}
+    .section-{{ section.id }} .itg-icons-column {
+      order: 1 !important;
+    }
+    .section-{{ section.id }} .itg-image-column {
+      order: 2 !important;
+    }
+  {% endif %}
+
+  .section-{{ section.id }} .itg-image-column,
+  .section-{{ section.id }} .itg-image-column.itg-image-center {
+    {% if section.settings.image_full_width_mobile %}
+      width: 100vw !important;
+      margin-left: calc(-50vw + 50%) !important;
+      margin-right: calc(-50vw + 50%) !important;
+    {% else %}
+      width: {{ section.settings.image_width_mobile }}% !important;
+      margin: 0 auto !important;
+    {% endif %}
+  }
+
+  .section-{{ section.id }} .itg-image-block {
+    {% if section.settings.image_position_mobile == 'above' %}
+      margin-bottom: {{ section.settings.image_spacing }}px;
+    {% else %}
+      margin-top: {{ section.settings.image_spacing }}px;
+    {% endif %}
+  }
+
+  /* Mobile: Bottom fade */
+  .section-{{ section.id }} .itg-image-block::after {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: {{ section.settings.fade_height_mobile }}%;
+    {% if section.settings.use_custom_fade_color %}
+      {% assign fade_color = section.settings.custom_fade_color %}
+      background: linear-gradient(to bottom, transparent, {{ fade_color }});
+    {% elsif section.settings.use_theme_colors %}
+      {% if settings.section_gradient_enabled and settings.section_gradient_background != blank %}
+        background: {{ settings.section_gradient_background }};
+        background-attachment: fixed;
+        -webkit-mask-image: linear-gradient(to bottom, transparent, black);
+        mask-image: linear-gradient(to bottom, transparent, black);
+      {% else %}
+        {% assign fade_color = settings.section_background_color %}
+        background: linear-gradient(to bottom, transparent, {{ fade_color }});
+      {% endif %}
+    {% else %}
+      {% if section.settings.gradient_enabled and section.settings.gradient_background != blank %}
+        background: {{ section.settings.gradient_background }};
+        background-attachment: fixed;
+        -webkit-mask-image: linear-gradient(to bottom, transparent, black);
+        mask-image: linear-gradient(to bottom, transparent, black);
+      {% else %}
+        {% assign fade_color = section.settings.background_color %}
+        background: linear-gradient(to bottom, transparent, {{ fade_color }});
+      {% endif %}
+    {% endif %}
+  }
+}
+
+.section-{{ section.id }} .itg-feature-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.section-{{ section.id }} .itg-video-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.section-{{ section.id }} .itg-feature-video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.section-{{ section.id }} .itg-feature-iframe {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 0;
+}
+
+.section-{{ section.id }} .itg-image-placeholder {
+  width: 100%;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.section-{{ section.id }} .itg-image-placeholder svg {
+  width: 50%;
+  height: 50%;
+  opacity: 0.3;
+}
+
+.section-{{ section.id }} .itg-hide-mobile {
+  display: block;
+}
+
+@media screen and (max-width: 749px) {
+  .section-{{ section.id }} .itg-hide-mobile {
+    display: none;
+  }
+}
+
+/* ===========================
+   Custom HTML Block Styles
+   =========================== */
+.section-{{ section.id }} .itg-custom-html {
+  margin-top: {{ section.settings.html_spacing }}px;
+}
+
+/* ===========================
+   Mobile Typography
+   =========================== */
+@media screen and (max-width: 749px) {
+  .section-{{ section.id }} .itg-heading {
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.heading_font_size_mobile }}px;
+    {% else %}
+      font-size: {{ section.settings.heading_font_size_mobile }}px;
+    {% endif %}
+  }
+
+  .section-{{ section.id }} .itg-highlighted-text {
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.highlighted_text_font_size_mobile }}px;
+    {% else %}
+      font-size: {{ section.settings.highlighted_font_size_mobile }}px;
+    {% endif %}
+  }
+
+  .section-{{ section.id }} .itg-subheading {
+    {% if settings.enable_global_typography %}
+      font-size: {{ settings.body_font_size_mobile }}px;
+    {% else %}
+      font-size: {{ section.settings.subheading_font_size_mobile }}px;
+    {% endif %}
+  }
+}
+
+/* ===========================
+   Per-Block Width & Position Overrides
+   =========================== */
+{% for block in section.blocks %}
+  {% if block.type == 'image' %}
+    /* Desktop width and position override for block {{ block.id }} */
+    @media only screen and (min-width: 750px) {
+      .section-{{ section.id }} .itg-image-block-{{ block.id }} {
+        width: {{ block.settings.width_desktop }}%;
+      }
+
+      {% comment %} Position override for desktop {% endcomment %}
+      {% if block.settings.position_desktop == 'center' %}
+        /* Per-block fade: Centered image - fade both sides */
+        .section-{{ section.id }} .itg-image-block-{{ block.id }}::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          width: {{ section.settings.fade_height_desktop }}%;
+          height: auto;
+          pointer-events: none;
+          z-index: 1;
+          {% if section.settings.use_custom_fade_color %}
+            {% assign fade_color = section.settings.custom_fade_color %}
+            background: linear-gradient(to right, {{ fade_color }}, transparent) !important;
+          {% elsif section.settings.use_theme_colors %}
+            {% if settings.section_gradient_enabled and settings.section_gradient_background != blank %}
+              background: {{ settings.section_gradient_background }} !important;
+              background-attachment: fixed !important;
+              -webkit-mask-image: linear-gradient(to right, black, transparent) !important;
+              mask-image: linear-gradient(to right, black, transparent) !important;
+            {% else %}
+              {% assign fade_color = settings.section_background_color %}
+              background: linear-gradient(to right, {{ fade_color }}, transparent) !important;
+            {% endif %}
+          {% else %}
+            {% if section.settings.gradient_enabled and section.settings.gradient_background != blank %}
+              background: {{ section.settings.gradient_background }} !important;
+              background-attachment: fixed !important;
+              -webkit-mask-image: linear-gradient(to right, black, transparent) !important;
+              mask-image: linear-gradient(to right, black, transparent) !important;
+            {% else %}
+              {% assign fade_color = section.settings.background_color %}
+              background: linear-gradient(to right, {{ fade_color }}, transparent) !important;
+            {% endif %}
+          {% endif %}
+        }
+
+        .section-{{ section.id }} .itg-image-block-{{ block.id }}::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          width: {{ section.settings.fade_height_desktop }}%;
+          height: auto;
+          pointer-events: none;
+          z-index: 1;
+          {% if section.settings.use_custom_fade_color %}
+            {% assign fade_color = section.settings.custom_fade_color %}
+            background: linear-gradient(to left, {{ fade_color }}, transparent) !important;
+          {% elsif section.settings.use_theme_colors %}
+            {% if settings.section_gradient_enabled and settings.section_gradient_background != blank %}
+              background: {{ settings.section_gradient_background }} !important;
+              background-attachment: fixed !important;
+              -webkit-mask-image: linear-gradient(to left, black, transparent) !important;
+              mask-image: linear-gradient(to left, black, transparent) !important;
+            {% else %}
+              {% assign fade_color = settings.section_background_color %}
+              background: linear-gradient(to left, {{ fade_color }}, transparent) !important;
+            {% endif %}
+          {% else %}
+            {% if section.settings.gradient_enabled and section.settings.gradient_background != blank %}
+              background: {{ section.settings.gradient_background }} !important;
+              background-attachment: fixed !important;
+              -webkit-mask-image: linear-gradient(to left, black, transparent) !important;
+              mask-image: linear-gradient(to left, black, transparent) !important;
+            {% else %}
+              {% assign fade_color = section.settings.background_color %}
+              background: linear-gradient(to left, {{ fade_color }}, transparent) !important;
+            {% endif %}
+          {% endif %}
+        }
+      {% elsif block.settings.position_desktop == 'right' %}
+        .section-{{ section.id }} .itg-image-column:has(.itg-image-block-{{ block.id }}) {
+          order: 2;
+        }
+        /* Per-block fade: Image on right, icons on left - fade left side */
+        .section-{{ section.id }} .itg-image-block-{{ block.id }}::after {
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: auto;
+          width: {{ section.settings.fade_height_desktop }}%;
+          height: auto;
+          {% if section.settings.use_custom_fade_color %}
+            {% assign fade_color = section.settings.custom_fade_color %}
+            background: linear-gradient(to right, {{ fade_color }}, transparent) !important;
+          {% elsif section.settings.use_theme_colors %}
+            {% if settings.section_gradient_enabled and settings.section_gradient_background != blank %}
+              background: {{ settings.section_gradient_background }} !important;
+              background-attachment: fixed !important;
+              -webkit-mask-image: linear-gradient(to right, black, transparent) !important;
+              mask-image: linear-gradient(to right, black, transparent) !important;
+            {% else %}
+              {% assign fade_color = settings.section_background_color %}
+              background: linear-gradient(to right, {{ fade_color }}, transparent) !important;
+            {% endif %}
+          {% else %}
+            {% if section.settings.gradient_enabled and section.settings.gradient_background != blank %}
+              background: {{ section.settings.gradient_background }} !important;
+              background-attachment: fixed !important;
+              -webkit-mask-image: linear-gradient(to right, black, transparent) !important;
+              mask-image: linear-gradient(to right, black, transparent) !important;
+            {% else %}
+              {% assign fade_color = section.settings.background_color %}
+              background: linear-gradient(to right, {{ fade_color }}, transparent) !important;
+            {% endif %}
+          {% endif %}
+        }
+      {% elsif block.settings.position_desktop == 'left' %}
+        .section-{{ section.id }} .itg-image-column:has(.itg-image-block-{{ block.id }}) {
+          order: 1;
+        }
+        /* Per-block fade: Image on left, icons on right - fade right side */
+        .section-{{ section.id }} .itg-image-block-{{ block.id }}::after {
+          top: 0;
+          bottom: 0;
+          right: 0;
+          left: auto;
+          width: {{ section.settings.fade_height_desktop }}%;
+          height: auto;
+          {% if section.settings.use_custom_fade_color %}
+            {% assign fade_color = section.settings.custom_fade_color %}
+            background: linear-gradient(to left, {{ fade_color }}, transparent) !important;
+          {% elsif section.settings.use_theme_colors %}
+            {% if settings.section_gradient_enabled and settings.section_gradient_background != blank %}
+              background: {{ settings.section_gradient_background }} !important;
+              background-attachment: fixed !important;
+              -webkit-mask-image: linear-gradient(to left, black, transparent) !important;
+              mask-image: linear-gradient(to left, black, transparent) !important;
+            {% else %}
+              {% assign fade_color = settings.section_background_color %}
+              background: linear-gradient(to left, {{ fade_color }}, transparent) !important;
+            {% endif %}
+          {% else %}
+            {% if section.settings.gradient_enabled and section.settings.gradient_background != blank %}
+              background: {{ section.settings.gradient_background }} !important;
+              background-attachment: fixed !important;
+              -webkit-mask-image: linear-gradient(to left, black, transparent) !important;
+              mask-image: linear-gradient(to left, black, transparent) !important;
+            {% else %}
+              {% assign fade_color = section.settings.background_color %}
+              background: linear-gradient(to left, {{ fade_color }}, transparent) !important;
+            {% endif %}
+          {% endif %}
+        }
+      {% endif %}
+    }
+
+    /* Mobile width override for block {{ block.id }} */
+    @media only screen and (max-width: 749px) {
+      .section-{{ section.id }} .itg-image-block-{{ block.id }} {
+        width: {{ block.settings.width_mobile }}%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  {% endif %}
+{% endfor %}
+
+/* ===========================
+   Button Block Styles
+   =========================== */
+{% for block in section.blocks %}
+  {% if block.type == 'button' %}
+    #shopify-section-{{ section.id }} .itg-button-wrapper[data-block-id="{{ block.id }}"] {
+      margin-top: {{ block.settings.margin_top | default: 0 }}px;
+      margin-bottom: {{ block.settings.margin_bottom | default: 24 }}px;
+      text-align: {{ block.settings.alignment_desktop | default: 'left' }};
+      {% if block.settings.hide_on_desktop %}
+        display: none;
+      {% endif %}
+    }
+
+    @media screen and (max-width: 768px) {
+      #shopify-section-{{ section.id }} .itg-button-wrapper[data-block-id="{{ block.id }}"] {
+        text-align: {{ block.settings.alignment_mobile | default: 'center' }};
+        {% if block.settings.hide_on_desktop %}
+          display: block;
+        {% endif %}
+      }
+    }
+
+    #shopify-section-{{ section.id }} .itg-button-wrapper[data-block-id="{{ block.id }}"] .itg-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      {% if block.settings.full_width %}
+        width: 100%;
+      {% elsif block.settings.use_custom_width %}
+        width: {{ block.settings.custom_width_desktop | default: 300 }}px;
+      {% endif %}
+    }
+
+    @media screen and (max-width: 768px) {
+      #shopify-section-{{ section.id }} .itg-button-wrapper[data-block-id="{{ block.id }}"] .itg-button {
+        {% if block.settings.full_width_mobile_only %}
+          width: 100%;
+        {% elsif block.settings.use_custom_width %}
+          width: {{ block.settings.custom_width_mobile | default: 280 }}px;
+        {% endif %}
+      }
+    }
+
+    #shopify-section-{{ section.id }} .itg-button-wrapper[data-block-id="{{ block.id }}"] .itg-button--custom-styles {
+      {% if block.settings.use_gradient %}
+        background: {{ block.settings.button_gradient }};
+      {% else %}
+        background-color: {{ block.settings.button_bg_color | default: '#000000' }};
+      {% endif %}
+      color: {{ block.settings.button_text_color | default: '#FFFFFF' }};
+      border: {{ block.settings.border_width | default: 0 }}px solid {{ block.settings.border_color | default: '#000000' }};
+      border-radius: {{ block.settings.border_radius | default: 4 }}px;
+      padding: {{ block.settings.padding_vertical | default: 16 }}px {{ block.settings.padding_horizontal | default: 24 }}px;
+      font-size: {{ block.settings.font_size_desktop | default: 16 }}px;
+      font-weight: {{ block.settings.font_weight | default: '600' }};
+      text-transform: {{ block.settings.text_transform | default: 'uppercase' }};
+      letter-spacing: {{ block.settings.letter_spacing | default: 1 }}px;
+    }
+
+    @media screen and (max-width: 768px) {
+      #shopify-section-{{ section.id }} .itg-button-wrapper[data-block-id="{{ block.id }}"] .itg-button--custom-styles {
+        font-size: {{ block.settings.font_size_mobile | default: 14 }}px;
+      }
+    }
+
+    #shopify-section-{{ section.id }} .itg-button-wrapper[data-block-id="{{ block.id }}"] .itg-button--custom-styles:hover {
+      background-color: {{ block.settings.button_bg_color_hover | default: '#333333' }};
+      color: {{ block.settings.button_text_color_hover | default: '#FFFFFF' }};
+      transform: translateY(-2px);
+    }
+
+    #shopify-section-{{ section.id }} .itg-button-wrapper[data-block-id="{{ block.id }}"] .itg-button-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: {{ block.settings.button_icon_size | default: 20 }}px !important;
+      color: {{ block.settings.button_icon_color | default: '#FFFFFF' }} !important;
+      width: auto !important;
+      height: auto !important;
+      line-height: 1 !important;
+    }
+
+    #shopify-section-{{ section.id }} .itg-button-wrapper[data-block-id="{{ block.id }}"] .itg-btn-icon-material {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: {{ block.settings.button_icon_size | default: 20 }}px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #shopify-section-{{ section.id }} .itg-button-wrapper[data-block-id="{{ block.id }}"] .itg-btn-icon-filled {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    #shopify-section-{{ section.id }} .itg-button-wrapper[data-block-id="{{ block.id }}"] .itg-button-icon--left {
+      margin-right: {{ block.settings.button_icon_gap | default: 8 }}px;
+    }
+
+    #shopify-section-{{ section.id }} .itg-button-wrapper[data-block-id="{{ block.id }}"] .itg-button-icon--right {
+      margin-left: {{ block.settings.button_icon_gap | default: 8 }}px;
+    }
+
+    #shopify-section-{{ section.id }} .itg-button-wrapper[data-block-id="{{ block.id }}"] .itg-button-icon--custom {
+      width: {{ block.settings.button_icon_size | default: 20 }}px;
+      height: {{ block.settings.button_icon_size | default: 20 }}px;
+    }
+
+    #shopify-section-{{ section.id }} .itg-button-wrapper[data-block-id="{{ block.id }}"] .itg-button-icon--custom svg {
+      width: 100%;
+      height: 100%;
+      fill: currentColor;
+    }
+
+    #shopify-section-{{ section.id }} .itg-button-wrapper[data-block-id="{{ block.id }}"] .itg-button-text {
+      display: inline-block;
+    }
+  {% endif %}
+{% endfor %}
+
+</style>
+
+{% schema %}
+{"name":"Icon Text Grid","tag":"section","class":"section-icon-text-grid","settings": [
+ {"type":"header","content":"Use Theme Colors"},
+ {"type":"checkbox","id":"use_theme_colors","label":"Use Theme Colors","default": false,"info":"Enable to use colors from Theme Settings"},
+ {"type":"header","content":"Heading"},
+ {"type":"text","id":"heading_before","label":"Heading Text (Before Highlight)","default":"add your"},
+ {"type":"text","id":"heading_after","label":"Heading Text (After Highlight)"},
+ {"type":"text","id":"highlighted_text","label":"Highlighted Text","default":"title here"},
+ {"type":"select","id":"highlight_position","label":"Highlight Position","options": [
+ {"value":"inline_first","label":"Inline (First)"},
+ {"value":"inline_second","label":"Inline (Second)"},
+ {"value":"above","label":"Above Heading"},
+ {"value":"below","label":"Below Heading"}
+ ],"default":"inline_second"},
+ {"type":"select","id":"heading_tag","label":"Heading Tag","options": [
+ {"value":"h1","label":"H1"},
+ {"value":"h2","label":"H2"},
+ {"value":"h3","label":"H3"},
+ {"value":"h4","label":"H4"},
+ {"value":"p","label":"Paragraph"}
+ ],"default":"h2"},
+ {"type":"select","id":"heading_text_align","label":"Text Alignment (Mobile)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"select","id":"heading_text_align_desktop","label":"Text Alignment (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"range","id":"header_spacing","label":"Header Bottom Spacing","min": 0,"max": 100,"step": 4,"unit":"px","default": 24
+ },
+ {"type":"header","content":"Heading Styling (If not using theme colors)"},
+ {"type":"range","id":"heading_font_size_desktop","label":"Heading Font Size - Desktop","min": 16,"max": 80,"step": 2,"unit":"px","default": 48
+ },
+ {"type":"range","id":"heading_font_size_mobile","label":"Heading Font Size - Mobile","min": 16,"max": 60,"step": 2,"unit":"px","default": 32
+ },
+ {"type":"range","id":"heading_font_weight","label":"Heading Font Weight","min": 100,"max": 900,"step": 100,"default": 500
+ },
+ {"type":"color","id":"heading_color","label":"Heading Color","default":"#000000"},
+ {"type":"header","content":"Highlighted Text (If not using theme colors)"},
+ {"type":"checkbox","id":"highlighted_gradient_enabled","label":"Enable Gradient for Highlight","default": true
+ },
+ {"type":"color_background","id":"highlighted_gradient","label":"Highlight Gradient","default":"linear-gradient(90deg, rgba(0, 0, 0, 1), rgba(153, 153, 153, 1) 100%)"},
+ {"type":"color","id":"highlighted_color","label":"Highlight Color","default":"#ffffff"},
+ {"type":"range","id":"highlighted_font_size_desktop","label":"Highlight Font Size - Desktop","min": 16,"max": 80,"step": 2,"unit":"px","default": 40
+ },
+ {"type":"range","id":"highlighted_font_size_mobile","label":"Highlight Font Size - Mobile","min": 16,"max": 60,"step": 2,"unit":"px","default": 32
+ },
+ {"type":"range","id":"highlighted_font_weight","label":"Highlight Font Weight","min": 100,"max": 900,"step": 100,"default": 500
+ },
+ {"type":"range","id":"highlighted_spacing","label":"Highlighted Text Bottom Spacing","min": 0,"max": 40,"step": 2,"unit":"px","default": 12,"info":"For above/below positions"},
+ {"type":"header","content":"Subheading"},
+ {"type":"textarea","id":"subheading","label":"Subheading Text","default":"Add your info text here"},
+ {"type":"range","id":"subheading_font_size_desktop","label":"Subheading Font Size - Desktop","min": 12,"max": 32,"step": 1,"unit":"px","default": 16
+ },
+ {"type":"range","id":"subheading_font_size_mobile","label":"Subheading Font Size - Mobile","min": 12,"max": 24,"step": 1,"unit":"px","default": 14
+ },
+ {"type":"range","id":"subheading_font_weight","label":"Subheading Font Weight","min": 100,"max": 900,"step": 100,"default": 400
+ },
+ {"type":"color","id":"subheading_color","label":"Subheading Color","default":"#000000"},
+ {"type":"range","id":"subheading_spacing","label":"Subheading Bottom Spacing","min": 0,"max": 60,"step": 4,"unit":"px","default": 24
+ },
+ {"type":"header","content":"Content Positioning"},
+ {"type":"select","id":"heading_position","label":"Heading Position","options": [
+ {"value":"above_content","label":"Above Everything"},
+ {"value":"above_image","label":"Above Image"},
+ {"value":"above_icons","label":"Above Icons"}
+ ],"default":"above_content","info":"Choose where the heading should appear in the section"},
+ {"type":"header","content":"️ Image Settings"},
+ {"type":"range","id":"image_width_desktop","label":"Image Width (Desktop)","min": 20,"max": 60,"step": 5,"unit":"%","default": 40,"info":"Width of image column on desktop (icons take remaining space)"},
+ {"type":"checkbox","id":"hide_image_mobile","label":"Hide Image on Mobile","default": false
+ },
+ {"type":"select","id":"image_position_mobile","label":"Image Position (Mobile)","options": [
+ {"value":"above","label":"Above Icons"},
+ {"value":"below","label":"Below Icons"}
+ ],"default":"above","info":"Position of image relative to icon grid on mobile"},
+ {"type":"range","id":"image_width_mobile","label":"Image Width (Mobile)","min": 50,"max": 100,"step": 5,"unit":"%","default": 100,"info":"Width of image on mobile"},
+ {"type":"checkbox","id":"image_full_width_mobile","label":"Full Width on Mobile (No Padding)","default": false,"info":"Remove left/right padding on mobile for edge-to-edge image"},
+ {"type":"range","id":"image_spacing","label":"Image Bottom Spacing (Mobile)","min": 0,"max": 100,"step": 4,"unit":"px","default": 32,"info":"Space below image on mobile only"},
+ {"type":"range","id":"desktop_gap","label":"Gap Between Image & Icons (Desktop)","min": 0,"max": 100,"step": 4,"unit":"px","default": 16
+ },
+ {"type":"header","content":"Image Fade Effect"},
+ {"type":"checkbox","id":"use_custom_fade_color","label":"Use Custom Fade Color","default": false,"info":"Override background color for image fade"},
+ {"type":"color","id":"custom_fade_color","label":"Custom Fade Color","default":"#ffffff","info":"Used when 'Use Custom Fade Color' is enabled"},
+ {"type":"range","id":"fade_height_desktop","label":"Fade Height/Width (Desktop)","min": 10,"max": 50,"step": 5,"unit":"%","default": 25,"info":"Width of side fade on desktop"},
+ {"type":"range","id":"fade_height_mobile","label":"Fade Height (Mobile)","min": 10,"max": 50,"step": 5,"unit":"%","default": 35,"info":"Height of bottom fade on mobile"},
+ {"type":"range","id":"html_spacing","label":"Custom HTML Top Spacing","min": 0,"max": 100,"step": 4,"unit":"px","default": 0
+ },
+ {"type":"header","content":"Grid Layout"},
+ {"type":"range","id":"columns_desktop","label":"Columns - Desktop","min": 1,"max": 6,"step": 1,"default": 2
+ },
+ {"type":"select","id":"columns_mobile","label":"Columns - Mobile","options": [
+ {"value":"1","label":"1 Column"},
+ {"value":"2","label":"2 Columns"}
+ ],"default":"2"},
+ {"type":"range","id":"grid_gap_horizontal_desktop","label":"Horizontal Gap - Desktop","min": 0,"max": 100,"step": 4,"unit":"px","default": 32,"info":"Space between columns on desktop"},
+ {"type":"range","id":"grid_gap_vertical_desktop","label":"Vertical Gap - Desktop","min": 0,"max": 100,"step": 4,"unit":"px","default": 32,"info":"Space between rows on desktop"},
+ {"type":"range","id":"grid_gap_horizontal_mobile","label":"Horizontal Gap - Mobile","min": 0,"max": 60,"step": 4,"unit":"px","default": 36,"info":"Space between columns on mobile"},
+ {"type":"range","id":"grid_gap_vertical_mobile","label":"Vertical Gap - Mobile","min": 0,"max": 60,"step": 4,"unit":"px","default": 44,"info":"Space between rows on mobile"},
+ {"type":"header","content":"Icon & Content Alignment"},
+ {"type":"select","id":"alignment_mobile","label":"Alignment (Mobile)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left","info":"Aligns both icon and content on mobile"},
+ {"type":"select","id":"alignment_desktop","label":"Alignment (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center","info":"Aligns both icon and content on desktop"},
+ {"type":"header","content":"Icon Styling"},
+ {"type":"range","id":"icon_size_desktop","label":"Icon Size - Desktop","min": 20,"max": 200,"step": 4,"unit":"px","default": 80
+ },
+ {"type":"range","id":"icon_size_mobile","label":"Icon Size - Mobile","min": 20,"max": 120,"step": 4,"unit":"px","default": 56
+ },
+ {"type":"range","id":"icon_spacing_desktop","label":"Icon Bottom Spacing - Desktop","min": 0,"max": 60,"step": 4,"unit":"px","default": 8
+ },
+ {"type":"range","id":"icon_spacing_mobile","label":"Icon Bottom Spacing - Mobile","min": 0,"max": 40,"step": 4,"unit":"px","default": 8
+ },
+ {"type":"checkbox","id":"enable_icon_color","label":"Enable Custom Icon Color","default": true,"info":"Applies to SVG icons only"},
+ {"type":"color","id":"icon_color","label":"Icon Color","default":"#000000","info":"For SVG icons"},
+ {"type":"header","content":"Icon Background"},
+ {"type":"checkbox","id":"enable_icon_background","label":"Enable Icon Background","default": true
+ },
+ {"type":"checkbox","id":"enable_icon_background_gradient","label":"Enable Icon Background Gradient","default": false
+ },
+ {"type":"color_background","id":"icon_background_gradient","label":"Icon Background Gradient"},
+ {"type":"color","id":"icon_background_color","label":"Icon Background Color","default":"#ffffff"},
+ {"type":"range","id":"icon_padding","label":"Icon Background Padding","min": 0,"max": 40,"step": 2,"unit":"px","default": 14
+ },
+ {"type":"range","id":"icon_border_radius","label":"Icon Border Radius","min": 0,"max": 100,"step": 2,"unit":"px","default": 100,"info":"50% = Circle"},
+ {"type":"range","id":"icon_border_width","label":"Icon Border Width","min": 0,"max": 10,"step": 1,"unit":"px","default": 1
+ },
+ {"type":"select","id":"icon_border_style","label":"Icon Border Style","options": [
+ {"value":"solid","label":"Solid"},
+ {"value":"dashed","label":"Dashed"},
+ {"value":"dotted","label":"Dotted"},
+ {"value":"none","label":"None"}
+ ],"default":"solid"},
+ {"type":"color","id":"icon_border_color","label":"Icon Border Color","default":"#000000"},
+ {"type":"header","content":"Card Title Styling"},
+ {"type":"range","id":"title_font_size_desktop","label":"Title Font Size - Desktop","min": 14,"max": 48,"step": 2,"unit":"px","default": 20
+ },
+ {"type":"range","id":"title_font_size_mobile","label":"Title Font Size - Mobile","min": 14,"max": 36,"step": 2,"unit":"px","default": 16
+ },
+ {"type":"range","id":"title_font_weight","label":"Title Font Weight","min": 100,"max": 900,"step": 100,"default": 500
+ },
+ {"type":"range","id":"title_line_height","label":"Title Line Height","min": 1.0,"max": 2.0,"step": 0.1,"default": 1.4
+ },
+ {"type":"color","id":"title_color","label":"Title Color","default":"#000000"},
+ {"type":"range","id":"title_spacing_desktop","label":"Title Bottom Spacing - Desktop","min": 0,"max": 40,"step": 2,"unit":"px","default": 12
+ },
+ {"type":"range","id":"title_spacing_mobile","label":"Title Bottom Spacing - Mobile","min": 0,"max": 32,"step": 2,"unit":"px","default": 10
+ },
+ {"type":"header","content":"Card Content Styling"},
+ {"type":"range","id":"content_font_size_desktop","label":"Content Font Size - Desktop","min": 12,"max": 24,"step": 1,"unit":"px","default": 15
+ },
+ {"type":"range","id":"content_font_size_mobile","label":"Content Font Size - Mobile","min": 12,"max": 20,"step": 1,"unit":"px","default": 14
+ },
+ {"type":"range","id":"content_font_weight","label":"Content Font Weight","min": 100,"max": 900,"step": 100,"default": 400
+ },
+ {"type":"range","id":"content_line_height","label":"Content Line Height","min": 1.0,"max": 2.5,"step": 0.1,"default": 1.6
+ },
+ {"type":"color","id":"content_color","label":"Content Color","default":"#000000"},
+ {"type":"header","content":"Section Background (If not using theme colors)"},
+ {"type":"color","id":"background_color","label":"Background Color","default":"#ffffff"},
+ {"type":"checkbox","id":"gradient_enabled","label":"Enable Gradient Background","default": false
+ },
+ {"type":"color_background","id":"gradient_background","label":"Gradient Background","default":"linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(240, 240, 240, 1) 100%)"},
+ {"type":"header","content":"Section Padding (If not using theme colors)"},
+ {"type":"range","id":"padding_top_desktop","min": 0,"max": 200,"step": 4,"unit":"px","label":"Top Padding - Desktop","default": 80
+ },
+ {"type":"range","id":"padding_bottom_desktop","min": 0,"max": 200,"step": 4,"unit":"px","label":"Bottom Padding - Desktop","default": 80
+ },
+ {"type":"range","id":"padding_top_mobile","min": 0,"max": 100,"step": 4,"unit":"px","label":"Top Padding - Mobile","default": 60
+ },
+ {"type":"range","id":"padding_bottom_mobile","min": 0,"max": 100,"step": 4,"unit":"px","label":"Bottom Padding - Mobile","default": 60
+ }
+ ],"blocks": [
+ {"type":"icon_text_card","name":"Icon Text Card","settings": [
+ {"type":"header","content":"Layout"},
+ {"type":"checkbox","id":"inline_icon_title","label":"Icon & Title Inline","default": false,"info":"Put icon and title on same line, with content below"},
+ {"type":"header","content":"Icon"},
+ {"type":"paragraph","content":"**Icon Priority:** Custom SVG takes first priority, then uploaded image, then Google Material Icon. Only one will display."},
+ {"type":"html","id":"icon_svg","label":"SVG Icon Code","info":"Paste your SVG code here (highest priority)"},
+ {"type":"image_picker","id":"icon_image","label":"Icon Image","info":"Upload an icon image (used if no SVG is provided)"},
+ {"type":"text","id":"icon_name","label":"Google Material Icon/Symbol Name","info":"Enter icon name with underscores (e.g., 'star', 'bath_public_large', 'shopping_cart'). Browse at: https://fonts.google.com/icons"},
+ {"type":"select","id":"icon_style","label":"Icon Style","options": [
+ {"value":"material-icons","label":"Icons: Filled (Classic)"},
+ {"value":"material-icons-outlined","label":"Icons: Outlined"},
+ {"value":"material-icons-round","label":"Icons: Rounded"},
+ {"value":"material-icons-sharp","label":"Icons: Sharp"},
+ {"value":"material-icons-two-tone","label":"Icons: Two Tone"},
+ {"value":"material-symbols-outlined","label":"Symbols: Outlined (Modern)"},
+ {"value":"material-symbols-rounded","label":"Symbols: Rounded (Modern)"},
+ {"value":"material-symbols-sharp","label":"Symbols: Sharp (Modern)"}
+ ],"default":"material-symbols-outlined","info":"Material Icons = Classic set | Material Symbols = Modern set with more icons"},
+ {"type":"paragraph","content":"**How to use Google Material Icons/Symbols:**\n1. Visit https://fonts.google.com/icons\n2. Search for an icon (e.g., 'bath', 'star', 'shopping')\n3. Click on the icon to see its name with underscores (e.g., 'bath_public_large')\n4. Copy the EXACT name and paste it in the 'Icon Name' field above\n5. Choose 'Symbols' style for newer icons like 'bath_public_large'\n6. Choose 'Icons' style for classic icons like 'star', 'favorite', 'home'\n\n**Tip:** Material Symbols has MORE icons than Material Icons!"},
+ {"type":"header","content":"️ Content"},
+ {"type":"text","id":"title","label":"Title","default":"Fast Shipping"},
+ {"type":"richtext","id":"content","label":"Content","default":"<p>Free delivery on orders over $50.</p>"},
+ {"type":"header","content":"Card Border"},
+ {"type":"range","id":"card_border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Border Width","default": 0},
+ {"type":"select","id":"card_border_style","label":"Border Style","options": [
+ {"value":"solid","label":"Solid"},
+ {"value":"dashed","label":"Dashed"},
+ {"value":"dotted","label":"Dotted"}
+ ],"default":"solid"},
+ {"type":"color","id":"card_border_color","label":"Border Color","default":"#e5e7eb"},
+ {"type":"range","id":"card_border_radius","min": 0,"max": 50,"step": 2,"unit":"px","label":"Border Radius","default": 8}
+ ]
+ },
+ {"type":"image","name":"Image/Video Block","settings": [
+ {"type":"image_picker","id":"image","label":"Image"},
+ {"type":"video_url","id":"video_url","label":"Video URL","accept":["youtube","vimeo"],"info":"Add a YouTube or Vimeo URL. If provided, video will be used instead of image."},
+ {"type":"video","id":"hosted_video","label":"Hosted Video","info":"Upload a video directly. Takes priority over YouTube/Vimeo URL."},
+ {"type":"header","content":"Visibility"},
+ {"type":"checkbox","id":"hide_on_mobile","label":"Hide on Mobile","default": false
+ },
+ {"type":"header","content":"Positioning"},
+ {"type":"select","id":"position_desktop","label":"Position (Desktop)","options": [
+ {"value":"left","label":"Left of Icons"},
+ {"value":"center","label":"Center (2 icons each side)"},
+ {"value":"right","label":"Right of Icons"}
+ ],"default":"center","info":"Choose 'Center' to display image in middle with 2 icons on each side. Requires at least 4 icon blocks."},
+ {"type":"header","content":"Sizing"},
+ {"type":"select","id":"aspect_ratio","label":"Image Aspect Ratio","options": [
+ {"value":"1/1","label":"Square (1:1)"},
+ {"value":"4/3","label":"Standard (4:3)"},
+ {"value":"16/9","label":"Widescreen (16:9)"},
+ {"value":"21/9","label":"Ultrawide (21:9)"},
+ {"value":"3/2","label":"Classic (3:2)"},
+ {"value":"2/3","label":"Portrait (2:3)"},
+ {"value":"9/16","label":"Vertical (9:16)"},
+ {"value":"auto","label":"Auto (Original)"}
+ ],"default":"1/1"},
+ {"type":"range","id":"width_desktop","label":"Width - Desktop","min": 20,"max": 100,"step": 5,"unit":"%","default": 100,"info":"Override section-level width setting"},
+ {"type":"range","id":"width_mobile","label":"Width - Mobile","min": 50,"max": 100,"step": 5,"unit":"%","default": 100,"info":"Override section-level width setting"},
+ {"type":"header","content":"Border"},
+ {"type":"range","id":"border_width","label":"Border Width","min": 0,"max": 20,"step": 1,"unit":"px","default": 0
+ },
+ {"type":"select","id":"border_style","label":"Border Style","options": [
+ {"value":"solid","label":"Solid"},
+ {"value":"dashed","label":"Dashed"},
+ {"value":"dotted","label":"Dotted"}
+ ],"default":"solid"},
+ {"type":"color","id":"border_color","label":"Border Color","default":"#000000"},
+ {"type":"range","id":"border_radius","label":"Border Radius","min": 0,"max": 50,"step": 2,"unit":"px","default": 0
+ }
+ ]
+ },
+ {"type":"custom_html","name":"Custom HTML","settings": [
+ {"type":"html","id":"html_content","label":"HTML Content","info":"Add your custom HTML code here"}
+ ]
+ },
+ {"type":"button","name":"Button","settings": [
+ {"type":"paragraph","content":"**Call-to-Action Button**"},
+ {"type":"text","id":"button_text","label":"Button Text","default":"SHOP NOW"},
+ {"type":"url","id":"button_link","label":"Button Link"},
+ {"type":"text","id":"scroll_to_section","label":"Scroll to Section Class","info":"Enter class name WITHOUT the dot (e.g., 'product-info' NOT '.product-info'). Leave button link empty when using this."},
+ {"type":"checkbox","id":"hide_on_desktop","label":"Hide on Desktop","default": false,"info":"Hide this button on desktop devices"},
+ {"type":"header","content":"Icon Settings"},
+ {"type":"text","id":"button_icon","label":"Google Icon Name","info":"Enter icon name like: shopping_cart, local_shipping, favorite. Use underscores between words. [View all icons](https://fonts.google.com/icons?icon.set=Material+Symbols&icon.platform=web)","default":"arrow_right_alt"},
+ {"type":"checkbox","id":"button_icon_filled","label":"Filled icon","default": false},
+ {"type":"html","id":"button_custom_icon","label":"Custom SVG Icon Code","info":"If provided, this custom SVG will be used instead of the Google Material Icon. Paste your SVG code here."},
+ {"type":"select","id":"icon_position","label":"Icon Position","options": [
+ {"value":"left","label":"Left of text"},
+ {"value":"right","label":"Right of text"}
+ ],"default":"right"},
+ {"type":"range","id":"button_icon_size","min": 12,"max": 48,"step": 2,"unit":"px","label":"Icon Size","default": 20},
+ {"type":"range","id":"button_icon_gap","min": 0,"max": 30,"step": 2,"unit":"px","label":"Gap Between Icon & Text","default": 8},
+ {"type":"color","id":"button_icon_color","label":"Icon Color","default":"#ffffff","info":"Leave as white if using custom styles, or match your theme button color"},
+ {"type":"header","content":"Alignment"},
+ {"type":"select","id":"alignment_desktop","label":"Alignment (Desktop)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"select","id":"alignment_mobile","label":"Alignment (Mobile)","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"center"},
+ {"type":"header","content":"Style Settings"},
+ {"type":"checkbox","id":"use_custom_styles","label":"Use Custom Styles","default": true,"info":"Enable to override theme button styles with custom settings below"},
+ {"type":"header","content":"Colors"},
+ {"type":"color","id":"button_text_color","label":"Text Color","default":"#ffffff"},
+ {"type":"color","id":"button_bg_color","label":"Background Color","default":"#000000"},
+ {"type":"checkbox","id":"use_gradient","label":"Use Gradient Background","default": false},
+ {"type":"color_background","id":"button_gradient","label":"Gradient Background"},
+ {"type":"color","id":"button_text_color_hover","label":"Text Color (Hover)","default":"#ffffff"},
+ {"type":"color","id":"button_bg_color_hover","label":"Background Color (Hover)","default":"#333333"},
+ {"type":"header","content":"Border"},
+ {"type":"range","id":"border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Border Width","default": 0},
+ {"type":"color","id":"border_color","label":"Border Color","default":"#000000"},
+ {"type":"range","id":"border_radius","min": 0,"max": 50,"step": 1,"unit":"px","label":"Border Radius","default": 4},
+ {"type":"header","content":"Typography"},
+ {"type":"range","id":"font_size_desktop","min": 12,"max": 32,"step": 1,"unit":"px","label":"Font Size (Desktop)","default": 16},
+ {"type":"range","id":"font_size_mobile","min": 12,"max": 28,"step": 1,"unit":"px","label":"Font Size (Mobile)","default": 14},
+ {"type":"select","id":"font_weight","label":"Font Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"},
+ {"value":"800","label":"Extra Bold"}
+ ],"default":"600"},
+ {"type":"select","id":"text_transform","label":"Text Transform","options": [
+ {"value":"none","label":"None"},
+ {"value":"uppercase","label":"Uppercase"},
+ {"value":"lowercase","label":"Lowercase"},
+ {"value":"capitalize","label":"Capitalize"}
+ ],"default":"uppercase"},
+ {"type":"range","id":"letter_spacing","min": -2,"max": 10,"step": 0.5,"unit":"px","label":"Letter Spacing","default": 1},
+ {"type":"header","content":"Padding"},
+ {"type":"range","id":"padding_vertical","min": 0,"max": 40,"step": 2,"unit":"px","label":"Vertical Padding","default": 16},
+ {"type":"range","id":"padding_horizontal","min": 0,"max": 80,"step": 2,"unit":"px","label":"Horizontal Padding","default": 24},
+ {"type":"header","content":"Layout"},
+ {"type":"checkbox","id":"full_width","label":"Full Width Button","default": false},
+ {"type":"checkbox","id":"full_width_mobile_only","label":"Full Width on Mobile Only","default": true},
+ {"type":"checkbox","id":"use_custom_width","label":"Use Custom Width","default": false,"info":"Enable to set custom button width instead of auto"},
+ {"type":"range","id":"custom_width_desktop","min": 100,"max": 800,"step": 10,"unit":"px","label":"Custom Width (Desktop)","default": 300},
+ {"type":"range","id":"custom_width_mobile","min": 100,"max": 500,"step": 10,"unit":"px","label":"Custom Width (Mobile)","default": 280},
+ {"type":"range","id":"margin_top","min": -20,"max": 40,"step": 2,"unit":"px","label":"Top Margin","default": 0},
+ {"type":"range","id":"margin_bottom","min": -20,"max": 40,"step": 2,"unit":"px","label":"Bottom Margin","default": 24}
+ ]
+ }
+ ],"presets": [
+ {"name":"Icon Text Grid","blocks": [
+ {"type":"image","settings": {"hide_on_mobile": false,"position_desktop":"center","aspect_ratio":"1/1","width_desktop": 100,"width_mobile": 100,"border_width": 0,"border_style":"solid","border_color":"#000000","border_radius": 0}
+ },
+ {"type":"icon_text_card","settings": {"inline_icon_title": false,"icon_svg":"","icon_name":"blur_on","icon_style":"material-icons","title":"Fast Shipping","content":"<p>Free delivery on orders over $50.</p>","card_border_width": 0,"card_border_style":"solid","card_border_color":"#e5e7eb","card_border_radius": 8}
+ },
+ {"type":"icon_text_card","settings": {"inline_icon_title": false,"icon_svg":"","icon_name":"public","icon_style":"material-icons-outlined","title":"Secure Payment","content":"<p>Your payment  is encrypted and secure.</p>","card_border_width": 0,"card_border_style":"solid","card_border_color":"#e5e7eb","card_border_radius": 8}
+ },
+ {"type":"icon_text_card","settings": {"inline_icon_title": false,"icon_svg":"","icon_name":"","icon_style":"material-icons","title":"24/7 Support","content":"<p>Our customer service team is available 24/7.</p>","card_border_width": 0,"card_border_style":"solid","card_border_color":"#e5e7eb","card_border_radius": 8}
+ },
+ {"type":"icon_text_card","settings": {"inline_icon_title": false,"icon_svg":"","icon_name":"","icon_style":"material-icons","title":"Easy Returns","content":"<p>Not satisfied? Return your order no problem</p>","card_border_width": 0,"card_border_style":"solid","card_border_color":"#e5e7eb","card_border_radius": 8}
+ },
+ {"type":"button","settings": {"button_text":"SHOP NOW","button_link":"","scroll_to_section":"","hide_on_desktop": false,"button_icon":"arrow_right_alt","button_icon_filled": false,"button_custom_icon":"","icon_position":"right","button_icon_size": 20,"button_icon_gap": 8,"button_icon_color":"#ffffff","alignment_desktop":"center","alignment_mobile":"center","use_custom_styles": true,"button_text_color":"#ffffff","button_bg_color":"#000000","use_gradient": false,"button_gradient":"","button_text_color_hover":"#ffffff","button_bg_color_hover":"#333333","border_width": 0,"border_color":"#000000","border_radius": 4,"font_size_desktop": 16,"font_size_mobile": 14,"font_weight":"600","text_transform":"uppercase","letter_spacing": 1,"padding_vertical": 16,"padding_horizontal": 24,"full_width": false,"full_width_mobile_only": true,"use_custom_width": false,"custom_width_desktop": 300,"custom_width_mobile": 280,"margin_top": 0,"margin_bottom": 24}
+ }
+ ],"category":"Features"}
+ ]
+}
+{% endschema %}
+
+<script>
+(function() {
+  const buttons = document.querySelectorAll('#shopify-section-{{ section.id }} .scroll-to-section');
+
+  buttons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      const targetClass = this.getAttribute('data-scroll-target');
+
+      if (targetClass) {
+        e.preventDefault();
+
+        const targetElement = document.querySelector('.' + targetClass);
+
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }
+    });
+  });
+})();
+</script>

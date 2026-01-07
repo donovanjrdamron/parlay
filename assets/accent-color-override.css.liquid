@@ -1,0 +1,51 @@
+/* ========================================
+   ACCENT COLOR COMPLETE OVERRIDE
+   Replaces ALL accent colors with custom settings
+   ======================================== */
+
+:root {
+  /* Override Accent 1 with button background color */
+  --color-base-accent-1: {{ settings.button_background_color | color_extract: 'red' }}, {{ settings.button_background_color | color_extract: 'green' }}, {{ settings.button_background_color | color_extract: 'blue' }};
+
+  /* Override Accent 2 with button text color */
+  --color-base-accent-2: {{ settings.button_text_color | color_extract: 'red' }}, {{ settings.button_text_color | color_extract: 'green' }}, {{ settings.button_text_color | color_extract: 'blue' }};
+
+  /* Override gradient accents */
+  {% if settings.button_gradient_enabled %}
+    --gradient-base-accent-1: {{ settings.button_gradient }};
+    --gradient-base-accent-2: {{ settings.button_gradient }};
+  {% else %}
+    --gradient-base-accent-1: {{ settings.button_background_color }};
+    --gradient-base-accent-2: {{ settings.button_background_color }};
+  {% endif %}
+
+  /* Override all uses of accent color variables */
+  --accent-color: var(--color-base-accent-1);
+  --accent-2-color: var(--color-base-accent-2);
+}
+
+/* Remove accent colors from all elements that might use them */
+* {
+  --accent-color: {{ settings.button_background_color | color_extract: 'red' }}, {{ settings.button_background_color | color_extract: 'green' }}, {{ settings.button_background_color | color_extract: 'blue' }};
+  --accent-2-color: {{ settings.button_text_color | color_extract: 'red' }}, {{ settings.button_text_color | color_extract: 'green' }}, {{ settings.button_text_color | color_extract: 'blue' }};
+}
+
+/* Specific overrides for elements that use accent colors */
+.color-accent-1 {
+  background: {{ settings.button_background_color }};
+  --color-foreground: {{ settings.button_text_color | color_extract: 'red' }}, {{ settings.button_text_color | color_extract: 'green' }}, {{ settings.button_text_color | color_extract: 'blue' }};
+}
+
+.color-accent-2 {
+  background: {{ settings.button_background_color }};
+  --color-foreground: {{ settings.button_text_color | color_extract: 'red' }}, {{ settings.button_text_color | color_extract: 'green' }}, {{ settings.button_text_color | color_extract: 'blue' }};
+}
+
+/* Override select and pickers to not use accent colors */
+.select__select,
+select,
+.product-form__input select {
+  --accent-color: 0, 0, 0;
+  --accent-2-color: 0, 0, 0;
+  --pickers-overlay-opacity: 0;
+}

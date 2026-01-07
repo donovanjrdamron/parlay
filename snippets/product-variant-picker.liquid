@@ -1,0 +1,772 @@
+{% comment %}
+  Renders product variant-picker
+
+  Accepts:
+  - product: {Object} product object.
+  - block: {Object} passing the block information.
+  - product_form_id: {String} Id of the product form to which the variant picker is associated.
+  - update_url: {Boolean} whether or not to update url when changing variants. If false, the url isn't updated. Default: true (optional).
+  Usage:
+  {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+{% endcomment %}
+
+<style>
+  /* GLOBAL OVERFLOW FIX - Prevent horizontal scroll in Shopify editor */
+  .product-form,
+  .product-form__buttons,
+  .product__info-container,
+  .product__info-wrapper,
+  [id^="variant-selects-"] {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Override base.css pill margin */
+  #variant-selects-{{ section.id }} .product-form__input:not(.product-form__input--quantity-breaks) input[type="radio"] + label {
+    margin: 0 !important;
+  }
+
+  /* Option label margin bottom */
+  #variant-selects-{{ section.id }} .product-form__label-container {
+    margin-bottom: {{ block.settings.option_label_margin_bottom | default: 10 }}px;
+  }
+
+  /* Pill wrapper for proper label positioning */
+  .variant-pill-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* Pills with custom images */
+  .variant-pill--with-image {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+    width: auto !important;
+    white-space: nowrap;
+  }
+
+  .variant-pill__image {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 0;
+  }
+
+  .variant-pill__image img {
+    display: block;
+    vertical-align: middle;
+  }
+
+  .variant-pill__text {
+    display: inline-block;
+    line-height: normal;
+  }
+
+  /* Prevent pills from going full width */
+  .product-form__input--pills .variant-pill--with-image {
+    flex: 0 0 auto !important;
+  }
+
+  /* Custom pill styles from local settings */
+  #variant-selects-{{ section.id }} .product-form__input--pills input[type="radio"] + label {
+    background-color: {{ block.settings.pills_bg_color_inactive | default: '#ffffff' }};
+    color: {{ block.settings.pills_text_color_inactive | default: '#000000' }};
+    border: {{ block.settings.pills_border_width | default: 1 }}px solid {{ block.settings.pills_border_color_inactive | default: '#cccccc' }};
+    border-radius: {{ block.settings.pills_border_radius | default: 4 }}px;
+    padding: {{ block.settings.pills_padding_vertical | default: 10 }}px {{ block.settings.pills_padding_horizontal | default: 16 }}px;
+    font-size: {{ block.settings.pills_font_size_inactive | default: 14 }}px;
+    letter-spacing: 0;
+    transition: all 0.2s ease;
+  }
+
+  #variant-selects-{{ section.id }} .product-form__input--pills input[type="radio"]:checked + label {
+    background-color: {{ block.settings.pills_bg_color_active | default: '#000000' }};
+    color: {{ block.settings.pills_text_color_active | default: '#ffffff' }};
+    border-color: {{ block.settings.pills_border_color_active | default: '#000000' }};
+    font-weight: {{ block.settings.pills_font_weight_active | default: '600' }};
+    font-size: {{ block.settings.pills_font_size_active | default: 14 }}px;
+    letter-spacing: 0;
+  }
+
+  #variant-selects-{{ section.id }} .product-form__input--pills input[type="radio"]:checked + label .variant-pill__text {
+    font-weight: {{ block.settings.pills_font_weight_active | default: '600' }};
+    font-size: {{ block.settings.pills_font_size_active | default: 14 }}px;
+  }
+
+  #variant-selects-{{ section.id }} .variant-pill__image img {
+    width: {{ block.settings.pills_image_size | default: 30 }}px;
+    height: {{ block.settings.pills_image_size | default: 30 }}px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  /* Color swatch styling for pills (non-circle mode) */
+  #variant-selects-{{ section.id }} .variant-pill__color-swatch {
+    width: {{ block.settings.pills_image_size | default: 30 }}px;
+    height: {{ block.settings.pills_image_size | default: 30 }}px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  #variant-selects-{{ section.id }} .variant-pill__color {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 4px;
+  }
+
+  /* Image Only Mode Styles */
+  #variant-selects-{{ section.id }} .product-form__input--pills input[type="radio"] + label.variant-pill--image-only {
+    padding: 0;
+    background: transparent;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  #variant-selects-{{ section.id }} .variant-pill--image-only .variant-pill__image {
+    width: {{ block.settings.pills_image_only_size | default: 60 }}px;
+    height: {{ block.settings.pills_image_only_size | default: 60 }}px;
+    border-radius: {{ block.settings.pills_border_radius | default: 4 }}px;
+    overflow: hidden;
+    border: {{ block.settings.pills_border_width | default: 1 }}px solid {{ block.settings.pills_border_color_inactive | default: '#cccccc' }};
+    transition: border-color 0.2s ease;
+  }
+
+  #variant-selects-{{ section.id }} .product-form__input--pills input[type="radio"]:checked + label.variant-pill--image-only .variant-pill__image {
+    border-color: {{ block.settings.pills_border_color_active | default: '#000000' }};
+    border-width: {{ block.settings.pills_border_width | default: 1 | times: 2 }}px;
+  }
+
+  #variant-selects-{{ section.id }} .variant-pill--image-only .variant-pill__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Color swatch in image-only mode */
+  #variant-selects-{{ section.id }} .variant-pill--image-only .variant-pill__color-swatch {
+    width: 100%;
+    height: 100%;
+  }
+
+  #variant-selects-{{ section.id }} .variant-pill--image-only .variant-pill__color {
+    width: 100%;
+    height: 100%;
+    border-radius: {{ block.settings.pills_border_radius | default: 4 }}px;
+  }
+
+  #variant-selects-{{ section.id }} .variant-pill__label-below {
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    margin-top: 6px;
+    color: {{ block.settings.pills_text_color_inactive | default: '#000000' }};
+  }
+
+  #variant-selects-{{ section.id }} .product-form__input--pills input[type="radio"]:checked ~ .variant-pill__label-below {
+    color: {{ block.settings.pills_text_color_active | default: '#000000' }};
+    font-weight: {{ block.settings.pills_font_weight_active | default: '600' }};
+    font-size: {{ block.settings.pills_font_size_active | default: 14 }}px;
+  }
+
+  /* Hide variant text when enabled (excluding overrides) */
+  {% if block.settings.pills_hide_variant_text %}
+    {% assign override_1_slug_check = block.settings.pills_override_1_option_name | downcase | strip | replace: ' ', '-' %}
+    {% assign override_2_slug_check = block.settings.pills_override_2_option_name | downcase | strip | replace: ' ', '-' %}
+    {% assign override_3_slug_check = block.settings.pills_override_3_option_name | downcase | strip | replace: ' ', '-' %}
+
+    #variant-selects-{{ section.id }} .product-form__input--pills input[type="radio"] + label .variant-pill__text {
+      display: none !important;
+    }
+
+    {% if override_1_slug_check != blank %}
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_1_slug_check }}"] input[type="radio"] + label .variant-pill__text {
+        display: inline-block !important;
+      }
+    {% endif %}
+    {% if override_2_slug_check != blank %}
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_2_slug_check }}"] input[type="radio"] + label .variant-pill__text {
+        display: inline-block !important;
+      }
+    {% endif %}
+    {% if override_3_slug_check != blank %}
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_3_slug_check }}"] input[type="radio"] + label .variant-pill__text {
+        display: inline-block !important;
+      }
+    {% endif %}
+  {% endif %}
+
+  /* Option-Specific Override 1 */
+  {% if block.settings.pills_override_1_option_name != blank %}
+    {% assign override_1_slug = block.settings.pills_override_1_option_name | downcase | strip | replace: ' ', '-' %}
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_1_slug }}"] input[type="radio"] + label {
+      background-color: {{ block.settings.pills_override_1_bg_color_inactive }};
+      color: {{ block.settings.pills_override_1_text_color_inactive }};
+      border: {{ block.settings.pills_override_1_border_width }}px solid {{ block.settings.pills_override_1_border_color_inactive }};
+      border-radius: {{ block.settings.pills_override_1_border_radius }}px;
+      padding: {{ block.settings.pills_override_1_padding_vertical }}px {{ block.settings.pills_override_1_padding_horizontal }}px;
+      font-size: {{ block.settings.pills_override_1_font_size_inactive | default: 14 }}px !important;
+      letter-spacing: 0;
+    }
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_1_slug }}"] input[type="radio"] + label .variant-pill__text {
+      color: {{ block.settings.pills_override_1_text_color_inactive }} !important;
+      font-size: {{ block.settings.pills_override_1_font_size_inactive | default: 14 }}px !important;
+    }
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_1_slug }}"] input[type="radio"]:checked + label {
+      background-color: {{ block.settings.pills_override_1_bg_color_active }};
+      color: {{ block.settings.pills_override_1_text_color_active }};
+      border-color: {{ block.settings.pills_override_1_border_color_active }};
+      font-weight: {{ block.settings.pills_override_1_font_weight_active | default: '600' }};
+      font-size: {{ block.settings.pills_override_1_font_size_active | default: 14 }}px !important;
+      letter-spacing: 0;
+    }
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_1_slug }}"] input[type="radio"]:checked + label .variant-pill__text {
+      color: {{ block.settings.pills_override_1_text_color_active }} !important;
+      font-size: {{ block.settings.pills_override_1_font_size_active | default: 14 }}px !important;
+    }
+    {% if block.settings.pills_override_1_circle_mode %}
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_1_slug }}"] input[type="radio"] + label {
+        width: {{ block.settings.pills_override_1_circle_size }}px !important;
+        height: {{ block.settings.pills_override_1_circle_size }}px !important;
+        min-width: {{ block.settings.pills_override_1_circle_size }}px !important;
+        min-height: {{ block.settings.pills_override_1_circle_size }}px !important;
+        border-radius: 50% !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      /* Only hide text when image is present */
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_1_slug }}"] input[type="radio"] + label:has(.variant-pill__image) .variant-pill__text {
+        font-size: 0;
+        display: none;
+      }
+      /* Show text when no image (blank) */
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_1_slug }}"] input[type="radio"] + label:not(:has(.variant-pill__image)) .variant-pill__text {
+        font-size: 12px;
+        display: block;
+        text-align: center;
+        line-height: 1.2;
+        word-wrap: break-word;
+        max-width: 100%;
+        padding: 2px;
+      }
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_1_slug }}"] input[type="radio"] + label .variant-pill__image {
+        width: 100%;
+        height: 100%;
+      }
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_1_slug }}"] input[type="radio"] + label .variant-pill__image img {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+      }
+    {% endif %}
+    {% if block.settings.pills_override_1_hide_variant_text %}
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_1_slug }}"] input[type="radio"] + label .variant-pill__text {
+        display: none !important;
+      }
+    {% endif %}
+    /* Label below colors for Override 1 */
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_1_slug }}"] .variant-pill__label-below {
+      color: {{ block.settings.pills_override_1_text_color_inactive }};
+    }
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_1_slug }}"] input[type="radio"]:checked ~ .variant-pill__label-below {
+      color: {{ block.settings.pills_override_1_text_color_active }};
+      font-weight: {{ block.settings.pills_override_1_font_weight_active | default: block.settings.pills_font_weight_active | default: '600' }};
+      font-size: {{ block.settings.pills_override_1_font_size_active | default: block.settings.pills_font_size_active | default: 14 }}px;
+    }
+  {% endif %}
+
+  /* Option-Specific Override 2 */
+  {% if block.settings.pills_override_2_option_name != blank %}
+    {% assign override_2_slug = block.settings.pills_override_2_option_name | downcase | strip | replace: ' ', '-' %}
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_2_slug }}"] input[type="radio"] + label {
+      background-color: {{ block.settings.pills_override_2_bg_color_inactive }};
+      color: {{ block.settings.pills_override_2_text_color_inactive }};
+      border: {{ block.settings.pills_override_2_border_width }}px solid {{ block.settings.pills_override_2_border_color_inactive }};
+      border-radius: {{ block.settings.pills_override_2_border_radius }}px;
+      padding: {{ block.settings.pills_override_2_padding_vertical }}px {{ block.settings.pills_override_2_padding_horizontal }}px;
+      font-size: {{ block.settings.pills_override_2_font_size_inactive | default: 14 }}px !important;
+      letter-spacing: 0;
+    }
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_2_slug }}"] input[type="radio"] + label .variant-pill__text {
+      color: {{ block.settings.pills_override_2_text_color_inactive }} !important;
+      font-size: {{ block.settings.pills_override_2_font_size_inactive | default: 14 }}px !important;
+    }
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_2_slug }}"] input[type="radio"]:checked + label {
+      background-color: {{ block.settings.pills_override_2_bg_color_active }};
+      color: {{ block.settings.pills_override_2_text_color_active }};
+      border-color: {{ block.settings.pills_override_2_border_color_active }};
+      font-weight: {{ block.settings.pills_override_2_font_weight_active | default: '600' }};
+      font-size: {{ block.settings.pills_override_2_font_size_active | default: 14 }}px !important;
+      letter-spacing: 0;
+    }
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_2_slug }}"] input[type="radio"]:checked + label .variant-pill__text {
+      color: {{ block.settings.pills_override_2_text_color_active }} !important;
+      font-size: {{ block.settings.pills_override_2_font_size_active | default: 14 }}px !important;
+    }
+    {% if block.settings.pills_override_2_circle_mode %}
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_2_slug }}"] input[type="radio"] + label {
+        width: {{ block.settings.pills_override_2_circle_size }}px !important;
+        height: {{ block.settings.pills_override_2_circle_size }}px !important;
+        min-width: {{ block.settings.pills_override_2_circle_size }}px !important;
+        min-height: {{ block.settings.pills_override_2_circle_size }}px !important;
+        border-radius: 50% !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      /* Only hide text when image is present */
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_2_slug }}"] input[type="radio"] + label:has(.variant-pill__image) .variant-pill__text {
+        font-size: 0;
+        display: none;
+      }
+      /* Show text when no image (blank) */
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_2_slug }}"] input[type="radio"] + label:not(:has(.variant-pill__image)) .variant-pill__text {
+        font-size: 12px;
+        display: block;
+        text-align: center;
+        line-height: 1.2;
+        word-wrap: break-word;
+        max-width: 100%;
+        padding: 2px;
+      }
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_2_slug }}"] input[type="radio"] + label .variant-pill__image {
+        width: 100%;
+        height: 100%;
+      }
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_2_slug }}"] input[type="radio"] + label .variant-pill__image img {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+      }
+    {% endif %}
+    {% if block.settings.pills_override_2_hide_variant_text %}
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_2_slug }}"] input[type="radio"] + label .variant-pill__text {
+        display: none !important;
+      }
+    {% endif %}
+    /* Label below colors for Override 2 */
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_2_slug }}"] .variant-pill__label-below {
+      color: {{ block.settings.pills_override_2_text_color_inactive }};
+    }
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_2_slug }}"] input[type="radio"]:checked ~ .variant-pill__label-below {
+      color: {{ block.settings.pills_override_2_text_color_active }};
+      font-weight: {{ block.settings.pills_override_2_font_weight_active | default: block.settings.pills_font_weight_active | default: '600' }};
+      font-size: {{ block.settings.pills_override_2_font_size_active | default: block.settings.pills_font_size_active | default: 14 }}px;
+    }
+  {% endif %}
+
+  /* Option-Specific Override 3 */
+  {% if block.settings.pills_override_3_option_name != blank %}
+    {% assign override_3_slug = block.settings.pills_override_3_option_name | downcase | strip | replace: ' ', '-' %}
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_3_slug }}"] input[type="radio"] + label {
+      background-color: {{ block.settings.pills_override_3_bg_color_inactive }};
+      color: {{ block.settings.pills_override_3_text_color_inactive }};
+      border: {{ block.settings.pills_override_3_border_width }}px solid {{ block.settings.pills_override_3_border_color_inactive }};
+      border-radius: {{ block.settings.pills_override_3_border_radius }}px;
+      padding: {{ block.settings.pills_override_3_padding_vertical }}px {{ block.settings.pills_override_3_padding_horizontal }}px;
+      font-size: {{ block.settings.pills_override_3_font_size_inactive | default: 14 }}px !important;
+      letter-spacing: 0;
+    }
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_3_slug }}"] input[type="radio"] + label .variant-pill__text {
+      color: {{ block.settings.pills_override_3_text_color_inactive }} !important;
+      font-size: {{ block.settings.pills_override_3_font_size_inactive | default: 14 }}px !important;
+    }
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_3_slug }}"] input[type="radio"]:checked + label {
+      background-color: {{ block.settings.pills_override_3_bg_color_active }};
+      color: {{ block.settings.pills_override_3_text_color_active }};
+      border-color: {{ block.settings.pills_override_3_border_color_active }};
+      font-weight: {{ block.settings.pills_override_3_font_weight_active | default: '600' }};
+      font-size: {{ block.settings.pills_override_3_font_size_active | default: 14 }}px !important;
+      letter-spacing: 0;
+    }
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_3_slug }}"] input[type="radio"]:checked + label .variant-pill__text {
+      color: {{ block.settings.pills_override_3_text_color_active }} !important;
+      font-size: {{ block.settings.pills_override_3_font_size_active | default: 14 }}px !important;
+    }
+    {% if block.settings.pills_override_3_circle_mode %}
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_3_slug }}"] input[type="radio"] + label {
+        width: {{ block.settings.pills_override_3_circle_size }}px !important;
+        height: {{ block.settings.pills_override_3_circle_size }}px !important;
+        min-width: {{ block.settings.pills_override_3_circle_size }}px !important;
+        min-height: {{ block.settings.pills_override_3_circle_size }}px !important;
+        border-radius: 50% !important;
+        padding: 0 !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      /* Only hide text when image is present */
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_3_slug }}"] input[type="radio"] + label:has(.variant-pill__image) .variant-pill__text {
+        font-size: 0;
+        display: none;
+      }
+      /* Show text when no image (blank) */
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_3_slug }}"] input[type="radio"] + label:not(:has(.variant-pill__image)) .variant-pill__text {
+        font-size: 12px;
+        display: block;
+        text-align: center;
+        line-height: 1.2;
+        word-wrap: break-word;
+        padding: 2px;
+      }
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_3_slug }}"] input[type="radio"] + label .variant-pill__image {
+        width: 100%;
+        height: 100%;
+      }
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_3_slug }}"] input[type="radio"] + label .variant-pill__image img {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+      }
+    {% endif %}
+    {% if block.settings.pills_override_3_hide_variant_text %}
+      #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_3_slug }}"] input[type="radio"] + label .variant-pill__text {
+        display: none !important;
+      }
+    {% endif %}
+    /* Label below colors for Override 3 */
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_3_slug }}"] .variant-pill__label-below {
+      color: {{ block.settings.pills_override_3_text_color_inactive }};
+    }
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_3_slug }}"] input[type="radio"]:checked ~ .variant-pill__label-below {
+      color: {{ block.settings.pills_override_3_text_color_active }};
+      font-weight: 600;
+    }
+  {% endif %}
+
+  /* ====== EQUAL PILL SIZES ====== */
+  {% if block.settings.pills_equal_size %}
+    #variant-selects-{{ section.id }} .product-form__input--pills:not([data-override-equal-size]) .variant-pill-wrapper,
+    #variant-selects-{{ section.id }} .product-form__input--pills:not([data-override-equal-size]) input[type="radio"] + label {
+      width: {{ block.settings.pills_equal_size_width | default: 80 }}px !important;
+      min-width: {{ block.settings.pills_equal_size_width | default: 80 }}px !important;
+      text-align: center;
+      justify-content: center;
+    }
+  {% endif %}
+
+  /* Override 1 Equal Size */
+  {% if block.settings.pills_override_1_option_name != blank and block.settings.pills_override_1_equal_size %}
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_1_slug }}"] .variant-pill-wrapper,
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_1_slug }}"] input[type="radio"] + label {
+      width: {{ block.settings.pills_override_1_equal_size_width | default: 80 }}px !important;
+      min-width: {{ block.settings.pills_override_1_equal_size_width | default: 80 }}px !important;
+      text-align: center;
+      justify-content: center;
+    }
+  {% endif %}
+
+  /* Override 2 Equal Size */
+  {% if block.settings.pills_override_2_option_name != blank and block.settings.pills_override_2_equal_size %}
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_2_slug }}"] .variant-pill-wrapper,
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_2_slug }}"] input[type="radio"] + label {
+      width: {{ block.settings.pills_override_2_equal_size_width | default: 80 }}px !important;
+      min-width: {{ block.settings.pills_override_2_equal_size_width | default: 80 }}px !important;
+      text-align: center;
+      justify-content: center;
+    }
+  {% endif %}
+
+  /* Override 3 Equal Size */
+  {% if block.settings.pills_override_3_option_name != blank and block.settings.pills_override_3_equal_size %}
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_3_slug }}"] .variant-pill-wrapper,
+    #variant-selects-{{ section.id }} .product-form__input--pills[data-option-name="{{ override_3_slug }}"] input[type="radio"] + label {
+      width: {{ block.settings.pills_override_3_equal_size_width | default: 80 }}px !important;
+      min-width: {{ block.settings.pills_override_3_equal_size_width | default: 80 }}px !important;
+      text-align: center;
+      justify-content: center;
+    }
+  {% endif %}
+
+  /* ====== PILLS SLIDER VIEWPORT BASE STYLES ====== */
+  .pills-slider-viewport {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* ====== SLIDER MODE ====== */
+  /* Contain the slider and prevent page overflow */
+  #variant-selects-{{ section.id }}.slider-mode-enabled {
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  /* Override min-width: fit-content from base.css which causes overflow */
+  .slider-mode-active.product-form__input {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  /* The scrollable viewport */
+  .slider-mode-active .pills-slider-viewport {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 10px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 5px 2px;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Hide scrollbar */
+  .slider-mode-active .pills-slider-viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Pills must NOT shrink - they maintain their size and scroll */
+  .slider-mode-active .variant-pill-wrapper {
+    flex: 0 0 auto !important;
+  }
+</style>
+
+{%- unless product.has_only_default_variant -%}
+  {% liquid
+    assign types_string = block.settings.picker_types | downcase
+    if types_string == blank
+      assign types_string = 'pills,pills,pills'
+    endif
+    assign types_array = types_string | split: ','
+
+    assign hidden_variants_raw = block.settings.hidden_variants
+    if hidden_variants_raw == blank
+      assign hidden_variants_raw = ''
+    endif
+    assign hidden_variants = hidden_variants_raw | downcase | split: ','
+
+    # Calculate cumulative pill index offset for sequential URL mapping
+    assign cumulative_pill_index = 0
+
+    # Check if any slider mode is enabled
+    assign any_slider_mode = false
+    if block.settings.pills_slider_mode
+      assign any_slider_mode = true
+    endif
+    if block.settings.pills_override_1_slider_mode
+      assign any_slider_mode = true
+    endif
+    if block.settings.pills_override_2_slider_mode
+      assign any_slider_mode = true
+    endif
+    if block.settings.pills_override_3_slider_mode
+      assign any_slider_mode = true
+    endif
+  %}
+  <variant-selects
+    id="variant-selects-{{ section.id }}"
+    class="no-js-hidden{% if any_slider_mode %} slider-mode-enabled{% endif %}"
+    data-section="{{ section.id }}"
+    data-url="{{ product.url }}"
+    data-skip-non-existent='true'
+    data-skip-unavailable="{{ block.settings.skip_unavailable }}"
+    {% if update_url == false %}
+      data-update-url="false"
+    {% endif %}
+    {% if has_filtering %}
+      data-has-filtering="true"
+    {% endif %}
+    style="--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;"
+    {{ block.shopify_attributes }}
+  >
+    {%- for option in product.options_with_values -%}
+      {% assign option_name_lower = option.name | downcase | strip %}
+      {% assign is_hidden = false %}
+      {% for hidden_variant in hidden_variants %}
+        {% assign hidden_variant_trimmed = hidden_variant | strip %}
+        {% if option_name_lower == hidden_variant_trimmed %}
+          {% assign is_hidden = true %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+      {% unless is_hidden %}
+        {% assign type = types_array[forloop.index0] | strip | replace: ' ', '-' %}
+        {% comment %}Store cumulative index for this option before rendering{% endcomment %}
+        {% assign current_option_cumulative_index = cumulative_pill_index %}
+        {% assign option_name_slug = option.name | downcase | strip | replace: ' ', '-' %}
+        {% comment %}Check if slider mode should be active for this option{% endcomment %}
+        {% assign slider_mode_active = false %}
+        {% if block.settings.pills_slider_mode %}
+          {% assign slider_mode_active = true %}
+        {% endif %}
+        {% if block.settings.pills_override_1_option_name != blank %}
+          {% assign o1_check = block.settings.pills_override_1_option_name | downcase | strip %}
+          {% if option_name_lower == o1_check and block.settings.pills_override_1_slider_mode %}
+            {% assign slider_mode_active = true %}
+          {% endif %}
+        {% endif %}
+        {% if block.settings.pills_override_2_option_name != blank %}
+          {% assign o2_check = block.settings.pills_override_2_option_name | downcase | strip %}
+          {% if option_name_lower == o2_check and block.settings.pills_override_2_slider_mode %}
+            {% assign slider_mode_active = true %}
+          {% endif %}
+        {% endif %}
+        {% if block.settings.pills_override_3_option_name != blank %}
+          {% assign o3_check = block.settings.pills_override_3_option_name | downcase | strip %}
+          {% if option_name_lower == o3_check and block.settings.pills_override_3_slider_mode %}
+            {% assign slider_mode_active = true %}
+          {% endif %}
+        {% endif %}
+        <div
+          class="product-form__input product-form__input--{{ type }}{% if block.settings.full_width_dropdowns %} product-form__input--full{% endif %}{% if type == 'hidden' %} hidden{% endif %}{% if slider_mode_active and type == 'pills' %} slider-mode-active{% endif %}"
+          data-option-name="{{ option_name_slug }}"
+        >
+        <div class="visually-hidden product-form__input__type" data-type="{{ type }}">&nbsp</div>
+        {% comment %}Check if label should be hidden{% endcomment %}
+        {% assign hide_this_label = block.settings.pills_hide_label | default: false %}
+        {% if block.settings.pills_override_1_option_name != blank %}
+          {% assign override_1_name_check = block.settings.pills_override_1_option_name | downcase | strip %}
+          {% if option_name_lower == override_1_name_check %}
+            {% assign hide_this_label = block.settings.pills_override_1_hide_label | default: false %}
+          {% endif %}
+        {% endif %}
+        {% if block.settings.pills_override_2_option_name != blank %}
+          {% assign override_2_name_check = block.settings.pills_override_2_option_name | downcase | strip %}
+          {% if option_name_lower == override_2_name_check %}
+            {% assign hide_this_label = block.settings.pills_override_2_hide_label | default: false %}
+          {% endif %}
+        {% endif %}
+        {% if block.settings.pills_override_3_option_name != blank %}
+          {% assign override_3_name_check = block.settings.pills_override_3_option_name | downcase | strip %}
+          {% if option_name_lower == override_3_name_check %}
+            {% assign hide_this_label = block.settings.pills_override_3_hide_label | default: false %}
+          {% endif %}
+        {% endif %}
+        {% unless hide_this_label %}
+        <div class='product-form__label-container' id='SizeChartAppend-{{ section.id }}-option_{{ forloop.index }}_label_container'>
+          <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
+            {% if block.settings.custom_labels == blank %}
+              {{ option.name }}
+            {% else %}
+              <span id="custom-label-{{ section.id }}-{{ forloop.index }}">
+                {% assign downcase_name = option.name | downcase %}
+                {% assign uppercase_name = option.name | upcase %}
+                {{
+                  block.settings.custom_labels
+                  | replace: '[count]', forloop.index
+                  | replace: '[name]', option.name
+                  | replace: '[name_lowercase]', downcase_name
+                  | replace: '[name_uppercase]', uppercase_name
+                  | replace: '[selected]', option.selected_value
+                }}
+              </span>
+            {% endif %}
+          </label>
+          {% capture current_append %}option_{{ forloop.index }}_label_container{% endcapture %}
+          {% if sizing_chart_html != nil and sizing_chart_append == current_append %}
+            {{ sizing_chart_html }}
+          {% endif %}
+        </div>
+        {% endunless %}
+        {% case type %}
+          {% when 'dropdown' %}
+            <div class="select no-background color-{{ settings.pickers_color_scheme }} accent-color-{{ settings.pickers_overlay_color }} accent-2-color-{{ settings.pickers_text_color }}">
+              <select
+                id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                class="select__select"
+                name="options[{{ option.name | escape }}]"
+                form="{{ product_form_id }}"
+              >
+                {% render 'product-variant-options', product: product, option: option, block: block, type: 'dropdown', pill_url_offset: current_option_cumulative_index %}
+              </select>
+              {% render 'icon-caret' %}
+            </div>
+          {% else %}
+            <div class="pills-slider-viewport">
+              {% render 'product-variant-options', product: product, option: option, block: block, type: 'pills', pill_url_offset: current_option_cumulative_index %}
+            </div>
+        {% endcase %}
+        {% capture current_append %}option_{{ forloop.index }}_under_container{% endcapture %}
+        <div class='product-form__under-container'>{% if sizing_chart_html != nil and sizing_chart_append == current_append %}{{ sizing_chart_html }}{% endif %}</div>
+      </div>
+      {% comment %}Increment cumulative index ONLY for pills (not dropdowns, etc.){% endcomment %}
+      {% if type == 'pills' %}
+        {% assign cumulative_pill_index = cumulative_pill_index | plus: option.values.size %}
+      {% endif %}
+      {% endunless %}
+    {%- endfor -%}
+
+    <script type="application/json">
+      {{ product.variants | json }}
+    </script>
+  </variant-selects>
+{%- endunless -%}
+
+<noscript
+  class="product-form__noscript-wrapper-{{ section.id }}"
+  style="--margin-top: {{ block.settings.margin_top | divided_by: 10.0 }}rem;--margin-bottom: {{ block.settings.margin_bottom | divided_by: 10.0 }}rem;"
+>
+  <div class="product-form__input{% if product.has_only_default_variant %} hidden{% endif %}">
+    <label class="form__label" for="Variants-{{ section.id }}">
+      {{- 'products.product.product_variants' | t -}}
+    </label>
+    <div class="select">
+      <select
+        name="id"
+        id="Variants-{{ section.id }}"
+        class="select__select"
+        form="{{ product_form_id }}"
+      >
+        {%- for variant in product.variants -%}
+          <option
+            {% if variant == product.selected_or_first_available_variant %}
+              selected="selected"
+            {% endif %}
+            {% if variant.available == false %}
+              disabled
+            {% endif %}
+            value="{{ variant.id }}"
+          >
+            {%- liquid
+              echo variant.title
+              echo variant.price | money | strip_html | prepend: ' - '
+              if variant.available == false
+                echo 'products.product.sold_out' | t | prepend: ' - '
+              endif
+              if variant.quantity_rule.increment > 1
+                echo 'products.product.quantity.multiples_of' | t: quantity: variant.quantity_rule.increment | prepend: ' - '
+              endif
+              if variant.quantity_rule.min > 1
+                echo 'products.product.quantity.minimum_of' | t: quantity: variant.quantity_rule.min | prepend: ' - '
+              endif
+              if variant.quantity_rule.max != null
+                echo 'products.product.quantity.maximum_of' | t: quantity: variant.quantity_rule.max | prepend: ' - '
+              endif
+              # TODO: enable theme-check once `item_count_for_variant` is accepted as valid filter
+              # theme-check-disable
+              assign cart_quantity = cart | item_count_for_variant: variant.id
+              # theme-check-enable
+              if cart_quantity > 0
+                echo 'products.product.quantity.in_cart_html' | t: quantity: cart_quantity | prepend: ' - '
+              endif
+            -%}
+          </option>
+        {%- endfor -%}
+      </select>
+      {% render 'icon-caret' %}
+    </div>
+  </div>
+</noscript>

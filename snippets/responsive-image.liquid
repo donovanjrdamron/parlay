@@ -1,0 +1,53 @@
+{% comment %}
+  Responsive Image with WebP optimization
+  Usage: {% render 'responsive-image', image: product.image, alt: product.title, sizes: '(min-width: 750px) 50vw, 100vw' %}
+{% endcomment %}
+
+{%- liquid
+  assign webp_url = image | image_url: width: 1920, format: 'webp'
+  assign jpg_url = image | image_url: width: 1920
+  assign webp_mobile = image | image_url: width: 750, format: 'webp'
+  assign jpg_mobile = image | image_url: width: 750
+
+  if alt == blank
+    assign alt = image.alt | escape
+  endif
+
+  unless sizes
+    assign sizes = '100vw'
+  endunless
+-%}
+
+<picture>
+  <!-- WebP for modern browsers -->
+  <source
+    type="image/webp"
+    media="(min-width: 750px)"
+    srcset="{{ webp_url }}"
+  >
+  <source
+    type="image/webp"
+    media="(max-width: 749px)"
+    srcset="{{ webp_mobile }}"
+  >
+
+  <!-- Fallback for older browsers -->
+  <source
+    media="(min-width: 750px)"
+    srcset="{{ jpg_url }}"
+  >
+  <source
+    media="(max-width: 749px)"
+    srcset="{{ jpg_mobile }}"
+  >
+
+  <!-- Default img tag with lazy loading -->
+  <img
+    src="{{ jpg_mobile }}"
+    alt="{{ alt }}"
+    loading="lazy"
+    width="{{ image.width }}"
+    height="{{ image.height }}"
+    sizes="{{ sizes }}"
+  >
+</picture>

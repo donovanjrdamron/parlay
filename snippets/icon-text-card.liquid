@@ -1,0 +1,308 @@
+{% comment %}
+  Icon Text Card Snippet
+  A horizontal card with an icon on the left, title and description text on the right
+  Icons: Image upload, Custom SVG, or Placeholder Square
+{% endcomment %}
+
+{%- liquid
+  assign card_id = card_id | default: section.id
+
+  # Content
+  assign title_text = title | default: 'TITLE HERE'
+  assign paragraph_text = paragraph | default: 'YOUR PARAGRAPH TEXT HERE'
+
+  # Icon type and sources
+  assign icon_type = icon_type | default: 'google'
+  assign icon_svg = icon_svg
+  assign custom_svg = custom_svg
+  assign google_icon = google_icon | default: 'star'
+  assign icon_style = icon_style | default: 'filled'
+  assign icon_color = icon_color | default: '#000000'
+  assign override_svg_color = override_svg_color | default: false
+  assign icon_size = icon_size | default: 50
+
+  # Card Styling
+  assign enable_animation = enable_animation | default: false
+  assign card_bg = card_background | default: 'linear-gradient(135deg, #c9a789 0%, #e8d5c4 100%)'
+  assign card_width = card_width | default: '100'
+  assign card_max_width = card_max_width | default: 600
+  assign card_padding_vertical = card_padding_vertical | default: 40
+  assign card_padding_horizontal = card_padding_horizontal | default: 40
+  assign mobile_card_padding_vertical = mobile_card_padding_vertical | default: 20
+  assign mobile_card_padding_horizontal = mobile_card_padding_horizontal | default: 20
+  assign card_border_radius = card_border_radius | default: 0
+  assign card_border_width = card_border_width | default: 0
+  assign card_border_color = card_border_color | default: '#000000'
+  assign card_border_style = card_border_style | default: 'solid'
+
+  # Layout
+  assign inline_icon_title = inline_icon_title | default: false
+  assign gap = gap | default: 30
+  assign align_items = align_items | default: 'center'
+  assign text_align = text_align | default: 'left'
+
+  # Title Styling
+  assign title_color = title_color | default: '#000000'
+  assign title_font_size = title_font_size | default: 32
+  assign title_font_size_mobile = title_font_size_mobile | default: 24
+  assign title_font_weight = title_font_weight | default: 700
+  assign title_line_height = title_line_height | default: 1.2
+  assign title_text_transform = title_text_transform | default: 'none'
+  assign title_margin_bottom = title_margin_bottom | default: 10
+
+  # Paragraph Styling
+  assign paragraph_color = paragraph_color | default: '#000000'
+  assign paragraph_font_size = paragraph_font_size | default: 14
+  assign paragraph_font_size_mobile = paragraph_font_size_mobile | default: 13
+  assign paragraph_font_weight = paragraph_font_weight | default: 400
+  assign paragraph_line_height = paragraph_line_height | default: 1.5
+
+  # Responsive
+  assign mobile_stack = mobile_stack | default: false
+  assign mobile_icon_size = mobile_icon_size | default: 80
+  assign mobile_gap = mobile_gap | default: 20
+-%}
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
+
+<div class="icon-text-card" data-card-id="{{ card_id }}">
+  <style>
+    .icon-text-card[data-card-id="{{ card_id }}"] {
+      background: {{ card_bg }};
+      width: {{ card_width }}%;
+      max-width: {{ card_max_width }}px;
+      padding: {{ card_padding_vertical }}px {{ card_padding_horizontal }}px;
+      border-radius: {{ card_border_radius }}px;
+      {% if card_border_width > 0 %}
+        border: {{ card_border_width }}px {{ card_border_style }} {{ card_border_color }};
+      {% endif %}
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    {% if enable_animation %}
+    .icon-text-card[data-card-id="{{ card_id }}"] .card-shine-animation {
+      display: block !important;
+      background-image: linear-gradient(to left, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.1) 70%, rgba(255, 255, 255, 0.01) 100%), linear-gradient(to right, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.1) 70%, rgba(255, 255, 255, 0.01) 100%);
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      z-index: 2;
+      transform: rotate(-20deg);
+      animation: card-shine-slide-{{ card_id }} 8s linear 0s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes card-shine-slide-{{ card_id }} {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(80rem);
+      }
+    }
+    {% endif %}
+
+    .icon-text-card[data-card-id="{{ card_id }}"] .card-content {
+      display: flex;
+      flex-direction: {% if inline_icon_title %}column{% else %}row{% endif %};
+      align-items: {% if inline_icon_title %}flex-start{% else %}{{ align_items }}{% endif %};
+      gap: {% if inline_icon_title %}12{% else %}{{ gap }}{% endif %}px;
+      position: relative;
+      z-index: 1;
+    }
+
+    {% if inline_icon_title %}
+    .icon-text-card[data-card-id="{{ card_id }}"] .inline-header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: {{ gap }}px;
+      width: 100%;
+    }
+
+    .icon-text-card[data-card-id="{{ card_id }}"] .inline-header .card-title {
+      margin: 0;
+    }
+    {% endif %}
+
+    .icon-text-card[data-card-id="{{ card_id }}"] .custom-icon-svg {
+      flex-shrink: 0;
+      width: {{ icon_size }}px;
+      height: {{ icon_size }}px;
+    }
+
+    .icon-text-card[data-card-id="{{ card_id }}"] .material-icons,
+    .icon-text-card[data-card-id="{{ card_id }}"] .material-icons-outlined {
+      flex-shrink: 0;
+      font-size: {{ icon_size }}px;
+      width: {{ icon_size }}px;
+      height: {{ icon_size }}px;
+      color: {{ icon_color }};
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    .icon-text-card[data-card-id="{{ card_id }}"] .custom-icon-svg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      {% if override_svg_color %}
+        fill: {{ icon_color }};
+        color: {{ icon_color }};
+      {% endif %}
+    }
+
+    .icon-text-card[data-card-id="{{ card_id }}"] .custom-icon-svg svg {
+      width: 100%;
+      height: 100%;
+      {% if override_svg_color %}
+        fill: {{ icon_color }};
+      {% endif %}
+    }
+
+    {% if override_svg_color %}
+    .icon-text-card[data-card-id="{{ card_id }}"] .custom-icon-svg svg * {
+      fill: {{ icon_color }} !important;
+      stroke: {{ icon_color }} !important;
+    }
+    {% endif %}
+
+    .icon-text-card[data-card-id="{{ card_id }}"] .text-content {
+      flex: 1;
+      text-align: {{ text_align }};
+    }
+
+    .icon-text-card[data-card-id="{{ card_id }}"] .card-title {
+      color: {{ title_color }};
+      font-size: {{ title_font_size }}px;
+      font-weight: {{ title_font_weight }};
+      line-height: {{ title_line_height }};
+      text-transform: {{ title_text_transform }};
+      margin: 0 0 {{ title_margin_bottom }}px 0;
+      padding: 0;
+    }
+
+    .icon-text-card[data-card-id="{{ card_id }}"] .card-paragraph {
+      color: {{ paragraph_color }};
+      font-size: {{ paragraph_font_size }}px;
+      font-weight: {{ paragraph_font_weight }};
+      line-height: {{ paragraph_line_height }};
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Mobile Responsive */
+    @media screen and (max-width: 749px) {
+      .icon-text-card[data-card-id="{{ card_id }}"] {
+        padding: {{ mobile_card_padding_vertical }}px {{ mobile_card_padding_horizontal }}px;
+      }
+
+      {% if mobile_stack %}
+        .icon-text-card[data-card-id="{{ card_id }}"] .card-content {
+          flex-direction: column;
+          gap: {{ mobile_gap }}px;
+          text-align: center;
+        }
+
+        .icon-text-card[data-card-id="{{ card_id }}"] .text-content {
+          text-align: center;
+        }
+      {% else %}
+        .icon-text-card[data-card-id="{{ card_id }}"] .card-content {
+          gap: {{ mobile_gap }}px;
+        }
+      {% endif %}
+
+      .icon-text-card[data-card-id="{{ card_id }}"] .material-icons,
+      .icon-text-card[data-card-id="{{ card_id }}"] .material-icons-outlined,
+      .icon-text-card[data-card-id="{{ card_id }}"] .custom-icon-svg {
+        width: {{ mobile_icon_size }}px;
+        height: {{ mobile_icon_size }}px;
+      }
+
+      .icon-text-card[data-card-id="{{ card_id }}"] .material-icons,
+      .icon-text-card[data-card-id="{{ card_id }}"] .material-icons-outlined {
+        font-size: {{ mobile_icon_size }}px;
+      }
+
+      .icon-text-card[data-card-id="{{ card_id }}"] .card-title {
+        font-size: {{ title_font_size_mobile }}px;
+      }
+
+      .icon-text-card[data-card-id="{{ card_id }}"] .card-paragraph {
+        font-size: {{ paragraph_font_size_mobile }}px;
+      }
+    }
+  </style>
+
+  {% if enable_animation %}
+  <div class="card-shine-animation"></div>
+  {% endif %}
+
+  <div class="card-content">
+    {% if inline_icon_title %}
+      <div class="inline-header">
+        {% if icon_type == 'svg' and icon_svg != blank %}
+          {%- comment -%} Custom SVG Code {%- endcomment -%}
+          <div class="custom-icon-svg">
+            {{ icon_svg }}
+          </div>
+        {% elsif custom_svg != blank %}
+          {%- comment -%} Legacy custom SVG support {%- endcomment -%}
+          <div class="custom-icon-svg">
+            {{ custom_svg }}
+          </div>
+        {% else %}
+          {%- comment -%} Google Material Icon (default) {%- endcomment -%}
+          {% if icon_style == 'outlined' %}
+            <span class="material-icons-outlined">{{ google_icon }}</span>
+          {% else %}
+            <span class="material-icons">{{ google_icon }}</span>
+          {% endif %}
+        {% endif %}
+
+        {% if title_text != blank %}
+          <h3 class="card-title">{{ title_text }}</h3>
+        {% endif %}
+      </div>
+
+      {% if paragraph_text != blank %}
+        <p class="card-paragraph">{{ paragraph_text }}</p>
+      {% endif %}
+    {% else %}
+      {% if icon_type == 'svg' and icon_svg != blank %}
+        {%- comment -%} Custom SVG Code {%- endcomment -%}
+        <div class="custom-icon-svg">
+          {{ icon_svg }}
+        </div>
+      {% elsif custom_svg != blank %}
+        {%- comment -%} Legacy custom SVG support {%- endcomment -%}
+        <div class="custom-icon-svg">
+          {{ custom_svg }}
+        </div>
+      {% else %}
+        {%- comment -%} Google Material Icon (default) {%- endcomment -%}
+        {% if icon_style == 'outlined' %}
+          <span class="material-icons-outlined">{{ google_icon }}</span>
+        {% else %}
+          <span class="material-icons">{{ google_icon }}</span>
+        {% endif %}
+      {% endif %}
+
+      <div class="text-content">
+        {% if title_text != blank %}
+          <h3 class="card-title">{{ title_text }}</h3>
+        {% endif %}
+        {% if paragraph_text != blank %}
+          <p class="card-paragraph">{{ paragraph_text }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>

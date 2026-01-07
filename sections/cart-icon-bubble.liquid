@@ -1,0 +1,53 @@
+{%- liquid
+  assign non_upsell_count = cart.item_count
+  for item in cart.items
+    if item.product.tags contains 'cart-hidden'
+      assign non_upsell_count = non_upsell_count | minus: 1
+    endif
+  endfor
+-%}
+
+{%- comment -%} Use cart icon from section settings {%- endcomment -%}
+{% if section.settings.cart_icon != blank %}
+  {% render 'material-icon', icon: section.settings.cart_icon, filled: section.settings.cart_icon_filled %}
+{% elsif section.settings.cart_icon_svg != blank %}
+  {{ section.settings.cart_icon_svg }}
+{% else %}
+  {% render 'icon-cart' %}
+{% endif %}
+
+<span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+{%- if non_upsell_count > 0 -%}
+  <div class="cart-count-bubble">
+    {%- if non_upsell_count < 100 -%}
+      <span aria-hidden="true">{{ non_upsell_count }}</span>
+    {%- endif -%}
+    <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: non_upsell_count }}</span>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Cart Icon Bubble",
+  "settings": [
+    {
+      "type": "text",
+      "id": "cart_icon",
+      "label": "Cart Icon",
+      "info": "Material icon name (e.g., shopping_bag, shopping_cart)",
+      "default": "shopping_bag"
+    },
+    {
+      "type": "checkbox",
+      "id": "cart_icon_filled",
+      "label": "Filled Icon",
+      "default": false
+    },
+    {
+      "type": "html",
+      "id": "cart_icon_svg",
+      "label": "Custom Cart Icon SVG"
+    }
+  ]
+}
+{% endschema %}

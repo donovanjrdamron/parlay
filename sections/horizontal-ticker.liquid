@@ -1,0 +1,396 @@
+{% comment %}
+  Horizontal Ticker Section
+  Infinite scrolling ticker with customizable items
+{% endcomment %}
+
+<div class="section-{{ section.id }} horizontal-ticker-section">
+  <style>
+    /* ===========================
+       Section Padding
+       =========================== */
+    .section-{{ section.id }} {
+      padding-top: {{ section.settings.section_padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.section_padding_bottom_desktop }}px;
+    }
+
+    @media screen and (max-width: 749px) {
+      .section-{{ section.id }} {
+        padding-top: {{ section.settings.section_padding_top_mobile }}px;
+        padding-bottom: {{ section.settings.section_padding_bottom_mobile }}px;
+      }
+    }
+
+    /* ===========================
+       Heading Styles
+       =========================== */
+    .section-{{ section.id }} .ht-heading {
+      font-size: {{ section.settings.heading_size_desktop }}px;
+      font-weight: {{ section.settings.heading_weight }};
+      color: {{ section.settings.heading_color }};
+      margin: 0;
+      text-transform: {{ section.settings.heading_text_transform }};
+    }
+
+    @media screen and (max-width: 749px) {
+      .section-{{ section.id }} .ht-heading {
+        font-size: {{ section.settings.heading_size_mobile }}px;
+      }
+    }
+
+    /* ===========================
+       Ticker Container
+       =========================== */
+    .section-{{ section.id }} .ht-ticker-wrapper {
+      {% if section.settings.override_section_settings %}
+        {% if section.settings.section_gradient_enabled %}
+          background: {{ section.settings.section_gradient_background }};
+        {% else %}
+          background-color: {{ section.settings.section_background_color }};
+        {% endif %}
+      {% else %}
+        {% if settings.section_gradient_enabled %}
+          background: {{ settings.section_gradient_background }};
+        {% else %}
+          background-color: {{ settings.section_background_color }};
+        {% endif %}
+      {% endif %}
+      border-top: {{ section.settings.border_top_width }}px {{ section.settings.border_top_style }} {{ section.settings.border_top_color }};
+      border-bottom: {{ section.settings.border_bottom_width }}px {{ section.settings.border_bottom_style }} {{ section.settings.border_bottom_color }};
+      padding-top: {{ section.settings.ticker_padding_vertical }}px;
+      padding-bottom: {{ section.settings.ticker_padding_vertical }}px;
+      margin-top: {{ section.settings.ticker_margin_top }}px;
+      margin-bottom: {{ section.settings.ticker_margin_bottom }}px;
+    }
+
+    .section-{{ section.id }} .ht-ticker-heading-top {
+      text-align: center;
+      margin-bottom: {{ section.settings.heading_gap }}px;
+    }
+
+  .section-{{ section.id }} .ht-ticker-content {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    -webkit-overflow-scrolling: auto;
+  }
+
+  .section-{{ section.id }} .ht-ticker-track {
+    display: flex;
+    gap: {{ section.settings.item_gap }}px;
+    animation: ht-scroll-{{ section.id }} {{ section.settings.animation_speed }}s linear infinite;
+    animation-direction: {{ section.settings.animation_direction }};
+    width: max-content;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+    {% if section.settings.pause_on_hover %}
+    .section-{{ section.id }} .ht-ticker-track:hover {
+      animation-play-state: paused;
+    }
+  {% endif %}
+    
+    @keyframes ht-scroll-{{ section.id }} {
+      0% {
+        transform: translate3d(0, 0, 0);
+      }
+      100% {
+        transform: translate3d(-50%, 0, 0);
+      }
+    }
+
+    /* ===========================
+       Ticker Item Styles
+       =========================== */
+    .section-{{ section.id }} .ht-ticker-item {
+      display: flex;
+      align-items: center;
+      gap: {{ section.settings.content_gap }}px;
+      flex-shrink: 0;
+      padding: {{ section.settings.item_padding_vertical }}px {{ section.settings.item_padding_horizontal }}px;
+      {% if section.settings.item_gradient_bg_enabled %}
+        background: {{ section.settings.item_gradient_background }};
+      {% else %}
+        background-color: {{ section.settings.item_background_color }};
+      {% endif %}
+      border: {{ section.settings.item_border_width }}px {{ section.settings.item_border_style }} {{ section.settings.item_border_color }};
+      border-radius: {{ section.settings.item_border_radius }}px;
+    }
+
+    .section-{{ section.id }} .ht-item-icon {
+      flex-shrink: 0;
+      width: {{ section.settings.icon_size }}px;
+      height: {{ section.settings.icon_size }}px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: {{ section.settings.icon_border_width }}px solid {{ section.settings.icon_border_color }};
+      border-radius: {{ section.settings.icon_border_radius }}px;
+    }
+
+    .section-{{ section.id }} .ht-item-icon svg {
+      width: 100%;
+      height: 100%;
+      fill: {{ section.settings.icon_color }};
+    }
+
+    .section-{{ section.id }} .ht-item-icon .material-icon {
+      font-size: {{ section.settings.icon_size }}px;
+      color: {{ section.settings.icon_color }};
+    }
+
+    .section-{{ section.id }} .ht-item-image {
+      flex-shrink: 0;
+      width: {{ section.settings.image_width }}px;
+      height: {{ section.settings.image_height }}px;
+      object-fit: contain;
+    }
+
+    .section-{{ section.id }} .ht-item-text {
+      font-size: {{ section.settings.text_size }}px;
+      font-weight: {{ section.settings.text_weight }};
+      color: {{ section.settings.text_color }};
+      white-space: nowrap;
+      margin: 0;
+    }
+
+    @media screen and (max-width: 749px) {
+      .section-{{ section.id }} .ht-item-text {
+        font-size: {{ section.settings.text_size_mobile }}px;
+      }
+    }
+  </style>
+
+  <div class="ht-ticker-wrapper">
+    <div class="container {% if section.settings.enable_full_width %}page-width--full{% else %}page-width{% endif %}">
+      {% if section.settings.heading_text != blank %}
+        <div class="ht-ticker-heading-top">
+          <{{ section.settings.heading_tag }} class="ht-heading">{{ section.settings.heading_text }}</{{ section.settings.heading_tag }}>
+        </div>
+      {% endif %}
+
+      <div class="ht-ticker-content">
+        <div class="ht-ticker-track">
+        {% comment %} First set of items {% endcomment %}
+        {% for block in section.blocks %}
+          <div class="ht-ticker-item" {{ block.shopify_attributes }}>
+            {% if block.settings.icon_svg != blank %}
+              <div class="ht-item-icon">
+                {{ block.settings.icon_svg }}
+              </div>
+            {% elsif block.settings.icon != blank %}
+              <div class="ht-item-icon">
+                {% render 'material-icon', icon: block.settings.icon, filled: block.settings.icon_filled %}
+              </div>
+            {% endif %}
+
+            {% if block.settings.image != blank %}
+              <img 
+                src="{{ block.settings.image | image_url: width: 400 }}"
+                srcset="{{ block.settings.image | image_url: width: 200 }} 200w,
+                        {{ block.settings.image | image_url: width: 400 }} 400w"
+                  alt="{{ block.settings.image.alt | escape }}"
+                class="ht-item-image"
+                loading="lazy"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}"
+              >
+            {% endif %}
+            
+            {% if block.settings.text != blank %}
+              <p class="ht-item-text">{{ block.settings.text }}</p>
+            {% endif %}
+            </div>
+        {% endfor %}
+
+        {% comment %} Duplicate set for seamless loop {% endcomment %}
+          {% for block in section.blocks %}
+          <div class="ht-ticker-item" aria-hidden="true">
+            {% if block.settings.icon_svg != blank %}
+              <div class="ht-item-icon">
+                {{ block.settings.icon_svg }}
+              </div>
+            {% elsif block.settings.icon != blank %}
+              <div class="ht-item-icon">
+                {% render 'material-icon', icon: block.settings.icon, filled: block.settings.icon_filled %}
+              </div>
+            {% endif %}
+
+            {% if block.settings.image != blank %}
+              <img 
+                src="{{ block.settings.image | image_url: width: 400 }}"
+                srcset="{{ block.settings.image | image_url: width: 200 }} 200w,
+                        {{ block.settings.image | image_url: width: 400 }} 400w"
+                      alt="{{ block.settings.image.alt | escape }}"
+                class="ht-item-image"
+                    loading="lazy"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}"
+              >
+            {% endif %}
+            
+            {% if block.settings.text != blank %}
+              <p class="ht-item-text">{{ block.settings.text }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{"name":"Horizontal Ticker","class":"horizontal-ticker-section","settings": [
+ {"type":"header","content":"Section Styling"},
+ {"type":"checkbox","id":"enable_full_width","label":"Enable Full Width","default": false,"info":"Makes the ticker span the full width of the screen"},
+ {"type":"checkbox","id":"override_section_settings","label":"Override Global Section Settings","default": false
+ },
+ {"type":"checkbox","id":"section_gradient_enabled","label":"Enable Gradient Background","default": false,"info":"Only applies when overriding global settings"},
+ {"type":"color_background","id":"section_gradient_background","label":"Gradient Background","default":"linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(245, 245, 245, 1) 100%)"},
+ {"type":"color","id":"section_background_color","label":"Solid Background Color","default":"#ffffff"},
+ {"type":"range","id":"section_padding_top_desktop","label":"Padding Top (Desktop)","min": 0,"max": 120,"step": 4,"unit":"px","default": 60
+ },
+ {"type":"range","id":"section_padding_bottom_desktop","label":"Padding Bottom (Desktop)","min": 0,"max": 120,"step": 4,"unit":"px","default": 60
+ },
+ {"type":"range","id":"section_padding_top_mobile","label":"Padding Top (Mobile)","min": 0,"max": 152,"step": 4,"unit":"px","default": 40
+ },
+ {"type":"range","id":"section_padding_bottom_mobile","label":"Padding Bottom (Mobile)","min": 0,"max": 152,"step": 4,"unit":"px","default": 40
+ },
+ {"type":"range","id":"ticker_margin_top","label":"Ticker Margin Top","min": 0,"max": 100,"step": 4,"unit":"px","default": 0,"info":"Space above the ticker wrapper"
+ },
+ {"type":"range","id":"ticker_margin_bottom","label":"Ticker Margin Bottom","min": 0,"max": 100,"step": 4,"unit":"px","default": 0,"info":"Space below the ticker wrapper"
+ },
+ {"type":"header","content":"Heading"},
+ {"type":"text","id":"heading_text","label":"Heading Text","default":"Featured In","info":"Optional heading centered above the scrolling items"},
+ {"type":"select","id":"heading_tag","label":"Heading Tag","options": [
+ {"value":"h1","label":"H1"},
+ {"value":"h2","label":"H2"},
+ {"value":"h3","label":"H3"},
+ {"value":"h4","label":"H4"},
+ {"value":"h5","label":"H5"},
+ {"value":"h6","label":"H6"},
+ {"value":"p","label":"Paragraph"}
+ ],"default":"h3"},
+ {"type":"range","id":"heading_size_desktop","label":"Heading Size (Desktop)","min": 14,"max": 60,"step": 2,"unit":"px","default": 24
+ },
+ {"type":"range","id":"heading_size_mobile","label":"Heading Size (Mobile)","min": 12,"max": 40,"step": 2,"unit":"px","default": 20
+ },
+ {"type":"select","id":"heading_weight","label":"Heading Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"600"},
+ {"type":"color","id":"heading_color","label":"Heading Color","default":"#000000"},
+ {"type":"select","id":"heading_text_transform","label":"Heading Text Transform","options": [
+ {"value":"none","label":"None"},
+ {"value":"uppercase","label":"Uppercase"},
+ {"value":"lowercase","label":"Lowercase"},
+ {"value":"capitalize","label":"Capitalize"}
+ ],"default":"uppercase"},
+ {"type":"range","id":"heading_gap","label":"Space Below Heading","min": 0,"max": 80,"step": 4,"unit":"px","default": 24,"info":"Vertical space between heading and scrolling items"},
+ {"type":"header","content":"Ticker Borders"},
+ {"type":"range","id":"border_top_width","label":"Top Border Width","min": 0,"max": 10,"step": 1,"unit":"px","default": 1
+ },
+ {"type":"select","id":"border_top_style","label":"Top Border Style","options": [
+ {"value":"solid","label":"Solid"},
+ {"value":"dashed","label":"Dashed"},
+ {"value":"dotted","label":"Dotted"}
+ ],"default":"solid"},
+ {"type":"color","id":"border_top_color","label":"Top Border Color","default":"#e0e0e0"},
+ {"type":"range","id":"border_bottom_width","label":"Bottom Border Width","min": 0,"max": 10,"step": 1,"unit":"px","default": 1
+ },
+ {"type":"select","id":"border_bottom_style","label":"Bottom Border Style","options": [
+ {"value":"solid","label":"Solid"},
+ {"value":"dashed","label":"Dashed"},
+ {"value":"dotted","label":"Dotted"}
+ ],"default":"solid"},
+ {"type":"color","id":"border_bottom_color","label":"Bottom Border Color","default":"#e0e0e0"},
+ {"type":"range","id":"ticker_padding_vertical","label":"Ticker Vertical Padding","min": 0,"max": 60,"step": 4,"unit":"px","default": 20,"info":"Padding inside the ticker area (between borders)"},
+ {"type":"header","content":"️ Animation Settings"},
+ {"type":"range","id":"animation_speed","label":"Animation Speed","min": 10,"max": 100,"step": 5,"unit":"s","default": 30,"info":"Lower = faster"},
+ {"type":"select","id":"animation_direction","label":"Animation Direction","options": [
+ {"value":"normal","label":"Left to Right"},
+ {"value":"reverse","label":"Right to Left"}
+ ],"default":"normal"},
+ {"type":"checkbox","id":"pause_on_hover","label":"Pause on Hover","default": true
+ },
+ {"type":"range","id":"item_gap","label":"Gap Between Items","min": 0,"max": 100,"step": 4,"unit":"px","default": 32
+ },
+ {"type":"header","content":"Item Styling"},
+ {"type":"checkbox","id":"item_gradient_bg_enabled","label":"Enable Item Gradient Background","default": false
+ },
+ {"type":"color_background","id":"item_gradient_background","label":"Item Gradient Background","default":"linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(245, 245, 245, 1) 100%)"},
+ {"type":"color","id":"item_background_color","label":"Item Background Color","default":"transparent"},
+ {"type":"range","id":"item_padding_vertical","label":"Item Vertical Padding","min": 0,"max": 60,"step": 4,"unit":"px","default": 12
+ },
+ {"type":"range","id":"item_padding_horizontal","label":"Item Horizontal Padding","min": 0,"max": 80,"step": 4,"unit":"px","default": 24
+ },
+ {"type":"range","id":"item_border_width","label":"Item Border Width","min": 0,"max": 10,"step": 1,"unit":"px","default": 0
+ },
+ {"type":"select","id":"item_border_style","label":"Item Border Style","options": [
+ {"value":"solid","label":"Solid"},
+ {"value":"dashed","label":"Dashed"},
+ {"value":"dotted","label":"Dotted"}
+ ],"default":"solid"},
+ {"type":"color","id":"item_border_color","label":"Item Border Color","default":"#e0e0e0"},
+ {"type":"range","id":"item_border_radius","label":"Item Border Radius","min": 0,"max": 50,"step": 2,"unit":"px","default": 8
+ },
+ {"type":"header","content":"Text Settings"},
+ {"type":"range","id":"text_size","label":"Text Size (Desktop)","min": 12,"max": 48,"step": 1,"unit":"px","default": 18
+ },
+ {"type":"range","id":"text_size_mobile","label":"Text Size (Mobile)","min": 12,"max": 32,"step": 1,"unit":"px","default": 16
+ },
+ {"type":"select","id":"text_weight","label":"Text Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"500"},
+ {"type":"color","id":"text_color","label":"Text Color","default":"#000000"},
+ {"type":"header","content":"Icon Settings"},
+ {"type":"range","id":"icon_size","label":"Icon Size","min": 16,"max": 80,"step": 2,"unit":"px","default": 24
+ },
+ {"type":"color","id":"icon_color","label":"Icon Color","default":"#000000"},
+ {"type":"range","id":"content_gap","label":"Gap Between Icon & Text","min": 0,"max": 40,"step": 2,"unit":"px","default": 12
+ },
+ {"type":"color","id":"icon_border_color","label":"Icon Border Color","default":"transparent"},
+ {"type":"range","id":"icon_border_width","label":"Icon Border Width","min": 0,"max": 10,"step": 1,"unit":"px","default": 0
+ },
+ {"type":"range","id":"icon_border_radius","label":"Icon Border Radius","min": 0,"max": 50,"step": 2,"unit":"px","default": 0
+ },
+ {"type":"header","content":"️ Image Settings"},
+ {"type":"range","id":"image_width","label":"Image Width","min": 20,"max": 200,"step": 10,"unit":"px","default": 120
+ },
+ {"type":"range","id":"image_height","label":"Image Height","min": 20,"max": 100,"step": 5,"unit":"px","default": 40
+ }
+ ],"blocks": [
+ {"type":"ticker_item","name":"Ticker Item","settings": [
+ {"type":"textarea","id":"icon_svg","label":"Custom Icon SVG Code","info":"Paste SVG code for a custom icon (takes priority over Material Icon)"},
+ {"type":"text","id":"icon","label":"Google Material Icon","info":"Enter Material Icon name (e.g., 'check_circle', 'star', 'favorite')"},
+ {"type":"checkbox","id":"icon_filled","label":"Use Filled Material Icon","default": false
+ },
+ {"type":"image_picker","id":"image","label":"Image","info":"Image or logo (optional)"},
+ {"type":"text","id":"text","label":"Text","default":"Ticker Item"}
+ ]
+ }
+ ],"presets": [
+ {"name":"Horizontal Ticker","blocks": [
+ {"type":"ticker_item","settings": {"text":"Free Shipping"}
+ },
+ {"type":"ticker_item","settings": {"text":"30-Day Returns"}
+ },
+ {"type":"ticker_item","settings": {"text":"24/7 Support"}
+ },
+ {"type":"ticker_item","settings": {"text":"Secure Checkout"}
+ },
+ {"type":"ticker_item","settings": {"text":"Trusted by 10,000+"}
+ }
+ ],"category":"Content"}
+ ]
+}
+{% endschema %}

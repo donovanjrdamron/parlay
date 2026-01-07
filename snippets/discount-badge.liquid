@@ -1,0 +1,46 @@
+{% comment %}
+  Discount Badge Snippet
+
+  Usage:
+    {% render 'discount-badge',
+      compare_at_price: product.compare_at_price,
+      price: product.price
+    %}
+
+  Parameters:
+    - compare_at_price: The original price (required)
+    - price: The sale price (required)
+{% endcomment %}
+
+{% if settings.badge_enable and compare_at_price and price and compare_at_price > price %}
+  {% assign discount_amount = compare_at_price | minus: price %}
+  {% assign discount_percentage = discount_amount | times: 100.0 | divided_by: compare_at_price | round %}
+
+  {% comment %} Format the discount amount with currency {% endcomment %}
+  {% assign discount_price = discount_amount | money %}
+
+  {% comment %} Get badge text from settings and replace placeholders {% endcomment %}
+  {% assign badge_text = settings.badge_text | replace: '[price]', discount_price | replace: '[percentage]', discount_percentage %}
+
+  {% comment %} Build background style {% endcomment %}
+  {% if settings.enable_badge_gradient %}
+    {% assign bg_style = 'background: ' | append: settings.badge_gradient | append: ';' %}
+  {% else %}
+    {% assign bg_style = 'background-color: ' | append: settings.badge_bg_color | append: ';' %}
+  {% endif %}
+
+  <span class="discount-badge" style="
+    {{ bg_style }}
+    color: {{ settings.badge_text_color }};
+    font-size: {{ settings.badge_font_size }}px;
+    font-weight: {{ settings.badge_font_weight }};
+    padding: {{ settings.badge_padding_vertical }}px {{ settings.badge_padding_horizontal }}px;
+    border-radius: {{ settings.badge_border_radius }}px;
+    border: {{ settings.badge_border_width }}px solid {{ settings.badge_border_color }};
+    display: inline-block;
+    line-height: 1.2;
+    white-space: nowrap;
+  ">
+    {{ badge_text }}
+  </span>
+{% endif %}

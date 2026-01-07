@@ -1,0 +1,121 @@
+/* Fix: Show mobile elements as a block above images, not overlaying them */
+
+/* Mobile: Display elements as a block above the image */
+@media screen and (max-width: 749px) {
+  /* Container for mobile elements above product image - NO PADDING/MARGIN */
+  .mobile-overlay-container {
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    z-index: 1 !important;
+  }
+
+  /* Remove overlay positioning - make them normal block elements */
+  .product__title--overlay-mobile,
+  .rating-stars--overlay-mobile,
+  .product-page-price--overlay-mobile {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    background: transparent !important;
+    z-index: auto !important;
+    display: block !important;
+  }
+
+  /* Make sure media wrapper doesn't have position issues */
+  .product__media-wrapper {
+    position: relative !important;
+    overflow: visible !important;
+    z-index: 1 !important;
+  }
+
+  /* Remove any absolute positioning data attributes on mobile */
+  [data-mobile-position] {
+    position: relative !important;
+  }
+
+  /* Ensure elements don't overlay on the image */
+  [data-mobile-position="top"],
+  [data-mobile-position="bottom"],
+  [data-mobile-position="center"] {
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+  }
+
+  /* Product grid should display as column on mobile */
+  #MainProduct-template--23638805045615__main .product {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Ensure mobile container appears first */
+  .mobile-overlay-container[data-mobile-container="true"] {
+    order: -1;
+  }
+
+  /* Media wrapper comes after */
+  .product__media-wrapper {
+    order: 0;
+  }
+
+  /* Info wrapper comes last */
+  .product__info-wrapper {
+    order: 1;
+  }
+}
+
+/* Desktop: Keep elements visible in their original positions */
+@media screen and (min-width: 750px) {
+  /* Keep mobile container visible if it has content */
+  .mobile-overlay-container {
+    /* Let it be visible if JavaScript moves elements there */
+    display: none; /* Remove !important so JS can control */
+  }
+
+  /* Ensure elements are visible wherever they are */
+  .product__title--overlay-mobile,
+  .rating-stars--overlay-mobile,
+  .product-page-price--overlay-mobile {
+    position: relative !important;
+    display: block !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    background: transparent !important;
+  }
+
+  /* Product info should be visible */
+  .product__info-wrapper {
+    display: block !important;
+  }
+
+  /* Ensure these blocks are visible in product info on desktop */
+  .product__info-wrapper .product__title--overlay-mobile,
+  .product__info-wrapper .rating-stars--overlay-mobile,
+  .product__info-wrapper .product-page-price--overlay-mobile {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Ensure no overlapping or absolute positioning */
+.product__title--overlay-mobile::before,
+.product__title--overlay-mobile::after,
+.rating-stars--overlay-mobile::before,
+.rating-stars--overlay-mobile::after,
+.product-page-price--overlay-mobile::before,
+.product-page-price--overlay-mobile::after {
+  display: none !important;
+}

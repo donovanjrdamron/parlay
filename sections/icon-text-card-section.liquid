@@ -1,0 +1,188 @@
+{{ 'component-rte.css' | asset_url | stylesheet_tag }}
+
+<div class="icon-text-card-section section-{{ section.id }}-padding">
+  <div class="page-width">
+    {%- render 'icon-text-card',
+      card_id: section.id,
+
+      title: section.settings.title,
+      paragraph: section.settings.paragraph,
+      icon_type: section.settings.icon_type,
+      icon_image: section.settings.icon_image,
+      icon_svg: section.settings.icon_svg,
+
+      card_background: section.settings.card_background,
+      card_width: section.settings.card_width,
+      card_max_width: section.settings.card_max_width,
+      card_padding_top: section.settings.card_padding_top,
+      card_padding_bottom: section.settings.card_padding_bottom,
+      card_padding_left: section.settings.card_padding_left,
+      card_padding_right: section.settings.card_padding_right,
+      card_border_radius: section.settings.card_border_radius,
+      card_border_width: section.settings.card_border_width,
+      card_border_color: section.settings.card_border_color,
+      card_shadow: section.settings.card_shadow,
+      card_shadow_x: section.settings.card_shadow_x,
+      card_shadow_y: section.settings.card_shadow_y,
+      card_shadow_blur: section.settings.card_shadow_blur,
+      card_shadow_color: section.settings.card_shadow_color,
+
+      icon_size: section.settings.icon_size,
+      icon_background: section.settings.icon_background,
+      icon_border_radius: section.settings.icon_border_radius,
+      icon_border_width: section.settings.icon_border_width,
+      icon_border_color: section.settings.icon_border_color,
+      icon_padding: section.settings.icon_padding,
+
+      enable_animation: section.settings.enable_animation,
+
+      gap: section.settings.gap,
+      align_items: section.settings.align_items,
+      text_align: section.settings.text_align,
+
+      title_color: section.settings.title_color,
+      title_font_size: section.settings.title_font_size,
+      title_font_size_mobile: section.settings.title_font_size_mobile,
+      title_font_weight: section.settings.title_font_weight,
+      title_line_height: section.settings.title_line_height,
+      title_text_transform: section.settings.title_text_transform,
+      title_margin_bottom: section.settings.title_margin_bottom,
+
+      paragraph_color: section.settings.paragraph_color,
+      paragraph_font_size: section.settings.paragraph_font_size,
+      paragraph_font_size_mobile: section.settings.paragraph_font_size_mobile,
+      paragraph_font_weight: section.settings.paragraph_font_weight,
+      paragraph_line_height: section.settings.paragraph_line_height,
+
+      mobile_stack: section.settings.mobile_stack,
+      mobile_icon_size: section.settings.mobile_icon_size,
+      mobile_gap: section.settings.mobile_gap,
+      mobile_card_padding: section.settings.mobile_card_padding
+    -%}
+  </div>
+</div>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{"name":"Icon Text Card","tag":"section","class":"section","settings": [
+ {"type":"header","content":"Content"},
+ {"type":"text","id":"title","label":"Title","default":"TITLE HERE"},
+ {"type":"textarea","id":"paragraph","label":"Paragraph Text","default":"YOUR PARAGRAPH TEXT HERE"},
+ {"type":"header","content":"Icon / Image"},
+ {"type":"select","id":"icon_type","label":"Icon Type","options": [
+ {"value":"image","label":"Image Upload"},
+ {"value":"svg","label":"Custom SVG Code"},
+ {"value":"none","label":"Placeholder Square"}
+ ],"default":"none"},
+ {"type":"image_picker","id":"icon_image","label":"Icon Image","info":"Upload your icon/logo (works when 'Image Upload' is selected)"},
+ {"type":"html","id":"icon_svg","label":"Custom SVG Code","info":"Paste your SVG code here (works when 'Custom SVG Code' is selected)"},
+ {"type":"range","id":"icon_size","min": 40,"max": 200,"step": 5,"unit":"px","label":"Icon Box Size (Desktop)","default": 100
+ },
+ {"type":"range","id":"mobile_icon_size","min": 40,"max": 150,"step": 5,"unit":"px","label":"Icon Box Size (Mobile)","default": 80
+ },
+ {"type":"color","id":"icon_background","label":"Icon Box Background","default":"#f5f5f5"},
+ {"type":"range","id":"icon_border_radius","min": 0,"max": 100,"step": 2,"unit":"px","label":"Icon Box Border Radius","default": 0
+ },
+ {"type":"range","id":"icon_border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Icon Box Border Width","default": 2
+ },
+ {"type":"color","id":"icon_border_color","label":"Icon Box Border Color","default":"#000000"},
+ {"type":"range","id":"icon_padding","min": 0,"max": 40,"step": 2,"unit":"px","label":"Icon Box Inner Padding","default": 20
+ },
+ {"type":"header","content":"Card Styling"},
+ {"type":"checkbox","id":"enable_animation","label":"Enable Shine Animation","default": false,"info":"Adds a sliding shine effect across the card"},
+ {"type":"color","id":"card_background","label":"Card Background Color","default":"#c9a789"},
+ {"type":"range","id":"card_width","min": 50,"max": 100,"step": 5,"unit":"%","label":"Card Width (%)","default": 100
+ },
+ {"type":"range","id":"card_max_width","min": 300,"max": 1200,"step": 50,"unit":"px","label":"Card Max Width","default": 600
+ },
+ {"type":"range","id":"card_padding_top","min": 0,"max": 100,"step": 5,"unit":"px","label":"Card Padding Top","default": 40
+ },
+ {"type":"range","id":"card_padding_bottom","min": 0,"max": 100,"step": 5,"unit":"px","label":"Card Padding Bottom","default": 40
+ },
+ {"type":"range","id":"card_padding_left","min": 0,"max": 100,"step": 5,"unit":"px","label":"Card Padding Left","default": 40
+ },
+ {"type":"range","id":"card_padding_right","min": 0,"max": 100,"step": 5,"unit":"px","label":"Card Padding Right","default": 40
+ },
+ {"type":"range","id":"mobile_card_padding","min": 10,"max": 60,"step": 5,"unit":"px","label":"Card Padding Mobile (All Sides)","default": 20
+ },
+ {"type":"range","id":"card_border_radius","min": 0,"max": 50,"step": 2,"unit":"px","label":"Card Border Radius","default": 0
+ },
+ {"type":"range","id":"card_border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Card Border Width","default": 0
+ },
+ {"type":"color","id":"card_border_color","label":"Card Border Color","default":"#000000"},
+ {"type":"checkbox","id":"card_shadow","label":"Enable Card Shadow","default": false
+ },
+ {"type":"range","id":"card_shadow_x","min": -20,"max": 20,"step": 1,"unit":"px","label":"Shadow Horizontal Offset","default": 0
+ },
+ {"type":"range","id":"card_shadow_y","min": -20,"max": 20,"step": 1,"unit":"px","label":"Shadow Vertical Offset","default": 4
+ },
+ {"type":"range","id":"card_shadow_blur","min": 0,"max": 40,"step": 2,"unit":"px","label":"Shadow Blur","default": 10
+ },
+ {"type":"color","id":"card_shadow_color","label":"Shadow Color","default":"rgba(0,0,0,0.1)","info":"Use rgba for transparency"},
+ {"type":"header","content":"Layout"},
+ {"type":"range","id":"gap","min": 10,"max": 80,"step": 5,"unit":"px","label":"Gap Between Icon and Text (Desktop)","default": 30
+ },
+ {"type":"range","id":"mobile_gap","min": 10,"max": 60,"step": 5,"unit":"px","label":"Gap Between Icon and Text (Mobile)","default": 20
+ },
+ {"type":"select","id":"align_items","label":"Vertical Alignment","options": [
+ {"value":"flex-start","label":"Top"},
+ {"value":"center","label":"Center"},
+ {"value":"flex-end","label":"Bottom"}
+ ],"default":"center"},
+ {"type":"select","id":"text_align","label":"Text Alignment","options": [
+ {"value":"left","label":"Left"},
+ {"value":"center","label":"Center"},
+ {"value":"right","label":"Right"}
+ ],"default":"left"},
+ {"type":"checkbox","id":"mobile_stack","label":"Stack Vertically on Mobile","default": false,"info":"Changes to vertical layout on mobile devices"},
+ {"type":"header","content":"️ Title Styling"},
+ {"type":"color","id":"title_color","label":"Title Color","default":"#000000"},
+ {"type":"range","id":"title_font_size","min": 16,"max": 72,"step": 2,"unit":"px","label":"Title Font Size (Desktop)","default": 32
+ },
+ {"type":"range","id":"title_font_size_mobile","min": 14,"max": 48,"step": 2,"unit":"px","label":"Title Font Size (Mobile)","default": 24
+ },
+ {"type":"range","id":"title_font_weight","min": 100,"max": 900,"step": 100,"label":"Title Font Weight","default": 700
+ },
+ {"type":"range","id":"title_line_height","min": 1,"max": 2,"step": 0.1,"label":"Title Line Height","default": 1.2
+ },
+ {"type":"select","id":"title_text_transform","label":"Title Text Transform","options": [
+ {"value":"none","label":"None"},
+ {"value":"uppercase","label":"Uppercase"},
+ {"value":"lowercase","label":"Lowercase"},
+ {"value":"capitalize","label":"Capitalize"}
+ ],"default":"none"},
+ {"type":"range","id":"title_margin_bottom","min": 0,"max": 40,"step": 2,"unit":"px","label":"Space Below Title","default": 10
+ },
+ {"type":"header","content":"Paragraph Styling"},
+ {"type":"color","id":"paragraph_color","label":"Paragraph Color","default":"#000000"},
+ {"type":"range","id":"paragraph_font_size","min": 10,"max": 32,"step": 1,"unit":"px","label":"Paragraph Font Size (Desktop)","default": 14
+ },
+ {"type":"range","id":"paragraph_font_size_mobile","min": 10,"max": 24,"step": 1,"unit":"px","label":"Paragraph Font Size (Mobile)","default": 13
+ },
+ {"type":"range","id":"paragraph_font_weight","min": 100,"max": 900,"step": 100,"label":"Paragraph Font Weight","default": 400
+ },
+ {"type":"range","id":"paragraph_line_height","min": 1,"max": 2.5,"step": 0.1,"label":"Paragraph Line Height","default": 1.5
+ },
+ {"type":"header","content":"Section Spacing"},
+ {"type":"range","id":"padding_top","min": 0,"max": 100,"step": 4,"unit":"px","label":"Section Padding Top","default": 36
+ },
+ {"type":"range","id":"padding_bottom","min": 0,"max": 100,"step": 4,"unit":"px","label":"Section Padding Bottom","default": 36
+ }
+ ],"presets": [
+ {"name":"Icon Text Card","category":"Features"}
+ ]
+}
+{% endschema %}

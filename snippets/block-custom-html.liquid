@@ -1,0 +1,8 @@
+{% comment %}
+  Block Custom HTML Snippet
+  Usage: {% render 'block-custom-html', block: block, section_id: section.id %}
+{% endcomment %}
+
+<div class="block-custom-html block-{{ block.id }}" {{ block.shopify_attributes }}>
+  {{ block.settings.custom_html }}
+</div>

@@ -1,0 +1,82 @@
+/* ========================================
+   SELECT/DROPDOWN OVERRIDES
+   Removes accent color dependencies from all selects
+   ======================================== */
+
+/* Override all select dropdowns to use neutral colors */
+.select__select,
+select.select__select,
+.select select,
+.variant-dropdown,
+.product-form__input select,
+.facets__form select {
+  /* Remove the accent color gradient background */
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #dddddd !important;
+  padding: 10px 35px 10px 12px !important;
+  font-size: 14px !important;
+  appearance: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+
+  /* Add a simple dropdown arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23000000'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 20px !important;
+}
+
+/* Hover state */
+.select__select:hover,
+select.select__select:hover,
+.select select:hover,
+.variant-dropdown:hover,
+.product-form__input select:hover,
+.facets__form select:hover {
+  background-color: #f5f5f5 !important;
+  border-color: #999999 !important;
+}
+
+/* Focus state */
+.select__select:focus,
+select.select__select:focus,
+.select select:focus,
+.variant-dropdown:focus,
+.product-form__input select:focus,
+.facets__form select:focus {
+  outline: none !important;
+  border-color: #666666 !important;
+  background-color: #ffffff !important;
+}
+
+/* Remove any SVG icons that might be added */
+.select svg {
+  display: none !important;
+}
+
+/* Option styles */
+.select__select option,
+select.select__select option,
+.select select option {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  padding: 8px !important;
+}
+
+/* Disabled state */
+.select__select:disabled,
+select.select__select:disabled,
+.select select:disabled {
+  background-color: #f5f5f5 !important;
+  color: #999999 !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+}
+
+/* Remove gradient overlays from select wrappers */
+.select {
+  --accent-color: 0, 0, 0;
+  --accent-2-color: 0, 0, 0;
+  --pickers-overlay-opacity: 0;
+}

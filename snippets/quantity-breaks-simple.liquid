@@ -1,0 +1,3218 @@
+{% comment %}
+  Renders quantity breaks bundle selector with instant cart update and connected pricing
+  
+  Accepts:
+  - product: {Object} product object
+  - block: {Object} block settings
+  - product_form_id: {String} product form ID
+  
+  Usage:
+  {% render 'quantity-breaks-v2', product: product, block: block, product_form_id: product_form_id %}
+{% endcomment %}
+
+{%- liquid
+  comment
+    ===========================================
+    QUANTITY BREAK 1 SETTINGS
+    ===========================================
+  endcomment
+  
+  assign qb1_image = block.settings.qb1_image
+  assign qb1_title = block.settings.qb1_title | default: 'Single Pack'
+  assign qb1_html_position = block.settings.qb1_html_position | default: 'below'
+  assign qb1_custom_html = block.settings.qb1_custom_html
+  assign qb1_use_custom_pricing = block.settings.qb1_use_custom_pricing | default: false
+  assign qb1_custom_price = block.settings.qb1_custom_price
+  assign qb1_custom_compare_price = block.settings.qb1_custom_compare_price
+  
+  comment
+    ===========================================
+    QUANTITY BREAK 1 BADGE SETTINGS
+    ===========================================
+  endcomment
+  
+  assign qb1_enable_badge = block.settings.qb1_enable_badge | default: false
+  assign qb1_badge_text = block.settings.qb1_badge_text | default: 'POPULAR'
+  assign qb1_badge_position = block.settings.qb1_badge_position | default: 'top-right'
+  assign qb1_badge_color = block.settings.qb1_badge_color | default: '#ffffff'
+  assign qb1_badge_bg_color = block.settings.qb1_badge_bg_color | default: '#ff4444'
+  assign qb1_badge_enable_gradient = block.settings.qb1_badge_enable_gradient | default: false
+  assign qb1_badge_gradient_start = block.settings.qb1_badge_gradient_start | default: '#ff4444'
+  assign qb1_badge_gradient_end = block.settings.qb1_badge_gradient_end | default: '#ff6666'
+  assign qb1_badge_font_size = block.settings.qb1_badge_font_size | default: 11
+  assign qb1_badge_font_weight = block.settings.qb1_badge_font_weight | default: '600'
+  assign qb1_badge_border_radius = block.settings.qb1_badge_border_radius | default: 4
+  assign qb1_badge_border_width = block.settings.qb1_badge_border_width | default: 0
+  assign qb1_badge_border_color = block.settings.qb1_badge_border_color | default: '#ffffff'
+  assign qb1_badge_padding_top = block.settings.qb1_badge_padding_top | default: 4
+  assign qb1_badge_padding_bottom = block.settings.qb1_badge_padding_bottom | default: 4
+  assign qb1_badge_padding_left = block.settings.qb1_badge_padding_left | default: 12
+  assign qb1_badge_padding_right = block.settings.qb1_badge_padding_right | default: 12
+  assign qb1_badge_full_width = block.settings.qb1_badge_full_width | default: false
+  assign qb1_show_save_badge = block.settings.qb1_show_save_badge | default: false
+  
+  comment
+    ===========================================
+    QUANTITY BREAK 2 SETTINGS
+    ===========================================
+  endcomment
+  
+  assign qb2_quantity = block.settings.qb2_quantity | default: 2
+  assign qb2_discount = block.settings.qb2_discount | default: 10
+  assign qb2_image = block.settings.qb2_image
+  assign qb2_title = block.settings.qb2_title | default: 'Double Pack'
+  assign qb2_html_position = block.settings.qb2_html_position | default: 'below'
+  assign qb2_custom_html = block.settings.qb2_custom_html
+  assign qb2_use_custom_pricing = block.settings.qb2_use_custom_pricing | default: false
+  assign qb2_custom_price = block.settings.qb2_custom_price
+  assign qb2_custom_compare_price = block.settings.qb2_custom_compare_price
+  
+  comment
+    ===========================================
+    QUANTITY BREAK 2 BADGE SETTINGS
+    ===========================================
+  endcomment
+  
+  assign qb2_enable_badge = block.settings.qb2_enable_badge | default: false
+  assign qb2_badge_text = block.settings.qb2_badge_text | default: 'POPULAR'
+  assign qb2_badge_position = block.settings.qb2_badge_position | default: 'top-right'
+  assign qb2_badge_color = block.settings.qb2_badge_color | default: '#ffffff'
+  assign qb2_badge_bg_color = block.settings.qb2_badge_bg_color | default: '#ff4444'
+  assign qb2_badge_enable_gradient = block.settings.qb2_badge_enable_gradient | default: false
+  assign qb2_badge_gradient_start = block.settings.qb2_badge_gradient_start | default: '#ff4444'
+  assign qb2_badge_gradient_end = block.settings.qb2_badge_gradient_end | default: '#ff6666'
+  assign qb2_badge_font_size = block.settings.qb2_badge_font_size | default: 11
+  assign qb2_badge_font_weight = block.settings.qb2_badge_font_weight | default: '600'
+  assign qb2_badge_border_radius = block.settings.qb2_badge_border_radius | default: 4
+  assign qb2_badge_border_width = block.settings.qb2_badge_border_width | default: 0
+  assign qb2_badge_border_color = block.settings.qb2_badge_border_color | default: '#ffffff'
+  assign qb2_badge_padding_top = block.settings.qb2_badge_padding_top | default: 4
+  assign qb2_badge_padding_bottom = block.settings.qb2_badge_padding_bottom | default: 4
+  assign qb2_badge_padding_left = block.settings.qb2_badge_padding_left | default: 12
+  assign qb2_badge_padding_right = block.settings.qb2_badge_padding_right | default: 12
+  assign qb2_badge_full_width = block.settings.qb2_badge_full_width | default: false
+  assign qb2_show_save_badge = block.settings.qb2_show_save_badge | default: false
+  
+  comment
+    ===========================================
+    QUANTITY BREAK 3 SETTINGS
+    ===========================================
+  endcomment
+
+  assign qb3_hide = block.settings.qb3_hide | default: false
+  assign qb3_quantity = block.settings.qb3_quantity | default: 3
+  assign qb3_discount = block.settings.qb3_discount | default: 15
+  assign qb3_image = block.settings.qb3_image
+  assign qb3_title = block.settings.qb3_title | default: 'Triple Pack'
+  assign qb3_html_position = block.settings.qb3_html_position | default: 'below'
+  assign qb3_custom_html = block.settings.qb3_custom_html
+  assign qb3_use_custom_pricing = block.settings.qb3_use_custom_pricing | default: false
+  assign qb3_custom_price = block.settings.qb3_custom_price
+  assign qb3_custom_compare_price = block.settings.qb3_custom_compare_price
+  
+  comment
+    ===========================================
+    QUANTITY BREAK 3 BADGE SETTINGS
+    ===========================================
+  endcomment
+  
+  assign qb3_enable_badge = block.settings.qb3_enable_badge | default: false
+  assign qb3_badge_text = block.settings.qb3_badge_text | default: 'BEST VALUE'
+  assign qb3_badge_position = block.settings.qb3_badge_position | default: 'top-right'
+  assign qb3_badge_color = block.settings.qb3_badge_color | default: '#ffffff'
+  assign qb3_badge_bg_color = block.settings.qb3_badge_bg_color | default: '#00C7FF'
+  assign qb3_badge_enable_gradient = block.settings.qb3_badge_enable_gradient | default: false
+  assign qb3_badge_gradient_start = block.settings.qb3_badge_gradient_start | default: '#00C7FF'
+  assign qb3_badge_gradient_end = block.settings.qb3_badge_gradient_end | default: '#00A8D4'
+  assign qb3_badge_font_size = block.settings.qb3_badge_font_size | default: 11
+  assign qb3_badge_font_weight = block.settings.qb3_badge_font_weight | default: '600'
+  assign qb3_badge_border_radius = block.settings.qb3_badge_border_radius | default: 4
+  assign qb3_badge_border_width = block.settings.qb3_badge_border_width | default: 0
+  assign qb3_badge_border_color = block.settings.qb3_badge_border_color | default: '#ffffff'
+  assign qb3_badge_padding_top = block.settings.qb3_badge_padding_top | default: 4
+  assign qb3_badge_padding_bottom = block.settings.qb3_badge_padding_bottom | default: 4
+  assign qb3_badge_padding_left = block.settings.qb3_badge_padding_left | default: 12
+  assign qb3_badge_padding_right = block.settings.qb3_badge_padding_right | default: 12
+  assign qb3_badge_full_width = block.settings.qb3_badge_full_width | default: false
+  assign qb3_show_save_badge = block.settings.qb3_show_save_badge | default: false
+  
+  comment
+    ===========================================
+    STYLING SETTINGS
+    ===========================================
+  endcomment
+  
+  assign active_border_color = block.settings.active_border_color | default: '#ff0000'
+  assign inactive_border_color = block.settings.inactive_border_color | default: '#e5e5e5'
+  assign border_width = block.settings.border_width | default: 2
+  assign active_bg_color = block.settings.active_bg_color | default: '#ffffff'
+  assign inactive_bg_color = block.settings.inactive_bg_color | default: '#ffffff'
+  assign enable_gradient = block.settings.enable_gradient | default: false
+  assign gradient_start = block.settings.gradient_start | default: '#ffffff'
+  assign gradient_end = block.settings.gradient_end | default: '#f8f8f8'
+  assign variant_border_color = block.settings.variant_border_color | default: '#e5e5e5'
+  assign title_text_color = block.settings.title_text_color | default: '#333333'
+  assign price_text_color = block.settings.price_text_color | default: '#00C7FF'
+  assign compare_price_text_color = block.settings.compare_price_text_color | default: '#999999'
+  assign border_radius = block.settings.border_radius | default: 8
+  
+  comment
+    ===========================================
+    SPACING SETTINGS
+    ===========================================
+  endcomment
+  
+  assign margin_top = block.settings.margin_top | default: 16
+  assign margin_bottom = block.settings.margin_bottom | default: 16
+  assign qb_padding_top = block.settings.qb_padding_top | default: 16
+  assign qb_padding_bottom = block.settings.qb_padding_bottom | default: 16
+  assign qb_padding_left = block.settings.qb_padding_left | default: 16
+  assign qb_padding_right = block.settings.qb_padding_right | default: 16
+  
+  # Spacing & Layout
+  assign qb_gap_image_text = block.settings.qb_gap_image_text | default: 16
+  assign qb_gap_options = block.settings.qb_gap_options | default: 12
+
+  # Image Settings
+  assign qb_image_size = block.settings.qb_image_size | default: 60
+  assign qb_image_border_radius = block.settings.qb_image_border_radius | default: 8
+  assign qb_hide_images = block.settings.qb_hide_images | default: false
+  assign qb_hide_all_prices = block.settings.qb_hide_all_prices | default: false
+
+  # Typography
+  assign qb_title_font_size = block.settings.qb_title_font_size | default: 16
+  assign qb_title_font_weight = block.settings.qb_title_font_weight | default: '600'
+  assign qb_price_font_size = block.settings.qb_price_font_size | default: 18
+  assign qb_price_font_weight = block.settings.qb_price_font_weight | default: '600'
+  assign qb_compare_price_font_size = block.settings.qb_compare_price_font_size | default: 14
+  assign qb_compare_price_font_weight = block.settings.qb_compare_price_font_weight | default: '400'
+  
+  # Active State Colors
+  assign qb_active_bg_color = block.settings.qb_active_bg_color | default: '#f8f9fa'
+  assign qb_active_title_color = block.settings.qb_active_title_color | default: '#000000'
+  assign qb_active_price_color = block.settings.qb_active_price_color | default: '#00C7FF'
+  assign qb_active_compare_price_color = block.settings.qb_active_compare_price_color | default: '#999999'
+  assign qb_active_savings_color = block.settings.qb_active_savings_color | default: '#28a745'
+  assign qb_active_badge_text_color = block.settings.qb_active_badge_text_color | default: '#ffffff'
+  assign qb_active_badge_bg_color = block.settings.qb_active_badge_bg_color | default: '#ff4444'
+  
+  # Variant Input Styling
+  assign qb_variant_input_padding = block.settings.qb_variant_input_padding | default: 8
+  assign qb_variant_input_border_radius = block.settings.qb_variant_input_border_radius | default: 4
+  assign qb_variant_input_bg_color = block.settings.qb_variant_input_bg_color | default: '#ffffff'
+  assign qb_variant_input_border_color = block.settings.qb_variant_input_border_color | default: '#e5e5e5'
+  assign qb_variant_input_text_color = block.settings.qb_variant_input_text_color | default: '#000000'
+
+  # Variant Select Styling
+  assign qb_variant_select_padding = block.settings.qb_variant_select_padding | default: 8
+  assign qb_variant_select_font_size = block.settings.qb_variant_select_font_size | default: 13
+  assign qb_variant_select_font_weight = block.settings.qb_variant_select_font_weight | default: '400'
+
+  # Variant Label Styling
+  assign qb_variant_label_font_size = block.settings.qb_variant_label_font_size | default: 12
+  assign qb_variant_label_font_weight = block.settings.qb_variant_label_font_weight | default: '500'
+  assign qb_variant_label_color = block.settings.qb_variant_label_color | default: '#666666'
+  assign qb_variant_label_active_color = block.settings.qb_variant_label_active_color | default: '#000000'
+
+  # Pill Settings - RECONNECTING ALL PILL SETTINGS
+  assign qb_pill_inactive_bg = block.settings.qb_pill_inactive_bg | default: '#ffffff'
+  assign qb_pill_inactive_text_color = block.settings.qb_pill_inactive_text_color | default: '#666666'
+  assign qb_pill_active_bg = block.settings.qb_pill_active_bg | default: '#f0f0f0'
+  assign qb_pill_active_text_color = block.settings.qb_pill_active_text_color | default: '#000000'
+  assign qb_pill_active_border = block.settings.qb_pill_active_border | default: '#000000'
+  assign qb_pill_padding = block.settings.qb_pill_padding | default: 3
+  assign qb_pill_border_radius = block.settings.qb_pill_border_radius | default: 25
+  assign qb_pill_border_width = block.settings.qb_pill_border_width | default: 2
+  assign qb_pill_border_color = block.settings.qb_pill_border_color | default: '#e5e5e5'
+  assign qb_pill_label_padding_left = block.settings.qb_pill_label_padding_left | default: 0
+  assign qb_pill_label_padding_right = block.settings.qb_pill_label_padding_right | default: 7
+
+  # Variant Row Styling
+  assign qb_variant_row_padding_bottom = block.settings.qb_variant_row_padding_bottom | default: 16
+  assign qb_variant_row_margin_bottom = block.settings.qb_variant_row_margin_bottom | default: 16
+  assign qb_variant_row_border_width = block.settings.qb_variant_row_border_width | default: 1
+  assign qb_variant_row_border_style = block.settings.qb_variant_row_border_style | default: 'solid'
+  assign qb_variant_row_border_color = block.settings.qb_variant_row_border_color | default: '#e5e5e5'
+  assign qb_variant_row_last_padding_bottom = block.settings.qb_variant_row_last_padding_bottom | default: 0
+  assign qb_variant_row_last_margin_bottom = block.settings.qb_variant_row_last_margin_bottom | default: 10
+
+  # Variant Image Settings
+  assign qb_show_variant_image = block.settings.qb_show_variant_image | default: false
+  assign qb_variant_custom_image = block.settings.qb_variant_custom_image
+  assign qb_variant_img_use_custom_urls = block.settings.qb_variant_img_use_custom_urls | default: false
+  assign qb_variant_img_urls_raw = block.settings.qb_variant_img_urls | default: ''
+
+  # Clean up variant image URLs
+  assign qb_variant_img_urls_temp = qb_variant_img_urls_raw | split: ','
+  assign qb_variant_img_urls = ''
+  for url in qb_variant_img_urls_temp
+    assign clean_url = url | strip
+    if clean_url != ''
+      if qb_variant_img_urls == ''
+        assign qb_variant_img_urls = clean_url
+      else
+        assign qb_variant_img_urls = qb_variant_img_urls | append: ',' | append: clean_url
+      endif
+    endif
+  endfor
+  assign qb_variant_img_urls = qb_variant_img_urls | split: ','
+
+  # Variant Number Badge Styling
+  assign qb_variant_num_font_size = block.settings.qb_variant_num_font_size | default: 12
+  assign qb_variant_num_font_weight = block.settings.qb_variant_num_font_weight | default: '600'
+  assign qb_variant_num_color = block.settings.qb_variant_num_color | default: '#00C7FF'
+  assign qb_variant_num_bg_color = block.settings.qb_variant_num_bg_color | default: 'rgba(0, 199, 255, 0.1)'
+  assign qb_variant_num_border_radius = block.settings.qb_variant_num_border_radius | default: 4
+  assign qb_variant_num_padding_top = block.settings.qb_variant_num_padding_top | default: 2
+  assign qb_variant_num_padding_bottom = block.settings.qb_variant_num_padding_bottom | default: 2
+  assign qb_variant_num_padding_left = block.settings.qb_variant_num_padding_left | default: 6
+  assign qb_variant_num_padding_right = block.settings.qb_variant_num_padding_right | default: 6
+
+  # Save Badge Styling
+  assign qb_hide_save_badges = block.settings.qb_hide_save_badges | default: false
+  assign qb_save_badge_font_size = block.settings.qb_save_badge_font_size | default: 11
+  assign qb_save_badge_font_weight = block.settings.qb_save_badge_font_weight | default: '600'
+  assign qb_save_badge_text_color = block.settings.qb_save_badge_text_color | default: '#ffffff'
+  assign qb_save_badge_bg_color = block.settings.qb_save_badge_bg_color | default: '#ff4444'
+  assign qb_save_badge_border_radius = block.settings.qb_save_badge_border_radius | default: 4
+  assign qb_save_badge_padding_top = block.settings.qb_save_badge_padding_top | default: 2
+  assign qb_save_badge_padding_bottom = block.settings.qb_save_badge_padding_bottom | default: 2
+  assign qb_save_badge_padding_left = block.settings.qb_save_badge_padding_left | default: 8
+  assign qb_save_badge_padding_right = block.settings.qb_save_badge_padding_right | default: 8
+  assign qb_save_badge_margin_left = block.settings.qb_save_badge_margin_left | default: 8
+
+  # Hidden Variants
+  assign qb_hidden_variants_raw = block.settings.qb_hidden_variants | default: ''
+  assign qb_hidden_variants = qb_hidden_variants_raw | downcase | split: ','
+
+  # Pill Variants (which options should show as pills)
+  assign qb_pill_variants_raw = block.settings.qb_pill_variants | default: ''
+  assign qb_pill_variants = qb_pill_variants_raw | downcase | split: ','
+
+  # Swatch Settings
+  assign qb_swatch_variants_raw = block.settings.qb_swatch_variants | default: ''
+  assign qb_swatch_variants = qb_swatch_variants_raw | downcase | split: ','
+  assign qb_swatch_size = block.settings.qb_swatch_size | default: 50
+  assign qb_swatch_border_radius = block.settings.qb_swatch_border_radius | default: 10
+  assign qb_swatch_border_width = block.settings.qb_swatch_border_width | default: 2
+  assign qb_swatch_border_color = block.settings.qb_swatch_border_color | default: '#e5e5e5'
+  assign qb_swatch_hover_border_color = block.settings.qb_swatch_hover_border_color | default: '#999999'
+  assign qb_swatch_active_border_color = block.settings.qb_swatch_active_border_color | default: '#ff0000'
+  assign qb_swatch_gap = block.settings.qb_swatch_gap | default: 10
+
+  # Variant Name Display Settings
+  assign qb_show_variant_name = block.settings.qb_show_variant_name | default: true
+  assign qb_variant_name_size = block.settings.qb_variant_name_size | default: 14
+  assign qb_variant_name_color = block.settings.qb_variant_name_color | default: '#333333'
+  assign qb_variant_name_weight = block.settings.qb_variant_name_weight | default: '600'
+  assign qb_variant_name_margin_top = block.settings.qb_variant_name_margin_top | default: 8
+  assign qb_variant_name_margin_bottom = block.settings.qb_variant_name_margin_bottom | default: 6
+  assign qb_variant_name_padding_top = block.settings.qb_variant_name_padding_top | default: 0
+  assign qb_variant_name_padding_bottom = block.settings.qb_variant_name_padding_bottom | default: 0
+  assign qb_variant_name_padding_left = block.settings.qb_variant_name_padding_left | default: 0
+  assign qb_variant_name_padding_right = block.settings.qb_variant_name_padding_right | default: 0
+
+  # Variant Layout Settings
+  assign qb_variants_display_row = block.settings.qb_variants_display_row | default: false
+  assign qb_variants_row_gap = block.settings.qb_variants_row_gap | default: 15
+
+  # Active Variants Container Padding
+  assign qb_active_variants_padding_left = block.settings.qb_active_variants_padding_left | default: 10
+  assign qb_active_variants_padding_right = block.settings.qb_active_variants_padding_right | default: 10
+
+  # Swatch Image URLs (custom URLs mode)
+  assign qb_use_custom_urls = block.settings.qb_use_custom_urls | default: false
+  assign qb_swatch_image_urls_raw = block.settings.qb_swatch_image_urls | default: ''
+  assign qb_swatch_image_urls_temp = qb_swatch_image_urls_raw | split: ','
+
+  # Clean up URLs by stripping whitespace
+  assign qb_swatch_image_urls = ''
+  for url in qb_swatch_image_urls_temp
+    assign clean_url = url | strip
+    if clean_url != ''
+      if qb_swatch_image_urls == ''
+        assign qb_swatch_image_urls = clean_url
+      else
+        assign qb_swatch_image_urls = qb_swatch_image_urls | append: ',' | append: clean_url
+      endif
+    endif
+  endfor
+  assign qb_swatch_image_urls = qb_swatch_image_urls | split: ','
+-%}
+<!-- DEBUG: qb_use_custom_urls = {{ qb_use_custom_urls }}, URLs count = {{ qb_swatch_image_urls.size }}, URLs = {{ qb_swatch_image_urls | join: ' | ' }} -->
+
+<style>
+  .qb-wrapper {
+    margin: {{ margin_top }}px 0 {{ margin_bottom }}px 0;
+  }
+  .qb-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .qb-header-line { flex: 1; height: 1px; background: #ddd; }
+  .qb-header-text { 
+    font-weight: 700; 
+    font-size: 18px; 
+    white-space: nowrap;
+    color: {{ title_text_color }};
+  }
+  .qb-options { display: flex; flex-direction: column; gap: {{ qb_gap_options }}px; }
+
+  .qb-option {
+    display: flex;
+    align-items: flex-start;
+    padding: {{ qb_padding_top }}px {{ qb_padding_right }}px {{ qb_padding_bottom }}px {{ qb_padding_left }}px;
+    border: {{ border_width }}px solid {{ inactive_border_color }};
+    border-radius: {{ border_radius }}px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    flex-direction: column;
+    background-color: {{ inactive_bg_color }};
+  }
+  .qb-option.qb-active {
+    border-color: {{ active_border_color }};
+    {% if enable_gradient %}
+      background: linear-gradient(to right, {{ gradient_start }}, {{ gradient_end }});
+    {% else %}
+      background-color: {{ active_bg_color }};
+    {% endif %}
+  }
+  
+  .qb-option.qb-active .qb-title {
+    color: {{ qb_active_title_color }};
+  }
+  
+  .qb-option.qb-active .qb-price {
+    color: {{ qb_active_price_color }};
+  }
+  
+  .qb-option.qb-active .qb-compare {
+    color: {{ qb_active_compare_price_color }};
+  }
+  
+  .qb-option.qb-active .qb-savings {
+    color: {{ qb_active_savings_color }};
+  }
+  
+  .qb-option.qb-active .qb-save-badge {
+    color: {{ qb_active_badge_text_color }};
+    background-color: {{ qb_active_badge_bg_color }};
+  }
+  
+  .qb-option.qb-active .qb-variant-label {
+    color: {{ qb_variant_label_active_color }};
+  }
+  
+  .qb-option.qb-sold-out {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #f5f5f5;
+  }
+  .qb-option.qb-sold-out:hover {
+    border-color: #e5e5e5;
+    background: #f5f5f5;
+  }
+  .qb-sold-out-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 8px 24px;
+    background: #ff4444;
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    z-index: 10;
+    pointer-events: none;
+  }
+  
+  .qb-radio {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #bbb;
+    border-radius: 50%;
+    margin-right: 16px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .qb-option.qb-active .qb-radio { border-color: {{ price_text_color }}; }
+  .qb-radio::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: {{ price_text_color }};
+    transition: transform 0.2s;
+  }
+  .qb-option.qb-active .qb-radio::after { transform: translate(-50%, -50%) scale(1); }
+  
+  .qb-badge {
+    position: absolute;
+    padding: 4px 12px;
+    z-index: 1;
+    white-space: nowrap;
+  }
+
+  .qb-badge-top-left {
+    top: 8px;
+    left: 8px;
+  }
+
+  .qb-badge-top-right {
+    top: 8px;
+    right: 8px;
+  }
+
+  .qb-badge-bottom-left {
+    bottom: 8px;
+    left: 8px;
+  }
+
+  .qb-badge-bottom-right {
+    bottom: 8px;
+    right: 8px;
+  }
+  
+  .qb-content {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: {{ qb_gap_image_text }}px;
+    flex-direction: row;
+    width: 100%;
+  }
+  .qb-left { display: flex; gap: 16px; align-items: center; flex: 1; }
+  .qb-image {
+    width: {{ qb_image_size }}px;
+    height: {{ qb_image_size }}px;
+    border-radius: {{ qb_image_border_radius }}px;
+    overflow: hidden;
+    flex-shrink: 0;
+    {% if qb_hide_images %}
+      display: none !important;
+    {% endif %}
+  }
+  .qb-image img { width: 100%; height: 100%; object-fit: cover; }
+  
+  .qb-info { flex: 1; }
+  .qb-title { 
+    font-size: {{ qb_title_font_size }}px; 
+    font-weight: {{ qb_title_font_weight }}; 
+    color: {{ title_text_color }}; 
+  }
+  .qb-savings { 
+    font-size: 12px; 
+    color: #666; 
+    margin-top: 4px; 
+  }
+  .qb-save-badge {
+    display: {% if qb_hide_save_badges %}none{% else %}inline-block{% endif %};
+    padding: {{ qb_save_badge_padding_top }}px {{ qb_save_badge_padding_right }}px {{ qb_save_badge_padding_bottom }}px {{ qb_save_badge_padding_left }}px;
+    background: {{ qb_save_badge_bg_color }};
+    color: {{ qb_save_badge_text_color }};
+    border-radius: {{ qb_save_badge_border_radius }}px;
+    font-size: {{ qb_save_badge_font_size }}px;
+    font-weight: {{ qb_save_badge_font_weight }};
+    margin-left: {{ qb_save_badge_margin_left }}px;
+  }
+  
+  .qb-pricing {
+    text-align: right;
+    width: max-content;
+    {% if qb_hide_all_prices %}
+      display: none !important;
+    {% endif %}
+  }
+  .qb-price {
+    font-size: {{ qb_price_font_size }}px;
+    font-weight: {{ qb_price_font_weight }};
+    color: {{ price_text_color }};
+    transition: all 0.2s ease;
+  }
+  .qb-price.qb-price-updating {
+    opacity: 0.5;
+    transform: scale(0.98);
+  }
+  .qb-compare {
+    font-size: {{ qb_compare_price_font_size }}px;
+    font-weight: {{ qb_compare_price_font_weight }};
+    color: {{ compare_price_text_color }};
+    text-decoration: line-through;
+    transition: all 0.2s ease; 
+  }
+  
+  .qb-variants {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 1px solid {{ variant_border_color }};
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, margin-top 0.4s ease, padding-top 0.4s ease;
+  }
+  .qb-option.qb-active .qb-variants {
+    max-height: 1000px;
+    margin-top: 16px;
+    padding-top: 16px;
+    padding-left: {{ qb_active_variants_padding_left }}px;
+    padding-right: {{ qb_active_variants_padding_right }}px;
+  }
+  
+  .qb-custom-html {
+    margin-top: 16px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .qb-custom-html-above {
+    margin-top: 0;
+    margin-bottom: 16px;
+  }
+  .qb-custom-html-below {
+    margin-top: 16px;
+  }
+  
+  .qb-variant-row {
+    display: flex;
+    align-items: center;
+    padding-bottom: {{ qb_variant_row_padding_bottom }}px;
+    margin-bottom: {{ qb_variant_row_margin_bottom }}px;
+    flex-direction: row;
+    gap: 20px;
+    border-bottom: {{ qb_variant_row_border_width }}px {{ qb_variant_row_border_style }} {{ qb_variant_row_border_color }};
+  }
+  .qb-variant-row:last-child {
+    border-bottom: none;
+    padding-bottom: {{ qb_variant_row_last_padding_bottom }}px;
+    margin-bottom: {{ qb_variant_row_last_margin_bottom }}px;
+  }
+  .qb-variant-left { 
+    display: flex; 
+    gap: 12px; 
+    align-items: center; 
+  }
+  .qb-variant-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: white;
+  }
+  .qb-variant-img img { width: 100%; height: 100%; object-fit: cover; }
+  .qb-variant-label {
+    font-size: {{ qb_variant_label_font_size }}px;
+    font-weight: {{ qb_variant_label_font_weight }};
+    color: {{ qb_variant_label_color }};
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .qb-variant-num {
+    font-size: {{ qb_variant_num_font_size }}px;
+    font-weight: {{ qb_variant_num_font_weight }};
+    color: {{ qb_variant_num_color }};
+    background: {{ qb_variant_num_bg_color }};
+    border-radius: {{ qb_variant_num_border_radius }}px;
+    padding: {{ qb_variant_num_padding_top }}px {{ qb_variant_num_padding_right }}px {{ qb_variant_num_padding_bottom }}px {{ qb_variant_num_padding_left }}px;
+    margin-right: 4px;
+    display: inline-block;
+  }
+
+  /* Pill styles for variant labels and pill options */
+  .qb-variant-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .qb-variant-pill.pill-style {
+    display: inline-block;
+    padding: {{ qb_pill_padding }}px {{ qb_pill_label_padding_right }}px {{ qb_pill_padding }}px {{ qb_pill_label_padding_left }}px;
+    background: {{ qb_pill_inactive_bg }};
+    color: {{ qb_pill_inactive_text_color }};
+    border: {{ qb_pill_border_width }}px solid {{ qb_pill_border_color }};
+    border-radius: {{ qb_pill_border_radius }}px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .qb-variant-pill.pill-style:hover {
+    opacity: 0.8;
+  }
+
+  .qb-variant-pill.pill-style.qb-pill-active,
+  .qb-option.qb-active .qb-variant-pill.pill-style.qb-pill-active {
+    background: {{ qb_pill_active_bg }};
+    color: {{ qb_pill_active_text_color }};
+    border-color: {{ qb_pill_active_border }};
+  }
+
+  .qb-pill-label {
+    font-size: {{ qb_variant_label_font_size }}px;
+    font-weight: {{ qb_variant_label_font_weight }};
+  }
+  
+  .qb-variant-selects {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    width: 100%;
+    flex-direction: column;
+    align-content: flex-end;
+    justify-content: center;
+  }
+
+  /* Wrapper for each variant option */
+  .qb-variant-option-wrapper {
+    margin-bottom: 12px;
+  }
+
+  /* Row layout for variant name and selector */
+  .qb-variant-option-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: {{ qb_variants_row_gap }}px !important;
+    width: 100%;
+  }
+
+  .qb-variant-option-row .qb-variant-name {
+    flex: 0 0 auto !important;
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  .qb-variant-option-row .qb-variant-select,
+  .qb-variant-option-row .qb-variant-pills,
+  .qb-variant-option-row .qb-variant-swatches {
+    flex: 1 !important;
+    width: auto !important;
+  }
+  .qb-variant-select {
+    padding: {{ qb_variant_select_padding }}px;
+    border: 1px solid {{ qb_variant_input_border_color }};
+    border-radius: {{ qb_variant_input_border_radius }}px;
+    background: {{ qb_variant_input_bg_color }};
+    font-size: {{ qb_variant_select_font_size }}px;
+    font-weight: {{ qb_variant_select_font_weight }};
+    color: {{ qb_variant_input_text_color }};
+    cursor: pointer;
+    min-width: 100px;
+  }
+  .qb-variant-select:focus {
+    outline: none;
+    border-color: {{ qb_variant_input_border_color }};
+  }
+
+  /* Swatch Styles */
+  .qb-variant-swatches {
+    display: flex;
+    gap: {{ qb_swatch_gap }}px;
+    margin-top: {{ qb_variant_label_font_size }}px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .qb-variant-swatch {
+    width: {{ qb_swatch_size }}px;
+    height: {{ qb_swatch_size }}px;
+    border: {{ qb_swatch_border_width }}px solid {{ qb_swatch_border_color }};
+    border-radius: {{ qb_swatch_border_radius }}%;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    background: #f5f5f5;
+  }
+  .qb-variant-swatch:hover {
+    transform: scale(1.05);
+    border-color: {{ qb_swatch_hover_border_color }};
+  }
+  .qb-variant-swatch.qb-swatch-active {
+    border-color: {{ qb_swatch_active_border_color }};
+    border-width: {{ qb_swatch_border_width | plus: 1 }}px;
+  }
+  .qb-variant-swatch img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .qb-variant-swatch-label {
+    font-size: 11px;
+    margin-left: 4px;
+    color: {{ qb_variant_label_color }};
+    white-space: nowrap;
+  }
+  .qb-variant-swatch-item {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* When swatches are displayed as pills */
+  .qb-variant-swatches.qb-swatches-as-pills {
+    margin-top: 0 !important;
+  }
+
+  .qb-variant-swatch-pill {
+    cursor: pointer;
+    user-select: none;
+    width: auto !important;
+    height: auto !important;
+    border-radius: {{ qb_pill_border_radius }}px !important;
+  }
+
+  .qb-variant-swatch-pill.pill-style {
+    display: inline-flex;
+    align-items: center;
+    padding: {{ qb_pill_padding }}px {{ qb_pill_label_padding_right }}px {{ qb_pill_padding }}px {{ qb_pill_label_padding_left }}px;
+    background: {{ qb_pill_inactive_bg }};
+    color: {{ qb_pill_inactive_text_color }};
+    border: {{ qb_pill_border_width }}px solid {{ qb_pill_border_color }};
+    border-radius: {{ qb_pill_border_radius }}px;
+    transition: all 0.2s ease;
+    min-height: 38px; /* Maintain height even without image (30px image + padding) */
+  }
+
+  .qb-variant-swatch-pill.pill-style:hover {
+    opacity: 0.8;
+  }
+
+  .qb-variant-swatch-pill.pill-style.qb-swatch-active,
+  .qb-variant-swatch-pill.pill-style.qb-pill-active {
+    background: {{ qb_pill_active_bg }};
+    color: {{ qb_pill_active_text_color }};
+    border-color: {{ qb_pill_active_border }};
+  }
+
+  .qb-swatch-pill-label {
+    font-size: {{ qb_variant_label_font_size }}px;
+    font-weight: {{ qb_variant_label_font_weight }};
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .qb-variant-swatch-pill .qb-swatch-image-placeholder img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    .qb-content {
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+    }
+    .qb-pricing {
+      text-align: right;
+      width: max-content;
+    }
+    .qb-variant-row {
+      flex-direction: row;
+      align-items: stretch;
+    }
+    .qb-variant-selects {
+      width: 100%;
+    }
+    .qb-variant-select { width: 100%; }
+  }
+
+  .qb-has-badge {
+    margin-top: 6px;
+  }
+</style>
+
+<div class="qb-wrapper" data-product-id="{{ product.id }}" data-form-id="{{ product_form_id }}" {{ block.shopify_attributes }}>
+  {% if show_title %}
+    <div class="qb-header">
+      <div class="qb-header-line"></div>
+      <div class="qb-header-text">{{ title_text }}</div>
+      <div class="qb-header-line"></div>
+    </div>
+  {% endif %}
+
+  <div class="qb-options">
+    {% for n in (1..3) %}
+      {%- liquid
+        case n
+          when 1
+            assign qty = 1
+            assign title = qb1_title
+            assign enable_badge = qb1_enable_badge
+            assign badge_text = qb1_badge_text
+            assign badge_position = qb1_badge_position
+            assign badge_color = qb1_badge_color
+            assign badge_bg_color = qb1_badge_bg_color
+            assign badge_enable_gradient = qb1_badge_enable_gradient
+            assign badge_gradient_start = qb1_badge_gradient_start
+            assign badge_gradient_end = qb1_badge_gradient_end
+            assign badge_font_size = qb1_badge_font_size
+            assign badge_font_weight = qb1_badge_font_weight
+            assign badge_border_radius = qb1_badge_border_radius
+            assign badge_border_width = qb1_badge_border_width
+            assign badge_border_color = qb1_badge_border_color
+            assign badge_padding_top = qb1_badge_padding_top
+            assign badge_padding_bottom = qb1_badge_padding_bottom
+            assign badge_padding_left = qb1_badge_padding_left
+            assign badge_padding_right = qb1_badge_padding_right
+            assign badge_full_width = qb1_badge_full_width
+            assign show_save_badge = qb1_show_save_badge
+            assign discount = 0
+            assign custom_html = qb1_custom_html
+            assign html_position = qb1_html_position
+            assign use_custom_pricing = qb1_use_custom_pricing
+            assign custom_price = qb1_custom_price
+            assign custom_compare_price = qb1_custom_compare_price
+            assign custom_image = qb1_image
+          when 2
+            assign qty = qb2_quantity
+            assign title = qb2_title
+            assign enable_badge = qb2_enable_badge
+            assign badge_text = qb2_badge_text
+            assign badge_position = qb2_badge_position
+            assign badge_color = qb2_badge_color
+            assign badge_bg_color = qb2_badge_bg_color
+            assign badge_enable_gradient = qb2_badge_enable_gradient
+            assign badge_gradient_start = qb2_badge_gradient_start
+            assign badge_gradient_end = qb2_badge_gradient_end
+            assign badge_font_size = qb2_badge_font_size
+            assign badge_font_weight = qb2_badge_font_weight
+            assign badge_border_radius = qb2_badge_border_radius
+            assign badge_border_width = qb2_badge_border_width
+            assign badge_border_color = qb2_badge_border_color
+            assign badge_padding_top = qb2_badge_padding_top
+            assign badge_padding_bottom = qb2_badge_padding_bottom
+            assign badge_padding_left = qb2_badge_padding_left
+            assign badge_padding_right = qb2_badge_padding_right
+            assign badge_full_width = qb2_badge_full_width
+            assign show_save_badge = qb2_show_save_badge
+            assign discount = qb2_discount
+            assign custom_html = qb2_custom_html
+            assign html_position = qb2_html_position
+            assign use_custom_pricing = qb2_use_custom_pricing
+            assign custom_price = qb2_custom_price
+            assign custom_compare_price = qb2_custom_compare_price
+            assign custom_image = qb2_image
+          when 3
+            assign qty = qb3_quantity
+            assign title = qb3_title
+            assign enable_badge = qb3_enable_badge
+            assign badge_text = qb3_badge_text
+            assign badge_position = qb3_badge_position
+            assign badge_color = qb3_badge_color
+            assign badge_bg_color = qb3_badge_bg_color
+            assign badge_enable_gradient = qb3_badge_enable_gradient
+            assign badge_gradient_start = qb3_badge_gradient_start
+            assign badge_gradient_end = qb3_badge_gradient_end
+            assign badge_font_size = qb3_badge_font_size
+            assign badge_font_weight = qb3_badge_font_weight
+            assign badge_border_radius = qb3_badge_border_radius
+            assign badge_border_width = qb3_badge_border_width
+            assign badge_border_color = qb3_badge_border_color
+            assign badge_padding_top = qb3_badge_padding_top
+            assign badge_padding_bottom = qb3_badge_padding_bottom
+            assign badge_padding_left = qb3_badge_padding_left
+            assign badge_padding_right = qb3_badge_padding_right
+            assign badge_full_width = qb3_badge_full_width
+            assign show_save_badge = qb3_show_save_badge
+            assign discount = qb3_discount
+            assign custom_html = qb3_custom_html
+            assign html_position = qb3_html_position
+            assign use_custom_pricing = qb3_use_custom_pricing
+            assign custom_price = qb3_custom_price
+            assign custom_compare_price = qb3_custom_compare_price
+            assign custom_image = qb3_image
+        endcase
+
+        # Skip the third quantity break if it's hidden
+        if n == 3 and qb3_hide
+          continue
+        endif
+
+        assign base_price = product.price | times: qty
+        
+        if use_custom_pricing and custom_price > 0
+          assign final_price = custom_price
+        elsif discount > 0
+          assign discount_multiplier = 100 | minus: discount
+          assign final_price = base_price | times: discount_multiplier | divided_by: 100
+        else
+          assign final_price = base_price
+        endif
+        
+        if use_custom_pricing and custom_compare_price > 0
+          assign final_compare = custom_compare_price
+        elsif product.compare_at_price and product.compare_at_price > product.price
+          assign final_compare = product.compare_at_price | times: qty
+        else
+          assign final_compare = base_price
+        endif
+        
+        assign savings = final_compare | minus: final_price
+
+        assign badge_height = badge_font_size | plus: badge_padding_top | plus: badge_padding_bottom | plus: badge_border_width | plus: badge_border_width
+        assign badge_top_offset = badge_height | divided_by: 2 | plus: 3
+        assign badge_top_position = badge_top_offset | times: -1
+      -%}
+
+      <div class="qb-option {% if n == 1 %}qb-active{% endif %}{% if enable_badge and badge_text != blank %} qb-has-badge{% endif %}"
+           data-qty="{{ qty }}"
+           data-option="{{ n }}"
+           data-final-price="{{ final_price }}"
+           data-final-compare="{{ final_compare }}"
+           style="{% if badge_full_width == true %}margin-top: -{{ badge_height }}px; padding-top: calc({{ qb_padding_top }}px + {{ badge_height }}px);{% endif %}">
+        <div class="qb-badge qb-badge-{{ badge_position }} {% if badge_full_width == true %}qb-badge-full-width{% endif %}"
+             style="
+               {% if enable_badge == false %}display: none !important;{% endif %}
+               color: {{ badge_color }};
+               font-size: {{ badge_font_size }}px;
+               font-weight: {{ badge_font_weight }};
+               border: {{ badge_border_width }}px solid {{ badge_border_color }};
+               padding: {{ badge_padding_top }}px {{ badge_padding_right }}px {{ badge_padding_bottom }}px {{ badge_padding_left }}px;
+               {% if badge_full_width == true %}
+                 position: absolute !important;
+                 top: 0 !important;
+                 left: 0 !important;
+                 right: 0 !important;
+                 width: 100% !important;
+                 margin: 0 !important;
+                 text-align: center !important;
+                 z-index: 1;
+                 border-radius: calc({{ border_radius }}px - {{ border_width }}px) calc({{ border_radius }}px - {{ border_width }}px) 0 0 !important;
+               {% else %}
+                 position: absolute;
+                 top: {{ badge_top_position }}px;
+                 {% if badge_position == 'top-left' or badge_position == 'bottom-left' %}
+                   left: 12px;
+                 {% else %}
+                   right: 12px;
+                 {% endif %}
+                 width: max-content;
+                 z-index: 1;
+                 border-radius: {{ badge_border_radius }}px;
+               {% endif %}
+               white-space: nowrap;
+               {% if badge_enable_gradient %}
+                 background: linear-gradient(45deg, {{ badge_gradient_start }}, {{ badge_gradient_end }});
+               {% else %}
+                 background-color: {{ badge_bg_color }};
+               {% endif %}
+             ">
+          {{ badge_text }}
+        </div>
+        
+        {% if show_save_badge and savings > 0 %}
+          {%- liquid
+            if qty == 1 and product.compare_at_price and product.compare_at_price > product.price
+              assign original_price = product.compare_at_price
+              assign current_price = product.price
+              assign savings_amount = original_price | minus: current_price
+              assign save_percentage = savings_amount | times: 100 | divided_by: original_price
+            else
+              assign single_price = product.price
+              assign total_original_price = single_price | times: qty
+              assign total_discounted_price = final_price
+              assign savings_amount = total_original_price | minus: total_discounted_price
+              assign save_percentage = savings_amount | times: 100 | divided_by: total_original_price
+            endif
+            assign save_percentage_rounded = save_percentage | round
+          -%}
+          <div class="qb-save-badge qb-badge-top-left" 
+               style="
+                 color: #ffffff;
+                 font-size: 11px;
+                 font-weight: 600;
+                 border-radius: 4px;
+                 border: 0px solid #ffffff;
+                 padding: 4px 8px;
+                 background-color: #28a745;
+                 position: absolute;
+                 top: -13px;
+                 left: 12px;
+                 z-index: 1;
+                 white-space: nowrap;
+               ">
+            SAVE {{ save_percentage_rounded }}%
+          </div>
+        {% endif %}
+        
+        <div class="qb-radio"></div>
+        
+        <div class="qb-content">
+          <div class="qb-left">
+            {% if custom_image != blank %}
+              <div class="qb-image">
+                <img src="{{ custom_image | image_url: width: 200 }}" alt="{{ title }}" loading="lazy" width="200" height="200">
+              </div>
+            {% elsif product.featured_image %}
+              <div class="qb-image">
+                <img src="{{ product.featured_image | image_url: width: 200 }}" alt="{{ product.title }}" loading="lazy" width="200" height="200">
+              </div>
+            {% endif %}
+            
+            <div class="qb-info">
+              <div>
+                <span class="qb-title">{{ title }}</span>
+                {% if savings > 0 %}
+                  {%- liquid
+                    if qty == 1 and product.compare_at_price and product.compare_at_price > product.price
+                      assign original_price = product.compare_at_price
+                      assign current_price = product.price
+                      assign savings_amount = original_price | minus: current_price
+                      assign save_percentage = savings_amount | times: 100 | divided_by: original_price
+                    else
+                      assign single_price = product.price
+                      assign total_original_price = single_price | times: qty
+                      assign total_discounted_price = final_price
+                      assign savings_amount = total_original_price | minus: total_discounted_price
+                      assign save_percentage = savings_amount | times: 100 | divided_by: total_original_price
+                    endif
+                    assign save_percentage_rounded = save_percentage | round
+                  -%}
+                  <span class="qb-save-badge">SAVE {{ save_percentage_rounded }}%</span>
+                {% endif %}
+              </div>
+              {% if savings > 0 %}
+                <div class="qb-savings">You save {{ savings | money }} total</div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <div class="qb-pricing">
+            <div class="qb-price">{{ final_price | money }}</div>
+            {% if final_compare > final_price %}
+              <div class="qb-compare">{{ final_compare | money }}</div>
+            {% endif %}
+          </div>
+        </div>
+        
+        {% if custom_html != blank %}
+          {% if html_position == 'above' %}
+            <div class="qb-custom-html qb-custom-html-above">
+              {{ custom_html }}
+            </div>
+          {% endif %}
+        {% endif %}
+        
+        {% unless product.has_only_default_variant %}
+          {% comment %} Check if there are any visible variants {% endcomment %}
+          {% assign has_visible_variants = false %}
+          {% for option in product.options_with_values %}
+            {% assign option_name_lower = option.name | downcase | strip %}
+            {% assign is_hidden = false %}
+            {% for hidden_variant in qb_hidden_variants %}
+              {% assign hidden_variant_trimmed = hidden_variant | strip %}
+              {% if option_name_lower == hidden_variant_trimmed %}
+                {% assign is_hidden = true %}
+                {% break %}
+              {% endif %}
+            {% endfor %}
+            {% unless is_hidden %}
+              {% assign has_visible_variants = true %}
+              {% break %}
+            {% endunless %}
+          {% endfor %}
+
+          {% if has_visible_variants %}
+          <div class="qb-variants">
+            {% for i in (1..qty) %}
+              <div class="qb-variant-row">
+                <div class="qb-variant-left">
+                  {% if qb_show_variant_image == true %}
+                    <div class="qb-variant-img">
+                      {% liquid
+                        assign variant_img_src = ''
+
+                        # First priority: Custom Variant Row Image (same for all rows)
+                        if qb_variant_custom_image
+                          assign variant_img_src = qb_variant_custom_image | image_url: width: 100
+                        endif
+
+                        # Second priority: Check if using custom URLs for variant images
+                        if variant_img_src == blank and qb_variant_img_use_custom_urls and qb_variant_img_urls.size > 0
+                          assign option_index = n | minus: 1
+                          if option_index < qb_variant_img_urls.size
+                            assign variant_img_src = qb_variant_img_urls[option_index]
+                          endif
+                        endif
+
+                        # Third priority: Fall back to QB-specific image if no custom URL
+                        if variant_img_src == blank
+                          case n
+                            when 1
+                              if qb1_image
+                                assign variant_img_src = qb1_image | image_url: width: 100
+                              endif
+                            when 2
+                              if qb2_image
+                                assign variant_img_src = qb2_image | image_url: width: 100
+                              endif
+                            when 3
+                              if qb3_image
+                                assign variant_img_src = qb3_image | image_url: width: 100
+                              endif
+                          endcase
+                        endif
+
+                        # Final fallback to product featured image
+                        if variant_img_src == blank and product.featured_image
+                          assign variant_img_src = product.featured_image | image_url: width: 100
+                        endif
+                      %}
+
+                      {% if variant_img_src != blank %}
+                        <img src="{{ variant_img_src }}" alt="{{ product.title }}" loading="lazy">
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                  <div class="qb-variant-label">
+                    <span class="qb-variant-num">{{ i }}x</span>
+                    {{ product.title | truncate: 25 }}
+                  </div>
+                </div>
+
+                <div class="qb-variant-selects">
+                  {% for option in product.options_with_values %}
+                    {% assign option_name_lower = option.name | downcase | strip %}
+                    {% assign is_hidden = false %}
+                    {% assign is_swatch = false %}
+                    {% assign is_pill = false %}
+
+                    {% comment %} Check if hidden {% endcomment %}
+                    {% for hidden_variant in qb_hidden_variants %}
+                      {% assign hidden_variant_trimmed = hidden_variant | strip %}
+                      {% if option_name_lower == hidden_variant_trimmed %}
+                        {% assign is_hidden = true %}
+                        {% break %}
+                      {% endif %}
+                    {% endfor %}
+
+                    {% comment %} Check if swatch {% endcomment %}
+                    {% for swatch_variant in qb_swatch_variants %}
+                      {% assign swatch_variant_trimmed = swatch_variant | strip %}
+                      {% if option_name_lower == swatch_variant_trimmed %}
+                        {% assign is_swatch = true %}
+                        {% break %}
+                      {% endif %}
+                    {% endfor %}
+
+                    {% comment %} Check if pill {% endcomment %}
+                    {% for pill_variant in qb_pill_variants %}
+                      {% assign pill_variant_trimmed = pill_variant | strip %}
+                      {% if option_name_lower == pill_variant_trimmed %}
+                        {% assign is_pill = true %}
+                        {% break %}
+                      {% endif %}
+                    {% endfor %}
+
+                    {% unless is_hidden %}
+                      {% comment %} Wrap each variant option in a container for row layout {% endcomment %}
+                      <div class="qb-variant-option-wrapper{% if qb_variants_display_row %} qb-variant-option-row{% endif %}">
+
+                      {% comment %} Display variant name if enabled {% endcomment %}
+                      {% if qb_show_variant_name %}
+                        <div class="qb-variant-name" style="
+                          font-size: {{ qb_variant_name_size }}px;
+                          color: {{ qb_variant_name_color }};
+                          font-weight: {{ qb_variant_name_weight }};
+                          margin-top: {{ qb_variant_name_margin_top }}px;
+                          margin-bottom: {{ qb_variant_name_margin_bottom }}px;
+                          padding-top: {{ qb_variant_name_padding_top }}px;
+                          padding-bottom: {{ qb_variant_name_padding_bottom }}px;
+                          padding-left: {{ qb_variant_name_padding_left }}px;
+                          padding-right: {{ qb_variant_name_padding_right }}px;
+                        ">
+                          {{ option.name }}
+                        </div>
+                      {% endif %}
+
+                      {% comment %} Only render as swatch/pill if explicitly set, otherwise dropdown {% endcomment %}
+                      {% if is_swatch %}
+                        {% comment %} Render as swatches {% endcomment %}
+                        <div class="qb-variant-swatches qb-swatches-as-pills"
+                             data-bundle-option="{{ n }}"
+                             data-item="{{ i }}"
+                             data-option-position="{{ option.position }}"
+                             data-option-name="{{ option.name }}">
+                          {% comment %} Calculate URL index offset for this variant option, skipping hidden variants {% endcomment %}
+                          {% assign url_index_offset = 0 %}
+                          {% for prev_option in product.options_with_values %}
+                            {% if prev_option.position < option.position %}
+                              {% comment %} Check if this prev_option is hidden {% endcomment %}
+                              {% assign prev_option_name_lower = prev_option.name | downcase | strip %}
+                              {% assign prev_is_hidden = false %}
+                              {% for hidden_variant in qb_hidden_variants %}
+                                {% assign hidden_variant_trimmed = hidden_variant | strip %}
+                                {% if prev_option_name_lower == hidden_variant_trimmed %}
+                                  {% assign prev_is_hidden = true %}
+                                  {% break %}
+                                {% endif %}
+                              {% endfor %}
+
+                              {% comment %} Only add to offset if not hidden {% endcomment %}
+                              {% unless prev_is_hidden %}
+                                {% assign url_index_offset = url_index_offset | plus: prev_option.values.size %}
+                              {% endunless %}
+                            {% endif %}
+                          {% endfor %}
+
+                          {% for value in option.values %}
+                            {% comment %} Calculate URL index for this specific option value {% endcomment %}
+                            {% assign current_url_index = url_index_offset | plus: forloop.index0 %}
+                            {% comment %}DEBUG URL MAPPING: Option={{ option.name }}, Value={{ value }}, Position={{ option.position }}, Offset={{ url_index_offset }}, Index={{ current_url_index }}{% endcomment %}
+
+                            {% comment %} Find ALL variants with this option value and store their data {% endcomment %}
+                            {% assign matching_variants = '' %}
+                            {% for variant in product.variants %}
+                              {% assign matches = false %}
+                              {% case option.position %}
+                                {% when 1 %}
+                                  {% if variant.option1 == value %}
+                                    {% assign matches = true %}
+                                  {% endif %}
+                                {% when 2 %}
+                                  {% if variant.option2 == value %}
+                                    {% assign matches = true %}
+                                  {% endif %}
+                                {% when 3 %}
+                                  {% if variant.option3 == value %}
+                                    {% assign matches = true %}
+                                  {% endif %}
+                              {% endcase %}
+
+                              {% if matches %}
+                                {% comment %} Build variant data string: id|opt1|opt2|opt3|image_url {% endcomment %}
+                                {% assign variant_data = variant.id | append: '|' | append: variant.option1 | append: '|' | append: variant.option2 | append: '|' | append: variant.option3 %}
+
+                                {% assign img_url = '' %}
+
+                                {% if qb_use_custom_urls %}
+                                  {% comment %} Use custom URLs when enabled {% endcomment %}
+                                  {% if qb_swatch_image_urls.size > 0 and current_url_index < qb_swatch_image_urls.size %}
+                                    {% assign img_url = qb_swatch_image_urls[current_url_index] %}
+                                    {% comment %} Check if the URL is 'blank' keyword - if so, skip this image {% endcomment %}
+                                    {% if img_url == 'blank' %}
+                                      {% assign img_url = '' %}
+                                    {% endif %}
+                                    {% comment %}CUSTOM URL: index={{ current_url_index }}, url={{ img_url }}{% endcomment %}
+                                  {% endif %}
+                                {% else %}
+                                  {% comment %} Use metafield images by default {% endcomment %}
+                                  {% assign variant_image = variant.metafields.custom.variant_image %}
+                                  {% if variant_image == blank %}
+                                    {% assign variant_image = variant.metafields.custom.varaint_image %}
+                                  {% endif %}
+                                  {% if variant_image %}
+                                    {% assign img_url = variant_image | image_url: width: 100 %}
+                                  {% endif %}
+                                {% endif %}
+
+                                {% if img_url != '' %}
+                                  {% assign variant_data = variant_data | append: '|' | append: img_url %}
+                                {% else %}
+                                  {% assign variant_data = variant_data | append: '|' %}
+                                {% endif %}
+
+                                {% if matching_variants == '' %}
+                                  {% assign matching_variants = variant_data %}
+                                {% else %}
+                                  {% assign matching_variants = matching_variants | append: ';;' | append: variant_data %}
+                                {% endif %}
+                              {% endif %}
+                            {% endfor %}
+
+                            <div class="qb-variant-swatch-item">
+                              {% comment %}DEBUG: {{ value }} variants: {{ matching_variants }}{% endcomment %}
+                              {% comment %} Check if we should show image placeholder {% endcomment %}
+                              {% assign show_image_placeholder = true %}
+                              {% if qb_use_custom_urls and qb_swatch_image_urls.size > 0 and current_url_index < qb_swatch_image_urls.size %}
+                                {% assign current_url = qb_swatch_image_urls[current_url_index] %}
+                                {% if current_url == 'blank' %}
+                                  {% assign show_image_placeholder = false %}
+                                {% endif %}
+                              {% endif %}
+
+                              <div class="qb-variant-swatch qb-variant-swatch-pill pill-style{% if forloop.first %} qb-swatch-active qb-pill-active{% endif %}"
+                                   data-value="{{ value }}"
+                                   data-variants="{{ matching_variants }}"
+                                   data-debug-variants="{{ matching_variants }}"
+                                   data-debug-custom-urls="{{ qb_use_custom_urls }}"
+                                   data-debug-url-index="{{ current_url_index }}"
+                                   data-debug-offset="{{ url_index_offset }}"
+                                   data-debug-loop-index="{{ forloop.index0 }}">
+                                {% if show_image_placeholder %}
+                                  <div class="qb-swatch-image-placeholder" style="width:30px;height:30px;display:inline-block;vertical-align:middle;margin-right:6px;">
+                                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#999;background:#f0f0f0;border-radius:4px;">
+                                      {{ value | slice: 0, 2 | upcase }}
+                                    </div>
+                                  </div>
+                                {% endif %}
+                                <span class="qb-swatch-pill-label" {% unless show_image_placeholder %}style="padding-left: 6px;"{% endunless %}>{{ value }}</span>
+                              </div>
+                            </div>
+                          {% endfor %}
+                        </div>
+                      {% elsif is_pill %}
+                        {% comment %} Render as pills {% endcomment %}
+                        <div class="qb-variant-pills"
+                             data-bundle-option="{{ n }}"
+                             data-item="{{ i }}"
+                             data-option-position="{{ option.position }}"
+                             data-option-name="{{ option.name }}">
+                          {% for value in option.values %}
+                            <label class="qb-variant-pill pill-style{% if forloop.first %} qb-pill-active{% endif %}">
+                              <input type="radio"
+                                     name="qb-pill-{{ n }}-{{ i }}-{{ option.position }}"
+                                     value="{{ value }}"
+                                     data-value="{{ value }}"
+                                     {% if forloop.first %}checked{% endif %}
+                                     style="display: none;">
+                              <span class="qb-pill-label">{{ value }}</span>
+                            </label>
+                          {% endfor %}
+                        </div>
+                      {% else %}
+                        {% comment %} Default to dropdown when not explicitly set as swatch or pill {% endcomment %}
+                        <select
+                          class="qb-variant-select"
+                          data-bundle-option="{{ n }}"
+                          data-item="{{ i }}"
+                          data-option-position="{{ option.position }}"
+                          data-option-name="{{ option.name }}"
+                        >
+                          {% for value in option.values %}
+                            <option value="{{ value }}" data-value="{{ value }}">{{ value }}</option>
+                          {% endfor %}
+                        </select>
+                      {% endif %}
+
+                      {% comment %} Close the wrapper div {% endcomment %}
+                      </div>
+                    {% endunless %}
+                  {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        {% endunless %}
+        
+        {% if custom_html != blank %}
+          {% if html_position == 'below' %}
+            <div class="qb-custom-html qb-custom-html-below">
+              {{ custom_html }}
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script type="application/json" id="qb-variants-{{ product.id }}">
+  {{ product.variants | json }}
+</script>
+
+<script>
+(function() {
+  'use strict';
+  
+  const wrapper = document.querySelector('.qb-wrapper[data-product-id="{{ product.id }}"]');
+  if (!wrapper) return;
+  
+  const productId = {{ product.id }};
+  const formId = '{{ product_form_id }}';
+  const variantsJson = document.getElementById('qb-variants-' + productId);
+  const variants = variantsJson ? JSON.parse(variantsJson.textContent) : [];
+  
+  let selectedQty = 1;
+  let bundleData = { items: [] };
+  let cartDrawerOpenedByUs = false;
+
+  // ===== MONEY FORMATTING =====
+  function formatMoney(cents) {
+    if (typeof Shopify !== 'undefined' && typeof Shopify.formatMoney === 'function') {
+      return Shopify.formatMoney(cents, Shopify.money_format);
+    }
+    
+    const existingPrice = document.querySelector('.main-price, .price-item--sale');
+    if (existingPrice) {
+      const priceText = existingPrice.textContent.trim();
+      const hasSymbolAfter = /\d[\$£€]/.test(priceText);
+      const value = (cents / 100).toFixed(2);
+      
+      if (hasSymbolAfter) {
+        const symbol = priceText.match(/[\$£€]/)?.[0] || '£';
+        return value + symbol;
+      } else {
+        const symbol = priceText.match(/[\$£€]/)?.[0] || '£';
+        return symbol + value;
+      }
+    }
+    
+    const value = (cents / 100).toFixed(2);
+    return '£' + value;
+  }
+  
+  // ===== PRICE UPDATE FUNCTION =====
+  function updateAllPrices(finalPrice, comparePrice) {
+    if (!finalPrice || finalPrice === 0) {
+      return;
+    }
+
+    const formattedPrice = formatMoney(finalPrice);
+    const formattedCompare = formatMoney(comparePrice);
+
+    const mainPriceSelectors = [
+      '#price-{{ section.id }} .price__sale .price-item--sale',
+      '#price-{{ section.id }} .price__regular .price-item--regular:not(.main-comapre-price)',
+      '.price-item.price-item--sale.price-item--last.main-price',
+      '.main-price',
+      '.price-item--sale.main-price'
+    ];
+
+    mainPriceSelectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(el => {
+        // Skip if this is inside price__compare-price (that's handled separately)
+        if (!el.closest('.price__compare-price') && !el.classList.contains('main-comapre-price')) {
+          el.textContent = formattedPrice;
+          el.style.display = '';
+          el.classList.remove('visibility-hidden');
+        }
+      });
+    });
+    
+    const mainComparePriceSelectors = [
+      '#price-{{ section.id }} .price__compare-price .price-item',
+      '#price-{{ section.id }} .price__compare-price .price-item--regular',
+      '.price-item.price-item--regular.main-comapre-price',
+      '.main-comapre-price',
+      '.price-item--regular.main-comapre-price'
+    ];
+
+    mainComparePriceSelectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(el => {
+        if (comparePrice > finalPrice) {
+          el.textContent = formattedCompare;
+          el.style.display = '';
+          el.classList.remove('visibility-hidden');
+          // Show parent price__compare-price span
+          if (el.closest('.price__compare-price')) {
+            el.closest('.price__compare-price').style.display = '';
+          }
+        } else {
+          el.style.display = 'none';
+          el.classList.add('visibility-hidden');
+          // Hide parent price__compare-price span
+          if (el.closest('.price__compare-price')) {
+            el.closest('.price__compare-price').style.display = 'none';
+          }
+        }
+      });
+    });
+    
+    const stickyPriceSelectors = [
+      '.price-item.price-item--sale.price-item--last',
+      '.price-item--sale.price-item--last'
+    ];
+    
+    stickyPriceSelectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(el => {
+        if (!el.classList.contains('main-price')) {
+          el.textContent = formattedPrice;
+        }
+      });
+    });
+    
+    const stickyComparePriceSelectors = [
+      '.price-item.price-item--regular:not(.main-comapre-price)',
+      '.price-item--regular:not(.main-comapre-price)'
+    ];
+    
+    stickyComparePriceSelectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(el => {
+        if (comparePrice > finalPrice) {
+          el.textContent = formattedCompare;
+          el.style.display = '';
+          el.classList.remove('visibility-hidden');
+        } else {
+          el.style.display = 'none';
+          el.classList.add('visibility-hidden');
+        }
+      });
+    });
+    
+    // Update buy button price - target the specific main-atc-price element
+    const mainAtcPrice = document.getElementById('main-atc-price-{{ section.id }}');
+    if (mainAtcPrice) {
+      mainAtcPrice.textContent = formattedPrice;
+      mainAtcPrice.classList.remove('hidden');
+      mainAtcPrice.style.display = '';
+      mainAtcPrice.style.visibility = 'visible';
+    }
+
+    // Also try the generic selector as backup
+    const genericAtcPrice = document.querySelector('.main-atc-price');
+    if (genericAtcPrice && genericAtcPrice !== mainAtcPrice) {
+      genericAtcPrice.textContent = formattedPrice;
+      genericAtcPrice.classList.remove('hidden');
+      genericAtcPrice.style.display = '';
+      genericAtcPrice.style.visibility = 'visible';
+    }
+
+    // Update all price elements on the page (excluding compare prices)
+    const genericPriceSelectors = [
+      '#price-{{ section.id }} .price__sale .price-item--sale',
+      '#price-{{ section.id }} .price__regular .price-item--regular',
+      '[data-product-price]'
+    ];
+
+    genericPriceSelectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(el => {
+        // Make sure we're not updating compare prices
+        if (!el.closest('.price__compare-price') && !el.classList.contains('main-comapre-price')) {
+          el.textContent = formattedPrice;
+        }
+      });
+    });
+
+    // Update sticky ATC prices
+    const stickyAtcPrice = document.getElementById('sticky-atc-price-{{ section.id }}');
+    if (stickyAtcPrice) {
+      stickyAtcPrice.textContent = formattedPrice;
+    }
+
+    const stickyAtcSeparatePrice = document.querySelector('#sticky-atc-separate-price-{{ section.id }} .price-item--sale');
+    if (stickyAtcSeparatePrice) {
+      stickyAtcSeparatePrice.textContent = formattedPrice;
+    }
+
+    document.dispatchEvent(new CustomEvent('qb:price-updated', {
+      detail: {
+        price: finalPrice,
+        comparePrice: comparePrice,
+        formattedPrice: formattedPrice,
+        formattedCompare: formattedCompare
+      },
+      bubbles: true
+    }));
+  }
+  
+  // ===== INITIALIZATION =====
+  function init() {
+    // Set the first option as active by default
+    const firstOption = wrapper.querySelector('.qb-option:first-child');
+    if (firstOption && !firstOption.classList.contains('qb-sold-out')) {
+      firstOption.classList.add('qb-active');
+      selectedQty = parseInt(firstOption.dataset.qty);
+    }
+    
+    setupOptionClicks();
+    setupVariantSelects();
+    setupSwatchClicks();
+    setupPillClicks();
+    setupOverlayCleanup();
+    updateVariantAvailability();
+    updateQuantity(selectedQty);
+
+    // Initial bundle data setup - will be overridden by buildCombinedBundle if variant picker is present
+    updateBundleData();
+
+    checkSoldOutOptions();
+    updateSwatchImages();
+
+    // Ensure active state is applied after all initialization
+    const activeOption = wrapper.querySelector('.qb-option.qb-active');
+    if (activeOption) {
+      // Force a reflow to ensure CSS is applied
+      activeOption.offsetHeight;
+
+      const finalPrice = parseInt(activeOption.dataset.finalPrice);
+      const finalCompare = parseInt(activeOption.dataset.finalCompare);
+
+      // Update prices immediately
+      updateAllPrices(finalPrice, finalCompare);
+
+      // Also update quantity-based pricing for ATC buttons
+      const qty = parseInt(activeOption.dataset.qty);
+      updateQuantity(qty);
+
+      // Force update of sticky button if it exists
+      const stickyButton = document.querySelector('.sticky-atc button[data-cart-add]');
+      if (stickyButton) {
+        stickyButton.dataset.qty = qty;
+      }
+    }
+  }
+  
+  // ===== VARIANT AVAILABILITY =====
+  function updateVariantAvailability() {
+    const selects = wrapper.querySelectorAll('.qb-variant-select');
+    
+    selects.forEach(select => {
+      const bundleOption = select.dataset.bundleOption;
+      const itemNum = select.dataset.item;
+      const optionPosition = select.dataset.optionPosition;
+      
+      const options = select.querySelectorAll('option');
+      
+      options.forEach(option => {
+        const value = option.value;
+        
+        const selections = {};
+        
+        const itemSelects = wrapper.querySelectorAll(
+          `.qb-variant-select[data-bundle-option="${bundleOption}"][data-item="${itemNum}"]`
+        );
+        
+        itemSelects.forEach(otherSelect => {
+          const pos = otherSelect.dataset.optionPosition;
+          if (pos === optionPosition) {
+            selections['option' + pos] = value;
+          } else {
+            selections['option' + pos] = otherSelect.value;
+          }
+        });
+        
+        const matchingVariant = variants.find(v => {
+          return Object.keys(selections).every(key => v[key] === selections[key]);
+        });
+        
+        const originalValue = option.getAttribute('data-value') || value.replace(' - Sold Out', '');
+        option.textContent = originalValue;
+        option.disabled = false;
+        option.style.color = '';
+        
+        if (matchingVariant && !matchingVariant.available) {
+          option.textContent = originalValue + ' - Sold Out';
+          option.disabled = true;
+          option.style.color = '#999';
+        } else if (!matchingVariant) {
+          option.disabled = true;
+          option.style.color = '#999';
+        }
+      });
+    });
+  }
+  
+  function checkSoldOutOptions() {
+    const options = wrapper.querySelectorAll('.qb-option');
+    
+    options.forEach(option => {
+      const bundleOption = option.dataset.option;
+      const qty = parseInt(option.dataset.qty);
+      
+      let allAvailable = true;
+      
+      for (let i = 1; i <= qty; i++) {
+        const variant = getVariantForItem(bundleOption, i);
+        if (!variant || !variant.available) {
+          allAvailable = false;
+          break;
+        }
+      }
+      
+      if (!allAvailable) {
+        option.classList.add('qb-sold-out');
+        option.style.pointerEvents = 'none';
+        
+        const soldOutBadge = document.createElement('div');
+        soldOutBadge.className = 'qb-sold-out-badge';
+        soldOutBadge.textContent = 'SOLD OUT';
+        option.appendChild(soldOutBadge);
+        
+        if (option.classList.contains('qb-active')) {
+          option.classList.remove('qb-active');
+          
+          const availableOption = wrapper.querySelector('.qb-option:not(.qb-sold-out)');
+          if (availableOption) {
+            availableOption.classList.add('qb-active');
+            selectedQty = parseInt(availableOption.dataset.qty);
+            updateQuantity(selectedQty);
+            updateBundleData();
+            
+            const finalPrice = parseInt(availableOption.dataset.finalPrice);
+            const finalCompare = parseInt(availableOption.dataset.finalCompare);
+            updateAllPrices(finalPrice, finalCompare);
+          }
+        }
+      }
+    });
+  }
+  
+  // ===== EVENT SETUP =====
+  function setupOptionClicks() {
+    const options = wrapper.querySelectorAll('.qb-option');
+    
+    options.forEach(option => {
+      option.addEventListener('click', function(e) {
+        if (e.target.closest('.qb-variants')) return;
+        
+        if (this.classList.contains('qb-sold-out')) {
+          return;
+        }
+        
+        // Remove active class from all options
+        options.forEach(opt => opt.classList.remove('qb-active'));
+        
+        // Add active class to clicked option
+        this.classList.add('qb-active');
+        
+        // Force a reflow to ensure CSS is applied
+        this.offsetHeight;
+        
+        selectedQty = parseInt(this.dataset.qty);
+        const finalPrice = parseInt(this.dataset.finalPrice);
+        const finalCompare = parseInt(this.dataset.finalCompare);
+
+        updateQuantity(selectedQty);
+
+        // Update bundle data (will use buildCombinedBundle if variant picker sync is active)
+        updateBundleData();
+
+        // If variant picker sync is active, also trigger combined bundle build
+        if (typeof buildCombinedBundle === 'function') {
+          buildCombinedBundle();
+        }
+
+        updateAllPrices(finalPrice, finalCompare);
+
+        // Force update of sticky button if it exists
+        const stickyButton = document.querySelector('.sticky-atc button[data-cart-add]');
+        if (stickyButton) {
+          stickyButton.dataset.qty = selectedQty;
+        }
+      });
+    });
+  }
+  
+  function setupVariantSelects() {
+    const selects = wrapper.querySelectorAll('.qb-variant-select');
+
+    selects.forEach(select => {
+      select.addEventListener('change', function(e) {
+        e.stopPropagation();
+        updateBundleData();
+        const activeOption = wrapper.querySelector('.qb-option.qb-active');
+        const qty = activeOption ? parseInt(activeOption.dataset.qty) : 1;
+        updateDynamicPricing(qty);
+        updateQBOptionPrices();
+        updateVariantAvailability();
+        checkSoldOutOptions();
+      });
+
+      select.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+    });
+  }
+
+  // ===== PRICE UPDATES =====
+  function updateQBOptionPrices() {
+    // Get the currently selected variant from the main form
+    const form = document.getElementById(formId);
+    let currentVariantId = null;
+    if (form) {
+      const variantInput = form.querySelector('input[name="id"]');
+      if (variantInput) {
+        currentVariantId = variantInput.value;
+      }
+    }
+
+    // Find the variant details
+    const currentVariant = variants.find(v => v.id == currentVariantId);
+
+    // Get current variant picker selection
+    const pickerByPosition = getPickerSelectionsByPosition();
+
+    // Update each QB option
+    wrapper.querySelectorAll('.qb-option').forEach(option => {
+      const bundleOption = option.dataset.option;
+      const qty = parseInt(option.dataset.qty);
+
+      // Calculate price for this bundle with current picker selection
+      let totalPrice = 0;
+      let totalComparePrice = 0;
+
+      for (let i = 1; i <= qty; i++) {
+        const optionsByPosition = {};
+
+        // Start with picker selections
+        Object.assign(optionsByPosition, pickerByPosition);
+
+        // Get QB selections for this specific option (dropdowns)
+        const qbSelects = wrapper.querySelectorAll(
+          `.qb-variant-select[data-bundle-option="${bundleOption}"][data-item="${i}"]`
+        );
+
+        qbSelects.forEach(select => {
+          const position = select.dataset.optionPosition;
+          // Use default value (first option) for calculation
+          optionsByPosition[position] = select.value || select.options[0]?.value;
+        });
+
+        // Get QB swatch selections for this specific option
+        const qbSwatches = wrapper.querySelectorAll(
+          `.qb-variant-swatches[data-bundle-option="${bundleOption}"][data-item="${i}"]`
+        );
+
+        qbSwatches.forEach(swatchContainer => {
+          const position = swatchContainer.dataset.optionPosition;
+          const activeSwatch = swatchContainer.querySelector('.qb-variant-swatch.qb-swatch-active');
+          if (activeSwatch) {
+            optionsByPosition[position] = activeSwatch.dataset.value;
+          } else {
+            // Use first swatch as default
+            const firstSwatch = swatchContainer.querySelector('.qb-variant-swatch');
+            if (firstSwatch) {
+              optionsByPosition[position] = firstSwatch.dataset.value;
+            }
+          }
+        });
+
+        // Find matching variant
+        const variant = variants.find(v => {
+          for (let pos in optionsByPosition) {
+            if (v['option' + pos] !== optionsByPosition[pos]) {
+              return false;
+            }
+          }
+          return true;
+        });
+
+        if (variant) {
+          totalPrice += variant.price;
+          totalComparePrice += variant.compare_at_price || variant.price;
+        }
+      }
+
+      // Apply discount based on THIS option's number (not the active one)
+      const optionNum = parseInt(bundleOption);
+      let discount = 0;
+      switch(optionNum) {
+        case 1: discount = 0; break;
+        case 2: discount = {{ qb2_discount }}; break;
+        case 3: discount = {{ qb3_discount }}; break;
+        default: discount = 0;
+      }
+
+      const discountedPrice = totalPrice - (totalPrice * discount / 100);
+
+      // Update the option's displayed prices
+      const priceEl = option.querySelector('.qb-price');
+      const compareEl = option.querySelector('.qb-compare');
+
+      if (priceEl) {
+        // Update price immediately
+        priceEl.textContent = formatMoney(discountedPrice);
+      }
+
+      if (compareEl && totalComparePrice > discountedPrice) {
+        // Update compare price immediately
+        compareEl.textContent = formatMoney(totalComparePrice);
+        compareEl.style.display = '';
+      } else if (compareEl) {
+        compareEl.style.display = 'none';
+      }
+
+      // Update data attributes for future reference
+      option.dataset.finalPrice = discountedPrice;
+      option.dataset.finalCompare = totalComparePrice;
+    });
+  }
+
+  // ===== SWATCH SELECTION =====
+  function setupSwatchClicks() {
+    const swatches = wrapper.querySelectorAll('.qb-variant-swatch, .qb-variant-swatch-pill');
+
+    swatches.forEach(swatch => {
+      swatch.addEventListener('click', function(e) {
+        e.stopPropagation();
+
+        const value = this.dataset.value;
+        const swatchContainer = this.closest('.qb-variant-swatches');
+
+        // Remove active from all swatches/pills in this container
+        swatchContainer.querySelectorAll('.qb-variant-swatch, .qb-variant-swatch-pill').forEach(s => {
+          s.classList.remove('qb-swatch-active');
+          s.classList.remove('qb-pill-active');
+        });
+
+        // Add active to clicked swatch/pill
+        this.classList.add('qb-swatch-active');
+        this.classList.add('qb-pill-active');
+
+        // Update bundle data and pricing IMMEDIATELY (no delays)
+        updateBundleData();
+        const activeOption = wrapper.querySelector('.qb-option.qb-active');
+        const qty = activeOption ? parseInt(activeOption.dataset.qty) : 1;
+        updateDynamicPricing(qty);
+        updateQBOptionPrices();
+        updateVariantAvailability();
+        checkSoldOutOptions();
+      });
+    });
+  }
+
+  function setupPillClicks() {
+    const pills = wrapper.querySelectorAll('.qb-variant-pill');
+
+    pills.forEach(pill => {
+      pill.addEventListener('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        const pillContainer = this.closest('.qb-variant-pills');
+        const radioInput = this.querySelector('input[type="radio"]');
+
+        // Remove active from all pills in this container
+        pillContainer.querySelectorAll('.qb-variant-pill').forEach(p => {
+          p.classList.remove('qb-pill-active');
+          p.querySelector('input[type="radio"]').checked = false;
+        });
+
+        // Add active to clicked pill
+        this.classList.add('qb-pill-active');
+        radioInput.checked = true;
+
+        // Update bundle data and pricing IMMEDIATELY (no delays)
+        updateBundleData();
+        const activeOption = wrapper.querySelector('.qb-option.qb-active');
+        const qty = activeOption ? parseInt(activeOption.dataset.qty) : 1;
+        updateDynamicPricing(qty);
+        updateQBOptionPrices();
+        updateVariantAvailability();
+        checkSoldOutOptions();
+      });
+    });
+  }
+
+  // ===== UPDATE SWATCH IMAGES =====
+  function updateSwatchImages() {
+    // Get current picker selections by position
+    const pickerByPosition = getPickerSelectionsByPosition();
+
+    // Update each swatch (including pill-style swatches)
+    wrapper.querySelectorAll('.qb-variant-swatch').forEach(swatch => {
+      const variantsData = swatch.dataset.variants;
+      if (!variantsData) return;
+
+      // Parse variant data: id|opt1|opt2|opt3|image_url;;id|opt1|opt2|opt3|image_url
+      const variants = variantsData.split(';;');
+
+      // Find the variant that matches current picker selections
+      // If using custom URLs, just use the first variant's image since all have the same URL
+      let matchedVariant = null;
+      for (const variantStr of variants) {
+        const parts = variantStr.split('|');
+        const variantId = parts[0];
+        const opt1 = parts[1];
+        const opt2 = parts[2];
+        const opt3 = parts[3];
+        const imageUrl = parts[4];
+
+        // Check if this variant matches picker selections
+        let matches = true;
+        if (pickerByPosition[1] && opt1 !== pickerByPosition[1]) matches = false;
+        if (pickerByPosition[2] && opt2 !== pickerByPosition[2]) matches = false;
+        if (pickerByPosition[3] && opt3 !== pickerByPosition[3]) matches = false;
+
+        if (matches) {
+          matchedVariant = { id: variantId, opt1, opt2, opt3, imageUrl };
+          break;
+        }
+      }
+
+      // If no match found (e.g., no picker selection yet) and using custom URLs, use first variant
+      if (!matchedVariant && variants.length > 0) {
+        const parts = variants[0].split('|');
+        matchedVariant = {
+          id: parts[0],
+          opt1: parts[1],
+          opt2: parts[2],
+          opt3: parts[3],
+          imageUrl: parts[4]
+        };
+      }
+
+      // Update the swatch image
+      if (swatch.classList.contains('qb-variant-swatch-pill')) {
+        // For pill-style swatches, update the image placeholder if it exists
+        const imagePlaceholder = swatch.querySelector('.qb-swatch-image-placeholder');
+        if (imagePlaceholder) {
+          if (matchedVariant && matchedVariant.imageUrl) {
+            imagePlaceholder.innerHTML = `<img src="${matchedVariant.imageUrl}" alt="${swatch.dataset.value}" loading="lazy" style="width:30px;height:30px;object-fit:cover;border-radius:4px;display:block;">`;
+          } else {
+            // No image, show placeholder (only if placeholder exists)
+            imagePlaceholder.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#999;background:#f0f0f0;border-radius:4px;">${swatch.dataset.value.slice(0, 2).toUpperCase()}</div>`;
+          }
+        }
+      } else {
+        // Regular swatch
+        if (matchedVariant && matchedVariant.imageUrl) {
+          swatch.innerHTML = `<img src="${matchedVariant.imageUrl}" alt="${swatch.dataset.value}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;">`;
+        } else {
+          // No image, show placeholder
+          const placeholder = `<div class="qb-swatch-placeholder" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:12px;color:#999;background:#f0f0f0;">${swatch.dataset.value.slice(0, 2).toUpperCase()}<br><small style="font-size:8px;">URL:${swatch.dataset.debugUrlIndex || '?'}</small></div>`;
+          swatch.innerHTML = placeholder;
+        }
+      }
+    });
+  }
+  
+  // ===== OVERLAY CLEANUP =====
+  function setupOverlayCleanup() {
+    const forceCleanup = () => {
+      // Force cleanup of cart drawer element only
+      const cartDrawer = document.querySelector('cart-drawer');
+      if (cartDrawer) {
+        cartDrawer.classList.remove('active', 'animate', 'is-loaded');
+        cartDrawer.removeAttribute('open');
+      }
+
+      // Hide overlays - be very specific
+      const overlaySelectors = [
+        '#CartDrawer-Overlay',
+        '.cart-drawer__overlay'
+      ];
+
+      overlaySelectors.forEach(selector => {
+        const overlays = document.querySelectorAll(selector);
+        overlays.forEach(overlay => {
+          overlay.classList.remove('active', 'visible');
+          overlay.style.display = 'none';
+          overlay.style.visibility = 'hidden';
+          overlay.style.opacity = '0';
+        });
+      });
+
+      // Restore scroll
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      document.body.classList.remove('overflow-hidden');
+    };
+
+    const cleanupOnClose = () => {
+      setTimeout(forceCleanup, 50);
+    };
+
+    // Listen to native cart close events
+    document.addEventListener('cart:close', cleanupOnClose);
+    document.addEventListener('drawer:close', cleanupOnClose);
+
+    // Also listen for clicks on close buttons and overlays
+    document.addEventListener('click', (e) => {
+      const target = e.target;
+
+      // Check if clicked element is a close button or overlay
+      if (
+        target.matches('.drawer__close, .cart-drawer__close, [aria-label*="Close"], .drawer-overlay, #CartDrawer-Overlay') ||
+        target.closest('.drawer__close, .cart-drawer__close, [aria-label*="Close"]')
+      ) {
+        setTimeout(forceCleanup, 100);
+      }
+    }, true);
+  }
+  
+  // ===== QUANTITY & PRICING =====
+  function updateQuantity(qty) {
+    const form = document.getElementById(formId);
+    if (!form) return;
+    
+    const quantityInputs = form.querySelectorAll('input[name="quantity"]');
+    quantityInputs.forEach(input => {
+      input.value = qty;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    
+    updateDynamicPricing(qty);
+  }
+  
+  function getCurrentVariant() {
+    const activeOption = wrapper.querySelector('.qb-option.qb-active');
+    if (!activeOption) return variants[0];
+    
+    const bundleOption = activeOption.dataset.option;
+    return getVariantForItem(bundleOption, 1) || variants[0];
+  }
+  
+  function updateDynamicPricing(qty) {
+    let activeOption = wrapper.querySelector('.qb-option.qb-active');
+
+    // If no active option, use the first one (default)
+    if (!activeOption) {
+      activeOption = wrapper.querySelector('.qb-option');
+    }
+
+    if (!activeOption) {
+      return;
+    }
+
+    const quantity = parseInt(activeOption.dataset.qty);
+    const discount = getDiscountForQuantity(quantity);
+
+    // Calculate actual price based on bundleData items (which includes combined picker + QB selections)
+    let totalPrice = 0;
+    let totalComparePrice = 0;
+
+    if (bundleData.items && bundleData.items.length > 0) {
+      // Use actual variants from bundleData
+      bundleData.items.forEach(item => {
+        const variant = variants.find(v => v.id === item.id);
+        if (variant) {
+          totalPrice += variant.price * item.quantity;
+          totalComparePrice += (variant.compare_at_price || variant.price) * item.quantity;
+        }
+      });
+    } else {
+      // Fallback to old method if bundleData isn't populated yet
+      const bundleOption = activeOption.dataset.option;
+      for (let i = 1; i <= quantity; i++) {
+        const variant = getVariantForItem(bundleOption, i);
+        if (variant) {
+          totalPrice += variant.price;
+          totalComparePrice += variant.compare_at_price || variant.price;
+        }
+      }
+    }
+
+    // Apply discount
+    const discountedPrice = totalPrice - (totalPrice * discount / 100);
+
+    updateAllPrices(discountedPrice, totalComparePrice);
+  }
+  
+  function getDiscountForQuantity(qty) {
+    let activeOption = wrapper.querySelector('.qb-option.qb-active');
+
+    // If no active option, use the first one
+    if (!activeOption) {
+      activeOption = wrapper.querySelector('.qb-option');
+    }
+
+    if (!activeOption) return 0;
+
+    const optionNum = parseInt(activeOption.dataset.option);
+    switch(optionNum) {
+      case 1: return 0;
+      case 2: return {{ qb2_discount }};
+      case 3: return {{ qb3_discount }};
+      default: return 0;
+    }
+  }
+  
+  // ===== VARIANT MANAGEMENT =====
+  function getVariantForItem(bundleOption, itemNum) {
+    // Get ALL possible selections
+    const finalSelections = {};
+
+    // Step 1: Get variant picker selections (for non-hidden options)
+    const pickerSelections = getPickerSelectionsByPosition();
+
+    // Step 2: Get QB selections (for hidden options)
+    const qbSelections = {};
+
+    // Get QB dropdown selections
+    const selects = wrapper.querySelectorAll(
+      `.qb-variant-select[data-bundle-option="${bundleOption}"][data-item="${itemNum}"]`
+    );
+    selects.forEach(select => {
+      const position = parseInt(select.dataset.optionPosition);
+      qbSelections[position] = select.value;
+    });
+
+    // Get QB pill selections
+    const pillContainers = wrapper.querySelectorAll(
+      `.qb-variant-pills[data-bundle-option="${bundleOption}"][data-item="${itemNum}"]`
+    );
+    pillContainers.forEach(container => {
+      const position = parseInt(container.dataset.optionPosition);
+      const activePill = container.querySelector('.qb-variant-pill.qb-pill-active input[type="radio"]');
+      if (activePill) {
+        qbSelections[position] = activePill.value;
+      }
+    });
+
+    // Get QB swatch selections
+    const swatchContainers = wrapper.querySelectorAll(
+      `.qb-variant-swatches[data-bundle-option="${bundleOption}"][data-item="${itemNum}"]`
+    );
+    swatchContainers.forEach(container => {
+      const position = parseInt(container.dataset.optionPosition);
+      const activeSwatch = container.querySelector('.qb-variant-swatch.qb-swatch-active, .qb-variant-swatch-pill.qb-swatch-active');
+      if (activeSwatch) {
+        qbSelections[position] = activeSwatch.dataset.value;
+      }
+    });
+
+    // Step 3: Combine selections - QB overrides picker for its positions
+    for (let pos = 1; pos <= 3; pos++) {
+      if (qbSelections[pos]) {
+        finalSelections['option' + pos] = qbSelections[pos];
+      } else if (pickerSelections[pos]) {
+        finalSelections['option' + pos] = pickerSelections[pos];
+      }
+    }
+
+    // Find matching variant
+    const variant = variants.find(v => {
+      let matches = true;
+      for (let pos = 1; pos <= 3; pos++) {
+        const key = 'option' + pos;
+        if (finalSelections[key] && v[key] !== finalSelections[key]) {
+          matches = false;
+          break;
+        }
+      }
+      return matches;
+    });
+
+    return variant;
+  }
+  
+  function updateBundleData() {
+    const activeOption = wrapper.querySelector('.qb-option.qb-active');
+    if (!activeOption) return;
+
+    const bundleOption = activeOption.dataset.option;
+    const qty = parseInt(activeOption.dataset.qty);
+    const finalPrice = parseInt(activeOption.dataset.finalPrice);
+    const finalCompare = parseInt(activeOption.dataset.finalCompare);
+    const discount = getDiscountForQuantity(qty);
+
+    bundleData.items = [];
+    const variantMap = {}; // Track variants to bundle identical ones
+
+    for (let i = 1; i <= qty; i++) {
+      const variant = getVariantForItem(bundleOption, i);
+      if (variant) {
+        const variantId = variant.id;
+
+        // Group identical variants together
+        if (variantMap[variantId]) {
+          variantMap[variantId].quantity += 1;
+        } else {
+          variantMap[variantId] = {
+            id: variantId,
+            quantity: 1
+            // Removed properties to allow stacking with same variant+selling_plan
+          };
+        }
+      }
+    }
+
+    // Convert map to array
+    bundleData.items = Object.values(variantMap);
+
+    bundleData.totalQty = qty;
+    bundleData.productId = productId;
+    bundleData.discount = discount;
+    bundleData.finalPrice = finalPrice;
+    bundleData.finalCompare = finalCompare;
+    window.qbBundleData = bundleData;
+
+    // Sync first variant to main form to ensure fallback works
+    updateMainFormVariant();
+  }
+  
+  // ===== HELPER: Update main form variant input (deprecated - now done inline) =====
+  function updateMainFormVariant() {
+    // This function is no longer used - variant updates happen directly in buildCombinedBundle
+    // Keeping for backwards compatibility
+  }
+
+  // ===== HELPER: Enable add to cart button =====
+  function enableAddToCartButton() {
+    const form = document.getElementById(formId);
+    if (!form) return;
+
+    // Enable main add to cart button
+    const button = form.querySelector('button[type="submit"]');
+    if (button) {
+      button.disabled = false;
+      button.removeAttribute('disabled');
+      button.removeAttribute('data-unavailable');
+      button.setAttribute('aria-disabled', 'false');
+
+      // Remove all disabling classes
+      button.classList.remove('disabled', 'btn--disabled', 'unavailable');
+
+      // Add enabling classes
+      button.classList.add('enabled');
+
+      // Also remove any data attributes that might disable it
+      button.removeAttribute('data-required-fields');
+      button.removeAttribute('data-valid-fields');
+
+      // Force button text to be clickable
+      const buttonText = button.querySelector('span, .button__text');
+      if (buttonText) {
+        buttonText.style.pointerEvents = 'none';
+      }
+    }
+
+    // Enable sticky button by ID pattern (SectionAtcBtn-{section.id})
+    const stickyButtonById = document.getElementById('SectionAtcBtn-{{ section.id }}');
+    if (stickyButtonById) {
+      stickyButtonById.disabled = false;
+      stickyButtonById.removeAttribute('disabled');
+      stickyButtonById.removeAttribute('data-unavailable');
+      stickyButtonById.setAttribute('aria-disabled', 'false');
+      stickyButtonById.classList.remove('disabled', 'btn--disabled', 'unavailable');
+      stickyButtonById.classList.add('enabled');
+    }
+
+    // Enable type="button" sticky buttons
+    const stickyTypeButtons = document.querySelectorAll('button[type="button"].main-product-atc, button[type="button"][class*="sticky"]');
+    stickyTypeButtons.forEach(btn => {
+      btn.disabled = false;
+      btn.removeAttribute('disabled');
+      btn.removeAttribute('data-unavailable');
+      btn.setAttribute('aria-disabled', 'false');
+    });
+
+    // Enable sticky add to cart button (type="submit")
+    const stickyButtons = document.querySelectorAll('.sticky-atc button[type="submit"], [class*="sticky"] button[type="submit"], .product-sticky-atc button[type="submit"]');
+    stickyButtons.forEach(stickyButton => {
+      stickyButton.disabled = false;
+      stickyButton.removeAttribute('disabled');
+      stickyButton.removeAttribute('data-unavailable');
+      stickyButton.setAttribute('aria-disabled', 'false');
+    });
+
+    // Also try to enable any button that might be disabled
+    document.querySelectorAll('button[disabled]').forEach(btn => {
+      if (btn.form && btn.form.id === formId) {
+        btn.disabled = false;
+        btn.removeAttribute('disabled');
+        btn.removeAttribute('data-unavailable');
+        btn.setAttribute('aria-disabled', 'false');
+      }
+    });
+  }
+
+  // ===== CART MANAGEMENT =====
+  function interceptFormSubmit() {
+    const form = document.getElementById(formId);
+    if (!form) return;
+    
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Rebuild bundle data with latest selections before adding to cart
+      if (typeof buildCombinedBundle === 'function') {
+        buildCombinedBundle();
+      }
+
+      cartDrawerOpenedByUs = true;
+      
+      let cartItems;
+      if (window.qbBundleData && window.qbBundleData.items && window.qbBundleData.items.length > 0) {
+        cartItems = window.qbBundleData.items.map(item => ({
+          id: item.id,
+          quantity: item.quantity,
+          properties: item.properties || {}
+        }));
+      } else {
+        const variantInput = form.querySelector('input[name="id"]');
+        const quantityInput = form.querySelector('input[name="quantity"]');
+        
+        if (variantInput && variantInput.value) {
+          cartItems = [{
+            id: parseInt(variantInput.value),
+            quantity: quantityInput ? parseInt(quantityInput.value) || 1 : 1
+          }];
+        } else {
+          alert('Please select a variant');
+          cartDrawerOpenedByUs = false;
+          return false;
+        }
+      }
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ items: cartItems })
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(err => {
+            throw new Error(err.description || `HTTP ${response.status}`);
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        return refreshCartWithSectionRendering();
+      })
+      .then(cart => {
+      })
+      .catch(error => {
+        cartDrawerOpenedByUs = false;
+        alert('Failed to add items to cart: ' + error.message);
+      });
+      
+      return false;
+    }, true);
+  }
+  
+  function refreshCartWithSectionRendering() {
+    return new Promise((resolve) => {
+      const sectionsUrl = `?sections=cart-drawer,cart-icon-bubble&timestamp=${Date.now()}`;
+
+      fetch(sectionsUrl)
+        .then(response => response.json())
+        .then(sections => {
+          if (sections['cart-drawer']) {
+            const cartDrawer = document.querySelector('cart-drawer');
+            if (cartDrawer) {
+              cartDrawer.innerHTML = sections['cart-drawer'];
+              cartDrawer.classList.remove('is-empty');
+              cartDrawer.classList.add('is-loaded');
+            }
+          }
+
+          if (sections['cart-icon-bubble']) {
+            // Parse the new section HTML to extract just the cart count bubble
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(sections['cart-icon-bubble'], 'text/html');
+            const newBubble = doc.querySelector('.cart-count-bubble');
+
+            const cartIconBubble = document.querySelector('#cart-icon-bubble');
+            const existingBubble = cartIconBubble ? cartIconBubble.querySelector('.cart-count-bubble') : null;
+
+            if (cartIconBubble) {
+              if (newBubble && existingBubble) {
+                // Replace only the cart count bubble, keep the icon
+                existingBubble.innerHTML = newBubble.innerHTML;
+              } else if (newBubble && !existingBubble) {
+                // Add the bubble if it doesn't exist
+                cartIconBubble.appendChild(newBubble.cloneNode(true));
+              } else if (!newBubble && existingBubble) {
+                // Remove the bubble if cart is empty
+                existingBubble.remove();
+              }
+            }
+          }
+
+          return fetch('/cart.js');
+        })
+        .then(response => response.json())
+        .then(cart => {
+          updateCartCounts(cart.item_count);
+          dispatchCartUpdateEvents(cart);
+
+          // Open drawer immediately
+          openCartDrawer();
+          resolve(cart);
+        })
+        .catch(error => {
+          cartDrawerOpenedByUs = false;
+          resolve(null);
+        });
+    });
+  }
+  
+  function dispatchCartUpdateEvents(cart) {
+    const events = ['cart:updated', 'cart:refresh', 'cart:change'];
+    events.forEach(eventName => {
+      document.dispatchEvent(new CustomEvent(eventName, { detail: cart, bubbles: true }));
+    });
+  }
+  
+  function updateCartCounts(itemCount) {
+    const selectors = ['[data-cart-count]', '.cart-count', '#cart-icon-bubble .count'];
+    selectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(el => {
+        el.textContent = itemCount;
+        el.setAttribute('data-cart-count', itemCount);
+      });
+    });
+  }
+  
+  function openCartDrawer() {
+    const cartDrawer = document.querySelector('cart-drawer');
+    if (cartDrawer) {
+      cartDrawer.classList.remove('is-empty');
+      cartDrawer.classList.add('is-loaded');
+    }
+
+    const triggers = [
+      '[data-cart-drawer-trigger]',
+      '.header__icon--cart',
+      '#cart-icon-bubble'
+    ];
+
+    for (const selector of triggers) {
+      const trigger = document.querySelector(selector);
+      if (trigger) {
+        trigger.click();
+        return;
+      }
+    }
+
+    if (cartDrawer && typeof cartDrawer.open === 'function') {
+      cartDrawer.open();
+    }
+  }
+
+  // ===== INTERCEPT STICKY BUTTON =====
+  function interceptStickyButton() {
+    const stickyButton = document.getElementById('SectionAtcBtn-{{ section.id }}');
+    if (!stickyButton) {
+      return;
+    }
+
+    // Mark that we've already intercepted this button
+    if (stickyButton.dataset.qbIntercepted === 'true') {
+      return;
+    }
+
+    stickyButton.dataset.qbIntercepted = 'true';
+
+    // Remove any existing click handlers by cloning the button
+    const newButton = stickyButton.cloneNode(true);
+    stickyButton.parentNode.replaceChild(newButton, stickyButton);
+
+    // Add our handler with capture phase to ensure it runs first
+    newButton.addEventListener('click', function(e) {
+      // Check if this is actually a bundle upsell button - DON'T intercept those!
+      if (e.target && e.target.classList && e.target.classList.contains('bundle-upsell-v2__button')) {
+        return; // Let the bundle handler take over
+      }
+
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+
+      // Trigger the main form submit which will use the bundleData
+      const form = document.getElementById(formId);
+      if (form) {
+        // Create and dispatch a submit event
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        form.dispatchEvent(submitEvent);
+      }
+
+      return false;
+    }, true);
+  }
+
+  // ===== START =====
+  init();
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      interceptFormSubmit();
+      interceptStickyButton();
+    });
+  } else {
+    interceptFormSubmit();
+    interceptStickyButton();
+  }
+
+  // Also try to intercept sticky button immediately
+  interceptStickyButton();
+
+  // SIMPLIFIED: Listen for variant changes and enable button
+  document.addEventListener('variant:change', function() {
+    setTimeout(() => {
+      enableAddToCartButton();
+      // Re-apply prices after variant change
+      const activeOption = wrapper.querySelector('.qb-option.qb-active');
+      if (activeOption) {
+        const finalPrice = parseInt(activeOption.dataset.finalPrice);
+        const finalCompare = parseInt(activeOption.dataset.finalCompare);
+        updateAllPrices(finalPrice, finalCompare);
+      }
+    }, 150);
+  });
+
+  // Also listen for shopify section renders
+  document.addEventListener('shopify:section:load', function() {
+    setTimeout(() => {
+      const activeOption = wrapper.querySelector('.qb-option.qb-active');
+      if (activeOption) {
+        const finalPrice = parseInt(activeOption.dataset.finalPrice);
+        const finalCompare = parseInt(activeOption.dataset.finalCompare);
+        updateAllPrices(finalPrice, finalCompare);
+      }
+    }, 150);
+  });
+
+  // Keep variant-selects visible
+  const variantSelects = document.querySelector('variant-selects');
+  if (variantSelects) {
+    // Ensure it stays visible
+    variantSelects.style.display = '';
+    variantSelects.style.visibility = '';
+    variantSelects.style.pointerEvents = '';
+  }
+
+  // ===== BUTTON WATCHDOG =====
+  // Watch for the button being disabled and re-enable it safely
+  const form = document.getElementById(formId);
+  if (form) {
+    const button = form.querySelector('button[type="submit"]');
+    if (button) {
+      // Initial enable
+      enableAddToCartButton();
+
+      // Safe watcher with debouncing
+      let enableTimeout;
+      const safeObserver = new MutationObserver(() => {
+        if (button.disabled) {
+          clearTimeout(enableTimeout);
+          enableTimeout = setTimeout(() => {
+            button.disabled = false;
+            button.removeAttribute('disabled');
+            button.removeAttribute('data-unavailable');
+            button.setAttribute('aria-disabled', 'false');
+          }, 50);
+        }
+      });
+
+      safeObserver.observe(button, {
+        attributes: true,
+        attributeFilter: ['disabled']
+      });
+
+      // Make sure button stays enabled
+      button.disabled = false;
+      button.removeAttribute('disabled');
+      button.removeAttribute('data-unavailable');
+      button.setAttribute('aria-disabled', 'false');
+    }
+  }
+
+  // ===== SYNC WITH VARIANT PICKER - SIMPLE READ-ONLY MODE =====
+  // The simple-variant-picker is ONLY for display
+  // QB fully manages variant selection
+
+  // Get variant picker selections by position (global scope for swatch updates)
+  // FIXED: Properly map option names to positions
+  function getPickerSelectionsByPosition() {
+      const selections = {};
+
+      // Create option name to position mapping
+      const optionNameToPosition = {};
+      {% for option in product.options_with_values %}
+      optionNameToPosition['{{ option.name }}'] = {{ option.position }};
+      optionNameToPosition['options[{{ option.name }}]'] = {{ option.position }};
+      {% endfor %}
+
+      // Method 1: Get from variant-selects web component
+      const variantSelectsComponent = document.querySelector('variant-selects#variant-selects-{{ section.id }}');
+      if (variantSelectsComponent) {
+        // Try to get from selects
+        const selects = variantSelectsComponent.querySelectorAll('select');
+
+        selects.forEach((select) => {
+          const optionName = select.name;
+
+          // Find the actual position from the option name
+          let actualPosition = null;
+
+          // Try direct name match
+          if (optionNameToPosition[optionName]) {
+            actualPosition = optionNameToPosition[optionName];
+          } else if (optionName.startsWith('options[') && optionName.endsWith(']')) {
+            // Extract the option name from options[name]
+            const cleanName = optionName.slice(8, -1);
+            if (optionNameToPosition[cleanName]) {
+              actualPosition = optionNameToPosition[cleanName];
+            }
+          }
+
+          if (actualPosition && select.value) {
+            selections[actualPosition] = select.value;
+          }
+        });
+
+        // Try to get from radio buttons
+        const radios = variantSelectsComponent.querySelectorAll('input[type="radio"]:checked');
+
+        radios.forEach((radio) => {
+          const optionName = radio.name;
+
+          // Find the actual position from the option name
+          let actualPosition = null;
+
+          // Try direct name match
+          if (optionNameToPosition[optionName]) {
+            actualPosition = optionNameToPosition[optionName];
+          } else if (optionName.startsWith('options[') && optionName.endsWith(']')) {
+            // Extract the option name from options[name]
+            const cleanName = optionName.slice(8, -1);
+            if (optionNameToPosition[cleanName]) {
+              actualPosition = optionNameToPosition[cleanName];
+            }
+          }
+
+          if (actualPosition && radio.value && !selections[actualPosition]) {
+            selections[actualPosition] = radio.value;
+          }
+        });
+      }
+
+      // Method 2: Fallback to any variant-selects on page
+      if (Object.keys(selections).length === 0) {
+        const anyVariantSelects = document.querySelector('variant-selects');
+        if (anyVariantSelects) {
+          const allSelects = anyVariantSelects.querySelectorAll('select');
+          allSelects.forEach((select, index) => {
+            if (select.value) {
+              selections[index + 1] = select.value;
+            }
+          });
+        }
+      }
+
+      // Method 3: Get from form inputs directly
+      if (Object.keys(selections).length === 0) {
+        const form = document.querySelector('form[action*="/cart/add"]');
+        if (form) {
+          // Get all option inputs
+          {% for option in product.options_with_values %}
+            const option{{ option.position }}Input = form.querySelector('input[name="options[{{ option.name }}]"]:checked, select[name="options[{{ option.name }}]"]');
+            if (option{{ option.position }}Input && option{{ option.position }}Input.value) {
+              selections[{{ option.position }}] = option{{ option.position }}Input.value;
+            }
+          {% endfor %}
+        }
+      }
+
+      return selections;
+  }
+
+  // Make buildCombinedBundle globally accessible within the scope
+  let buildCombinedBundle;
+
+  // Expose it to window for debugging
+  window.qbBuildCombinedBundle = function() {
+    if (typeof buildCombinedBundle === 'function') {
+      buildCombinedBundle();
+    }
+  };
+
+  function setupVariantPickerSync() {
+
+    // REMOVED duplicate listeners - using attachVariantListeners instead
+
+    // Update QB when picker changes - restored full functionality
+    function updateQBBasedOnPicker() {
+      // Build combined bundle with new selections
+      buildCombinedBundle();
+
+      // Update pricing for active option
+      const activeOption = wrapper.querySelector('.qb-option.qb-active');
+      if (activeOption) {
+        const qty = parseInt(activeOption.dataset.qty);
+        updateDynamicPricing(qty);
+      }
+
+      // Update all option prices
+      updateQBOptionPrices();
+
+      // Update variant availability
+      updateVariantAvailability();
+
+      // Check for sold out options
+      checkSoldOutOptions();
+
+      // Update swatch images
+      updateSwatchImages();
+
+      // Enable button once at the end
+      enableAddToCartButton();
+    }
+
+    // Build bundle variants from combined selections
+    buildCombinedBundle = function() {
+      const activeQB = wrapper.querySelector('.qb-option.qb-active');
+      if (!activeQB) {
+        return;
+      }
+
+      const bundleOption = activeQB.dataset.option;
+      const qty = parseInt(activeQB.dataset.qty);
+
+      // Get picker selections
+      const pickerByPosition = getPickerSelectionsByPosition();
+
+      // Build variants for each bundle item
+      const bundleVariants = [];
+
+      for (let i = 1; i <= qty; i++) {
+        const optionsByPosition = {};
+
+        // Start with ALL picker selections
+        for (let pos = 1; pos <= 3; pos++) {
+          if (pickerByPosition[pos]) {
+            optionsByPosition[pos] = pickerByPosition[pos];
+          }
+        }
+
+        // Override with QB selections for this item (dropdowns)
+        const qbSelects = wrapper.querySelectorAll(
+          `.qb-variant-select[data-bundle-option="${bundleOption}"][data-item="${i}"]`
+        );
+
+        qbSelects.forEach(select => {
+          const position = parseInt(select.dataset.optionPosition);
+          if (select.value) {
+            optionsByPosition[position] = select.value;
+          }
+        });
+
+        // Override with QB swatch selections for this item
+        const qbSwatches = wrapper.querySelectorAll(
+          `.qb-variant-swatches[data-bundle-option="${bundleOption}"][data-item="${i}"]`
+        );
+
+        qbSwatches.forEach(swatchContainer => {
+          const position = parseInt(swatchContainer.dataset.optionPosition);
+          const activeSwatch = swatchContainer.querySelector('.qb-variant-swatch.qb-swatch-active, .qb-variant-swatch-pill.qb-swatch-active');
+          if (activeSwatch) {
+            const value = activeSwatch.dataset.value;
+            optionsByPosition[position] = value;
+          }
+        });
+
+        // Override with QB pill selections for this item
+        const qbPills = wrapper.querySelectorAll(
+          `.qb-variant-pills[data-bundle-option="${bundleOption}"][data-item="${i}"]`
+        );
+
+        qbPills.forEach(container => {
+          const position = parseInt(container.dataset.optionPosition);
+          const activePill = container.querySelector('.qb-variant-pill.qb-pill-active input[type="radio"]');
+          if (activePill) {
+            optionsByPosition[position] = activePill.value;
+          }
+        });
+
+        // Find matching variant - need to check all 3 positions
+        const variant = variants.find(v => {
+          let matches = true;
+
+          // Check all possible option positions (1, 2, 3)
+          for (let pos = 1; pos <= 3; pos++) {
+            const optionValue = optionsByPosition[pos];
+            const variantValue = v['option' + pos];
+
+            // If we have a value for this position, it must match
+            if (optionValue && variantValue && optionValue !== variantValue) {
+              matches = false;
+              break;
+            }
+
+            // If variant has a value but we don't, we need to match from picker
+            if (!optionValue && variantValue) {
+              // This is the problem - missing option value!
+              matches = false;
+              break;
+            }
+          }
+
+          return matches;
+        });
+
+        if (variant) {
+          bundleVariants.push(variant);
+        }
+      }
+
+      // Update bundle data
+      if (bundleVariants.length > 0) {
+        bundleData.items = [];
+        const variantMap = {};
+
+        bundleVariants.forEach(variant => {
+          if (variantMap[variant.id]) {
+            variantMap[variant.id].quantity += 1;
+          } else {
+            variantMap[variant.id] = {
+              id: variant.id,
+              quantity: 1
+              // Removed properties to allow stacking with same variant+selling_plan
+            };
+          }
+        });
+
+        bundleData.items = Object.values(variantMap);
+        bundleData.totalQty = qty;
+        bundleData.productId = productId;
+        bundleData.discount = getDiscountForQuantity(qty);
+
+        // Calculate total prices for the bundle
+        let totalPrice = 0;
+        let totalComparePrice = 0;
+        bundleVariants.forEach(variant => {
+          totalPrice += variant.price;
+          if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+            totalComparePrice += variant.compare_at_price;
+          } else {
+            totalComparePrice += variant.price;
+          }
+        });
+
+        // Apply discount
+        const discount = getDiscountForQuantity(qty);
+        const discountedPrice = Math.round(totalPrice * (1 - discount / 100));
+
+        bundleData.finalPrice = discountedPrice;
+        bundleData.finalCompare = totalComparePrice > discountedPrice ? totalComparePrice : 0;
+
+        window.qbBundleData = bundleData;
+
+        // DO NOT update form variant input - it causes infinite loops with main.js
+        // The variant is already selected by the main variant picker
+        // We just use that selection for our bundle calculations
+
+        // Update pricing display with calculated prices
+        updateAllPrices(discountedPrice, totalComparePrice);
+
+        // updateDynamicPricing is NOT called here anymore - prices are already updated above
+        // This was causing the price to revert to single-item price when variants changed
+
+        // Update QB option prices based on new variant selection
+        updateQBOptionPrices();
+
+        // Update swatch images based on picker selection
+        updateSwatchImages();
+
+        // Always enable the button
+        enableAddToCartButton();
+      }
+    }
+
+    // Function to attach variant listeners
+    function attachVariantListeners() {
+      const variantSelects = document.querySelector('variant-selects#variant-selects-{{ section.id }}') || document.querySelector('variant-selects');
+      let listenersAttached = false;
+
+      if (variantSelects) {
+        // Listen to SELECT dropdowns
+        const selects = variantSelects.querySelectorAll('select[name^="options"], select.select__select, select');
+        selects.forEach(select => {
+          if (!select.dataset.qbListenerAttached) {
+            select.dataset.qbListenerAttached = 'true';
+            select.addEventListener('change', function(e) {
+
+              const activeQB = wrapper.querySelector('.qb-option.qb-active');
+
+              // ALWAYS update QB option prices when variant changes
+              setTimeout(() => {
+                updateQBOptionPrices();
+                enableAddToCartButton();
+              }, 10);
+
+              // If bundle active (qty > 1), also rebuild bundle
+              if (activeQB && parseInt(activeQB.dataset.qty) > 1) {
+                // AGGRESSIVE: Stop event propagation to prevent theme from updating
+                e.stopImmediatePropagation();
+
+                // Call buildCombinedBundle SYNCHRONOUSLY - no delay
+                buildCombinedBundle();
+
+                // Force another update after a tiny delay to ensure it sticks
+                setTimeout(() => buildCombinedBundle(), 10);
+              }
+            }, true); // Use capture phase to run before theme
+            listenersAttached = true;
+          }
+        });
+
+        // Listen to RADIO buttons (pills)
+        const radios = variantSelects.querySelectorAll('input[type="radio"], fieldset input');
+        radios.forEach(input => {
+          if (!input.dataset.qbListenerAttached) {
+            input.dataset.qbListenerAttached = 'true';
+            input.addEventListener('change', function(e) {
+              const activeQB = wrapper.querySelector('.qb-option.qb-active');
+
+              // ALWAYS update QB option prices when variant changes
+              setTimeout(() => {
+                updateQBOptionPrices();
+                enableAddToCartButton();
+              }, 10);
+
+              // If bundle active (qty > 1), also rebuild bundle
+              if (activeQB && parseInt(activeQB.dataset.qty) > 1) {
+                // AGGRESSIVE: Stop event propagation to prevent theme from updating
+                e.stopImmediatePropagation();
+
+                // Call buildCombinedBundle SYNCHRONOUSLY - no delay
+                buildCombinedBundle();
+
+                // Force another update after a tiny delay to ensure it sticks
+                setTimeout(() => buildCombinedBundle(), 10);
+              }
+            }, true); // Use capture phase to run before theme
+            listenersAttached = true;
+          }
+        });
+      }
+
+      // Also listen to any product form changes as backup
+      const productForm = document.querySelector('form[action*="/cart/add"]');
+      if (productForm) {
+        productForm.addEventListener('change', function(event) {
+          if (event.target.name && event.target.name.includes('option')) {
+            // Don't call buildCombinedBundle here - let price protection handle it
+          }
+        });
+      }
+
+      return listenersAttached;
+    }
+
+    // Attach listeners immediately
+    attachVariantListeners();
+
+    // Try again after DOM ready to catch late-loading elements
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', attachVariantListeners);
+    } else {
+      setTimeout(attachVariantListeners, 100);
+    }
+
+    // Listen to QB changes
+    wrapper.querySelectorAll('.qb-variant-select').forEach(select => {
+      select.addEventListener('change', function() {
+        buildCombinedBundle();
+      });
+    });
+
+    // Listen to QB option clicks
+    wrapper.querySelectorAll('.qb-option').forEach(option => {
+      option.addEventListener('click', function(e) {
+        if (!e.target.closest('.qb-variants')) {
+          buildCombinedBundle();
+        }
+      });
+    });
+
+    // Initial build and price update
+    buildCombinedBundle();
+    updateQBOptionPrices();
+  }
+
+  // Run initialization - CRITICAL: This was missing and broke everything
+  init();
+
+  // Run setup
+  setupVariantPickerSync();
+
+  // Build initial bundle immediately
+  if (typeof buildCombinedBundle === 'function') {
+    buildCombinedBundle();
+  }
+
+  // Safe listener for form changes
+  const productForm = document.querySelector('form[action*="/cart/add"]');
+  if (productForm) {
+    productForm.addEventListener('change', function(e) {
+      if (e.target && e.target.name && e.target.name.includes('option')) {
+        // Enable button after variant change
+        setTimeout(() => enableAddToCartButton(), 50);
+        setTimeout(() => enableAddToCartButton(), 150);
+      }
+    });
+  }
+
+  // AGGRESSIVE: Watch price elements and immediately fix any wrong updates
+  let lastBundlePrice = null;
+  let priceWatchdog;
+
+  function startPriceWatchdog() {
+    const activeQB = wrapper.querySelector('.qb-option.qb-active');
+    if (!activeQB || parseInt(activeQB.dataset.qty) <= 1) return;
+
+    const priceElements = document.querySelectorAll('.price-item--sale, .price-item--regular');
+
+    priceElements.forEach(el => {
+      const observer = new MutationObserver(() => {
+        const activeQB = wrapper.querySelector('.qb-option.qb-active');
+        if (activeQB && parseInt(activeQB.dataset.qty) > 1) {
+          // If theme changed the price, immediately rebuild bundle
+          clearTimeout(priceWatchdog);
+          priceWatchdog = setTimeout(() => {
+            buildCombinedBundle();
+          }, 5);
+        }
+      });
+
+      observer.observe(el, {
+        childList: true,
+        characterData: true,
+        subtree: true
+      });
+    });
+  }
+
+  // Start watchdog
+  startPriceWatchdog();
+
+  // Add a manual test button for debugging
+  window.testQBUpdate = function() {
+    const pickerSelections = getPickerSelectionsByPosition();
+    updateQBOptionPrices();
+  };
+
+  // Debug function to see what's being selected
+  window.debugQB = function() {
+    // Show current picker selections
+    const pickerSelections = getPickerSelectionsByPosition();
+
+    // Show QB selections
+    const activeQB = wrapper.querySelector('.qb-option.qb-active');
+    if (activeQB) {
+      const bundleOption = activeQB.dataset.option;
+      const qty = parseInt(activeQB.dataset.qty);
+
+      for (let i = 1; i <= qty; i++) {
+        // Show dropdown selections
+        const selects = wrapper.querySelectorAll(
+          `.qb-variant-select[data-bundle-option="${bundleOption}"][data-item="${i}"]`
+        );
+
+        // Show pill selections
+        const pills = wrapper.querySelectorAll(
+          `.qb-variant-pills[data-bundle-option="${bundleOption}"][data-item="${i}"]`
+        );
+
+        // Show swatch selections
+        const swatches = wrapper.querySelectorAll(
+          `.qb-variant-swatches[data-bundle-option="${bundleOption}"][data-item="${i}"]`
+        );
+
+        // Show final combined selections
+        const variant = getVariantForItem(bundleOption, i);
+      }
+    }
+  };
+
+})();
+</script>

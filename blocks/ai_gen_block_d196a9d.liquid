@@ -1,0 +1,403 @@
+{% doc %}
+  @prompt
+    A hero section that i can insert my own image for and will show under my header. I want it to be completely editable with the option to choose my own aspect ratio for desktop and for mobile using the same image, please make the padding adjustable functional
+    , when i adjust the padding it moves the content on the inside of the section. i want it to adjust the padding on the outside of the section so that when i adjust the paddings all to 0 there is no gaps around the section content, i want to be able to select a separate image for desktop and mobile. i also want to be able to have a choice to use a video from shopify files and change the video for mobile and desktop so i can use seperate videos from each, i want to be able to select a video from shopify files not a url, Liquid error (temp/ai_gen_block_2285209 line 177): wrong number of arguments (given 3, expected 2)
+    , Make it so i can add a link to the entire block
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-hero-{{ ai_gen_id }} {
+    display: block;
+    position: relative;
+    width: 100%;
+    margin-top: {{ block.settings.margin_top }}px;
+    margin-bottom: {{ block.settings.margin_bottom }}px;
+    margin-left: {{ block.settings.margin_left }}px;
+    margin-right: {{ block.settings.margin_right }}px;
+  }
+
+  .ai-hero-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .ai-hero-link-{{ ai_gen_id }} {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .ai-hero-media-container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-hero-media-container-{{ ai_gen_id }} {
+      padding-bottom: {{ block.settings.desktop_aspect_ratio }}%;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-hero-media-container-{{ ai_gen_id }} {
+      padding-bottom: {{ block.settings.mobile_aspect_ratio }}%;
+    }
+  }
+
+  .ai-hero-media-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-hero-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-hero-video-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-hero-placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-hero-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+  }
+
+  .ai-hero-desktop-only-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  .ai-hero-mobile-only-{{ ai_gen_id }} {
+    display: block;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-hero-desktop-only-{{ ai_gen_id }} {
+      display: block;
+    }
+
+    .ai-hero-mobile-only-{{ ai_gen_id }} {
+      display: none;
+    }
+  }
+{% endstyle %}
+
+<hero-block-{{ ai_gen_id }} class="ai-hero-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-hero-wrapper-{{ ai_gen_id }}">
+    {% if block.settings.hero_link != blank %}
+      <a href="{{ block.settings.hero_link }}" class="ai-hero-link-{{ ai_gen_id }}">
+    {% endif %}
+
+    <div class="ai-hero-media-container-{{ ai_gen_id }}">
+      {% if block.settings.media_type == 'image' %}
+        {% if block.settings.desktop_image != blank %}
+          <div class="ai-hero-media-{{ ai_gen_id }} ai-hero-desktop-only-{{ ai_gen_id }}">
+            <img
+              src="{{ block.settings.desktop_image | image_url: width: 2000 }}"
+              srcset="{{ block.settings.desktop_image | image_url: width: 500 }} 500w,
+                      {{ block.settings.desktop_image | image_url: width: 1000 }} 1000w,
+                      {{ block.settings.desktop_image | image_url: width: 1500 }} 1500w,
+                      {{ block.settings.desktop_image | image_url: width: 2000 }} 2000w"
+              sizes="100vw"
+              alt="{{ block.settings.desktop_image.alt | escape }}"
+              loading="lazy"
+              width="{{ block.settings.desktop_image.width }}"
+              height="{{ block.settings.desktop_image.height }}"
+              class="ai-hero-image-{{ ai_gen_id }}"
+            >
+          </div>
+        {% else %}
+          <div class="ai-hero-media-{{ ai_gen_id }} ai-hero-desktop-only-{{ ai_gen_id }}">
+            <div class="ai-hero-placeholder-{{ ai_gen_id }}">
+              {{ 'hero-apparel-1' | placeholder_svg_tag }}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.mobile_image != blank %}
+          <div class="ai-hero-media-{{ ai_gen_id }} ai-hero-mobile-only-{{ ai_gen_id }}">
+            <img
+              src="{{ block.settings.mobile_image | image_url: width: 1000 }}"
+              srcset="{{ block.settings.mobile_image | image_url: width: 375 }} 375w,
+                      {{ block.settings.mobile_image | image_url: width: 750 }} 750w,
+                      {{ block.settings.mobile_image | image_url: width: 1000 }} 1000w"
+              sizes="100vw"
+              alt="{{ block.settings.mobile_image.alt | escape }}"
+              loading="lazy"
+              width="{{ block.settings.mobile_image.width }}"
+              height="{{ block.settings.mobile_image.height }}"
+              class="ai-hero-image-{{ ai_gen_id }}"
+            >
+          </div>
+        {% elsif block.settings.desktop_image != blank %}
+          <div class="ai-hero-media-{{ ai_gen_id }} ai-hero-mobile-only-{{ ai_gen_id }}">
+            <img
+              src="{{ block.settings.desktop_image | image_url: width: 1000 }}"
+              srcset="{{ block.settings.desktop_image | image_url: width: 375 }} 375w,
+                      {{ block.settings.desktop_image | image_url: width: 750 }} 750w,
+                      {{ block.settings.desktop_image | image_url: width: 1000 }} 1000w"
+              sizes="100vw"
+              alt="{{ block.settings.desktop_image.alt | escape }}"
+              loading="lazy"
+              width="{{ block.settings.desktop_image.width }}"
+              height="{{ block.settings.desktop_image.height }}"
+              class="ai-hero-image-{{ ai_gen_id }}"
+            >
+          </div>
+        {% else %}
+          <div class="ai-hero-media-{{ ai_gen_id }} ai-hero-mobile-only-{{ ai_gen_id }}">
+            <div class="ai-hero-placeholder-{{ ai_gen_id }}">
+              {{ 'hero-apparel-1' | placeholder_svg_tag }}
+            </div>
+          </div>
+        {% endif %}
+      {% else %}
+        {% if block.settings.desktop_video != blank %}
+          <div class="ai-hero-media-{{ ai_gen_id }} ai-hero-desktop-only-{{ ai_gen_id }}">
+            {{
+              block.settings.desktop_video
+              | video_tag:
+                autoplay: true,
+                loop: true,
+                muted: true,
+                controls: false,
+                class: 'ai-hero-video-' | append: ai_gen_id
+            }}
+          </div>
+        {% else %}
+          <div class="ai-hero-media-{{ ai_gen_id }} ai-hero-desktop-only-{{ ai_gen_id }}">
+            <div class="ai-hero-placeholder-{{ ai_gen_id }}">
+              {{ 'hero-apparel-1' | placeholder_svg_tag }}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.mobile_video != blank %}
+          <div class="ai-hero-media-{{ ai_gen_id }} ai-hero-mobile-only-{{ ai_gen_id }}">
+            {{
+              block.settings.mobile_video
+              | video_tag:
+                autoplay: true,
+                loop: true,
+                muted: true,
+                controls: false,
+                class: 'ai-hero-video-' | append: ai_gen_id
+            }}
+          </div>
+        {% elsif block.settings.desktop_video != blank %}
+          <div class="ai-hero-media-{{ ai_gen_id }} ai-hero-mobile-only-{{ ai_gen_id }}">
+            {{
+              block.settings.desktop_video
+              | video_tag:
+                autoplay: true,
+                loop: true,
+                muted: true,
+                controls: false,
+                class: 'ai-hero-video-' | append: ai_gen_id
+            }}
+          </div>
+        {% else %}
+          <div class="ai-hero-media-{{ ai_gen_id }} ai-hero-mobile-only-{{ ai_gen_id }}">
+            <div class="ai-hero-placeholder-{{ ai_gen_id }}">
+              {{ 'hero-apparel-1' | placeholder_svg_tag }}
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    {% if block.settings.hero_link != blank %}
+      </a>
+    {% endif %}
+  </div>
+</hero-block-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class HeroBlock{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.videos = this.querySelectorAll('.ai-hero-video-{{ ai_gen_id }}');
+        this.videos.forEach(video => {
+          video.setAttribute('playsinline', '');
+          video.play().catch(() => {});
+        });
+      }
+    }
+
+    customElements.define('hero-block-{{ ai_gen_id }}', HeroBlock{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media type"
+    },
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "Media type",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "header",
+      "content": "Desktop media"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop image",
+      "info": "Used when media type is Image"
+    },
+    {
+      "type": "video",
+      "id": "desktop_video",
+      "label": "Desktop video",
+      "info": "Used when media type is Video"
+    },
+    {
+      "type": "header",
+      "content": "Mobile media"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "Optional. Falls back to desktop image if not set"
+    },
+    {
+      "type": "video",
+      "id": "mobile_video",
+      "label": "Mobile video",
+      "info": "Optional. Falls back to desktop video if not set"
+    },
+    {
+      "type": "header",
+      "content": "Aspect ratio"
+    },
+    {
+      "type": "range",
+      "id": "desktop_aspect_ratio",
+      "min": 20,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "label": "Desktop aspect ratio",
+      "default": 50,
+      "info": "Lower = wider, higher = taller"
+    },
+    {
+      "type": "range",
+      "id": "mobile_aspect_ratio",
+      "min": 50,
+      "max": 200,
+      "step": 5,
+      "unit": "%",
+      "label": "Mobile aspect ratio",
+      "default": 100,
+      "info": "Lower = wider, higher = taller"
+    },
+    {
+      "type": "header",
+      "content": "Link"
+    },
+    {
+      "type": "url",
+      "id": "hero_link",
+      "label": "Hero link",
+      "info": "Makes the entire hero clickable"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Top margin",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom margin",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_left",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Left margin",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_right",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Right margin",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero"
+    }
+  ]
+}
+{% endschema %}

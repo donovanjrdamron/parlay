@@ -1,0 +1,191 @@
+{% comment %}
+  Auto-adds free products to cart
+  Configure free products in Theme Settings > Auto-Add Free Products
+  Your Shopify automatic discounts will handle making them free at checkout
+{% endcomment %}
+
+{% if settings.enable_auto_free_products %}
+<script>
+(function() {
+  'use strict';
+
+  // Don't run in the theme editor
+  if (window.Shopify && window.Shopify.designMode) {
+    return;
+  }
+
+  // Build list of free products from theme settings
+  const freeProducts = [];
+
+  {% for i in (1..10) %}
+    {% assign free_key = 'free_product_' | append: i %}
+    {% assign free_product_handle = settings[free_key] %}
+
+    {% if free_product_handle != blank %}
+      {% assign free_product = all_products[free_product_handle] %}
+
+      {% if free_product.id != blank %}
+        freeProducts.push({
+          productId: {{ free_product.id | json }},
+          productHandle: {{ free_product.handle | json }},
+          variantId: {{ free_product.selected_or_first_available_variant.id | json }},
+          title: {{ free_product.title | json }}
+        });
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  // Track which free products we've already added
+  let isProcessing = false;
+
+  // Check cart and add free products if not already present
+  async function checkAndAddFreeProducts() {
+    if (isProcessing) {
+      return;
+    }
+
+    if (freeProducts.length === 0) {
+      return;
+    }
+
+    try {
+      isProcessing = true;
+
+      // Get current cart
+      const cartResponse = await fetch('/cart.js');
+      const cart = await cartResponse.json();
+
+      // Check if cart has any items (excluding free products we're about to add)
+      if (cart.item_count === 0) {
+        return;
+      }
+
+      // Get product IDs already in cart
+      const cartProductIds = new Set();
+      cart.items.forEach(item => {
+        cartProductIds.add(item.product_id);
+      });
+
+      // Find free products that are NOT already in cart
+      const itemsToAdd = [];
+
+      for (const freeProduct of freeProducts) {
+        const isFreeProductInCart = cartProductIds.has(freeProduct.productId);
+
+        // Validate the free product
+        if (!freeProduct.variantId || freeProduct.variantId === 'null' || freeProduct.variantId === null) {
+          continue;
+        }
+
+        // If free product is NOT already in cart, add it
+        if (!isFreeProductInCart) {
+
+          itemsToAdd.push({
+            id: freeProduct.variantId,
+            quantity: 1,
+            properties: {
+              '_free_gift': 'true'
+            }
+          });
+        }
+      }
+
+      // Add all qualifying free products
+      if (itemsToAdd.length > 0) {
+        const addResponse = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({ items: itemsToAdd })
+        });
+
+        if (addResponse.ok) {
+          try {
+            const result = await addResponse.json();
+
+            // Trigger cart refresh events
+            document.documentElement.dispatchEvent(new CustomEvent('cart:refresh', {
+              bubbles: true
+            }));
+
+            // Also try standard Shopify cart update event
+            if (window.Shopify && window.Shopify.onCartUpdate) {
+              window.Shopify.onCartUpdate();
+            }
+          } catch (parseError) {
+            const responseText = await addResponse.text();
+          }
+        } else {
+          try {
+            const errorText = await addResponse.text();
+
+            // Try to parse as JSON if possible
+            try {
+              const errorJson = JSON.parse(errorText);
+            } catch (e) {
+            }
+          } catch (e) {
+          }
+        }
+      }
+
+    } catch (error) {
+    } finally {
+      isProcessing = false;
+    }
+  }
+
+  // Listen for cart changes
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check on page load
+    setTimeout(checkAndAddFreeProducts, 500);
+
+    // Listen for cart updates
+    document.documentElement.addEventListener('cart:refresh', function() {
+      setTimeout(checkAndAddFreeProducts, 300);
+    });
+
+    // Listen for custom events from your theme's cart logic
+    if (typeof window.addEventListener !== 'undefined') {
+      window.addEventListener('cartUpdated', function() {
+        setTimeout(checkAndAddFreeProducts, 300);
+      });
+
+      // Listen for the actual event this theme dispatches
+      document.addEventListener('cartQuantityUpdated', function() {
+        setTimeout(checkAndAddFreeProducts, 300);
+      });
+    }
+
+    // Observe cart drawer opening
+    const observeCartDrawer = () => {
+      const cartDrawer = document.querySelector('cart-drawer');
+      if (cartDrawer) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class' || mutation.attributeName === 'open') {
+              if (cartDrawer.classList.contains('active') || cartDrawer.hasAttribute('open')) {
+                setTimeout(checkAndAddFreeProducts, 500);
+              }
+            }
+          });
+        });
+
+        observer.observe(cartDrawer, {
+          attributes: true,
+          attributeFilter: ['class', 'open']
+        });
+      }
+    };
+
+    observeCartDrawer();
+  });
+
+  // Expose for manual triggering if needed
+  window.checkBXGYRules = checkAndAddFreeProducts;
+
+})();
+</script>
+{% endif %}

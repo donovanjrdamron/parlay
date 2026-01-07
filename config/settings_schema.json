@@ -1,0 +1,414 @@
+[
+ {"name":"theme_info","theme_name":"ecomelevate","theme_version":"1.0","theme_author":"ecomelevate","theme_documentation_url":"https://ecomelevate.co","theme_support_email":"info@elevate.co"},
+    {
+    "name": "License",
+    "settings": [
+      {
+        "type": "text",
+        "id": "div",
+        "label": "Add your licence here",
+        "info": "Get Your license from https://ecomelevate-co.onrender.com/client/signup"
+      }
+    ]
+  },
+ {"name":"Security","settings": [
+ {"type":"checkbox","id":"disable_inspect","label":"Disable copying text, downloading images and opening Inspect element","default": true
+ },
+ {"type":"header","content":"Country blocker"},
+ {"type":"paragraph","content":"Block your store from countries that you aren't targeting to decrease the amount of competitors visiting your store."},
+ {"type":"select","id":"country_list_function","label":"Country list function","options": [
+ {"value":"block","label":"Block"},
+ {"value":"whitelist","label":"Whitelist"}
+ ],"info":"\"Block\"blocks selected countries from the list, \"Whitelist\"only allows the countries from the list.","default":"block"},
+ {"type":"text","id":"country_list","label":"Country codes list","info":"Country codes in Alpha-2 code format, split by comma. View all country codes [here](https://www.iban.com/country-codes). Example: \"US, GB\""},
+ {"type":"richtext","id":"country_invalid_error_msg","label":"Country invalid error message","default":"<h2>Unfortunately this store isn't available in your country.</h2>"}
+ ]
+ },
+ {"name":"t:settings_schema.logo.name","settings": [
+ {"type":"image_picker","id":"logo","label":"t:settings_schema.logo.settings.logo_image.label"},
+ {"type":"image_picker","id":"secondary_logo","label":"Secondary logo","info":"Used for the transparent header option, if needed."},
+ {"type":"range","id":"logo_width","min": 50,"max": 350,"step": 10,"default": 200,"unit":"px","label":"Desktop logo width"},
+ {"type":"range","id":"mobile_logo_width","min": 50,"max": 300,"step": 10,"default": 120,"unit":"px","label":"Mobile logo width"},
+ {"type":"image_picker","id":"favicon","label":"t:settings_schema.logo.settings.favicon.label","info":"t:settings_schema.logo.settings.favicon.info"}
+ ]
+ },
+ {"name":"Typography","settings": [
+ {"type":"header","content":"Font Selection"},
+ {"type":"font_picker","id":"type_header_font","default":"harmonia_sans_n6","label":"Heading Font"},
+ {"type":"font_picker","id":"type_body_font","default":"harmonia_sans_n4","label":"Body Font"},
+ {"type":"font_picker","id":"highlighted_text_font","default":"harmonia_sans_n7","label":"Highlighted/Accent Text Font"},
+ {"type":"header","content":"Global Typography Control"},
+ {"type":"paragraph","content":"When enabled, ALL text across your entire site will use the global font sizes and weights defined below. This overrides individual section settings."},
+ {"type":"checkbox","id":"enable_global_typography","label":"Enable Global Font Sizes & Weights","default": false,"info":"️ This will apply global typography to all sections, overriding their individual settings"},
+ {"type":"header","content":"Heading Settings"},
+ {"type":"range","id":"heading_font_size_desktop","min": 18,"max": 72,"step": 2,"unit":"px","label":"Heading Font Size - Desktop","default": 36
+ },
+ {"type":"range","id":"heading_font_size_mobile","min": 16,"max": 48,"step": 2,"unit":"px","label":"Heading Font Size - Mobile","default": 28
+ },
+ {"type":"color","id":"heading_color","label":"Heading Color","default":"#2E2A39"},
+ {"type":"select","id":"heading_font_weight","label":"Heading Font Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"},
+ {"value":"900","label":"Black"}
+ ],"default":"700"},
+ {"type":"range","id":"heading_letter_spacing","min": -50,"max": 50,"step": 1,"unit":"x","label":"Heading Letter Spacing","default": 0,"info":"Value will be divided by 1000 for em units (e.g., -50 = -0.05em)"},
+ {"type":"range","id":"heading_line_height","min": 0.8,"max": 2,"step": 0.1,"label":"Heading Line Height","default": 1
+ },
+ {"type":"select","id":"heading_text_transform","label":"Heading Text Transform","options": [
+ {"value":"none","label":"None"},
+ {"value":"uppercase","label":"UPPERCASE"},
+ {"value":"lowercase","label":"lowercase"},
+ {"value":"capitalize","label":"Capitalize"}
+ ],"default":"none"},
+ {"type":"header","content":"Body Text Settings"},
+ {"type":"range","id":"body_font_size_desktop","min": 12,"max": 24,"step": 1,"unit":"px","label":"Body Font Size - Desktop","default": 16
+ },
+ {"type":"range","id":"body_font_size_mobile","min": 12,"max": 20,"step": 1,"unit":"px","label":"Body Font Size - Mobile","default": 14
+ },
+ {"type":"color","id":"body_color","label":"Body Text Color","default":"#2E2A39"},
+ {"type":"select","id":"body_font_weight","label":"Body Font Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"}
+ ],"default":"400"},
+ {"type":"range","id":"body_letter_spacing","min": -50,"max": 50,"step": 1,"unit":"x","label":"Body Letter Spacing","default": 0,"info":"Value will be divided by 1000 for em units (e.g., -50 = -0.05em)"},
+ {"type":"range","id":"body_line_height","min": 1,"max": 2.5,"step": 0.1,"label":"Body Line Height","default": 1.5
+ },
+ {"type":"header","content":"Highlighted/Accent Text Settings"},
+ {"type":"range","id":"highlighted_text_font_size_desktop","min": 12,"max": 72,"step": 2,"unit":"px","label":"Accent Font Size - Desktop","default": 32
+ },
+ {"type":"range","id":"highlighted_text_font_size_mobile","min": 12,"max": 48,"step": 2,"unit":"px","label":"Accent Font Size - Mobile","default": 24
+ },
+ {"type":"color","id":"highlighted_text_solid_color","label":"Accent Text Color","default":"#ed122d","info":"Used when gradient is disabled"},
+ {"type":"select","id":"highlighted_text_font_weight","label":"Accent Font Weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"},
+ {"value":"900","label":"Black"}
+ ],"default":"700"},
+ {"type":"range","id":"highlighted_text_letter_spacing","min": -50,"max": 50,"step": 1,"unit":"x","label":"Accent Letter Spacing","default": 0,"info":"Value will be divided by 1000 for em units (e.g., -50 = -0.05em)"},
+ {"type":"select","id":"highlighted_text_transform","label":"Accent Text Transform","options": [
+ {"value":"none","label":"None"},
+ {"value":"uppercase","label":"UPPERCASE"},
+ {"value":"lowercase","label":"lowercase"},
+ {"value":"capitalize","label":"Capitalize"}
+ ],"default":"none"},
+ {"type":"checkbox","id":"highlighted_text_gradient_enabled","label":"Enable Gradient for Accent Text","default": false
+ },
+ {"type":"color_background","id":"highlighted_text_gradient","label":"Accent Gradient Color","default":"linear-gradient(90deg, rgba(237, 18, 45, 1), rgba(255, 107, 107, 1) 100%)","info":"Used when gradient is enabled"}
+ ]
+ },
+ {"name":"Section Settings","settings": [
+ {"type":"header","content":"Default Section Colors"},
+ {"type":"color","id":"section_background_color","label":"Background color","default":"#ffffff"},
+ {"type":"checkbox","id":"section_gradient_enabled","label":"Enable gradient background","default": false
+ },
+ {"type":"color_background","id":"section_gradient_background","label":"Gradient background","default":"linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(240, 240, 240, 1) 100%)","info":"Used when gradient is enabled"},
+ {"type":"header","content":"Default Section Padding - Desktop"},
+ {"type":"range","id":"section_padding_top_desktop","min": 0,"max": 200,"step": 4,"unit":"px","label":"Top padding - Desktop","default": 60
+ },
+ {"type":"range","id":"section_padding_bottom_desktop","min": 0,"max": 200,"step": 4,"unit":"px","label":"Bottom padding - Desktop","default": 60
+ },
+ {"type":"header","content":"Default Section Padding - Mobile"},
+ {"type":"range","id":"section_padding_top_mobile","min": 0,"max": 100,"step": 2,"unit":"px","label":"Top padding - Mobile","default": 40
+ },
+ {"type":"range","id":"section_padding_bottom_mobile","min": 0,"max": 100,"step": 2,"unit":"px","label":"Bottom padding - Mobile","default": 40
+ }
+ ]
+ },
+ {"name":"Button Settings","settings": [
+ {"type":"header","content":"Button Colors"},
+ {"type":"color","id":"button_background_color","label":"Background color","default":"#000000"},
+ {"type":"color","id":"button_text_color","label":"Text color","default":"#ffffff"},
+ {"type":"color","id":"button_border_color","label":"Border color","default":"#000000"},
+ {"type":"header","content":"Button Typography"},
+ {"type":"range","id":"button_font_size_desktop","min": 12,"max": 32,"step": 1,"unit":"px","label":"Font size - Desktop","default": 16
+ },
+ {"type":"range","id":"button_font_size_mobile","min": 10,"max": 24,"step": 1,"unit":"px","label":"Font size - Mobile","default": 14
+ },
+ {"type":"select","id":"button_font_weight","label":"Font weight","options": [
+ {"value":"300","label":"Light"},
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"},
+ {"value":"900","label":"Black"}
+ ],"default":"600"},
+ {"type":"header","content":"Button Padding"},
+ {"type":"range","id":"button_padding_horizontal","min": 10,"max": 40,"step": 1,"unit":"px","label":"Horizontal padding","default": 24
+ },
+ {"type":"range","id":"button_padding_vertical","min": 4,"max": 20,"step": 1,"unit":"px","label":"Vertical padding","default": 12
+ },
+ {"type":"header","content":"Button Border"},
+ {"type":"range","id":"button_border_width","min": 0,"max": 10,"step": 1,"unit":"px","label":"Border width","default": 2
+ },
+ {"type":"range","id":"button_border_radius","min": 0,"max": 50,"step": 1,"unit":"px","label":"Border radius","default": 4
+ },
+ {"type":"header","content":"Gradient Settings"},
+ {"type":"checkbox","id":"button_gradient_enabled","label":"Enable gradient background","default": false
+ },
+ {"type":"color_background","id":"button_gradient","label":"Button gradient","default":"linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(51, 51, 51, 1) 100%)"},
+ {"type":"header","content":"Hover State"},
+ {"type":"checkbox","id":"button_hover_enabled","label":"Enable hover effects","default": true
+ },
+ {"type":"color","id":"button_hover_background_color","label":"Hover background color","default":"#333333"},
+ {"type":"color","id":"button_hover_text_color","label":"Hover text color","default":"#ffffff"},
+ {"type":"color","id":"button_hover_border_color","label":"Hover border color","default":"#333333"},
+ {"type":"checkbox","id":"button_hover_gradient_enabled","label":"Enable hover gradient","default": false
+ },
+ {"type":"color_background","id":"button_hover_gradient","label":"Hover gradient","default":"linear-gradient(90deg, rgba(51, 51, 51, 1) 0%, rgba(0, 0, 0, 1) 100%)"}
+ ]
+ },
+ {"name":"Price Settings","settings": [
+ {"type":"header","content":"Global Price Colors"},
+ {"type":"paragraph","content":"These settings will override all price colors throughout your entire store."},
+ {"type":"color","id":"price_regular_color","label":"Regular price color","default":"#000000","info":"Color for regular product prices"},
+ {"type":"color","id":"price_sale_color","label":"Sale price color","default":"#dd1d1d","info":"Color for discounted/sale prices"},
+ {"type":"color","id":"price_compare_color","label":"Compare at price color","default":"#999999","info":"Color for strikethrough compare prices"},
+ {"type":"range","id":"price_font_size","min": 12,"max": 32,"step": 1,"unit":"px","label":"Price font size","default": 16,"info":"Base font size for prices"},
+ {"type":"select","id":"price_font_weight","label":"Price font weight","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi-bold"},
+ {"value":"700","label":"Bold"},
+ {"value":"800","label":"Extra bold"},
+ {"value":"900","label":"Black"}
+ ],"default":"700"},
+ {"type":"header","content":"Currency Settings"},
+ {"type":"color","id":"price_currency_color","label":"Currency symbol color","default":"#000000","info":"Color for currency symbols ($, €, £, etc.)"},
+ {"type":"checkbox","id":"price_currency_same_color","label":"Use same color as price for currency","default": true,"info":"When enabled, currency symbols will use the same color as the price"},
+ {"type":"header","content":"Badge & Label Settings"},
+ {"type":"color","id":"price_badge_sale_bg","label":"Sale badge background","default":"#dd1d1d"},
+ {"type":"color","id":"price_badge_sale_text","label":"Sale badge text color","default":"#ffffff"},
+ {"type":"color","id":"price_badge_soldout_bg","label":"Sold out badge background","default":"#000000"},
+ {"type":"color","id":"price_badge_soldout_text","label":"Sold out badge text color","default":"#ffffff"},
+ {"type":"checkbox","id":"price_override_enabled","label":"Enable global price color override","default": true,"info":"When enabled, these settings will override all price colors throughout the store"}
+ ]
+ },
+ {"name":"Animations","settings": [
+ {"type":"header","content":"Scroll Animations"},
+ {"type":"checkbox","id":"enable_scroll_animations","label":"Enable scroll animations","default": true,"info":"Animate sections as they scroll into view"},
+ {"type":"select","id":"scroll_animation_type","label":"Animation type","options": [
+ {"value":"fade-up","label":"Fade Up"},
+ {"value":"fade-in","label":"Fade In"},
+ {"value":"zoom-in","label":"Zoom In"},
+ {"value":"slide-left","label":"Slide from Right"},
+ {"value":"slide-right","label":"Slide from Left"}
+ ],"default":"fade-up"},
+ {"type":"range","id":"scroll_animation_threshold","label":"Scroll threshold","min": 0,"max": 50,"step": 5,"default": 15,"unit":"%","info":"How much of the section needs to be visible before animating"}
+ ]
+ },
+ {"name":"Slider controls","settings": [
+ {"type":"header","content":"Arrows"},
+ {"type":"range","id":"slider_arrow_size","min": 10,"max": 80,"step": 2,"unit":"px","label":"Button size","default": 30
+ },
+ {"type":"range","id":"slider_arrow_border_radius","min": 0,"max": 100,"step": 1,"unit":"%","label":"Corner radius","default": 100
+ },
+ {"type":"range","id":"slider_arrow_icon_size","min": 20,"max": 100,"step": 5,"unit":"%","label":"Icon size","default": 60
+ },
+ {"type":"header","content":"Pagination dots"},
+ {"type":"range","id":"pagination_dot_width","min": 2,"max": 30,"step": 1,"unit":"px","label":"Width","default": 6
+ },
+ {"type":"range","id":"pagination_dot_height","min": 2,"max": 30,"step": 1,"unit":"px","label":"Height","default": 6
+ },
+ {"type":"range","id":"pagination_dot_active_scale","min": 100,"max": 200,"step": 5,"unit":"%","label":"Active dot scale","default": 150
+ },
+ {"type":"range","id":"pagination_dot_spacing","min": 1,"max": 40,"step": 1,"unit":"px","label":"Space between dots","default": 12
+ },
+ {"type":"range","id":"pagination_dot_radius","min": 0,"max": 15,"step": 1,"unit":"px","label":"Corner radius","default": 5
+ }
+ ]
+ },
+ {"name":"t:settings_schema.layout.name","settings": [
+ {"type":"range","id":"page_width","min": 1000,"max": 1600,"step": 100,"default": 1200,"unit":"px","label":"t:settings_schema.layout.settings.page_width.label"},
+ {"type":"range","id":"spacing_sections","min": 0,"max": 100,"step": 4,"unit":"px","label":"t:settings_schema.layout.settings.spacing_sections.label","default": 36
+ },
+ {"type":"header","content":"t:settings_schema.layout.settings.header__grid.content"},
+ {"type":"paragraph","content":"t:settings_schema.layout.settings.paragraph__grid.content"},
+ {"type":"range","id":"spacing_grid_horizontal","min": 4,"max": 40,"step": 4,"default": 40,"unit":"px","label":"t:settings_schema.layout.settings.spacing_grid_horizontal.label"},
+ {"type":"range","id":"spacing_grid_vertical","min": 4,"max": 40,"step": 4,"default": 40,"unit":"px","label":"t:settings_schema.layout.settings.spacing_grid_vertical.label"}
+ ]
+ },
+ {"name":"t:settings_schema.inputs.name","settings": [
+ {"type":"header","content":"t:settings_schema.global.settings.header__border.content"},
+ {"type":"range","id":"inputs_border_thickness","min": 0,"max": 12,"step": 1,"unit":"px","label":"t:settings_schema.global.settings.thickness.label","default": 1
+ },
+ {"type":"range","id":"inputs_border_opacity","min": 0,"max": 100,"step": 5,"unit":"%","label":"t:settings_schema.global.settings.opacity.label","default": 15
+ },
+ {"type":"range","id":"inputs_radius","min": 0,"max": 40,"step": 2,"unit":"px","label":"t:settings_schema.global.settings.corner_radius.label","default": 10
+ },
+ {"type":"header","content":"t:settings_schema.global.settings.header__shadow.content"},
+ {"type":"range","id":"inputs_shadow_opacity","min": 0,"max": 100,"step": 5,"unit":"%","label":"t:settings_schema.global.settings.opacity.label","default": 0
+ },
+ {"type":"range","id":"inputs_shadow_horizontal_offset","min": -12,"max": 12,"step": 2,"unit":"px","label":"t:settings_schema.global.settings.horizontal_offset.label","default": 0
+ },
+ {"type":"range","id":"inputs_shadow_vertical_offset","min": -12,"max": 12,"step": 2,"unit":"px","label":"t:settings_schema.global.settings.vertical_offset.label","default": 0
+ },
+ {"type":"range","id":"inputs_shadow_blur","min": 0,"max": 20,"step": 5,"unit":"px","label":"t:settings_schema.global.settings.blur.label","default": 0
+ }
+ ]
+ },
+ {"name":"t:settings_schema.media.name","settings": [
+ {"type":"header","content":"t:settings_schema.global.settings.header__border.content"},
+ {"type":"range","id":"media_border_thickness","min": 0,"max": 24,"step": 1,"unit":"px","label":"t:settings_schema.global.settings.thickness.label","default": 0
+ },
+ {"type":"range","id":"media_border_opacity","min": 0,"max": 100,"step": 5,"unit":"%","label":"t:settings_schema.global.settings.opacity.label","default": 0
+ },
+ {"type":"range","id":"media_radius","min": 0,"max": 40,"step": 2,"unit":"px","label":"t:settings_schema.global.settings.corner_radius.label","default": 12
+ },
+ {"type":"header","content":"t:settings_schema.global.settings.header__shadow.content"},
+ {"type":"range","id":"media_shadow_opacity","min": 0,"max": 100,"step": 5,"unit":"%","label":"t:settings_schema.global.settings.opacity.label","default": 10
+ },
+ {"type":"range","id":"media_shadow_horizontal_offset","min": -40,"max": 40,"step": 2,"unit":"px","label":"t:settings_schema.global.settings.horizontal_offset.label","default": 10
+ },
+ {"type":"range","id":"media_shadow_vertical_offset","min": -40,"max": 40,"step": 2,"unit":"px","label":"t:settings_schema.global.settings.vertical_offset.label","default": 12
+ },
+ {"type":"range","id":"media_shadow_blur","min": 0,"max": 40,"step": 5,"unit":"px","label":"t:settings_schema.global.settings.blur.label","default": 20
+ }
+ ]
+ },
+ {"name":"t:settings_schema.brand_information.name","settings": [
+ {"type":"paragraph","content":"t:settings_schema.brand_information.settings.paragraph.content"},
+ {"type":"inline_richtext","id":"brand_headline","label":"t:settings_schema.brand_information.settings.brand_headline.label"},
+ {"type":"richtext","id":"brand_description","label":"t:settings_schema.brand_information.settings.brand_description.label"},
+ {"type":"image_picker","id":"brand_image","label":"t:settings_schema.brand_information.settings.brand_image.label"},
+ {"type":"range","id":"brand_image_width","min": 50,"max": 550,"step": 5,"default": 100,"unit":"px","label":"t:settings_schema.brand_information.settings.brand_image_width.label"}
+ ]
+ },
+ {"name":"t:settings_schema.social-media.name","settings": [
+ {"type":"header","content":"t:settings_schema.social-media.settings.header.content"},
+ {"type":"text","id":"social_facebook_link","label":"t:settings_schema.social-media.settings.social_facebook_link.label","info":"t:settings_schema.social-media.settings.social_facebook_link.info"},
+ {"type":"text","id":"social_instagram_link","label":"t:settings_schema.social-media.settings.social_instagram_link.label","info":"t:settings_schema.social-media.settings.social_instagram_link.info"},
+ {"type":"text","id":"social_youtube_link","label":"t:settings_schema.social-media.settings.social_youtube_link.label","info":"t:settings_schema.social-media.settings.social_youtube_link.info"},
+ {"type":"text","id":"social_tiktok_link","label":"t:settings_schema.social-media.settings.social_tiktok_link.label","info":"t:settings_schema.social-media.settings.social_tiktok_link.info"},
+ {"type":"text","id":"social_twitter_link","label":"t:settings_schema.social-media.settings.social_twitter_link.label","info":"t:settings_schema.social-media.settings.social_twitter_link.info"},
+ {"type":"text","id":"social_snapchat_link","label":"t:settings_schema.social-media.settings.social_snapchat_link.label","info":"t:settings_schema.social-media.settings.social_snapchat_link.info"},
+ {"type":"text","id":"social_pinterest_link","label":"t:settings_schema.social-media.settings.social_pinterest_link.label","info":"t:settings_schema.social-media.settings.social_pinterest_link.info"},
+ {"type":"text","id":"social_tumblr_link","label":"t:settings_schema.social-media.settings.social_tumblr_link.label","info":"t:settings_schema.social-media.settings.social_tumblr_link.info"},
+ {"type":"text","id":"social_vimeo_link","label":"t:settings_schema.social-media.settings.social_vimeo_link.label","info":"t:settings_schema.social-media.settings.social_vimeo_link.info"}
+ ]
+ },
+ {"name":"t:settings_schema.search_input.name","settings": [
+ {"type":"paragraph","content":"Add a \"search-hidden\"tag to the products you want to hide from the search results."},
+ {"type":"header","content":"t:settings_schema.search_input.settings.header.content"},
+ {"type":"checkbox","id":"predictive_search_enabled","default": true,"label":"t:settings_schema.search_input.settings.predictive_search_enabled.label"},
+ {"type":"checkbox","id":"predictive_search_show_vendor","default": false,"label":"t:settings_schema.search_input.settings.predictive_search_show_vendor.label","info":"t:settings_schema.search_input.settings.predictive_search_show_vendor.info"},
+ {"type":"checkbox","id":"predictive_search_show_price","default": true,"label":"t:settings_schema.search_input.settings.predictive_search_show_price.label","info":"t:settings_schema.search_input.settings.predictive_search_show_price.info"}
+ ]
+ },
+ {"name":"t:settings_schema.currency_format.name","settings": [
+ {"type":"header","content":"t:settings_schema.currency_format.settings.content"},
+ {"type":"paragraph","content":"t:settings_schema.currency_format.settings.paragraph"},
+ {"type":"checkbox","id":"currency_code_enabled","label":"t:settings_schema.currency_format.settings.currency_code_enabled.label","default": false
+ }
+ ]
+ },
+ {"name":"Scrollbar & Cursor","settings": [
+ {"type":"header","content":"Scrollbar"},
+ {"type":"select","id":"scrollbar_style","options": [
+ {"value":"default","label":"Default"},
+ {"value":"customized","label":"Customized"}
+ ],"label":"Desktop scrollbar style","default":"default"},
+ {"type":"color","id":"scrollbar_thumb_color","label":"Scrollbar thumb color","default":"#555555"},
+ {"type":"color","id":"scrollbar_track_color","label":"Scrollbar track color","default":"#F5F5F5"},
+ {"type":"range","id":"scrollbar_width","label":"Scrollbar width","min": 2,"max": 20,"step": 1,"unit":"px","default": 9
+ },
+ {"type":"header","content":"Cursor"},
+ {"type":"image_picker","id":"custom_cursor","label":"Custom cursor"}
+ ]
+ },
+ {"name":"t:settings_schema.cart.name","settings": [
+ {"type":"header","content":"To customize the cart drawer, customize the Cart drawer section (between the Header group & your added page sections)."},
+ {"type":"select","id":"cart_type","options": [
+ {"value":"drawer","label":"t:settings_schema.cart.settings.cart_type.drawer.label"},
+ {"value":"page","label":"t:settings_schema.cart.settings.cart_type.page.label"},
+ {"value":"notification","label":"t:settings_schema.cart.settings.cart_type.notification.label"}
+ ],"default":"drawer","label":"t:settings_schema.cart.settings.cart_type.label"},
+ {"type":"header","content":"Empty cart"},
+ {"type":"checkbox","id":"display_continue_shopping","label":"Display the Continue shopping button link when the cart is empty","default": true
+ },
+ {"type":"url","id":"continue_shopping_url","label":"Continue shopping button custom link","info":"If empty, a link to all products will be applied."}
+ ]
+ },
+ {"name":"Subscription Settings","settings": [
+ {"type":"paragraph","content":"Link products to their base subscription selling plan IDs. This allows you to configure subscription-specific functionality for up to 10 products."},
+ {"type":"header","content":"Product 1"},
+ {"type":"product","id":"subscription_product_1","label":"Product 1"},
+ {"type":"text","id":"subscription_product_1_id","label":"Subscription Selling Plan ID","info":"Enter the selling plan ID for this product's subscription"},
+ {"type":"range","id":"subscription_product_1_discount","min": 0,"max": 100,"step": 1,"unit":"%","label":"Subscription Discount","default": 0,"info":"Discount percentage shown in the upgrade button"},
+ {"type":"header","content":"Product 2"},
+ {"type":"product","id":"subscription_product_2","label":"Product 2"},
+ {"type":"text","id":"subscription_product_2_id","label":"Subscription Selling Plan ID","info":"Enter the selling plan ID for this product's subscription"},
+ {"type":"range","id":"subscription_product_2_discount","min": 0,"max": 100,"step": 1,"unit":"%","label":"Subscription Discount","default": 0,"info":"Discount percentage shown in the upgrade button"},
+ {"type":"header","content":"Product 3"},
+ {"type":"product","id":"subscription_product_3","label":"Product 3"},
+ {"type":"text","id":"subscription_product_3_id","label":"Subscription Selling Plan ID","info":"Enter the selling plan ID for this product's subscription"},
+ {"type":"range","id":"subscription_product_3_discount","min": 0,"max": 100,"step": 1,"unit":"%","label":"Subscription Discount","default": 0,"info":"Discount percentage shown in the upgrade button"},
+ {"type":"header","content":"Product 4"},
+ {"type":"product","id":"subscription_product_4","label":"Product 4"},
+ {"type":"text","id":"subscription_product_4_id","label":"Subscription Selling Plan ID","info":"Enter the selling plan ID for this product's subscription"},
+ {"type":"range","id":"subscription_product_4_discount","min": 0,"max": 100,"step": 1,"unit":"%","label":"Subscription Discount","default": 0,"info":"Discount percentage shown in the upgrade button"},
+ {"type":"header","content":"Product 5"},
+ {"type":"product","id":"subscription_product_5","label":"Product 5"},
+ {"type":"text","id":"subscription_product_5_id","label":"Subscription Selling Plan ID","info":"Enter the selling plan ID for this product's subscription"},
+ {"type":"range","id":"subscription_product_5_discount","min": 0,"max": 100,"step": 1,"unit":"%","label":"Subscription Discount","default": 0,"info":"Discount percentage shown in the upgrade button"},
+ {"type":"header","content":"Product 6"},
+ {"type":"product","id":"subscription_product_6","label":"Product 6"},
+ {"type":"text","id":"subscription_product_6_id","label":"Subscription Selling Plan ID","info":"Enter the selling plan ID for this product's subscription"},
+ {"type":"range","id":"subscription_product_6_discount","min": 0,"max": 100,"step": 1,"unit":"%","label":"Subscription Discount","default": 0,"info":"Discount percentage shown in the upgrade button"},
+ {"type":"header","content":"Product 7"},
+ {"type":"product","id":"subscription_product_7","label":"Product 7"},
+ {"type":"text","id":"subscription_product_7_id","label":"Subscription Selling Plan ID","info":"Enter the selling plan ID for this product's subscription"},
+ {"type":"range","id":"subscription_product_7_discount","min": 0,"max": 100,"step": 1,"unit":"%","label":"Subscription Discount","default": 0,"info":"Discount percentage shown in the upgrade button"},
+ {"type":"header","content":"Product 8"},
+ {"type":"product","id":"subscription_product_8","label":"Product 8"},
+ {"type":"text","id":"subscription_product_8_id","label":"Subscription Selling Plan ID","info":"Enter the selling plan ID for this product's subscription"},
+ {"type":"range","id":"subscription_product_8_discount","min": 0,"max": 100,"step": 1,"unit":"%","label":"Subscription Discount","default": 0,"info":"Discount percentage shown in the upgrade button"},
+ {"type":"header","content":"Product 9"},
+ {"type":"product","id":"subscription_product_9","label":"Product 9"},
+ {"type":"text","id":"subscription_product_9_id","label":"Subscription Selling Plan ID","info":"Enter the selling plan ID for this product's subscription"},
+ {"type":"range","id":"subscription_product_9_discount","min": 0,"max": 100,"step": 1,"unit":"%","label":"Subscription Discount","default": 0,"info":"Discount percentage shown in the upgrade button"},
+ {"type":"header","content":"Product 10"},
+ {"type":"product","id":"subscription_product_10","label":"Product 10"},
+ {"type":"text","id":"subscription_product_10_id","label":"Subscription Selling Plan ID","info":"Enter the selling plan ID for this product's subscription"},
+ {"type":"range","id":"subscription_product_10_discount","min": 0,"max": 100,"step": 1,"unit":"%","label":"Subscription Discount","default": 0,"info":"Discount percentage shown in the upgrade button"}
+ ]
+ },
+ {"name":"️ Badge Settings","settings": [
+ {"type":"paragraph","content":"Configure discount badge text and styling. Use [price] to display the discount amount and [percentage] to display the discount percentage."},
+ {"type":"checkbox","id":"badge_enable","label":"Enable Badge","default": true
+ },
+ {"type":"text","id":"badge_text","label":"Badge Text","default":"Save [percentage]%","info":"Use [price] for discount amount or [percentage] for discount percentage. Add % suffix yourself. Examples: 'Save [percentage]%', '[price] OFF', 'Save [price]'"},
+ {"type":"color","id":"badge_text_color","label":"Badge Text Color","default":"#FFFFFF"},
+ {"type":"color","id":"badge_bg_color","label":"Badge Background Color","default":"#FF0000"},
+ {"type":"checkbox","id":"enable_badge_gradient","label":"Enable background gradient","default": false
+ },
+ {"type":"color_background","id":"badge_gradient","label":"Badge Background Gradient","info":"Applied when Enable background gradient is checked."},
+ {"type":"range","id":"badge_font_size","min": 0,"max": 50,"step": 1,"unit":"px","label":"Badge Font Size","default": 14
+ },
+ {"type":"range","id":"badge_padding_vertical","min": 0,"max": 50,"step": 1,"unit":"px","label":"Badge Vertical Padding","default": 6
+ },
+ {"type":"range","id":"badge_padding_horizontal","min": 0,"max": 50,"step": 1,"unit":"px","label":"Badge Horizontal Padding","default": 12
+ },
+ {"type":"range","id":"badge_border_radius","min": 0,"max": 50,"step": 1,"unit":"px","label":"Badge Border Radius","default": 4
+ },
+ {"type":"range","id":"badge_border_width","min": 0,"max": 5,"step": 1,"unit":"px","label":"Badge Border Width","default": 0
+ },
+ {"type":"color","id":"badge_border_color","label":"Badge Border Color","default":"#000000"},
+ {"type":"select","id":"badge_font_weight","label":"Badge Font Weight","options": [
+ {"value":"400","label":"Normal"},
+ {"value":"500","label":"Medium"},
+ {"value":"600","label":"Semi Bold"},
+ {"value":"700","label":"Bold"},
+ {"value":"800","label":"Extra Bold"}
+ ],"default":"600"}
+ ]
+ }
+]
