@@ -764,8 +764,25 @@
       // Use double RAF to ensure layout is complete
       requestAnimationFrame(function () {
         requestAnimationFrame(function () {
-          // Get the clamped height (current visual height)
-          var clampedHeight = review.offsetHeight;
+          // Get computed styles to calculate expected 3-line height
+          var computedStyle = window.getComputedStyle(review);
+          var fontSize = parseFloat(computedStyle.fontSize);
+          var lineHeightValue = computedStyle.lineHeight;
+          
+          // Parse line-height (could be a number, px, or em)
+          var lineHeight;
+          if (lineHeightValue === 'normal') {
+            lineHeight = fontSize * 1.2; // Default line-height
+          } else if (lineHeightValue.includes('px')) {
+            lineHeight = parseFloat(lineHeightValue);
+          } else if (lineHeightValue.includes('em')) {
+            lineHeight = parseFloat(lineHeightValue) * fontSize;
+          } else {
+            lineHeight = parseFloat(lineHeightValue) * fontSize;
+          }
+          
+          // Calculate expected height for exactly 3 lines
+          var expectedThreeLineHeight = lineHeight * 3;
           
           // Create a hidden clone to measure full content height without clamp
           var clone = review.cloneNode(true);
@@ -781,15 +798,18 @@
           
           review.parentElement.appendChild(clone);
           
+          // Force layout calculation
+          void clone.offsetHeight;
+          
           // Measure full unclamped height
-          var fullHeight = clone.offsetHeight;
+          var fullHeight = clone.scrollHeight;
           
           // Remove clone immediately
           clone.parentElement.removeChild(clone);
           
-          // If full height is significantly greater than clamped height, it's overflowing
-          // Use threshold of 3px to account for rounding/measurement differences
-          var isOverflowing = fullHeight > clampedHeight + 3;
+          // If full height is greater than 3 lines, it's overflowing (4+ lines)
+          // Use small threshold (2px) to account for rounding
+          var isOverflowing = fullHeight > expectedThreeLineHeight + 2;
 
           if (isOverflowing) {
             toggle.textContent = 'Read more...';
