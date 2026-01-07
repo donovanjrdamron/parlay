@@ -761,9 +761,32 @@
       var toggle = review.parentElement && review.parentElement.querySelector('[data-review-toggle]');
       if (!toggle) return;
 
-      // Allow layout to settle before measuring to avoid false positives
+      // Allow layout to settle before measuring
       requestAnimationFrame(function () {
-        var isOverflowing = review.scrollHeight > review.clientHeight + 1;
+        // Temporarily remove line-clamp to measure actual content height
+        var originalDisplay = review.style.display;
+        var originalWebkitLineClamp = review.style.webkitLineClamp;
+        var originalOverflow = review.style.overflow;
+        
+        review.style.display = 'block';
+        review.style.webkitLineClamp = 'none';
+        review.style.overflow = 'visible';
+        
+        var fullHeight = review.scrollHeight;
+        
+        // Restore original styles
+        review.style.display = originalDisplay;
+        review.style.webkitLineClamp = originalWebkitLineClamp;
+        review.style.overflow = originalOverflow;
+        
+        // Calculate expected height for 3 lines (font-size * line-height * 3)
+        var computedStyle = window.getComputedStyle(review);
+        var fontSize = parseFloat(computedStyle.fontSize);
+        var lineHeight = parseFloat(computedStyle.lineHeight) || fontSize * 1.7;
+        var expectedHeight = lineHeight * 3;
+        
+        // Add a small tolerance (2px) to account for rounding
+        var isOverflowing = fullHeight > expectedHeight + 2;
 
         if (isOverflowing) {
           toggle.textContent = 'Read more...';
