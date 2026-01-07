@@ -159,7 +159,8 @@
                         {% endif %}
 
                         {% if block.settings.review_text != blank %}
-                          <div class="crs-review-text rte">{{ block.settings.review_text }}</div>
+                          <div class="crs-review-text rte" data-review-text>{{ block.settings.review_text }}</div>
+                          <button type="button" class="crs-read-more" data-review-toggle hidden>Click to read more</button>
                         {% endif %}
 
                         {% if has_product_info %}
@@ -550,11 +551,33 @@
     line-height: 1.7;
     margin-top: {{ section.settings.review_text_margin_top }}px;
     margin-bottom: {{ section.settings.review_text_margin_bottom }}px;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    position: relative;
     {% if section.settings.use_theme_colors %}
       color: {{ settings.body_color }};
     {% else %}
       color: {{ section.settings.review_text_color }};
     {% endif %}
+  }
+
+  .section-{{ section.id }} .crs-review-text.crs-review-text--expanded {
+    -webkit-line-clamp: unset;
+    display: block;
+    overflow: visible;
+  }
+
+  .section-{{ section.id }} .crs-read-more {
+    border: none;
+    background: none;
+    color: inherit;
+    padding: 0;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+    align-self: flex-start;
   }
 
   .section-{{ section.id }} .crs-product {
@@ -712,6 +735,33 @@
     }
   }
 {%- endstyle -%}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var section = document.querySelector('.section-{{ section.id }}');
+    if (!section) return;
+
+    var reviewBlocks = section.querySelectorAll('[data-review-text]');
+
+    reviewBlocks.forEach(function (review) {
+      var toggle = review.nextElementSibling && review.nextElementSibling.hasAttribute('data-review-toggle')
+        ? review.nextElementSibling
+        : null;
+
+      if (!toggle) return;
+
+      var isOverflowing = review.scrollHeight > review.clientHeight + 1;
+
+      if (isOverflowing) {
+        toggle.hidden = false;
+        toggle.addEventListener('click', function () {
+          var expanded = review.classList.toggle('crs-review-text--expanded');
+          toggle.textContent = expanded ? 'Hide' : 'Click to read more';
+        });
+      }
+    });
+  });
+</script>
 
 {% schema %}
 {"name":"Customer Review Slider","tag":"section","class":"section","settings": [
