@@ -453,6 +453,11 @@
     display: flex;
     flex-direction: column;
     gap: {{ section.settings.card_body_gap }}px;
+    flex: 1;
+  }
+
+  .section-{{ section.id }} .crs-card-body > :last-child {
+    margin-top: auto;
   }
 
   .section-{{ section.id }} .crs-custom-html {
