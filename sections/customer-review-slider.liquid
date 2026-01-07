@@ -161,8 +161,8 @@
                         {% if block.settings.review_text != blank %}
                           <div class="crs-review-text rte" data-review-text>
                             {{ block.settings.review_text }}
-                            <button type="button" class="crs-read-more" data-review-toggle hidden>Read more</button>
                           </div>
+                          <button type="button" class="crs-read-more" data-review-toggle hidden>Read more</button>
                         {% endif %}
 
                         {% if has_product_info %}
@@ -574,7 +574,7 @@
   .section-{{ section.id }} .crs-read-more {
     border: none;
     background: none;
-    color: {% if section.settings.use_theme_colors %}{{ settings.highlighted_text_solid_color | default: settings.heading_color }}{% else %}{{ section.settings.highlighted_color | default: section.settings.heading_color }}{% endif %};
+    color: #620a0a;
     padding: 0;
     font: inherit;
     font-size: {{ section.settings.review_font_size }}px;
@@ -582,7 +582,7 @@
     text-decoration: none;
     cursor: pointer;
     align-self: flex-start;
-    margin-left: 0.35rem;
+    margin: 0;
     display: inline-flex;
     align-items: center;
   }
@@ -751,7 +751,9 @@
     var reviewBlocks = section.querySelectorAll('[data-review-text]');
 
     reviewBlocks.forEach(function (review) {
-      var toggle = review.querySelector('[data-review-toggle]');
+      var toggle = review.nextElementSibling && review.nextElementSibling.hasAttribute('data-review-toggle')
+        ? review.nextElementSibling
+        : null;
       if (!toggle) return;
 
       var isOverflowing = review.scrollHeight > review.clientHeight + 1;
