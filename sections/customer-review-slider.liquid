@@ -162,7 +162,7 @@
                           <div class="crs-review-text rte" data-review-text>
                             {{ block.settings.review_text }}
                           </div>
-                          <button type="button" class="crs-read-more" data-review-toggle hidden>Read more</button>
+                          <button type="button" class="crs-read-more" data-review-toggle hidden>Read more...</button>
                         {% endif %}
 
                         {% if has_product_info %}
@@ -759,11 +759,15 @@
       var isOverflowing = review.scrollHeight > review.clientHeight + 1;
 
       if (isOverflowing) {
+        toggle.textContent = 'Read more...';
         toggle.hidden = false;
         toggle.addEventListener('click', function () {
           var expanded = review.classList.toggle('crs-review-text--expanded');
-          toggle.textContent = expanded ? 'Read less' : 'Read more';
+          toggle.textContent = expanded ? 'Read less' : 'Read more...';
         });
+      } else {
+        review.classList.remove('crs-review-text--expanded');
+        toggle.hidden = true;
       }
     });
   });
