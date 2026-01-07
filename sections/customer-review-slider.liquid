@@ -761,44 +761,51 @@
       var toggle = review.parentElement && review.parentElement.querySelector('[data-review-toggle]');
       if (!toggle) return;
 
-      // Allow layout to settle before measuring
+      // Use double RAF to ensure layout is complete
       requestAnimationFrame(function () {
-        // Temporarily remove line-clamp to measure actual content height
-        var originalDisplay = review.style.display;
-        var originalWebkitLineClamp = review.style.webkitLineClamp;
-        var originalOverflow = review.style.overflow;
-        
-        review.style.display = 'block';
-        review.style.webkitLineClamp = 'none';
-        review.style.overflow = 'visible';
-        
-        var fullHeight = review.scrollHeight;
-        
-        // Restore original styles
-        review.style.display = originalDisplay;
-        review.style.webkitLineClamp = originalWebkitLineClamp;
-        review.style.overflow = originalOverflow;
-        
-        // Calculate expected height for 3 lines (font-size * line-height * 3)
-        var computedStyle = window.getComputedStyle(review);
-        var fontSize = parseFloat(computedStyle.fontSize);
-        var lineHeight = parseFloat(computedStyle.lineHeight) || fontSize * 1.7;
-        var expectedHeight = lineHeight * 3;
-        
-        // Add a small tolerance (2px) to account for rounding
-        var isOverflowing = fullHeight > expectedHeight + 2;
+        requestAnimationFrame(function () {
+          // Get the clamped height (current visual height)
+          var clampedHeight = review.offsetHeight;
+          
+          // Create a hidden clone to measure full content height without clamp
+          var clone = review.cloneNode(true);
+          clone.style.position = 'absolute';
+          clone.style.visibility = 'hidden';
+          clone.style.height = 'auto';
+          clone.style.display = 'block';
+          clone.style.webkitLineClamp = 'unset';
+          clone.style.webkitBoxOrient = 'unset';
+          clone.style.overflow = 'visible';
+          clone.style.maxHeight = 'none';
+          clone.style.width = review.offsetWidth + 'px';
+          
+          review.parentElement.appendChild(clone);
+          
+          // Measure full unclamped height
+          var fullHeight = clone.offsetHeight;
+          
+          // Remove clone immediately
+          clone.parentElement.removeChild(clone);
+          
+          // If full height is significantly greater than clamped height, it's overflowing
+          // Use threshold of 3px to account for rounding/measurement differences
+          var isOverflowing = fullHeight > clampedHeight + 3;
 
-        if (isOverflowing) {
-          toggle.textContent = 'Read more...';
-          toggle.hidden = false;
-          toggle.addEventListener('click', function () {
-            var expanded = review.classList.toggle('crs-review-text--expanded');
-            toggle.textContent = expanded ? 'Read less' : 'Read more...';
-          });
-        } else {
-          review.classList.remove('crs-review-text--expanded');
-          toggle.hidden = true;
-        }
+          if (isOverflowing) {
+            toggle.textContent = 'Read more...';
+            toggle.hidden = false;
+            // Remove any existing listeners to prevent duplicates
+            var newToggle = toggle.cloneNode(true);
+            toggle.parentNode.replaceChild(newToggle, toggle);
+            newToggle.addEventListener('click', function () {
+              var expanded = review.classList.toggle('crs-review-text--expanded');
+              newToggle.textContent = expanded ? 'Read less' : 'Read more...';
+            });
+          } else {
+            review.classList.remove('crs-review-text--expanded');
+            toggle.hidden = true;
+          }
+        });
       });
     });
   });
