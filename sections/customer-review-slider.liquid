@@ -159,8 +159,10 @@
                         {% endif %}
 
                         {% if block.settings.review_text != blank %}
-                          <div class="crs-review-text rte" data-review-text>{{ block.settings.review_text }}</div>
-                          <button type="button" class="crs-read-more" data-review-toggle hidden>Click to read more</button>
+                          <div class="crs-review-text rte" data-review-text>
+                            {{ block.settings.review_text }}
+                            <button type="button" class="crs-read-more" data-review-toggle hidden>Read more</button>
+                          </div>
                         {% endif %}
 
                         {% if has_product_info %}
@@ -552,7 +554,7 @@
     margin-top: {{ section.settings.review_text_margin_top }}px;
     margin-bottom: {{ section.settings.review_text_margin_bottom }}px;
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     position: relative;
@@ -572,12 +574,17 @@
   .section-{{ section.id }} .crs-read-more {
     border: none;
     background: none;
-    color: inherit;
+    color: {% if section.settings.use_theme_colors %}{{ settings.highlighted_text_solid_color | default: settings.heading_color }}{% else %}{{ section.settings.highlighted_color | default: section.settings.heading_color }}{% endif %};
     padding: 0;
     font: inherit;
-    text-decoration: underline;
+    font-size: {{ section.settings.review_font_size }}px;
+    font-weight: {{ section.settings.review_text_font_weight | default: 'inherit' }};
+    text-decoration: none;
     cursor: pointer;
     align-self: flex-start;
+    margin-left: 0.35rem;
+    display: inline-flex;
+    align-items: center;
   }
 
   .section-{{ section.id }} .crs-product {
@@ -744,10 +751,7 @@
     var reviewBlocks = section.querySelectorAll('[data-review-text]');
 
     reviewBlocks.forEach(function (review) {
-      var toggle = review.nextElementSibling && review.nextElementSibling.hasAttribute('data-review-toggle')
-        ? review.nextElementSibling
-        : null;
-
+      var toggle = review.querySelector('[data-review-toggle]');
       if (!toggle) return;
 
       var isOverflowing = review.scrollHeight > review.clientHeight + 1;
@@ -756,7 +760,7 @@
         toggle.hidden = false;
         toggle.addEventListener('click', function () {
           var expanded = review.classList.toggle('crs-review-text--expanded');
-          toggle.textContent = expanded ? 'Hide' : 'Click to read more';
+          toggle.textContent = expanded ? 'Read less' : 'Read more';
         });
       }
     });
