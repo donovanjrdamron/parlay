@@ -159,10 +159,12 @@
                         {% endif %}
 
                         {% if block.settings.review_text != blank %}
-                          <div class="crs-review-text rte" data-review-text>
-                            {{ block.settings.review_text }}
+                          <div class="crs-review">
+                            <div class="crs-review-text rte" data-review-text>
+                              {{ block.settings.review_text }}
+                            </div>
+                            <button type="button" class="crs-read-more" data-review-toggle hidden>Read more...</button>
                           </div>
-                          <button type="button" class="crs-read-more" data-review-toggle hidden>Read more...</button>
                         {% endif %}
 
                         {% if has_product_info %}
@@ -547,6 +549,10 @@
     color: {{ section.settings.star_filled_color }};
   }
 
+  .section-{{ section.id }} .crs-review {
+    display: block;
+  }
+
   .section-{{ section.id }} .crs-review-text {
     font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
     font-size: {{ section.settings.review_font_size }}px;
@@ -583,8 +589,9 @@
     cursor: pointer;
     align-self: flex-start;
     margin: 0;
-    display: inline-flex;
-    align-items: center;
+    display: inline;
+    vertical-align: baseline;
+    margin-left: 0.35rem;
   }
 
   .section-{{ section.id }} .crs-product {
@@ -751,24 +758,25 @@
     var reviewBlocks = section.querySelectorAll('[data-review-text]');
 
     reviewBlocks.forEach(function (review) {
-      var toggle = review.nextElementSibling && review.nextElementSibling.hasAttribute('data-review-toggle')
-        ? review.nextElementSibling
-        : null;
+      var toggle = review.parentElement && review.parentElement.querySelector('[data-review-toggle]');
       if (!toggle) return;
 
-      var isOverflowing = review.scrollHeight > review.clientHeight + 1;
+      // Allow layout to settle before measuring to avoid false positives
+      requestAnimationFrame(function () {
+        var isOverflowing = review.scrollHeight > review.clientHeight + 1;
 
-      if (isOverflowing) {
-        toggle.textContent = 'Read more...';
-        toggle.hidden = false;
-        toggle.addEventListener('click', function () {
-          var expanded = review.classList.toggle('crs-review-text--expanded');
-          toggle.textContent = expanded ? 'Read less' : 'Read more...';
-        });
-      } else {
-        review.classList.remove('crs-review-text--expanded');
-        toggle.hidden = true;
-      }
+        if (isOverflowing) {
+          toggle.textContent = 'Read more...';
+          toggle.hidden = false;
+          toggle.addEventListener('click', function () {
+            var expanded = review.classList.toggle('crs-review-text--expanded');
+            toggle.textContent = expanded ? 'Read less' : 'Read more...';
+          });
+        } else {
+          review.classList.remove('crs-review-text--expanded');
+          toggle.hidden = true;
+        }
+      });
     });
   });
 </script>
