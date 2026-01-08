@@ -234,7 +234,7 @@
         "compare_price_font_size": 12,
         "price_margin_bottom": 0,
         "overlay_info_on_image_mobile": false,
-        "show_sale_badge": true,
+        "show_sale_badge": false,
         "use_theme_badge_colors": false,
         "sale_badge_format": "percentage",
         "sale_badge_text": "",
