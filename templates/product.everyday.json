@@ -1312,7 +1312,7 @@
         "collection": "everyday",
         "products_to_show": 3,
         "hide_current_product": true,
-        "layout_mode": "grid",
+        "layout_mode": "slider",
         "grid_columns_mobile": 2,
         "grid_columns_tablet": 3,
         "grid_columns_desktop": 3,
