@@ -504,7 +504,7 @@
           "bundle_upsell_dFweiq": {
             "type": "bundle_upsell",
             "settings": {
-              "title": "87% of customers upgrade",
+              "title": "Other people also added",
               "title_text_align": "left",
               "bundle_title_font_size": 15,
               "bundle_title_font_size_mobile": 13,
