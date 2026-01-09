@@ -2289,6 +2289,7 @@
         "table_max_width": 1000,
         "table_border_radius": 5,
         "show_desktop_image": true,
+        "desktop_image": "{{ product.metafields.custom.small_features_image.value }}",
         "hide_desktop_image_on_mobile": true,
         "desktop_image_position": "right",
         "desktop_image_alignment": "center",
