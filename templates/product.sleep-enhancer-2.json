@@ -1057,7 +1057,7 @@
             "question_2": "Sleep Enhancer Lens",
             "answer_2": "<p>The Sleep Enhancer Lens is designed for the part of the day when screens start to take a toll.</p><p>As the day winds down, artificial light keeps your body alert — even when you’re trying to slow down. This lens reduces blue-heavy screen light more aggressively, helping screens feel softer, less sharp, and far less stimulating.</p><p>The result is a noticeable shift: it’s easier to unwind, easier to relax after screens, and easier to fall asleep when the day is done. Many people wear the Sleep Enhancer Lens in the evening, at night, or anytime screens leave them feeling wired or overstimulated.</p><p>This lens is a deliberate choice — not meant to disappear, but to make a real difference when balance isn’t enough.</p>",
             "open_2": false,
-            "question_3": "Sizing",
+            "question_3": "",
             "answer_3": "{{ product.metafields.custom.sizing | metafield_tag }}",
             "open_3": false,
             "question_4": "",
