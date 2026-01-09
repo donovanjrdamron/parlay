@@ -1,1 +1,189 @@
-{"name":"t:sections.header.name","type":"header","sections":{"announcement_bar_rUQ7f8":{"type":"announcement-bar","blocks":{"announcement_F7G4kd":{"type":"announcement","settings":{"text":"New Years Special: Free Shipping On All Orders","text_alignment":"center","icon_type":"google","icon":"","filled_icon":false,"icon_svg":"","desktop_layout":"horizontal","mobile_layout":"horizontal","hidden_products":"","enable_specific_display":false,"displayed_products":""}},"announcement_gyAgmm":{"type":"announcement","settings":{"text":"Start The Year By Reseting Your Circadian Rhythm!","text_alignment":"center","icon_type":"google","icon":"","filled_icon":false,"icon_svg":"","desktop_layout":"horizontal","mobile_layout":"horizontal","hidden_products":"","enable_specific_display":false,"displayed_products":""}}},"block_order":["announcement_F7G4kd","announcement_gyAgmm"],"name":"t:sections.announcement-bar.name","settings":{"columns_desktop":1,"columns_mobile":1,"desktop_spacing":28,"mobile_spacing":12,"show_separator":false,"background_color":"#620a09","gradient_background":"","text_color":"#ffffff","mobile_text_size":12,"desktop_text_size":14,"mobile_icon_size":15,"desktop_icon_size":21,"icon_color":"#ffffff","enable_infinite_scroll":true,"scroll_speed":40,"infinite_scroll_spacing_desktop":40,"infinite_scroll_spacing_mobile":24,"slider_mobile":true,"slider_desktop":false,"type":"loop","autoplay":true,"autoplay_speed":3,"hidden_products":"","enable_specific_display":false,"displayed_products":"","padding_top":16,"padding_bottom":16}},"header":{"type":"header","settings":{"sticky_header_type":"always","show_line_separator":true,"bg_color":"#620a0a","background_opacity":100,"backdrop_blur":0,"icon_color":"#ffffff","logo_link":"\/","logo_position":"middle-center","menu":"main-menu","menu_type_desktop":"mega","highlight_active_link":false,"highlighted_link_color":"#ff0000","highlighted_link_bg_color":"#ffffff","menu_link_color":"#ffffff","mega_menu_bg_color":"#ffffff","mega_menu_text_color":"#000000","products_mega_menu_links":"gummies","products_mega_menu_display_collection_products":true,"products_mega_menu_display_collection_images":true,"products_mega_menu_display_collection_images_on_mobile":true,"mobile_menu_title":"Menu","secondary_menu":"","menu_bg_color":"#ffffff","menu_text_color":"#000000","menu_full_width":false,"mobile_logo_position":"center","icon_size":30,"cart_icon":"shopping_bag","cart_icon_filled":false,"cart_icon_svg":"","menu_icon":"menu","menu_icon_filled":false,"menu_icon_svg":"","account_icon":"person","account_icon_filled":false,"account_icon_svg":"","hide_account_desktop":false,"cart_bubble_size":16,"cart_bubble_font_size":10,"cart_bubble_bottom":4,"cart_bubble_left":22,"cart_bubble_bg_color":"#620a0a","cart_bubble_text_color":"#ffffff","margin_bottom":0,"padding_top":8,"padding_bottom":4}},"announcement_with_timer_MMTqER":{"type":"announcement-with-timer","disabled":true,"name":"Announcement with Timer","settings":{"show_text":true,"announcement_text":"New Year Sale Ends In","manual_days":1,"manual_hours":0,"manual_minutes":0,"manual_seconds":0,"ended_message":"Sale Ended","auto_reset":true,"show_days":false,"days_label":"Days","hours_label":"Hrs","minutes_label":"Min","seconds_label":"Sec","gradient_enabled":true,"background_gradient":"linear-gradient(46deg, rgba(3, 153, 201, 1) 13%, rgba(46, 178, 206, 1) 86%)","background_color":"#174059","animation_speed":5,"text_color":"#ffffff","font_size_desktop":16,"font_size_mobile":16,"font_weight":"700","timer_box_bg":"#ffffff","timer_text_color":"#2a2552","timer_box_width":30,"timer_box_height":40,"timer_box_width_mobile":26,"timer_box_height_mobile":28,"timer_box_radius":2,"timer_box_spacing":2,"timer_box_spacing_mobile":2,"timer_number_size":14,"timer_number_size_mobile":15,"timer_label_size":8,"timer_label_size_mobile":7,"separator_color":"#ffffff","separator_spacing":2,"separator_spacing_mobile":2,"padding_vertical":10,"element_gap":16,"element_gap_mobile":7}}},"order":["announcement_bar_rUQ7f8","header","announcement_with_timer_MMTqER"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement_bar_rUQ7f8": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement_F7G4kd": {
+          "type": "announcement",
+          "settings": {
+            "text": "FREE Shipping On All Orders",
+            "text_alignment": "center",
+            "icon_type": "google",
+            "icon": "",
+            "filled_icon": false,
+            "icon_svg": "",
+            "desktop_layout": "horizontal",
+            "mobile_layout": "horizontal",
+            "hidden_products": "",
+            "enable_specific_display": false,
+            "displayed_products": ""
+          }
+        },
+        "announcement_gyAgmm": {
+          "type": "announcement",
+          "settings": {
+            "text": "Start the year with a healthier lifestyle",
+            "text_alignment": "center",
+            "icon_type": "google",
+            "icon": "",
+            "filled_icon": false,
+            "icon_svg": "",
+            "desktop_layout": "horizontal",
+            "mobile_layout": "horizontal",
+            "hidden_products": "",
+            "enable_specific_display": false,
+            "displayed_products": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement_F7G4kd",
+        "announcement_gyAgmm"
+      ],
+      "name": "t:sections.announcement-bar.name",
+      "settings": {
+        "columns_desktop": 1,
+        "columns_mobile": 1,
+        "desktop_spacing": 28,
+        "mobile_spacing": 12,
+        "show_separator": false,
+        "background_color": "#620a09",
+        "gradient_background": "",
+        "text_color": "#ffffff",
+        "mobile_text_size": 12,
+        "desktop_text_size": 14,
+        "mobile_icon_size": 15,
+        "desktop_icon_size": 21,
+        "icon_color": "#ffffff",
+        "enable_infinite_scroll": true,
+        "scroll_speed": 40,
+        "infinite_scroll_spacing_desktop": 40,
+        "infinite_scroll_spacing_mobile": 24,
+        "slider_mobile": true,
+        "slider_desktop": false,
+        "type": "loop",
+        "autoplay": true,
+        "autoplay_speed": 3,
+        "hidden_products": "",
+        "enable_specific_display": false,
+        "displayed_products": "",
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "sticky_header_type": "always",
+        "show_line_separator": true,
+        "bg_color": "#620a0a",
+        "background_opacity": 100,
+        "backdrop_blur": 0,
+        "icon_color": "#ffffff",
+        "logo_link": "/",
+        "logo_position": "middle-center",
+        "menu": "main-menu",
+        "menu_type_desktop": "mega",
+        "highlight_active_link": false,
+        "highlighted_link_color": "#ff0000",
+        "highlighted_link_bg_color": "#ffffff",
+        "menu_link_color": "#ffffff",
+        "mega_menu_bg_color": "#ffffff",
+        "mega_menu_text_color": "#000000",
+        "products_mega_menu_links": "gummies",
+        "products_mega_menu_display_collection_products": true,
+        "products_mega_menu_display_collection_images": true,
+        "products_mega_menu_display_collection_images_on_mobile": true,
+        "mobile_menu_title": "Menu",
+        "secondary_menu": "",
+        "menu_bg_color": "#ffffff",
+        "menu_text_color": "#000000",
+        "menu_full_width": false,
+        "mobile_logo_position": "center",
+        "icon_size": 30,
+        "cart_icon": "shopping_bag",
+        "cart_icon_filled": false,
+        "cart_icon_svg": "",
+        "menu_icon": "menu",
+        "menu_icon_filled": false,
+        "menu_icon_svg": "",
+        "account_icon": "person",
+        "account_icon_filled": false,
+        "account_icon_svg": "",
+        "hide_account_desktop": false,
+        "cart_bubble_size": 16,
+        "cart_bubble_font_size": 10,
+        "cart_bubble_bottom": 4,
+        "cart_bubble_left": 22,
+        "cart_bubble_bg_color": "#620a0a",
+        "cart_bubble_text_color": "#ffffff",
+        "margin_bottom": 0,
+        "padding_top": 8,
+        "padding_bottom": 4
+      }
+    },
+    "announcement_with_timer_MMTqER": {
+      "type": "announcement-with-timer",
+      "disabled": true,
+      "name": "Announcement with Timer",
+      "settings": {
+        "show_text": true,
+        "announcement_text": "New Year Sale Ends In",
+        "manual_days": 1,
+        "manual_hours": 0,
+        "manual_minutes": 0,
+        "manual_seconds": 0,
+        "ended_message": "Sale Ended",
+        "auto_reset": true,
+        "show_days": false,
+        "days_label": "Days",
+        "hours_label": "Hrs",
+        "minutes_label": "Min",
+        "seconds_label": "Sec",
+        "gradient_enabled": true,
+        "background_gradient": "linear-gradient(46deg, rgba(3, 153, 201, 1) 13%, rgba(46, 178, 206, 1) 86%)",
+        "background_color": "#174059",
+        "animation_speed": 5,
+        "text_color": "#ffffff",
+        "font_size_desktop": 16,
+        "font_size_mobile": 16,
+        "font_weight": "700",
+        "timer_box_bg": "#ffffff",
+        "timer_text_color": "#2a2552",
+        "timer_box_width": 30,
+        "timer_box_height": 40,
+        "timer_box_width_mobile": 26,
+        "timer_box_height_mobile": 28,
+        "timer_box_radius": 2,
+        "timer_box_spacing": 2,
+        "timer_box_spacing_mobile": 2,
+        "timer_number_size": 14,
+        "timer_number_size_mobile": 15,
+        "timer_label_size": 8,
+        "timer_label_size_mobile": 7,
+        "separator_color": "#ffffff",
+        "separator_spacing": 2,
+        "separator_spacing_mobile": 2,
+        "padding_vertical": 10,
+        "element_gap": 16,
+        "element_gap_mobile": 7
+      }
+    }
+  },
+  "order": [
+    "announcement_bar_rUQ7f8",
+    "header",
+    "announcement_with_timer_MMTqER"
+  ]
+}
