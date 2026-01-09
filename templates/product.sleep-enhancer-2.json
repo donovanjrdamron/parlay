@@ -1021,7 +1021,7 @@
         "heading_position": "top-content",
         "vertical_alignment": "center",
         "background_color": "#ffffff",
-        "section_padding_top": 60,
+        "section_padding_top": 0,
         "section_padding_bottom": 60,
         "block_spacing_mobile": 20,
         "block_spacing_desktop": 12,
