@@ -1626,7 +1626,7 @@
             "customer_name": "Ben G.",
             "customer_age": "28",
             "rating": 5,
-            "review_text": "<p>I work on a computer all day now and was struggling with eye strain and sleep. These made a noticeable difference at night. I usually stay up until 1AM working on my laptop and falling asleep after use to be so hard that I would end up pulling my laptop back out a lot of days. Im honestly so happy I got hit by an instagram ad for these. Ever since i started wearing them at night (1 week ago) i can definitely notice my body winding down in ways it didn't use to. Falling asleep now is easier than ever and ive actually noticed waking up in the morning is too.</p>",
+            "review_text": "<p>I work on a computer all day now and was struggling with falling asleep. These made a noticeable difference at night. I usually stay up until 1AM working on my laptop and falling asleep after use to be so hard that I would end up pulling my laptop back out a lot of days. Im honestly so happy I got hit by an instagram ad for these. Ever since i started wearing them at night (1 week ago) i can definitely notice my body winding down in ways it didn't use to. Falling asleep now is easier than ever and ive actually noticed waking up in the morning is too.</p>",
             "product_reference": "the-aero-tortoise-ion-clear-1",
             "product_title_override": "",
             "product_price_override": "",
@@ -1910,7 +1910,7 @@
         "benefit_item_Rw9Kdc": {
           "type": "benefit_item",
           "settings": {
-            "label": "Calmer Evenings",
+            "label": "Fall asleep faster",
             "icon_type": "image",
             "icon": "{{ product.featured_image }}",
             "icon_svg": "",
@@ -1976,7 +1976,7 @@
         "benefit_item_Jhhz8A": {
           "type": "benefit_item",
           "settings": {
-            "label": "Night Routine",
+            "label": "Easier wind-down",
             "icon_type": "image",
             "icon": "{{ product.metafields.custom[\"4th_product_image\"].value }}",
             "icon_svg": "",
@@ -2044,7 +2044,7 @@
         "image_mask_fade_height": 40,
         "image_mask_fade_color": "#ffffff",
         "icon_vertical_spacing_mobile": 110,
-        "icon_horizontal_spacing_mobile": 115,
+        "icon_horizontal_spacing_mobile": 105,
         "icon_vertical_spacing_desktop": 125,
         "icon_horizontal_spacing_desktop": 70,
         "icon_label_gap": 10,
@@ -2055,7 +2055,7 @@
         "icon_label_active_color": "#d48c00",
         "icon_label_active_font_weight": "700",
         "icon_label_inactive_color": "#d48c00",
-        "icon_label_font_size": 16,
+        "icon_label_font_size": 15,
         "icon_label_font_weight": "500",
         "content_display_background": "rgba(0,0,0,0)",
         "content_display_text_color": "#620a09",
@@ -2141,7 +2141,7 @@
         "comparison_row_kzLbJx": {
           "type": "comparison_row",
           "settings": {
-            "benefit_text": "Targets disruptive blue + green light",
+            "benefit_text": "Reduces night-time stimulation",
             "us_value": "google_icon",
             "us_custom_text": "",
             "us_custom_svg": "",
@@ -2177,7 +2177,7 @@
         "comparison_row_Dhmfqr": {
           "type": "comparison_row",
           "settings": {
-            "benefit_text": "Two lenses for day + night",
+            "benefit_text": "Supports faster sleep onset",
             "us_value": "google_icon",
             "us_custom_text": "",
             "us_custom_svg": "",
@@ -2195,7 +2195,7 @@
         "comparison_row_bwXh3B": {
           "type": "comparison_row",
           "settings": {
-            "benefit_text": "Clear vision, natural color",
+            "benefit_text": "Noticeably softer screen experience",
             "us_value": "google_icon",
             "us_custom_text": "",
             "us_custom_svg": "",
@@ -2373,7 +2373,7 @@
             "icon_bg_color": "#da9100",
             "title": "Greater Artificial Light Reduction",
             "title_color": "#000000",
-            "description": "Limits a broader range of stimulating wavelengths from screens and indoor lighting for those who want maximum reduction.",
+            "description": "Filters a wider range of stimulating screen light that keeps your brain alert at night.",
             "text_color": "#000000"
           }
         },
@@ -2386,7 +2386,7 @@
             "icon_bg_color": "#da9100",
             "title": "Warm, Intentional Tint",
             "title_color": "#000000",
-            "description": "A visibly warmer tone that softens harsh light and creates a calmer visual environment.",
+            "description": "Visibly softens screens so your eyes and nervous system can relax instead of staying on high alert.",
             "text_color": "#000000"
           }
         },
@@ -2399,7 +2399,7 @@
             "icon_bg_color": "#da9100",
             "title": "Comfortable for Extended Wear",
             "title_color": "#000000",
-            "description": "Lightweight, durable lens designed to be worn for hours — whether that’s in the evening or throughout the day by choice.",
+            "description": "Lightweight and balanced so you can wear them all evening without pressure or fatigue.",
             "text_color": "#000000"
           }
         },
@@ -2456,8 +2456,8 @@
       "settings": {
         "use_theme_colors": false,
         "section_background_color": "#ffffff",
-        "heading_before": "Why the",
-        "highlighted_text": "Sleep Enhancer Lens?",
+        "heading_before": "Why this lens works",
+        "highlighted_text": "when others don’t",
         "heading_after": "",
         "highlight_position": "inline_second",
         "heading_tag": "h2",
@@ -2465,7 +2465,7 @@
         "heading_text_align_mobile": "center",
         "heading_color": "#620a0a",
         "heading_font_size_desktop": 40,
-        "heading_font_size_mobile": 32,
+        "heading_font_size_mobile": 30,
         "heading_font_weight": "700",
         "heading_line_height": 1.2,
         "heading_spacing_desktop": 30,
