@@ -137,25 +137,6 @@
             "margin_bottom": 15
           }
         },
-        "product_text_block_GYxrtF": {
-          "type": "product_text_block",
-          "settings": {
-            "text": "<p>Screens and indoor lighting keep your brain in “day mode” long after the day ends. The Sleep Enhancer Lens reduces the most stimulating artificial light so your body can actually wind down and fall asleep effortlessly.</p>",
-            "highlight_text": "\"Artificial Light\"",
-            "text_color": "#000000",
-            "font_size_desktop": 16,
-            "font_size_mobile": 16,
-            "line_height_desktop": 1.6,
-            "line_height_mobile": 1.5,
-            "text_align": "left",
-            "font_weight": 400,
-            "highlight_color": "#da9100",
-            "highlight_text_color": "#ffffff",
-            "highlight_padding": 2,
-            "margin_top": 0,
-            "margin_bottom": 15
-          }
-        },
         "benefit_list_i9jafU": {
           "type": "benefit_list",
           "settings": {
@@ -193,6 +174,25 @@
             "item_vertical_alignment": "center",
             "margin_top": 16,
             "margin_bottom": 16
+          }
+        },
+        "product_text_block_GYxrtF": {
+          "type": "product_text_block",
+          "settings": {
+            "text": "<p>Screens and indoor lighting keep your brain in “day mode” long after the day ends. The Sleep Enhancer Lens reduces the most stimulating artificial light so your body can actually wind down and fall asleep effortlessly.</p>",
+            "highlight_text": "\"Artificial Light\"",
+            "text_color": "#000000",
+            "font_size_desktop": 16,
+            "font_size_mobile": 16,
+            "line_height_desktop": 1.6,
+            "line_height_mobile": 1.5,
+            "text_align": "left",
+            "font_weight": 400,
+            "highlight_color": "#da9100",
+            "highlight_text_color": "#ffffff",
+            "highlight_padding": 2,
+            "margin_top": 0,
+            "margin_bottom": 15
           }
         },
         "product_bundle_CWRzMT": {
@@ -673,8 +673,8 @@
         "rating_stars_pTTC7n",
         "price",
         "divider_biQQWb",
-        "product_text_block_GYxrtF",
         "benefit_list_i9jafU",
+        "product_text_block_GYxrtF",
         "product_bundle_CWRzMT",
         "product_bundle_TyQTmd",
         "buy_buttons",
