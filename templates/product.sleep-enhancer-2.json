@@ -1616,45 +1616,6 @@
         "content_block_spacing_desktop": 20
       }
     },
-    "image_banner_YrVpd4": {
-      "type": "image-banner",
-      "name": "Image with Title",
-      "settings": {
-        "use_theme_colors": false,
-        "section_background_color": "#620a0a",
-        "section_gradient_enabled": false,
-        "section_background_gradient": "linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(245, 245, 245, 1) 100%)",
-        "section_padding_top": 0,
-        "section_padding_bottom": 0,
-        "full_width": true,
-        "image_ratio": "square",
-        "inherit_image_height": false,
-        "enable_custom_height": true,
-        "custom_height_desktop": 200,
-        "custom_height_mobile": 120,
-        "border_radius": 0,
-        "heading": "Happy Customers",
-        "heading_tag": "h1",
-        "heading_color": "#f5f5f5",
-        "heading_font_size_desktop": 48,
-        "heading_font_size_mobile": 34,
-        "heading_font_weight": "400",
-        "text_align": "center",
-        "highlighted_text": "Real Results",
-        "highlight_position": "before",
-        "highlighted_gradient_enabled": false,
-        "highlighted_color": "#fafafa",
-        "highlighted_gradient": "linear-gradient(90deg, rgba(237, 18, 45, 1), rgba(255, 107, 107, 1) 100%)",
-        "highlighted_font_size_desktop": 46,
-        "highlighted_font_size_mobile": 24,
-        "highlighted_font_weight": "500",
-        "text_position": "center",
-        "custom_html": "",
-        "html_position": "below",
-        "hide_on_mobile": false,
-        "hide_on_desktop": false
-      }
-    },
     "customer_review_slider_JXrfmA": {
       "type": "customer-review-slider",
       "blocks": {
@@ -3817,7 +3778,6 @@
     "main",
     "featured_collection_n6mJXY",
     "image_with_blocks_JKVYGX",
-    "image_banner_YrVpd4",
     "customer_review_slider_JXrfmA",
     "hero_benefits_L86ixD",
     "us_vs_them_tqCyr8",
