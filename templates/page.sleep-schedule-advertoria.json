@@ -123,8 +123,8 @@
         "button_HrWdfn": {
           "type": "button",
           "settings": {
-            "button_text": "GET ECOMELEVATE THEME NOW",
-            "button_url": "",
+            "button_text": "SHOP THE SLEEP ENHANCER LENS",
+            "button_url": "shopify://collections/sleep-enhancer",
             "button_alignment": "center",
             "full_width": true,
             "button_icon": "",
@@ -138,6 +138,7 @@
         },
         "sidebar_3raBtr": {
           "type": "sidebar",
+          "disabled": true,
           "settings": {
             "show_sidebar": true,
             "sidebar_title": "Store Owner Reviews",
@@ -190,7 +191,7 @@
         "disclaimer_Ln3jmc": {
           "type": "disclaimer",
           "settings": {
-            "disclaimer_text": "<p>Results may vary based on your store's niche, traffic quality, and product selection. The EcomElevate theme provides the tools and optimization necessary for higher conversions, but success also depends on your overall business strategy. Visit ecomelevate.co for more information and additional licenses.</p>",
+            "disclaimer_text": "<p><em>Based on published research on artificial light and sleep, as well as customer experiences. Results vary by individual. Not intended to diagnose or treat medical conditions.</em></p>",
             "disclaimer_alignment": "center",
             "disclaimer_text_color": "#666666",
             "disclaimer_background_color": "#f8f8f8",
@@ -236,7 +237,7 @@
         "sidebar_title_color": "#000000",
         "rating_bar_color": "#19bdff",
         "rating_background_color": "#ffffff",
-        "show_breadcrumb": true,
+        "show_breadcrumb": false,
         "breadcrumb_home_text": "Home",
         "breadcrumb_separator": ">",
         "breadcrumb_second_text": "Resources",
