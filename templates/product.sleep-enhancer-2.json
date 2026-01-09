@@ -108,7 +108,7 @@
         "product_text_block_GYxrtF": {
           "type": "product_text_block",
           "settings": {
-            "text": "<p><strong>Artificial light reducing lens designed with experts to heavily reduce harmful screen, and home lightings causing you to have better quality sleep, fall asleep faster, wake up more energized, and heavily improve brain function.</strong></p>",
+            "text": "<p>The Sleep Enhancer Lens is designed for people who feel wired at night even when they’re exhausted.</p><p>Screens, overhead LEDs, and indoor lighting keep your nervous system in “day mode” long after the day ends. This lens reduces the most stimulating parts of artificial light, making screens feel softer, your eyes feel less tense, and your body easier to slow down.</p><p>Most customers notice it’s easier to relax at night, fall asleep faster, and wake up feeling more rested — without changing their routine.</p>",
             "highlight_text": "\"Artificial Light\"",
             "text_color": "#000000",
             "font_size_desktop": 14,
@@ -265,11 +265,11 @@
           "type": "benefit_list",
           "settings": {
             "item_1_icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewbox=\"0 0 24 24\" fill=\"currentColor\"><path fill-rule=\"evenodd\" d=\"M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z\" clip-rule=\"evenodd\"></path></svg>",
-            "item_1_text": "<p>Designed using our established sleep & light research</p>",
+            "item_1_text": "<p>Helps you fall asleep faster after screen use</p>",
             "item_2_icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewbox=\"0 0 24 24\" fill=\"currentColor\"><path fill-rule=\"evenodd\" d=\"M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z\" clip-rule=\"evenodd\"></path></svg>",
-            "item_2_text": "<p>Created for modern screen habits backed by light science</p>",
+            "item_2_text": "<p>Supports deeper, more consistent sleep</p>",
             "item_3_icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewbox=\"0 0 24 24\" fill=\"currentColor\"><path fill-rule=\"evenodd\" d=\"M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z\" clip-rule=\"evenodd\"></path></svg>",
-            "item_3_text": "<p>Hand-made using the highest quality materials and attention to detail</p>",
+            "item_3_text": "<p>Premium acetate frames built for nightly wear</p>",
             "list_alignment": "flex-start",
             "list_gap": 6,
             "list_gap_mobile": 4,
