@@ -1644,7 +1644,7 @@
         "stats_gap_mobile": 0,
         "center_items_mobile": true,
         "stat_layout_desktop": "vertical",
-        "stat_number_position_desktop": "left",
+        "stat_number_position_desktop": "right",
         "stat_gap_desktop_horizontal": 20,
         "stat_layout_mobile": "vertical",
         "stat_number_position_mobile": "left",
