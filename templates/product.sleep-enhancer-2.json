@@ -1593,7 +1593,7 @@
         "image_83yA4b": {
           "type": "image",
           "settings": {
-            "image": "{{ product.metafields.custom[\"3rd_product_photo\"].value }}",
+            "image": "{{ product.metafields.custom[\"4th_product_image\"].value }}",
             "aspect_ratio": "1/1",
             "border_width": 4,
             "border_style": "solid",
@@ -1617,7 +1617,7 @@
         "heading_text": "Real Results People Feel at Night",
         "highlight_position": "inline_second",
         "heading_tag": "h1",
-        "heading_position": "above_stats",
+        "heading_position": "above_section",
         "heading_text_align": "center",
         "heading_text_align_desktop": "center",
         "heading_color": "#ffffff",
@@ -1638,7 +1638,7 @@
         "highlighted_font_size_mobile": 32,
         "highlighted_font_weight": "500",
         "highlighted_spacing": 12,
-        "columns_desktop": "2",
+        "columns_desktop": "1",
         "columns_mobile": "1",
         "stats_gap_desktop": 0,
         "stats_gap_mobile": 0,
