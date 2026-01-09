@@ -1594,7 +1594,7 @@
           "type": "image",
           "settings": {
             "image": "{{ product.metafields.custom[\"4th_product_image\"].value }}",
-            "aspect_ratio": "1/1",
+            "aspect_ratio": "2/3",
             "border_width": 4,
             "border_style": "solid",
             "border_color": "#ffffff",
@@ -1717,7 +1717,7 @@
         "section_background_color": "#651111ff",
         "section_padding_top_desktop": 80,
         "section_padding_bottom_desktop": 80,
-        "section_padding_top_mobile": 20,
+        "section_padding_top_mobile": 44,
         "section_padding_bottom_mobile": 20,
         "section_padding_horizontal_desktop": 0,
         "section_padding_horizontal_mobile": 0
