@@ -735,7 +735,7 @@
             "type": "delivery_date",
             "settings": {
               "position": "footer",
-              "days_ahead": 5,
+              "days_ahead": 7,
               "date_format": "[day], [month] [date]",
               "delivery_text": "<p>Order will arrive by <strong>[date]</strong></p>",
               "text_size": 14,
