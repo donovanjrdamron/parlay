@@ -74,7 +74,7 @@
         "price": {
           "type": "price",
           "settings": {
-            "layout": "price_first",
+            "layout": "price_second",
             "price_gap": 6,
             "badge_gap": 0,
             "price_color": "#000000",
