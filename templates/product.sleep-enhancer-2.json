@@ -1038,7 +1038,7 @@
         "display_id": false,
         "enable_sticky_info": true,
         "enable_section_background": true,
-        "section_bg_color": "#fafafa",
+        "section_bg_color": "#ffffff",
         "use_section_gradient": false,
         "section_bg_gradient": "linear-gradient(135deg, rgba(102, 126, 234, 1), rgba(118, 75, 162, 1) 100%)",
         "overlay_info_on_image_mobile": true,
