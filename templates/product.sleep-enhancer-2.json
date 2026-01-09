@@ -1531,30 +1531,6 @@
     "image_with_blocks_JKVYGX": {
       "type": "image-with-blocks",
       "blocks": {
-        "review_TKYLVP": {
-          "type": "review",
-          "settings": {
-            "show_stars": true,
-            "star_rating": 5,
-            "star_size": 16,
-            "star_color": "#fbbf24",
-            "star_spacing": 0,
-            "review_count": "<p><strong>+128 reviews </strong>from real customers</p>",
-            "font_size": 13,
-            "font_weight": "400",
-            "text_color": "#000000",
-            "bg_color": "rgba(0,0,0,0)",
-            "padding": 0,
-            "border_width": 0,
-            "border_color": "#e5e7eb",
-            "border_style": "solid",
-            "border_radius": 0,
-            "mobile_alignment": "center",
-            "desktop_alignment": "center",
-            "margin_top": 0,
-            "margin_bottom": 0
-          }
-        },
         "heading_ffEUYE": {
           "type": "heading",
           "settings": {
@@ -1619,7 +1595,6 @@
         }
       },
       "block_order": [
-        "review_TKYLVP",
         "heading_ffEUYE",
         "image_wMxgzx",
         "body_text_ciRixk"
@@ -2352,7 +2327,7 @@
         "intro_text_spacing": 25,
         "table_max_width": 1000,
         "table_border_radius": 5,
-        "show_desktop_image": false,
+        "show_desktop_image": true,
         "hide_desktop_image_on_mobile": true,
         "desktop_image_position": "right",
         "desktop_image_alignment": "center",
