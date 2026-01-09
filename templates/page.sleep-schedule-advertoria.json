@@ -11,13 +11,258 @@
   "sections": {
     "main": {
       "type": "main-page",
+      "disabled": true,
       "settings": {
         "padding_top": 100,
         "padding_bottom": 0
       }
+    },
+    "content_sidebar_xija9D": {
+      "type": "content-sidebar",
+      "blocks": {
+        "heading_wPkL8c": {
+          "type": "heading",
+          "settings": {
+            "tag": "h2",
+            "heading": "How these glasses fixed my sleep schedule",
+            "custom_size": true,
+            "text_size": 44,
+            "text_color": "#121212",
+            "line_height": 1,
+            "font_weight": "700",
+            "text_transform": "none",
+            "letter_spacing": 0,
+            "text_align": "left",
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "padding_left": 0,
+            "padding_right": 0
+          }
+        },
+        "text_Q4dAjV": {
+          "type": "text",
+          "settings": {
+            "text": "<p>I tried everything. Pills, supplements, going to bed earlier. Nothing worked. Then I realized what was actually causing the problem, Artificial light from my screens and home.</p>",
+            "highlighted_texts": "",
+            "hightlight_texts_color": "#19bdff",
+            "custom_size": true,
+            "text_size": 18,
+            "text_color": "#7f8c8d",
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "padding_left": 0,
+            "padding_right": 0
+          }
+        },
+        "rating_Gzd88t": {
+          "type": "rating",
+          "settings": {
+            "rating": 5,
+            "star_size": 20,
+            "star_color": "#f39c12",
+            "empty_star_color": "#e0e0e0",
+            "text": "4.9/5 Rating | 100+ Happy Customers",
+            "custom_size": true,
+            "text_size": 15,
+            "text_color": "",
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "padding_left": 0,
+            "padding_right": 0
+          }
+        },
+        "image_BAtyYU": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/DSC06362.jpg",
+            "image_alignment": "flex-start",
+            "image_width": "full",
+            "custom_image_width": 100,
+            "custom_height": false,
+            "image_height": 400,
+            "image_size": "cover",
+            "image_radius": 4,
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "padding_left": 0,
+            "padding_right": 0
+          }
+        },
+        "author_mViMnT": {
+          "type": "author",
+          "settings": {
+            "author_image": "shopify://shop_images/425835200_1555465521674632_2985043302420407243_n.jpg",
+            "author_name": "By Daniel Rodriguez, Videographer/Editor",
+            "badge": true,
+            "date": "Tuesday, January 28th, 2025",
+            "text_size": 16,
+            "star_color": "#F1C40F",
+            "empty_star_color": "#e0e0e0",
+            "badge_color": "#19bdff",
+            "badge_size": 16,
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "padding_left": 0,
+            "padding_right": 0
+          }
+        },
+        "basic_text_UHQbdb": {
+          "type": "basic_text",
+          "settings": {
+            "content": "<p><em>I wasn’t trying to biohack my sleep. I was just tired of being exhausted.</em></p><p>For years, my nights followed the same frustrating pattern.</p><p>I’d feel tired around 9 or 10pm. I’d get into bed at a reasonable time.</p><p>And then… nothing.</p><p>My body was exhausted, but my mind felt wide awake.</p><p>I’d lie there scrolling, watching videos, replying to texts — telling myself I’d put my phone down “in five minutes.” An hour would pass. Sometimes two.</p><p>When I finally fell asleep, it didn’t feel deep.</p><p>And in the morning, I woke up groggy, unfocused, and already behind.</p><p>Sound familiar?</p><h3><strong>The Part No One Talks About</strong></h3><p>I assumed this was just normal.</p><p>Everyone uses screens at night.</p><p>Everyone feels tired but wired.</p><p>Everyone struggles with sleep now.</p><p>But one night, after another restless evening, I started digging into <em>why</em> this was happening.</p><p>Not supplements.</p><p>Not routines.</p><p>Not meditation apps.</p><p>Light.</p><p>Specifically, <strong>artificial light</strong>.</p><h3><strong>What Artificial Light Was Doing to Me (Without Me Realizing It)</strong></h3><p>Screens, overhead LEDs, and indoor lighting don’t shut off when the day ends.</p><p>They keep sending “daytime” signals to your brain long after your body wants to rest.</p><p>I learned that certain wavelengths of light — especially blue and blue-green light — are shown in research to:</p><p></p><ul><li>Keep your brain alert<br/></li><li>Suppress melatonin<br/></li><li>Delay the natural wind-down process<br/></li></ul><p>So even though I <em>felt</em> tired, my nervous system was still stuck in day mode.</p><p>That explained everything.</p><h3><strong>Why “Regular” Blue Light Glasses Didn’t Work</strong></h3><p>I’d actually tried blue light glasses before.</p><p>They were clear. Barely noticeable.</p><p>And honestly? They didn’t change much.</p><p>Screens still felt sharp.</p><p>My mind still felt wired.</p><p>Sleep still took forever.</p><p>That’s when I realized something important:</p><p>Most blue light glasses are designed for <strong>daytime comfort</strong>, not nighttime recovery.</p><p>They don’t reduce <em>enough</em> of the light that actually keeps your brain stimulated at night.</p><h3><strong>The Glasses That Finally Made a Difference</strong></h3><p>That’s when I came across <strong>Parlay’s Sleep Enhancer Lens</strong>.</p><p>At first, I was skeptical.</p><p>They were visibly warmer than anything I’d worn before.</p><p>But after a few nights, the difference was obvious.</p><p>Screens felt softer.</p><p>My eyes relaxed instead of feeling tense.</p><p>And for the first time in a long time, my body actually started to slow down at night.</p><p>I wasn’t forcing sleep anymore.</p><p>It just… happened.</p><h3><strong>What Changed for Me</strong></h3><p>Within the first week, I noticed:</p><p></p><ul><li>I stopped feeling wired late at night<br/></li><li>Falling asleep took noticeably less time<br/></li><li>My sleep felt deeper and more consistent<br/></li><li>I woke up feeling clearer, not foggy<br/></li><li>The biggest surprise?</li></ul><p>I didn’t change my routine.</p><p>Same phone.</p><p>Same TV.</p><p>Same habits.</p><p>The only difference was <strong>reducing the stimulation from artificial light</strong>.</p><h3><strong>Why the Sleep Enhancer Lens Works</strong></h3><p>The Sleep Enhancer Lens is designed specifically for evening and nighttime use.</p><p>Instead of lightly filtering light, it <strong>reduces a broader range of stimulating wavelengths</strong> from screens and indoor lighting — the ones shown to interfere with sleep.</p><p>That creates a calmer visual environment, which helps your nervous system recognize that it’s time to slow down.</p><p>It’s not magic.</p><p>It’s removing the thing that was quietly keeping me awake.</p><h3><strong>The Results Speak for Themselves</strong></h3><p>Based on published light and sleep research and real customer experience:</p><p></p><ul><li><strong>Up to 99%</strong> reduction of blue-green light from screens<br/></li><li><strong>50–60% less</strong> melatonin suppression compared to no lens<br/></li><li><strong>20–40 minutes faster</strong> time to fall asleep after evening screen use<br/></li><li>Most users report feeling <strong>less overstimulated at night</strong><br/></li></ul><p><em>Individual results vary, but the pattern is consistent.</em></p><h3><strong>Who These Glasses Are For</strong></h3><p>If you:</p><p></p><ul><li>Feel tired but wired at night<br/></li><li>Struggle to fall asleep after screen use<br/></li><li>Wake up feeling unrefreshed<br/></li><li>Don’t want to overhaul your routine<br/></li></ul><p>These are worth trying.</p><h3><strong>A Small Change That Actually Mattered</strong></h3><p>I didn’t need a new bedtime ritual.</p><p>I didn’t need another supplement.</p><p>I just needed less stimulation where it mattered most.</p><p>The Sleep Enhancer Lens didn’t fix my sleep by adding something new.</p><p>It fixed my sleep by <strong>removing what was getting in the way</strong>.</p>",
+            "highlighted_texts": "",
+            "highlight_texts_color": "#19bdff",
+            "image_position": "above",
+            "image_width": 100,
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "padding_left": 0,
+            "padding_right": 0
+          }
+        },
+        "button_HrWdfn": {
+          "type": "button",
+          "settings": {
+            "button_text": "GET ECOMELEVATE THEME NOW",
+            "button_url": "",
+            "button_alignment": "center",
+            "full_width": true,
+            "button_icon": "",
+            "icon_position": "left",
+            "icon_size": 16,
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "padding_left": 0,
+            "padding_right": 0
+          }
+        },
+        "sidebar_3raBtr": {
+          "type": "sidebar",
+          "settings": {
+            "show_sidebar": true,
+            "sidebar_title": "Store Owner Reviews",
+            "sidebar_product": "",
+            "sidebar_product_btn": "Get EcomElevate Now!",
+            "override_product_image": false,
+            "override_product_title": false,
+            "custom_product_title": "",
+            "use_custom_content": false,
+            "custom_title": "",
+            "custom_description": "",
+            "custom_button_text": "",
+            "custom_button_link": "",
+            "sidebar_button_bg_color": "#262626",
+            "sidebar_button_text_color": "#ffffff",
+            "five_star_bar": 88,
+            "four_star_bar": 10,
+            "three_star_bar": 2,
+            "two_star_bar": 0,
+            "one_star_bar": 0,
+            "feature_title_1": "Pain Relief",
+            "feature_rating_1": 4.9,
+            "feature_title_2": "Ease of Use",
+            "feature_rating_2": 5,
+            "feature_title_3": "Value",
+            "feature_rating_3": 4.8,
+            "feature_title_4": "Results",
+            "feature_rating_4": 4.9,
+            "rating_star_size": 15,
+            "feature_star_size": 15,
+            "rating_star_color": "#F1C40F",
+            "rating_empty_star_color": "#e0e0e0",
+            "use_progress_gradient": false,
+            "progress_gradient_start": "#19bdff",
+            "progress_gradient_end": "#0b94cb",
+            "show_featured_product": true,
+            "show_rating_section": true,
+            "show_features": true,
+            "sidebar_background_color": "#ffffff",
+            "sidebar_text_color": "#000000",
+            "sidebar_title_color": "#000000",
+            "rating_bar_color": "#333030",
+            "rating_bar_background": "#f0f0f0",
+            "feature_star_color": "#F1C40F",
+            "feature_border_color": "#f0f0f0",
+            "sidebar_padding_top": 20,
+            "sidebar_padding_bottom": 20
+          }
+        },
+        "disclaimer_Ln3jmc": {
+          "type": "disclaimer",
+          "settings": {
+            "disclaimer_text": "<p>Results may vary based on your store's niche, traffic quality, and product selection. The EcomElevate theme provides the tools and optimization necessary for higher conversions, but success also depends on your overall business strategy. Visit ecomelevate.co for more information and additional licenses.</p>",
+            "disclaimer_alignment": "center",
+            "disclaimer_text_color": "#666666",
+            "disclaimer_background_color": "#f8f8f8",
+            "disclaimer_font_size": 12,
+            "disclaimer_padding_top": 20,
+            "disclaimer_padding_bottom": 20
+          }
+        }
+      },
+      "block_order": [
+        "heading_wPkL8c",
+        "text_Q4dAjV",
+        "rating_Gzd88t",
+        "image_BAtyYU",
+        "author_mViMnT",
+        "basic_text_UHQbdb",
+        "button_HrWdfn",
+        "sidebar_3raBtr",
+        "disclaimer_Ln3jmc"
+      ],
+      "name": "Advertorial Section",
+      "settings": {
+        "hide_header_footer": true,
+        "use_theme_colors": true,
+        "disable_global_button_styling": false,
+        "force_global_button_styling": false,
+        "section_background_color": "#ffffff",
+        "button_background_color": "#19bdff",
+        "button_text_color": "#ffffff",
+        "button_border_radius": 10,
+        "button_font_size_desktop": 19,
+        "button_font_weight": "700",
+        "button_padding_vertical": 20,
+        "button_padding_horizontal": 20,
+        "button_border_color": "#0d8cc9",
+        "button_border_bottom_color": "#0a6b9e",
+        "button_border_width": 2,
+        "button_border_bottom_width": 4,
+        "show_button_arrow": true,
+        "button_arrow_color": "#ffffff",
+        "breadcrumb_color": "#b7b7b7",
+        "sidebar_background_color": "#ffffff",
+        "sidebar_title_color": "#000000",
+        "rating_bar_color": "#19bdff",
+        "rating_background_color": "#ffffff",
+        "show_breadcrumb": true,
+        "breadcrumb_home_text": "Home",
+        "breadcrumb_separator": ">",
+        "breadcrumb_second_text": "Resources",
+        "breadcrumb_second_url": "",
+        "breadcrumb_current_text": "Shopify Themes",
+        "sidebar_width": 30,
+        "page_width_with_sidebar": 1150,
+        "page_width_without_sidebar": 800,
+        "section_padding_top": 50,
+        "section_padding_bottom": 0,
+        "advertorial_enable_sticky_cart": false,
+        "advertorial_sticky_cart_product": "",
+        "advertorial_sticky_cart_button_text": "Add to Cart",
+        "advertorial_sticky_button_style": "default",
+        "advertorial_sticky_cart_transparent_padding": 15,
+        "advertorial_sticky_cart_show_border": false,
+        "advertorial_sticky_cart_button_bg": "#28a745",
+        "advertorial_sticky_cart_button_text_color": "#ffffff",
+        "advertorial_sticky_cart_text_color": "#333333",
+        "advertorial_sticky_cart_sale_color": "#e74c3c",
+        "hide_sidebar_mobile": false
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "content_sidebar_xija9D"
   ]
 }
