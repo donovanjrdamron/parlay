@@ -1501,34 +1501,17 @@
         "hide_on_desktop": false
       }
     },
-    "customer_review_slider_KH6Fgq": {
+    "customer_review_slider_hWVU3B": {
       "type": "customer-review-slider",
       "blocks": {
-        "review_AfTqE3": {
-          "type": "review",
-          "settings": {
-            "customer_image": "shopify://shop_images/78848208398__48C6D707-8EFE-4E62-87B9-2F4C5937D5F4.heic",
-            "customer_name": "Mason",
-            "customer_age": "23",
-            "rating": 5,
-            "review_text": "<p>PERFECT FOR COLLEGE STUDENTS!! Now that i am doing school full time i feel like im constantly on my computer. I even got a compliment yesterday at a coffeeshop about the glasses. I knew i had to leave a review!</p>",
-            "product_reference": "the-aero-tortoise-ion-clear",
-            "product_title_override": "",
-            "product_price_override": "",
-            "product_compare_price_override": "",
-            "purchase_date_text": "Purchased on March 15",
-            "custom_html": "",
-            "custom_html_position": "below_product"
-          }
-        },
-        "review_W83iYz": {
+        "review_H79986": {
           "type": "review",
           "settings": {
             "customer_image": "shopify://shop_images/IMG_6147.jpg",
             "customer_name": "Ben G.",
             "customer_age": "28",
             "rating": 5,
-            "review_text": "<p>I love these glasses. I switched roles at work recently and now i have a computer job and ive been looking for a pair of glasses like this to reduce to my afternoon crashes and eye strain after a few hours. I bought a pair of the generic clear ones on amazon and had no success. My friend reccommened Parlay and i ended up buying some a couple weeks later and now I will never go back. I highly reccomend this brand.</p>",
+            "review_text": "<p>I work on a computer all day now and was struggling with falling asleep. These made a noticeable difference at night. I usually stay up until 1AM working on my laptop and falling asleep after use to be so hard that I would end up pulling my laptop back out a lot of days. Im honestly so happy I got hit by an instagram ad for these. Ever since i started wearing them at night (1 week ago) i can definitely notice my body winding down in ways it didn't use to. Falling asleep now is easier than ever and ive actually noticed waking up in the morning is too.</p>",
             "product_reference": "the-aero-tortoise-ion-clear-1",
             "product_title_override": "",
             "product_price_override": "",
@@ -1538,31 +1521,14 @@
             "custom_html_position": "below_product"
           }
         },
-        "review_HdicH4": {
-          "type": "review",
-          "settings": {
-            "customer_image": "shopify://shop_images/IMG_6158.heic",
-            "customer_name": "Karen V.",
-            "customer_age": "47",
-            "rating": 5,
-            "review_text": "<p>Im a Psychiatric nurse practitioner  and i finally found a brand of blue light blockers that i can confidently recommend to patients. Highly recommend</p>",
-            "product_reference": "the-aero-tortoise-ion-clear",
-            "product_title_override": "",
-            "product_price_override": "",
-            "product_compare_price_override": "",
-            "purchase_date_text": "Purchased on September 12",
-            "custom_html": "",
-            "custom_html_position": "below_product"
-          }
-        },
-        "review_aTzNcb": {
+        "review_JrxPG4": {
           "type": "review",
           "settings": {
             "customer_image": "shopify://shop_images/IMG_7745.jpg",
             "customer_name": "Celina S.",
             "customer_age": "",
             "rating": 5,
-            "review_text": "<p>They actually work!! I've tried way too many of the cheap clear ones. i wish i would have spent the money way sooner. Thank you guys!!</p>",
+            "review_text": "<p>I bought these because I was exhausted but still couldn’t fall asleep after being on my phone at night. Within the first few nights, I noticed my eyes felt less strained and my brain wasn’t racing when I got into bed. I didn’t change my routine or take anything new... I just wore the glasses in the evening. I wake up feeling more rested now, which honestly surprised me.</p>",
             "product_reference": "the-aero-night-moss",
             "product_title_override": "",
             "product_price_override": "",
@@ -1572,7 +1538,7 @@
             "custom_html_position": "below_product"
           }
         },
-        "review_JN8wrJ": {
+        "review_zWy4Cf": {
           "type": "review",
           "settings": {
             "customer_image": "shopify://shop_images/IMG_0379.heic",
@@ -1589,7 +1555,24 @@
             "custom_html_position": "below_product"
           }
         },
-        "review_DdVHND": {
+        "review_h7NA3X": {
+          "type": "review",
+          "settings": {
+            "customer_image": "shopify://shop_images/78848208398__48C6D707-8EFE-4E62-87B9-2F4C5937D5F4.heic",
+            "customer_name": "Mason",
+            "customer_age": "23",
+            "rating": 5,
+            "review_text": "<p>PERFECT FOR COLLEGE STUDENTS!! Now that i am doing school full time i feel like im constantly on my computer. I even got a compliment yesterday at a coffeeshop about the glasses. I knew i had to leave a review!</p>",
+            "product_reference": "the-aero-tortoise-ion-clear",
+            "product_title_override": "",
+            "product_price_override": "",
+            "product_compare_price_override": "",
+            "purchase_date_text": "Purchased on March 15",
+            "custom_html": "",
+            "custom_html_position": "below_product"
+          }
+        },
+        "review_4J96yR": {
           "type": "review",
           "settings": {
             "customer_image": "shopify://shop_images/IMG_2074.heic",
@@ -1606,7 +1589,7 @@
             "custom_html_position": "below_product"
           }
         },
-        "review_ACaJ8j": {
+        "review_k8F6dD": {
           "type": "review",
           "settings": {
             "customer_image": "shopify://shop_images/IMG_6546.heic",
@@ -1623,7 +1606,7 @@
             "custom_html_position": "below_product"
           }
         },
-        "review_64PRgq": {
+        "review_hQyrNX": {
           "type": "review",
           "settings": {
             "customer_image": "shopify://shop_images/IMG_1787.heic",
@@ -1640,7 +1623,24 @@
             "custom_html_position": "below_product"
           }
         },
-        "review_KgYcVz": {
+        "review_jCWc3t": {
+          "type": "review",
+          "settings": {
+            "customer_image": "shopify://shop_images/IMG_6158.heic",
+            "customer_name": "Karen V.",
+            "customer_age": "47",
+            "rating": 5,
+            "review_text": "<p>Im a Psychiatric nurse practitioner  and i finally found a brand of blue light blockers that i can confidently recommend to patients. Highly recommend</p>",
+            "product_reference": "the-aero-tortoise-ion-clear",
+            "product_title_override": "",
+            "product_price_override": "",
+            "product_compare_price_override": "",
+            "purchase_date_text": "Purchased on September 12",
+            "custom_html": "",
+            "custom_html_position": "below_product"
+          }
+        },
+        "review_6MeEjd": {
           "type": "review",
           "settings": {
             "customer_image": "shopify://shop_images/IMG_1785.heic",
@@ -1657,7 +1657,7 @@
             "custom_html_position": "below_product"
           }
         },
-        "review_tx4Dw4": {
+        "review_akUXLR": {
           "type": "review",
           "settings": {
             "customer_image": "shopify://shop_images/IMG_1826.heic",
@@ -1676,16 +1676,16 @@
         }
       },
       "block_order": [
-        "review_AfTqE3",
-        "review_W83iYz",
-        "review_HdicH4",
-        "review_aTzNcb",
-        "review_JN8wrJ",
-        "review_DdVHND",
-        "review_ACaJ8j",
-        "review_64PRgq",
-        "review_KgYcVz",
-        "review_tx4Dw4"
+        "review_H79986",
+        "review_JrxPG4",
+        "review_zWy4Cf",
+        "review_h7NA3X",
+        "review_4J96yR",
+        "review_k8F6dD",
+        "review_hQyrNX",
+        "review_jCWc3t",
+        "review_6MeEjd",
+        "review_akUXLR"
       ],
       "custom_css": [
         ".section-template--22818132590628__customer_review_slider_Ag9aVg .crs-card {height: 580px;}"
@@ -1694,13 +1694,13 @@
       "settings": {
         "use_theme_colors": false,
         "use_section_gradient": false,
-        "background_color": "#620a0a",
+        "background_color": "#651111",
         "gradient_enabled": false,
         "gradient_background": "linear-gradient(180deg, rgba(94, 201, 255, 1), rgba(9, 138, 203, 1) 100%)",
         "padding_top_desktop": 80,
         "padding_bottom_desktop": 80,
-        "padding_top_mobile": 0,
-        "padding_bottom_mobile": 0,
+        "padding_top_mobile": 32,
+        "padding_bottom_mobile": 32,
         "heading_before": "",
         "highlighted_text": "",
         "heading_after": "",
@@ -3419,7 +3419,7 @@
     "main",
     "featured_collection_DjG6xX",
     "image_banner_YrVpd4",
-    "customer_review_slider_KH6Fgq",
+    "customer_review_slider_hWVU3B",
     "hero_benefits_L86ixD",
     "us_vs_them_tqCyr8",
     "icon_benefit_list_aFqRJt",
