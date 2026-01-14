@@ -29,10 +29,20 @@
   {%- if frame_products.size == 0 -%}
     {%- comment -%} Debug message if no products found in metafield {%- endcomment -%}
     {%- if block.settings.show_debug -%}
+      {%- liquid
+        assign metafield_exists = false
+        if frame_selector_metafield != blank
+          assign metafield_exists = true
+        endif
+        assign value_exists = false
+        if frame_selector_metafield.value != blank
+          assign value_exists = true
+        endif
+      -%}
       <div style="padding: 20px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; margin: 10px 0;">
         <p style="margin: 0; color: #856404;"><strong>Frame Selector Debug:</strong> No frame products found in metafield.</p>
         <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Please add products to the <strong>custom.frame_selector</strong> metafield for this product.</p>
-        <p style="margin: 5px 0 0 0; color: #856404; font-size: 11px;">Metafield exists: {{ frame_selector_metafield != blank }}, Value exists: {{ frame_selector_metafield.value != blank }}, Products found: {{ frame_products.size }}</p>
+        <p style="margin: 5px 0 0 0; color: #856404; font-size: 11px;">Metafield exists: {{ metafield_exists }}, Value exists: {{ value_exists }}, Products found: {{ frame_products.size }}</p>
       </div>
     {%- endif -%}
   {%- else -%}
