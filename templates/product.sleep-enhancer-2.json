@@ -197,7 +197,6 @@
         },
         "frame_selector_UaGN8T": {
           "type": "frame_selector",
-          "disabled": true,
           "settings": {
             "heading": "Choose your frame",
             "heading_font_size_desktop": 24,
