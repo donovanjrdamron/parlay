@@ -31,6 +31,8 @@
 
   if block.settings.placeholder_1_image != blank
     assign bundle1_image = block.settings.placeholder_1_image
+  elsif product.metafields.custom.bundle1_image != blank
+    assign bundle1_image = product.metafields.custom.bundle1_image
   elsif product_1.featured_image
     assign bundle1_image = product_1.featured_image
   endif
