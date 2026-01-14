@@ -148,31 +148,51 @@
     <div class="frame-selector-grid">
       {%- for frame_product in frame_products -%}
         {%- liquid
-          assign is_selected = false
-          if frame_product.id == current_product.id
-            assign is_selected = true
+          # Extract base frame name from current product
+          assign current_frame_name = current_product.title
+          if current_product.title contains '('
+            assign current_title_parts = current_product.title | split: '('
+            assign current_frame_name = current_title_parts[0] | strip
+          endif
+          assign current_title_words = current_frame_name | split: ' '
+          if current_title_words.size >= 2
+            assign current_base_name = current_title_words[0] | append: ' ' | append: current_title_words[1]
+          else
+            assign current_base_name = current_frame_name
           endif
           
-          # Extract frame name from product title
-          # Handle formats like "The Aero Black (Sleep enhancer lens)" -> "The Aero"
+          # Extract base frame name from frame product
           assign frame_display_name = frame_product.title
-          
-          # Remove anything in parentheses
           if frame_product.title contains '('
             assign title_parts = frame_product.title | split: '('
             assign frame_display_name = title_parts[0] | strip
           endif
-          
-          # Extract just the frame name (remove color/variant info)
-          # "The Aero Black" -> "The Aero"
           assign title_words = frame_display_name | split: ' '
           if title_words.size >= 2
-            assign frame_display_name = title_words[0] | append: ' ' | append: title_words[1]
+            assign frame_base_name = title_words[0] | append: ' ' | append: title_words[1]
+          else
+            assign frame_base_name = frame_display_name
           endif
           
+          # Check if current product matches this frame (by base name or exact ID)
+          assign is_selected = false
+          if frame_product.id == current_product.id
+            assign is_selected = true
+          elsif current_base_name == frame_base_name
+            assign is_selected = true
+          endif
+          
+          # Use current product's image if it matches this frame, otherwise use frame product's image
           assign frame_image = frame_product.featured_image
-          if frame_image == blank
-            assign frame_image = frame_product.images.first
+          if is_selected
+            assign frame_image = current_product.featured_image
+            if frame_image == blank
+              assign frame_image = current_product.images.first
+            endif
+          else
+            if frame_image == blank
+              assign frame_image = frame_product.images.first
+            endif
           endif
         -%}
         
