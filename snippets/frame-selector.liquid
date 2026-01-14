@@ -17,9 +17,6 @@
     assign lens_type = 'everyday lens'
   endif
   
-  # Frame names in display order
-  assign frame_names = 'The Aero,The Monaco,The Origin' | split: ','
-  
   # Find products with same lens type for each frame
   assign aero_product = null
   assign monaco_product = null
@@ -27,22 +24,42 @@
   assign frame_products = blank | split: ''
   
   if lens_type != blank
-    # Search through all products to find matching frames
-    for collection_product in collections.all.products
-      # Check if product has the same lens type
-      if collection_product.tags contains lens_type
-        # Check which frame this product matches
-        assign product_title_lower = collection_product.title | downcase
-        
-        if product_title_lower contains 'aero' and aero_product == null
-          assign aero_product = collection_product
-        elsif product_title_lower contains 'monaco' and monaco_product == null
-          assign monaco_product = collection_product
-        elsif product_title_lower contains 'origin' and origin_product == null
-          assign origin_product = collection_product
+    # Try multiple methods to find products
+    # Method 1: Search through collections.all.products if available
+    if collections.all.products.size > 0
+      for collection_product in collections.all.products
+        if collection_product.tags contains lens_type
+          assign product_title_lower = collection_product.title | downcase
+          
+          if product_title_lower contains 'aero' and aero_product == null
+            assign aero_product = collection_product
+          elsif product_title_lower contains 'monaco' and monaco_product == null
+            assign monaco_product = collection_product
+          elsif product_title_lower contains 'origin' and origin_product == null
+            assign origin_product = collection_product
+          endif
         endif
-      endif
-    endfor
+      endfor
+    endif
+    
+    # Method 2: Search through product collections if Method 1 didn't work
+    if aero_product == null or monaco_product == null or origin_product == null
+      for collection in collections
+        for collection_product in collection.products
+          if collection_product.tags contains lens_type
+            assign product_title_lower = collection_product.title | downcase
+            
+            if product_title_lower contains 'aero' and aero_product == null
+              assign aero_product = collection_product
+            elsif product_title_lower contains 'monaco' and monaco_product == null
+              assign monaco_product = collection_product
+            elsif product_title_lower contains 'origin' and origin_product == null
+              assign origin_product = collection_product
+            endif
+          endif
+        endfor
+      endfor
+    endif
     
     # Build frame_products array in display order
     if aero_product != null
@@ -57,8 +74,23 @@
   endif
 -%}
 
+{%- comment -%} Debug: Show block even if no products found to help troubleshoot {%- endcomment -%}
+<div class="frame-selector frame-selector-{{ block_id }}" {{ block.shopify_attributes }}>
+  {%- if lens_type == blank -%}
+    {%- comment -%} Debug message if no lens type found {%- endcomment -%}
+    <div style="padding: 20px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; margin: 10px 0;">
+      <p style="margin: 0; color: #856404;"><strong>Frame Selector Debug:</strong> No lens type detected. Current product tags: {{ current_product.tags | join: ', ' }}</p>
+      <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Make sure your product has either "sleep enhancer lens" or "everyday lens" tag.</p>
+    </div>
+  {%- elsif frame_products.size == 0 -%}
+    {%- comment -%} Debug message if no frame products found {%- endcomment -%}
+    <div style="padding: 20px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; margin: 10px 0;">
+      <p style="margin: 0; color: #856404;"><strong>Frame Selector Debug:</strong> Found lens type "{{ lens_type }}" but no matching frame products found.</p>
+      <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Looking for products with tags containing "{{ lens_type }}" and titles containing "Aero", "Monaco", or "Origin".</p>
+    </div>
+  {%- endif -%}
+
 {%- if lens_type != blank and frame_products.size > 0 -%}
-  <div class="frame-selector frame-selector-{{ block_id }}" {{ block.shopify_attributes }}>
     {%- style -%}
       .frame-selector-{{ block_id }} {
         margin-top: {{ block.settings.margin_top }}px;
@@ -217,5 +249,5 @@
         </a>
       {%- endfor -%}
     </div>
-  </div>
 {%- endif -%}
+</div>
