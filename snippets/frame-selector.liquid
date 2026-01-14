@@ -9,23 +9,18 @@
   assign heading = block.settings.heading | default: "Choose your frame"
   assign current_product = product
   
-  # Get frame products from metafield
+  # Get frame products from metafield (Product List type)
   assign frame_selector_metafield = current_product.metafields.custom.frame_selector
   assign frame_products = blank | split: ''
   
-  # Handle different metafield types (list of products or single product)
+  # Handle product list metafield
   if frame_selector_metafield != blank
-    # If it's a list of products
-    if frame_selector_metafield.value.size > 0
-      for frame_product in frame_selector_metafield.value
-        if frame_product != blank
-          assign frame_products = frame_products | push: frame_product
-        endif
-      endfor
-    # If it's a single product reference
-    elsif frame_selector_metafield.value != blank
-      assign frame_products = frame_products | push: frame_selector_metafield.value
-    endif
+    # For product list metafields, iterate directly over .value
+    for frame_product in frame_selector_metafield.value
+      if frame_product != blank
+        assign frame_products = frame_products | push: frame_product
+      endif
+    endfor
   endif
 -%}
 
@@ -37,7 +32,7 @@
       <div style="padding: 20px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; margin: 10px 0;">
         <p style="margin: 0; color: #856404;"><strong>Frame Selector Debug:</strong> No frame products found in metafield.</p>
         <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Please add products to the <strong>custom.frame_selector</strong> metafield for this product.</p>
-        <p style="margin: 5px 0 0 0; color: #856404; font-size: 11px;">Metafield value: {{ frame_selector_metafield | json }}</p>
+        <p style="margin: 5px 0 0 0; color: #856404; font-size: 11px;">Metafield exists: {{ frame_selector_metafield != blank }}, Value exists: {{ frame_selector_metafield.value != blank }}, Products found: {{ frame_products.size }}</p>
       </div>
     {%- endif -%}
   {%- else -%}
