@@ -9,13 +9,25 @@
   assign heading = block.settings.heading | default: "Choose your frame"
   assign current_product = product
   
-  # Determine lens type from current product tags
+  # Determine lens type from current product tags (flexible matching)
   assign lens_type = null
-  if current_product.tags contains 'sleep enhancer lens'
-    assign lens_type = 'sleep enhancer lens'
-  elsif current_product.tags contains 'everyday lens'
-    assign lens_type = 'everyday lens'
-  endif
+  assign lens_type_tag = null
+  
+  # Check all product tags for lens type indicators
+  for tag in current_product.tags
+    assign tag_lower = tag | downcase
+    # Check for sleep enhancer variations
+    if tag_lower contains 'sleep enhancer' or tag_lower contains 'sleep-enhancer'
+      assign lens_type = 'sleep enhancer lens'
+      assign lens_type_tag = tag
+      break
+    # Check for everyday lens variations
+    elsif tag_lower contains 'everyday lens' or tag_lower contains 'everyday-lens' or tag_lower == 'everyday'
+      assign lens_type = 'everyday lens'
+      assign lens_type_tag = tag
+      break
+    endif
+  endfor
   
   # Find products with same lens type for each frame
   assign aero_product = null
@@ -28,7 +40,24 @@
     # Method 1: Search through collections.all.products if available
     if collections.all.products.size > 0
       for collection_product in collections.all.products
-        if collection_product.tags contains lens_type
+        # Flexible tag matching - check if product has matching lens type tag
+        assign has_matching_lens = false
+        for tag in collection_product.tags
+          assign tag_lower = tag | downcase
+          if lens_type == 'sleep enhancer lens'
+            if tag_lower contains 'sleep enhancer' or tag_lower contains 'sleep-enhancer'
+              assign has_matching_lens = true
+              break
+            endif
+          elsif lens_type == 'everyday lens'
+            if tag_lower contains 'everyday lens' or tag_lower contains 'everyday-lens' or tag_lower == 'everyday'
+              assign has_matching_lens = true
+              break
+            endif
+          endif
+        endfor
+        
+        if has_matching_lens
           assign product_title_lower = collection_product.title | downcase
           
           if product_title_lower contains 'aero' and aero_product == null
@@ -46,7 +75,24 @@
     if aero_product == null or monaco_product == null or origin_product == null
       for collection in collections
         for collection_product in collection.products
-          if collection_product.tags contains lens_type
+          # Flexible tag matching
+          assign has_matching_lens = false
+          for tag in collection_product.tags
+            assign tag_lower = tag | downcase
+            if lens_type == 'sleep enhancer lens'
+              if tag_lower contains 'sleep enhancer' or tag_lower contains 'sleep-enhancer'
+                assign has_matching_lens = true
+                break
+              endif
+            elsif lens_type == 'everyday lens'
+              if tag_lower contains 'everyday lens' or tag_lower contains 'everyday-lens' or tag_lower == 'everyday'
+                assign has_matching_lens = true
+                break
+              endif
+            endif
+          endfor
+          
+          if has_matching_lens
             assign product_title_lower = collection_product.title | downcase
             
             if product_title_lower contains 'aero' and aero_product == null
