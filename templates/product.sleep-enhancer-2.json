@@ -252,7 +252,7 @@
             "frame_name_font_weight": 500,
             "frame_text_color": "#ffffff",
             "margin_top": 20,
-            "margin_bottom": 20,
+            "margin_bottom": 44,
             "show_debug": false
           }
         },
