@@ -161,7 +161,7 @@
             assign current_base_name = current_frame_name
           endif
           
-          # Extract base frame name from frame product
+          # Extract base frame name from frame product (without color)
           assign frame_display_name = frame_product.title
           if frame_product.title contains '('
             assign title_parts = frame_product.title | split: '('
@@ -170,6 +170,8 @@
           assign title_words = frame_display_name | split: ' '
           if title_words.size >= 2
             assign frame_base_name = title_words[0] | append: ' ' | append: title_words[1]
+            # Use base name for display (without color)
+            assign frame_display_name = frame_base_name
           else
             assign frame_base_name = frame_display_name
           endif
