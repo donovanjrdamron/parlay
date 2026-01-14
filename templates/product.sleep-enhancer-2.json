@@ -228,6 +228,7 @@
         },
         "aero_color_selector_QKDRRE": {
           "type": "aero_color_selector",
+          "disabled": true,
           "settings": {
             "heading": "Choose your color",
             "heading_font_size_desktop": 20,
