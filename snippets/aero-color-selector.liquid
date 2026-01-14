@@ -21,8 +21,9 @@
   assign current_aero_variant = null
   
   if is_aero
-    # Search through all products to find Aero variants
-    if collections.all.products.size > 0
+    # Search through collections to find Aero variants
+    # Method 1: Try collections.all if available
+    if collections.all != blank and collections.all.products.size > 0
       for collection_product in collections.all.products
         assign product_title_lower = collection_product.title | downcase
         if product_title_lower contains 'aero'
@@ -34,10 +35,35 @@
       endfor
     endif
     
-    # If we didn't find current product, check if it's an Aero
-    if current_aero_variant == null and is_aero
-      assign current_aero_variant = current_product
-      # Make sure current product is in the list
+    # Method 2: Search through all collections if Method 1 didn't work or found nothing
+    if aero_variants.size == 0
+      for collection in collections
+        unless collection.handle == 'all'
+          for collection_product in collection.products
+            assign product_title_lower = collection_product.title | downcase
+            if product_title_lower contains 'aero'
+              # Check if we already have this product
+              assign already_added = false
+              for existing_variant in aero_variants
+                if existing_variant.id == collection_product.id
+                  assign already_added = true
+                  break
+                endif
+              endfor
+              unless already_added
+                assign aero_variants = aero_variants | push: collection_product
+                if collection_product.id == current_product.id
+                  assign current_aero_variant = collection_product
+                endif
+              endunless
+            endif
+          endfor
+        endunless
+      endfor
+    endif
+    
+    # Make sure current product is in the list if it's an Aero
+    if is_aero
       assign found_in_list = false
       for variant in aero_variants
         if variant.id == current_product.id
@@ -52,7 +78,35 @@
   endif
 -%}
 
-{%- if is_aero and aero_variants.size > 1 -%}
+{%- comment -%} Debug: Always show block container to help troubleshoot {%- endcomment -%}
+<div class="aero-color-selector aero-color-selector-{{ block_id }}" {{ block.shopify_attributes }}>
+  {%- if is_aero == false -%}
+    {%- if block.settings.show_debug -%}
+      <div style="padding: 20px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; margin: 10px 0;">
+        <p style="margin: 0; color: #856404;"><strong>Aero Color Selector Debug:</strong> Current product is not an Aero product.</p>
+        <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Product title: "{{ current_product.title }}"</p>
+        <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">This block only shows on Aero products.</p>
+      </div>
+    {%- endif -%}
+  {%- elsif aero_variants.size == 0 -%}
+    {%- if block.settings.show_debug -%}
+      <div style="padding: 20px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; margin: 10px 0;">
+        <p style="margin: 0; color: #856404;"><strong>Aero Color Selector Debug:</strong> Found Aero product but no variants found.</p>
+        <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Product title: "{{ current_product.title }}"</p>
+        <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Searched through collections but found 0 Aero variants.</p>
+      </div>
+    {%- endif -%}
+  {%- elsif aero_variants.size == 1 -%}
+    {%- if block.settings.show_debug -%}
+      <div style="padding: 20px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; margin: 10px 0;">
+        <p style="margin: 0; color: #856404;"><strong>Aero Color Selector Debug:</strong> Found {{ aero_variants.size }} Aero variant(s).</p>
+        <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Need at least 2 variants to show selector. Found: {{ aero_variants.size }}</p>
+        {%- for variant in aero_variants -%}
+          <p style="margin: 5px 0 0 0; color: #856404; font-size: 11px;">- {{ variant.title }}</p>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  {%- elsif aero_variants.size > 1 -%}
   <div class="aero-color-selector aero-color-selector-{{ block_id }}" {{ block.shopify_attributes }}>
     {%- style -%}
       .aero-color-selector-{{ block_id }} {
