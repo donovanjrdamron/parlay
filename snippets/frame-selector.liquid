@@ -1,0 +1,221 @@
+{%- comment -%}
+  Frame Selector Block
+  Allows customers to choose their frame while maintaining the same lens type
+  Filters products by lens type tags: "sleep enhancer lens" or "everyday lens"
+{%- endcomment -%}
+
+{%- liquid
+  assign block_id = block.id
+  assign heading = block.settings.heading | default: "Choose your frame"
+  assign current_product = product
+  
+  # Determine lens type from current product tags
+  assign lens_type = null
+  if current_product.tags contains 'sleep enhancer lens'
+    assign lens_type = 'sleep enhancer lens'
+  elsif current_product.tags contains 'everyday lens'
+    assign lens_type = 'everyday lens'
+  endif
+  
+  # Frame names in display order
+  assign frame_names = 'The Aero,The Monaco,The Origin' | split: ','
+  
+  # Find products with same lens type for each frame
+  assign aero_product = null
+  assign monaco_product = null
+  assign origin_product = null
+  assign frame_products = blank | split: ''
+  
+  if lens_type != blank
+    # Search through all products to find matching frames
+    for collection_product in collections.all.products
+      # Check if product has the same lens type
+      if collection_product.tags contains lens_type
+        # Check which frame this product matches
+        assign product_title_lower = collection_product.title | downcase
+        
+        if product_title_lower contains 'aero' and aero_product == null
+          assign aero_product = collection_product
+        elsif product_title_lower contains 'monaco' and monaco_product == null
+          assign monaco_product = collection_product
+        elsif product_title_lower contains 'origin' and origin_product == null
+          assign origin_product = collection_product
+        endif
+      endif
+    endfor
+    
+    # Build frame_products array in display order
+    if aero_product != null
+      assign frame_products = frame_products | push: aero_product
+    endif
+    if monaco_product != null
+      assign frame_products = frame_products | push: monaco_product
+    endif
+    if origin_product != null
+      assign frame_products = frame_products | push: origin_product
+    endif
+  endif
+-%}
+
+{%- if lens_type != blank and frame_products.size > 0 -%}
+  <div class="frame-selector frame-selector-{{ block_id }}" {{ block.shopify_attributes }}>
+    {%- style -%}
+      .frame-selector-{{ block_id }} {
+        margin-top: {{ block.settings.margin_top }}px;
+        margin-bottom: {{ block.settings.margin_bottom }}px;
+      }
+      
+      .frame-selector-{{ block_id }} .frame-selector-heading {
+        font-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+        font-size: {{ block.settings.heading_font_size_mobile }}px;
+        font-weight: {{ block.settings.heading_font_weight }};
+        color: {{ block.settings.heading_color }};
+        margin: 0 0 {{ block.settings.heading_margin_bottom }}px 0;
+        text-align: {{ block.settings.heading_alignment }};
+      }
+      
+      @media screen and (min-width: 750px) {
+        .frame-selector-{{ block_id }} .frame-selector-heading {
+          font-size: {{ block.settings.heading_font_size_desktop }}px;
+        }
+      }
+      
+      .frame-selector-{{ block_id }} .frame-selector-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: {{ block.settings.frame_gap }}px;
+        margin-top: {{ block.settings.grid_margin_top }}px;
+      }
+      
+      @media screen and (max-width: 749px) {
+        .frame-selector-{{ block_id }} .frame-selector-grid {
+          gap: {{ block.settings.frame_gap_mobile }}px;
+        }
+      }
+      
+      .frame-selector-{{ block_id }} .frame-item {
+        position: relative;
+        aspect-ratio: 1;
+        border-radius: {{ block.settings.frame_border_radius }}px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: {{ block.settings.frame_background }};
+        border: {{ block.settings.frame_border_width }}px solid {{ block.settings.frame_border_color }};
+        text-decoration: none;
+        display: block;
+      }
+      
+      .frame-selector-{{ block_id }} .frame-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      
+      .frame-selector-{{ block_id }} .frame-item.frame-item-selected {
+        border: {{ block.settings.selected_border_width }}px solid {{ block.settings.selected_border_color }};
+        box-shadow: 0 0 0 {{ block.settings.selected_border_width }}px {{ block.settings.selected_border_color }};
+      }
+      
+      .frame-selector-{{ block_id }} .frame-item-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      
+      .frame-selector-{{ block_id }} .frame-item-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+        padding: 12px;
+        color: {{ block.settings.frame_text_color }};
+        font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+        font-size: {{ block.settings.frame_name_font_size_mobile }}px;
+        font-weight: {{ block.settings.frame_name_font_weight }};
+      }
+      
+      @media screen and (min-width: 750px) {
+        .frame-selector-{{ block_id }} .frame-item-overlay {
+          font-size: {{ block.settings.frame_name_font_size_desktop }}px;
+          padding: 16px;
+        }
+      }
+      
+      .frame-selector-{{ block_id }} .frame-item-selected-label {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: {{ block.settings.selected_badge_background }};
+        color: {{ block.settings.selected_badge_text_color }};
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+      }
+    {%- endstyle -%}
+    
+    {%- if heading != blank -%}
+      <h3 class="frame-selector-heading">{{ heading }}</h3>
+    {%- endif -%}
+    
+    <div class="frame-selector-grid">
+      {%- for frame_product in frame_products limit: 3 -%}
+        {%- liquid
+          assign is_selected = false
+          if frame_product.id == current_product.id
+            assign is_selected = true
+          endif
+          
+          # Extract frame name from product title
+          # Handle formats like "The Aero Black (Sleep enhancer lens)" -> "The Aero"
+          assign frame_display_name = frame_product.title
+          
+          # Remove anything in parentheses
+          if frame_product.title contains '('
+            assign title_parts = frame_product.title | split: '('
+            assign frame_display_name = title_parts[0] | strip
+          endif
+          
+          # Extract just the frame name (remove color/variant info)
+          # "The Aero Black" -> "The Aero"
+          assign title_words = frame_display_name | split: ' '
+          if title_words.size >= 2
+            assign frame_display_name = title_words[0] | append: ' ' | append: title_words[1]
+          endif
+          
+          assign frame_image = frame_product.featured_image
+          if frame_image == blank
+            assign frame_image = frame_product.images.first
+          endif
+        -%}
+        
+        <a 
+          href="{{ frame_product.url }}" 
+          class="frame-item{% if is_selected %} frame-item-selected{% endif %}"
+          data-frame-product-id="{{ frame_product.id }}"
+        >
+          {%- if is_selected -%}
+            <span class="frame-item-selected-label">Selected</span>
+          {%- endif -%}
+          
+          {%- if frame_image != blank -%}
+            {{ frame_image | image_url: width: 400 | image_tag: loading: 'lazy', alt: frame_display_name, class: 'frame-item-image' }}
+          {%- else -%}
+            <div class="frame-item-image" style="background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999;">
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+          {%- endif -%}
+          
+          <div class="frame-item-overlay">
+            {{ frame_display_name }}
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
