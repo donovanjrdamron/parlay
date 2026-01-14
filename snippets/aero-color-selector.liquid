@@ -20,23 +20,95 @@
   assign aero_variants = blank | split: ''
   assign current_aero_variant = null
   
-  if is_aero
-    # Search through collections to find Aero variants
-    # Method 1: Try collections.all if available
-    if collections.all != blank and collections.all.products.size > 0
+  # Method 0: Try metafield first (most reliable - like frame selector)
+  assign aero_colors_metafield = current_product.metafields.custom.aero_color_selector
+  if aero_colors_metafield != blank and aero_colors_metafield.value != blank
+    assign aero_variants = aero_colors_metafield.value
+    # Find current product in the list
+    for variant_product in aero_variants
+      if variant_product.id == current_product.id
+        assign current_aero_variant = variant_product
+        break
+      endif
+    endfor
+  endif
+  
+  # Only try auto-finding if metafield didn't work
+  if is_aero and aero_variants.size == 0
+    # Method 1: Search through current product's collections first (most reliable)
+    for product_collection in current_product.collections
+      for collection_product in product_collection.products
+        assign product_title_lower = collection_product.title | downcase
+        if product_title_lower contains 'aero'
+          # Check if we already have this product
+          assign already_added = false
+          for existing_variant in aero_variants
+            if existing_variant.id == collection_product.id
+              assign already_added = true
+              break
+            endif
+          endfor
+          unless already_added
+            assign aero_variants = aero_variants | push: collection_product
+            if collection_product.id == current_product.id
+              assign current_aero_variant = collection_product
+            endif
+          endunless
+        endif
+      endfor
+    endfor
+    
+    # Method 2: Try collections.all if available and we haven't found enough
+    if aero_variants.size < 3 and collections.all != blank and collections.all.products.size > 0
       for collection_product in collections.all.products
         assign product_title_lower = collection_product.title | downcase
         if product_title_lower contains 'aero'
-          assign aero_variants = aero_variants | push: collection_product
-          if collection_product.id == current_product.id
-            assign current_aero_variant = collection_product
-          endif
+          # Check if we already have this product
+          assign already_added = false
+          for existing_variant in aero_variants
+            if existing_variant.id == collection_product.id
+              assign already_added = true
+              break
+            endif
+          endfor
+          unless already_added
+            assign aero_variants = aero_variants | push: collection_product
+            if collection_product.id == current_product.id
+              assign current_aero_variant = collection_product
+            endif
+          endunless
         endif
       endfor
     endif
     
-    # Method 2: Search through all collections if Method 1 didn't work or found nothing
-    if aero_variants.size == 0
+    # Method 3: Try to find products by handle using all_products
+    # Known Aero product handles (try common variations)
+    assign aero_handles = 'the-aero-black,the-aero-night-moss,the-aero-tortoise-ion-clear,the-aero-tortoise,the-aero-ion-clear' | split: ','
+    for handle in aero_handles
+      assign test_product = all_products[handle]
+      if test_product != blank
+        assign product_title_lower = test_product.title | downcase
+        if product_title_lower contains 'aero'
+          # Check if we already have this product
+          assign already_added = false
+          for existing_variant in aero_variants
+            if existing_variant.id == test_product.id
+              assign already_added = true
+              break
+            endif
+          endfor
+          unless already_added
+            assign aero_variants = aero_variants | push: test_product
+            if test_product.id == current_product.id
+              assign current_aero_variant = test_product
+            endif
+          endunless
+        endif
+      endif
+    endfor
+    
+    # Method 4: Search through all collections if we still haven't found enough
+    if aero_variants.size < 3
       for collection in collections
         unless collection.handle == 'all'
           for collection_product in collection.products
@@ -93,7 +165,17 @@
       <div style="padding: 20px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; margin: 10px 0;">
         <p style="margin: 0; color: #856404;"><strong>Aero Color Selector Debug:</strong> Found Aero product but no variants found.</p>
         <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Product title: "{{ current_product.title }}"</p>
-        <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Searched through collections but found 0 Aero variants.</p>
+        <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Product handle: "{{ current_product.handle }}"</p>
+        <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Product collections: {% for coll in current_product.collections %}{{ coll.handle }}{% unless forloop.last %}, {% endunless %}{% endfor %}</p>
+        {%- liquid
+          assign metafield_exists = false
+          if current_product.metafields.custom.aero_color_selector != blank
+            assign metafield_exists = true
+          endif
+        -%}
+        <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Metafield (custom.aero_color_selector) exists: {{ metafield_exists }}</p>
+        <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Searched through product collections, collections.all, all_products, and all collections but found 0 Aero variants.</p>
+        <p style="margin: 5px 0 0 0; color: #856404; font-size: 11px;"><strong>Solution:</strong> Add all Aero color products to the <strong>custom.aero_color_selector</strong> metafield (Product List type) for this product, similar to how the frame selector works.</p>
       </div>
     {%- endif -%}
   {%- elsif aero_variants.size == 1 -%}
