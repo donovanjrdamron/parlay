@@ -11,17 +11,11 @@
   
   # Get frame products from metafield (Product List type)
   assign frame_selector_metafield = current_product.metafields.custom.frame_selector
-  assign frame_products = blank | split: ''
+  assign frame_products = frame_selector_metafield.value
   
-  # Handle product list metafield
-  if frame_selector_metafield != blank
-    # For product list metafields, iterate directly over .value
-    # The value should be an array of product objects
-    for frame_product in frame_selector_metafield.value
-      if frame_product != blank
-        assign frame_products = frame_products | push: frame_product
-      endif
-    endfor
+  # If metafield is blank or empty, create empty array
+  if frame_selector_metafield == blank or frame_products == blank
+    assign frame_products = blank | split: ''
   endif
 -%}
 
