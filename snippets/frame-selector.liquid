@@ -1,7 +1,7 @@
 {%- comment -%}
   Frame Selector Block
-  Allows customers to choose their frame while maintaining the same lens type
-  Filters products by lens type tags: "sleep enhancer lens" or "everyday lens"
+  Displays frame options from product metafield
+  Uses custom.frame_selector metafield to manually select frame products
 {%- endcomment -%}
 
 {%- liquid
@@ -9,134 +9,38 @@
   assign heading = block.settings.heading | default: "Choose your frame"
   assign current_product = product
   
-  # Determine lens type from current product tags (flexible matching)
-  assign lens_type = null
-  assign lens_type_tag = null
-  
-  # Check all product tags for lens type indicators
-  for tag in current_product.tags
-    assign tag_lower = tag | downcase
-    # Check for sleep enhancer variations
-    if tag_lower contains 'sleep enhancer' or tag_lower contains 'sleep-enhancer'
-      assign lens_type = 'sleep enhancer lens'
-      assign lens_type_tag = tag
-      break
-    # Check for everyday lens variations
-    elsif tag_lower contains 'everyday lens' or tag_lower contains 'everyday-lens' or tag_lower == 'everyday'
-      assign lens_type = 'everyday lens'
-      assign lens_type_tag = tag
-      break
-    endif
-  endfor
-  
-  # Find products with same lens type for each frame
-  assign aero_product = null
-  assign monaco_product = null
-  assign origin_product = null
+  # Get frame products from metafield
+  assign frame_selector_metafield = current_product.metafields.custom.frame_selector
   assign frame_products = blank | split: ''
   
-  if lens_type != blank
-    # Try multiple methods to find products
-    # Method 1: Search through collections.all.products if available
-    if collections.all.products.size > 0
-      for collection_product in collections.all.products
-        # Flexible tag matching - check if product has matching lens type tag
-        assign has_matching_lens = false
-        for tag in collection_product.tags
-          assign tag_lower = tag | downcase
-          if lens_type == 'sleep enhancer lens'
-            if tag_lower contains 'sleep enhancer' or tag_lower contains 'sleep-enhancer'
-              assign has_matching_lens = true
-              break
-            endif
-          elsif lens_type == 'everyday lens'
-            if tag_lower contains 'everyday lens' or tag_lower contains 'everyday-lens' or tag_lower == 'everyday'
-              assign has_matching_lens = true
-              break
-            endif
-          endif
-        endfor
-        
-        if has_matching_lens
-          assign product_title_lower = collection_product.title | downcase
-          
-          if product_title_lower contains 'aero' and aero_product == null
-            assign aero_product = collection_product
-          elsif product_title_lower contains 'monaco' and monaco_product == null
-            assign monaco_product = collection_product
-          elsif product_title_lower contains 'origin' and origin_product == null
-            assign origin_product = collection_product
-          endif
+  # Handle different metafield types (list of products or single product)
+  if frame_selector_metafield != blank
+    # If it's a list of products
+    if frame_selector_metafield.value.size > 0
+      for frame_product in frame_selector_metafield.value
+        if frame_product != blank
+          assign frame_products = frame_products | push: frame_product
         endif
       endfor
-    endif
-    
-    # Method 2: Search through product collections if Method 1 didn't work
-    if aero_product == null or monaco_product == null or origin_product == null
-      for collection in collections
-        for collection_product in collection.products
-          # Flexible tag matching
-          assign has_matching_lens = false
-          for tag in collection_product.tags
-            assign tag_lower = tag | downcase
-            if lens_type == 'sleep enhancer lens'
-              if tag_lower contains 'sleep enhancer' or tag_lower contains 'sleep-enhancer'
-                assign has_matching_lens = true
-                break
-              endif
-            elsif lens_type == 'everyday lens'
-              if tag_lower contains 'everyday lens' or tag_lower contains 'everyday-lens' or tag_lower == 'everyday'
-                assign has_matching_lens = true
-                break
-              endif
-            endif
-          endfor
-          
-          if has_matching_lens
-            assign product_title_lower = collection_product.title | downcase
-            
-            if product_title_lower contains 'aero' and aero_product == null
-              assign aero_product = collection_product
-            elsif product_title_lower contains 'monaco' and monaco_product == null
-              assign monaco_product = collection_product
-            elsif product_title_lower contains 'origin' and origin_product == null
-              assign origin_product = collection_product
-            endif
-          endif
-        endfor
-      endfor
-    endif
-    
-    # Build frame_products array in display order
-    if aero_product != null
-      assign frame_products = frame_products | push: aero_product
-    endif
-    if monaco_product != null
-      assign frame_products = frame_products | push: monaco_product
-    endif
-    if origin_product != null
-      assign frame_products = frame_products | push: origin_product
+    # If it's a single product reference
+    elsif frame_selector_metafield.value != blank
+      assign frame_products = frame_products | push: frame_selector_metafield.value
     endif
   endif
 -%}
 
-{%- comment -%} Debug: Show block even if no products found to help troubleshoot {%- endcomment -%}
+{%- comment -%} Always show the block container, even if empty, for debugging {%- endcomment -%}
 <div class="frame-selector frame-selector-{{ block_id }}" {{ block.shopify_attributes }}>
-  {%- if lens_type == blank -%}
-    {%- comment -%} Debug message if no lens type found {%- endcomment -%}
-    <div style="padding: 20px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; margin: 10px 0;">
-      <p style="margin: 0; color: #856404;"><strong>Frame Selector Debug:</strong> No lens type detected. Current product tags: {{ current_product.tags | join: ', ' }}</p>
-      <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Make sure your product has either "sleep enhancer lens" or "everyday lens" tag.</p>
-    </div>
-  {%- elsif frame_products.size == 0 -%}
-    {%- comment -%} Debug message if no frame products found {%- endcomment -%}
-    <div style="padding: 20px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; margin: 10px 0;">
-      <p style="margin: 0; color: #856404;"><strong>Frame Selector Debug:</strong> Found lens type "{{ lens_type }}" but no matching frame products found.</p>
-      <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Looking for products with tags containing "{{ lens_type }}" and titles containing "Aero", "Monaco", or "Origin".</p>
-    </div>
-  {%- endif -%}
-
-{%- if lens_type != blank and frame_products.size > 0 -%}
+  {%- if frame_products.size == 0 -%}
+    {%- comment -%} Debug message if no products found in metafield {%- endcomment -%}
+    {%- if block.settings.show_debug -%}
+      <div style="padding: 20px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; margin: 10px 0;">
+        <p style="margin: 0; color: #856404;"><strong>Frame Selector Debug:</strong> No frame products found in metafield.</p>
+        <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Please add products to the <strong>custom.frame_selector</strong> metafield for this product.</p>
+        <p style="margin: 5px 0 0 0; color: #856404; font-size: 11px;">Metafield value: {{ frame_selector_metafield | json }}</p>
+      </div>
+    {%- endif -%}
+  {%- else -%}
     {%- style -%}
       .frame-selector-{{ block_id }} {
         margin-top: {{ block.settings.margin_top }}px;
@@ -160,7 +64,7 @@
       
       .frame-selector-{{ block_id }} .frame-selector-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat({{ frame_products.size }}, 1fr);
         gap: {{ block.settings.frame_gap }}px;
         margin-top: {{ block.settings.grid_margin_top }}px;
       }
@@ -242,7 +146,7 @@
     {%- endif -%}
     
     <div class="frame-selector-grid">
-      {%- for frame_product in frame_products limit: 3 -%}
+      {%- for frame_product in frame_products -%}
         {%- liquid
           assign is_selected = false
           if frame_product.id == current_product.id
@@ -295,5 +199,5 @@
         </a>
       {%- endfor -%}
     </div>
-{%- endif -%}
+  {%- endif -%}
 </div>
