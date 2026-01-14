@@ -263,7 +263,7 @@
             "layout_mode": "column",
             "product_2": "{{ block.settings.product_3.metafields.custom.bundle2.value }}",
             "product_3": "",
-            "placeholder_1_image": "{{ block.settings.product_3.metafields.custom.bundle1_image.value }}",
+            "placeholder_1_image": "{{ block.settings.product_2.metafields.custom.bundle1_image.value }}",
             "placeholder_2_image": "{{ block.settings.product_3.metafields.custom.bundle2_image.value }}",
             "bundle_1_label": "{{ block.settings.product_3.metafields.custom.bundle1_title.value }}",
             "bundle_2_label": "{{ block.settings.product_3.metafields.custom.bundle2_title.value }}",
