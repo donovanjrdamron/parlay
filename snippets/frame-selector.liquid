@@ -16,6 +16,7 @@
   # Handle product list metafield
   if frame_selector_metafield != blank
     # For product list metafields, iterate directly over .value
+    # The value should be an array of product objects
     for frame_product in frame_selector_metafield.value
       if frame_product != blank
         assign frame_products = frame_products | push: frame_product
@@ -43,6 +44,20 @@
         <p style="margin: 0; color: #856404;"><strong>Frame Selector Debug:</strong> No frame products found in metafield.</p>
         <p style="margin: 5px 0 0 0; color: #856404; font-size: 12px;">Please add products to the <strong>custom.frame_selector</strong> metafield for this product.</p>
         <p style="margin: 5px 0 0 0; color: #856404; font-size: 11px;">Metafield exists: {{ metafield_exists }}, Value exists: {{ value_exists }}, Products found: {{ frame_products.size }}</p>
+        {%- if frame_selector_metafield != blank -%}
+          {%- liquid
+            assign test_count = 0
+            for test_item in frame_selector_metafield.value
+              assign test_count = test_count | plus: 1
+            endfor
+          -%}
+          <p style="margin: 5px 0 0 0; color: #856404; font-size: 11px;">Items in metafield.value: {{ test_count }}</p>
+          {%- if test_count > 0 -%}
+            {%- for test_item in frame_selector_metafield.value limit: 1 -%}
+              <p style="margin: 5px 0 0 0; color: #856404; font-size: 11px;">First item ID: {{ test_item.id }}, Title: {{ test_item.title }}</p>
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endif -%}
       </div>
     {%- endif -%}
   {%- else -%}
