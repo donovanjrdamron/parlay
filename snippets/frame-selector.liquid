@@ -139,20 +139,6 @@
         }
       }
       
-      .frame-selector-{{ block_id }} .frame-item-selected-label {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        background: {{ block.settings.selected_badge_background }};
-        color: {{ block.settings.selected_badge_text_color }};
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
-      }
     {%- endstyle -%}
     
     {%- if heading != blank -%}
@@ -195,10 +181,6 @@
           class="frame-item{% if is_selected %} frame-item-selected{% endif %}"
           data-frame-product-id="{{ frame_product.id }}"
         >
-          {%- if is_selected -%}
-            <span class="frame-item-selected-label">Selected</span>
-          {%- endif -%}
-          
           {%- if frame_image != blank -%}
             {{ frame_image | image_url: width: 400 | image_tag: loading: 'lazy', alt: frame_display_name, class: 'frame-item-image' }}
           {%- else -%}
