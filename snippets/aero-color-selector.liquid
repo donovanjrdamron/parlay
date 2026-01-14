@@ -1,0 +1,206 @@
+{%- comment -%}
+  Aero Color Selector Block
+  Displays color swatches for Aero frame variants
+  Only shows on Aero products
+{%- endcomment -%}
+
+{%- liquid
+  assign block_id = block.id
+  assign heading = block.settings.heading | default: "Choose your color"
+  assign current_product = product
+  
+  # Check if current product is an Aero product
+  assign is_aero = false
+  assign current_title_lower = current_product.title | downcase
+  if current_title_lower contains 'aero'
+    assign is_aero = true
+  endif
+  
+  # Find all Aero color variants
+  assign aero_variants = blank | split: ''
+  assign current_aero_variant = null
+  
+  if is_aero
+    # Search through all products to find Aero variants
+    if collections.all.products.size > 0
+      for collection_product in collections.all.products
+        assign product_title_lower = collection_product.title | downcase
+        if product_title_lower contains 'aero'
+          assign aero_variants = aero_variants | push: collection_product
+          if collection_product.id == current_product.id
+            assign current_aero_variant = collection_product
+          endif
+        endif
+      endfor
+    endif
+    
+    # If we didn't find current product, check if it's an Aero
+    if current_aero_variant == null and is_aero
+      assign current_aero_variant = current_product
+      # Make sure current product is in the list
+      assign found_in_list = false
+      for variant in aero_variants
+        if variant.id == current_product.id
+          assign found_in_list = true
+          break
+        endif
+      endfor
+      unless found_in_list
+        assign aero_variants = aero_variants | push: current_product
+      endunless
+    endif
+  endif
+-%}
+
+{%- if is_aero and aero_variants.size > 1 -%}
+  <div class="aero-color-selector aero-color-selector-{{ block_id }}" {{ block.shopify_attributes }}>
+    {%- style -%}
+      .aero-color-selector-{{ block_id }} {
+        margin-top: {{ block.settings.margin_top }}px;
+        margin-bottom: {{ block.settings.margin_bottom }}px;
+      }
+      
+      .aero-color-selector-{{ block_id }} .color-selector-heading {
+        font-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+        font-size: {{ block.settings.heading_font_size_mobile }}px;
+        font-weight: {{ block.settings.heading_font_weight }};
+        color: {{ block.settings.heading_color }};
+        margin: 0 0 {{ block.settings.heading_margin_bottom }}px 0;
+        text-align: {{ block.settings.heading_alignment }};
+      }
+      
+      @media screen and (min-width: 750px) {
+        .aero-color-selector-{{ block_id }} .color-selector-heading {
+          font-size: {{ block.settings.heading_font_size_desktop }}px;
+        }
+      }
+      
+      .aero-color-selector-{{ block_id }} .color-swatches {
+        display: flex;
+        gap: {{ block.settings.swatch_gap }}px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: {{ block.settings.swatches_margin_top }}px;
+      }
+      
+      .aero-color-selector-{{ block_id }} .color-swatch-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: {{ block.settings.swatch_label_gap }}px;
+        text-decoration: none;
+        transition: transform 0.2s ease;
+      }
+      
+      .aero-color-selector-{{ block_id }} .color-swatch-item:hover {
+        transform: translateY(-2px);
+      }
+      
+      .aero-color-selector-{{ block_id }} .color-swatch {
+        width: {{ block.settings.swatch_size }}px;
+        height: {{ block.settings.swatch_size }}px;
+        border-radius: {{ block.settings.swatch_border_radius }}px;
+        border: {{ block.settings.swatch_border_width }}px solid {{ block.settings.swatch_border_color }};
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+        background: {{ block.settings.swatch_background }};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .aero-color-selector-{{ block_id }} .color-swatch:hover {
+        transform: scale(1.05);
+        border-color: {{ block.settings.swatch_hover_border_color }};
+      }
+      
+      .aero-color-selector-{{ block_id }} .color-swatch.swatch-selected {
+        border-color: {{ block.settings.selected_border_color }};
+        border-width: {{ block.settings.selected_border_width }}px;
+        box-shadow: 0 0 0 {{ block.settings.selected_border_width }}px {{ block.settings.selected_border_color }};
+      }
+      
+      .aero-color-selector-{{ block_id }} .color-swatch-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      
+      .aero-color-selector-{{ block_id }} .color-swatch-label {
+        font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+        font-size: {{ block.settings.swatch_label_font_size }}px;
+        font-weight: {{ block.settings.swatch_label_font_weight }};
+        color: {{ block.settings.swatch_label_color }};
+        text-align: center;
+        margin: 0;
+        line-height: 1.2;
+      }
+      
+      .aero-color-selector-{{ block_id }} .color-swatch-item.swatch-selected .color-swatch-label {
+        color: {{ block.settings.selected_label_color }};
+        font-weight: {{ block.settings.selected_label_font_weight }};
+      }
+    {%- endstyle -%}
+    
+    {%- if heading != blank -%}
+      <h3 class="color-selector-heading">{{ heading }}</h3>
+    {%- endif -%}
+    
+    <div class="color-swatches">
+      {%- for variant_product in aero_variants -%}
+        {%- liquid
+          assign is_selected = false
+          if variant_product.id == current_product.id
+            assign is_selected = true
+          endif
+          
+          # Extract color name from product title
+          # "The Aero Black" -> "Black"
+          # "The Aero Night Moss" -> "Night Moss"
+          # "The Aero Tortoise/ Ion-Clear" -> "Tortoise/ Ion-Clear"
+          assign color_name = variant_product.title
+          
+          # Remove anything in parentheses first
+          if variant_product.title contains '('
+            assign title_parts = variant_product.title | split: '('
+            assign color_name = title_parts[0] | strip
+          endif
+          
+          # Remove "The Aero" to get just the color
+          assign color_name = color_name | remove: 'The Aero' | strip
+          
+          # If nothing left after removal, use "Default"
+          if color_name == blank
+            assign color_name = 'Default'
+          endif
+          
+          # Get product image for swatch
+          assign swatch_image = variant_product.featured_image
+          if swatch_image == blank
+            assign swatch_image = variant_product.images.first
+          endif
+        -%}
+        
+        <a 
+          href="{{ variant_product.url }}" 
+          class="color-swatch-item{% if is_selected %} swatch-selected{% endif %}"
+          data-variant-product-id="{{ variant_product.id }}"
+        >
+          <div class="color-swatch{% if is_selected %} swatch-selected{% endif %}">
+            {%- if swatch_image != blank -%}
+              {{ swatch_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: color_name, class: 'color-swatch-image' }}
+            {%- else -%}
+              <div class="color-swatch-image" style="background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999;">
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+            {%- endif -%}
+          </div>
+          <p class="color-swatch-label">{{ color_name }}</p>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
