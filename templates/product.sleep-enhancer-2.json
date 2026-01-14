@@ -258,7 +258,6 @@
         },
         "product_bundle_CWRzMT": {
           "type": "product_bundle",
-          "disabled": true,
           "settings": {
             "bundle_layout": "one_and_two",
             "layout_mode": "column",
@@ -372,6 +371,7 @@
         },
         "product_bundle_TyQTmd": {
           "type": "product_bundle",
+          "disabled": true,
           "settings": {
             "bundle_layout": "one_and_two",
             "layout_mode": "row",
@@ -392,7 +392,7 @@
             "section_margin_bottom": 8,
             "bundles_gap": 8,
             "equal_card_width": true,
-            "custom_card_width": 300,
+            "custom_card_width": 210,
             "button_padding_vertical": 12,
             "button_padding_horizontal": 6,
             "bg_color": "#ffffff",
@@ -458,7 +458,7 @@
             "bundle_3_badge_padding_left": 12,
             "bundle_3_badge_padding_right": 12,
             "bundle_3_badge_full_width": false,
-            "label_font_size": 13,
+            "label_font_size": 14,
             "label_font_weight": 600,
             "label_color": "#000000",
             "active_label_color": "#000000",
