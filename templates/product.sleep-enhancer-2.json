@@ -299,7 +299,7 @@
             "bundle_1_label": "{{ block.settings.product_3.metafields.custom.bundle1_title.value }}",
             "bundle_2_label": "{{ block.settings.product_3.metafields.custom.bundle2_title.value }}",
             "bundle_3_label": "Bundle of 3",
-            "bundle_1_discount_type": "none",
+            "bundle_1_discount_type": "percentage",
             "bundle_1_discount_value": 0,
             "bundle_2_discount_type": "fixed",
             "bundle_2_discount_value": 50,
