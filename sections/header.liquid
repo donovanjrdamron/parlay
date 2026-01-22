@@ -131,8 +131,17 @@
       background: transparent !important;
     }
 
-    .section-header .header-wrapper,
-    .section-header .header-wrapper * {
+    .section-header .header-wrapper {
+      background: transparent !important;
+      background-color: transparent !important;
+    }
+
+    /* Exclude menu elements from transparent background */
+    .section-header .header-wrapper .header__inline-menu,
+    .section-header .header-wrapper .header__menu-item,
+    .section-header .header-wrapper .list-menu__item,
+    .section-header .header-wrapper .products-mega-menu,
+    .section-header .header-wrapper products-mega-menu {
       background: transparent !important;
       background-color: transparent !important;
     }
@@ -146,17 +155,30 @@
       background: {{ section.settings.menu_bg_color | default: '#ffffff' }} !important;
     }
 
+    /* Products mega menu - hide overlay and ensure body has background */
+    products-mega-menu .products-mega-menu__overlay {
+      display: none !important;
+    }
+
+    products-mega-menu .products-mega-menu__body,
+    products-mega-menu .products-mega-menu__body * {
+      background-color: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
+      background: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
+    }
+
     .mega-menu__content,
     .mega-menu__content *,
     .header__inline-menu .list-menu__item:hover .mega-menu,
-    .header__inline-menu .mega-menu {
+    .header__inline-menu .mega-menu,
+    .header__inline-menu details.mega-menu {
       background-color: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
       background: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
     }
 
     /* Dropdown menus */
     .header__inline-menu .list-menu__item details[open] > .header__submenu,
-    .header__inline-menu .header__submenu {
+    .header__inline-menu .header__submenu,
+    .header__inline-menu .header__submenu * {
       background-color: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
       background: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
     }
