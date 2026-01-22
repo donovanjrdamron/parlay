@@ -136,6 +136,30 @@
       background: transparent !important;
       background-color: transparent !important;
     }
+
+    /* Ensure menus have solid backgrounds on homepage */
+    .menu-drawer,
+    .menu-drawer *,
+    #menu-drawer,
+    #menu-drawer * {
+      background-color: {{ section.settings.menu_bg_color | default: '#ffffff' }} !important;
+      background: {{ section.settings.menu_bg_color | default: '#ffffff' }} !important;
+    }
+
+    .mega-menu__content,
+    .mega-menu__content *,
+    .header__inline-menu .list-menu__item:hover .mega-menu,
+    .header__inline-menu .mega-menu {
+      background-color: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
+      background: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
+    }
+
+    /* Dropdown menus */
+    .header__inline-menu .list-menu__item details[open] > .header__submenu,
+    .header__inline-menu .header__submenu {
+      background-color: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
+      background: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
+    }
   {% else %}
     .header-wrapper {
       background-color: rgba({{ section.settings.bg_color.red }}, {{ section.settings.bg_color.green }}, {{ section.settings.bg_color.blue }}, {{ section.settings.background_opacity | divided_by: 100.0 }}) !important;
