@@ -246,6 +246,22 @@
       position: relative;
     }
 
+    /* CRITICAL: Target by ID for maximum specificity */
+    #HeaderMenu-shop,
+    summary#HeaderMenu-shop,
+    summary#HeaderMenu-shop.header__menu-item,
+    summary#HeaderMenu-shop.header__menu-item--main,
+    summary#HeaderMenu-shop.list-menu__item,
+    summary#HeaderMenu-shop.link,
+    products-mega-menu summary#HeaderMenu-shop,
+    products-mega-menu summary#HeaderMenu-shop.header__menu-item,
+    .section-header summary#HeaderMenu-shop,
+    .header-wrapper summary#HeaderMenu-shop {
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
+    }
+
     /* CRITICAL: Ensure summary is ALWAYS transparent - MAXIMUM SPECIFICITY */
     products-mega-menu summary,
     products-mega-menu summary.header__menu-item,
