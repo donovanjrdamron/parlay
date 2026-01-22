@@ -80,7 +80,7 @@
     {% endif %}
     left: {{ section.settings.content_left_margin }}px;
     z-index: 3;
-    width: auto;
+    width: {{ section.settings.content_width }}px;
     max-width: {{ section.settings.content_max_width }}px;
     padding: {{ section.settings.content_padding_vertical }}px {{ section.settings.content_padding_horizontal }}px;
     text-align: {{ section.settings.text_alignment }} !important;
@@ -96,6 +96,9 @@
     color: {{ section.settings.heading_color }};
     text-align: {{ section.settings.text_alignment }} !important;
     width: 100%;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .video-hero-{{ section.id }} .video-hero__subheading {
@@ -107,6 +110,9 @@
     color: {{ section.settings.subheading_color }};
     text-align: {{ section.settings.text_alignment }} !important;
     width: 100%;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .video-hero-{{ section.id }} .video-hero__text {
@@ -117,6 +123,9 @@
     color: {{ section.settings.text_color }};
     text-align: {{ section.settings.text_alignment }} !important;
     width: 100%;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .video-hero-{{ section.id }} .video-hero__text p {
@@ -195,7 +204,7 @@
         transform: translateY({{ section.settings.content_vertical_offset_mobile }}px);
       {% endif %}
       left: {{ section.settings.content_left_margin_mobile }}px;
-      width: auto;
+      width: {{ section.settings.content_width_mobile }}px;
       max-width: calc(100% - {{ section.settings.content_left_margin_mobile | times: 2 }}px);
       padding: {{ section.settings.content_padding_vertical_mobile }}px {{ section.settings.content_padding_horizontal_mobile }}px;
     }
@@ -428,13 +437,36 @@
     },
     {
       "type": "range",
+      "id": "content_width",
+      "min": 200,
+      "max": 800,
+      "step": 25,
+      "unit": "px",
+      "label": "Content Width (Desktop)",
+      "default": 450,
+      "info": "Controls the width of the text box. Smaller values make text wrap to more lines."
+    },
+    {
+      "type": "range",
       "id": "content_max_width",
-      "min": 300,
+      "min": 200,
       "max": 1400,
       "step": 50,
       "unit": "px",
-      "label": "Content Max Width",
-      "default": 600
+      "label": "Content Max Width (Desktop)",
+      "default": 450,
+      "info": "Maximum width the content can expand to"
+    },
+    {
+      "type": "range",
+      "id": "content_width_mobile",
+      "min": 200,
+      "max": 600,
+      "step": 25,
+      "unit": "px",
+      "label": "Content Width (Mobile)",
+      "default": 300,
+      "info": "Controls the width of the text box on mobile"
     },
     {
       "type": "select",
