@@ -390,7 +390,7 @@
             "bundle_3_discount_type": "none",
             "bundle_3_discount_value": 0,
             "section_margin_top": 0,
-            "section_margin_bottom": 24,
+            "section_margin_bottom": 8,
             "bundles_gap": 8,
             "equal_card_width": true,
             "custom_card_width": 210,
@@ -482,6 +482,25 @@
             "custom_text_font_weight": 400,
             "custom_text_color": "#666666",
             "custom_text_active_color": "#000000"
+          }
+        },
+        "product_text_block_EhhbKe": {
+          "type": "product_text_block",
+          "settings": {
+            "text": "<p>Upgrade to the set for Day and Night protection</p>",
+            "highlight_text": "",
+            "text_color": "#333333",
+            "font_size_desktop": 16,
+            "font_size_mobile": 14,
+            "line_height_desktop": 1.6,
+            "line_height_mobile": 1.5,
+            "text_align": "center",
+            "font_weight": 400,
+            "highlight_color": "#620a0a",
+            "highlight_text_color": "#ffffff",
+            "highlight_padding": 2,
+            "margin_top": 0,
+            "margin_bottom": 15
           }
         },
         "buy_buttons": {
@@ -744,6 +763,7 @@
         "frame_selector_8ebqEb",
         "product_bundle_CWRzMT",
         "product_bundle_TyQTmd",
+        "product_text_block_EhhbKe",
         "buy_buttons",
         "product_flag_nqDbWz",
         "delivery_date_wiADyG",
