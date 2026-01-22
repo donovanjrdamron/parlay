@@ -107,7 +107,6 @@
       background-color: transparent !important;
       background: transparent !important;
       position: absolute;
-      top: 0;
       left: 0;
       right: 0;
       z-index: 101;
@@ -118,13 +117,13 @@
 
     .section-header {
       position: absolute !important;
-      top: 0;
       left: 0;
       right: 0;
       z-index: 101;
       margin-bottom: 0 !important;
       background: transparent !important;
       background-color: transparent !important;
+      top: var(--announcement-bar-height, 0px);
     }
 
     .section-header .header {
@@ -578,6 +577,17 @@
 
     setHeaderHeight() {
       document.documentElement.style.setProperty('--header-height', `${this.header.offsetHeight}px`);
+      
+      // Position header below announcement bar on homepage
+      if (window.location.pathname === '/' || window.location.pathname === '/index') {
+        const announcementBar = document.querySelector('.announcement-bar');
+        if (announcementBar) {
+          const announcementBarHeight = announcementBar.offsetHeight;
+          document.documentElement.style.setProperty('--announcement-bar-height', `${announcementBarHeight}px`);
+        } else {
+          document.documentElement.style.setProperty('--announcement-bar-height', '0px');
+        }
+      }
     }
 
     disconnectedCallback() {
@@ -673,6 +683,17 @@
 
     setHeaderHeight() {
       document.documentElement.style.setProperty('--header-height', `${this.header.offsetHeight}px`);
+      
+      // Position header below announcement bar on homepage
+      if (window.location.pathname === '/' || window.location.pathname === '/index') {
+        const announcementBar = document.querySelector('.announcement-bar');
+        if (announcementBar) {
+          const announcementBarHeight = announcementBar.offsetHeight;
+          document.documentElement.style.setProperty('--announcement-bar-height', `${announcementBarHeight}px`);
+        } else {
+          document.documentElement.style.setProperty('--announcement-bar-height', '0px');
+        }
+      }
     }
   }
 
