@@ -39,6 +39,7 @@
       ],
       "name": "Video Hero",
       "settings": {
+        "hero_video": "shopify://files/videos/0119 (1)-copy.mp4",
         "hero_video_mobile": "shopify://files/videos/0119 (1)(2).mp4",
         "min_height": 90,
         "min_height_mobile": 60,
