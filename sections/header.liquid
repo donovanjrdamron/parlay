@@ -225,6 +225,37 @@
     products-mega-menu .products-mega-menu__body {
       background-color: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
       background: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Ensure summary is always above the body and transparent - MOST SPECIFIC */
+    products-mega-menu summary,
+    products-mega-menu summary.header__menu-item,
+    products-mega-menu summary.header__menu-item--main,
+    products-mega-menu summary.list-menu__item,
+    products-mega-menu summary.products-mega-menu,
+    products-mega-menu summary.link,
+    .section-header products-mega-menu summary,
+    .section-header products-mega-menu summary.header__menu-item,
+    .header-wrapper products-mega-menu summary,
+    .header-wrapper products-mega-menu summary.header__menu-item {
+      position: relative !important;
+      z-index: 999 !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      box-shadow: none !important;
+      -webkit-box-shadow: none !important;
+    }
+
+    /* Ensure body doesn't overlap summary */
+    products-mega-menu details {
+      position: relative;
+    }
+
+    products-mega-menu .products-mega-menu__body {
+      margin-top: 0;
+      padding-top: 0;
     }
 
     /* Apply background to body children but exclude summary */
