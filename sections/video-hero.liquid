@@ -13,6 +13,7 @@
 
   {% if request.page_type == 'index' %}
     .video-hero-{{ section.id }} {
+      margin-top: calc(var(--header-height, 0px) * -1);
       padding-top: var(--header-height, 0px);
     }
   {% endif %}
