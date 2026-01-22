@@ -66,14 +66,18 @@
 
   .video-hero-{{ section.id }} .video-hero__content {
     position: absolute;
-    top: 50%;
+    top: {{ section.settings.content_top_position }}%;
     left: {{ section.settings.content_left_margin }}px;
-    transform: translateY(-50%);
+    {% if section.settings.content_position_type == 'percentage' %}
+      transform: translateY(-50%);
+    {% else %}
+      transform: translateY({{ section.settings.content_vertical_offset }}px);
+    {% endif %}
     z-index: 3;
     width: auto;
     max-width: {{ section.settings.content_max_width }}px;
     padding: {{ section.settings.content_padding_vertical }}px {{ section.settings.content_padding_horizontal }}px;
-    text-align: left !important;
+    text-align: {{ section.settings.text_alignment }} !important;
     color: {{ section.settings.text_color }};
   }
 
@@ -81,9 +85,10 @@
     font-size: {{ section.settings.heading_font_size }}px;
     font-weight: {{ section.settings.heading_font_weight }};
     line-height: {{ section.settings.heading_line_height }};
-    margin: 0 0 {{ section.settings.heading_margin_bottom }}px 0;
+    letter-spacing: {{ section.settings.heading_letter_spacing }}px;
+    margin: {{ section.settings.heading_margin_top }}px 0 {{ section.settings.heading_margin_bottom }}px 0;
     color: {{ section.settings.heading_color }};
-    text-align: left !important;
+    text-align: {{ section.settings.text_alignment }} !important;
     width: 100%;
   }
 
@@ -91,23 +96,25 @@
     font-size: {{ section.settings.subheading_font_size }}px;
     font-weight: {{ section.settings.subheading_font_weight }};
     line-height: {{ section.settings.subheading_line_height }};
-    margin: 0 0 {{ section.settings.subheading_margin_bottom }}px 0;
+    letter-spacing: {{ section.settings.subheading_letter_spacing }}px;
+    margin: {{ section.settings.subheading_margin_top }}px 0 {{ section.settings.subheading_margin_bottom }}px 0;
     color: {{ section.settings.subheading_color }};
-    text-align: left !important;
+    text-align: {{ section.settings.text_alignment }} !important;
     width: 100%;
   }
 
   .video-hero-{{ section.id }} .video-hero__text {
     font-size: {{ section.settings.text_font_size }}px;
     line-height: {{ section.settings.text_line_height }};
-    margin: 0 0 {{ section.settings.text_margin_bottom }}px 0;
+    letter-spacing: {{ section.settings.text_letter_spacing }}px;
+    margin: {{ section.settings.text_margin_top }}px 0 {{ section.settings.text_margin_bottom }}px 0;
     color: {{ section.settings.text_color }};
-    text-align: left !important;
+    text-align: {{ section.settings.text_alignment }} !important;
     width: 100%;
   }
 
   .video-hero-{{ section.id }} .video-hero__text p {
-    text-align: left !important;
+    text-align: {{ section.settings.text_alignment }} !important;
     margin: 0;
   }
 
@@ -169,11 +176,16 @@
     }
 
     .video-hero-{{ section.id }} .video-hero__content {
+      top: {{ section.settings.content_top_position_mobile }}%;
       left: {{ section.settings.content_left_margin_mobile }}px;
       width: auto;
       max-width: calc(100% - {{ section.settings.content_left_margin_mobile | times: 2 }}px);
       padding: {{ section.settings.content_padding_vertical_mobile }}px {{ section.settings.content_padding_horizontal_mobile }}px;
-      transform: translateY(-50%);
+      {% if section.settings.content_position_type == 'percentage' %}
+        transform: translateY(-50%);
+      {% else %}
+        transform: translateY({{ section.settings.content_vertical_offset_mobile }}px);
+      {% endif %}
     }
 
     .video-hero-{{ section.id }} .video-hero__heading {
@@ -405,12 +417,75 @@
     {
       "type": "range",
       "id": "content_max_width",
-      "min": 400,
+      "min": 300,
       "max": 1400,
       "step": 50,
       "unit": "px",
       "label": "Content Max Width",
       "default": 600
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Content Positioning"
+    },
+    {
+      "type": "select",
+      "id": "content_position_type",
+      "label": "Vertical Position Type",
+      "options": [
+        {
+          "value": "percentage",
+          "label": "Percentage (Centered)"
+        },
+        {
+          "value": "pixels",
+          "label": "Pixels from Top"
+        }
+      ],
+      "default": "percentage",
+      "info": "Percentage centers the content, Pixels positions from top"
+    },
+    {
+      "type": "range",
+      "id": "content_top_position",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Content Top Position (Desktop)",
+      "default": 50,
+      "info": "50% = centered vertically"
+    },
+    {
+      "type": "range",
+      "id": "content_vertical_offset",
+      "min": -200,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Vertical Offset (Desktop)",
+      "default": 0,
+      "info": "Adjust vertical position (negative = up, positive = down)"
     },
     {
       "type": "range",
@@ -419,8 +494,28 @@
       "max": 200,
       "step": 10,
       "unit": "px",
-      "label": "Content Left Margin (Desktop)",
+      "label": "Content Left Position (Desktop)",
       "default": 40
+    },
+    {
+      "type": "range",
+      "id": "content_top_position_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Content Top Position (Mobile)",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "content_vertical_offset_mobile",
+      "min": -200,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Vertical Offset (Mobile)",
+      "default": 0
     },
     {
       "type": "range",
@@ -429,7 +524,7 @@
       "max": 100,
       "step": 5,
       "unit": "px",
-      "label": "Content Left Margin (Mobile)",
+      "label": "Content Left Position (Mobile)",
       "default": 30
     },
     {
@@ -545,6 +640,16 @@
     },
     {
       "type": "range",
+      "id": "heading_margin_top",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Heading Top Margin",
+      "default": 0
+    },
+    {
+      "type": "range",
       "id": "heading_margin_bottom",
       "min": 0,
       "max": 60,
@@ -552,6 +657,16 @@
       "unit": "px",
       "label": "Heading Bottom Margin",
       "default": 20
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "min": -2,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Heading Letter Spacing",
+      "default": 0
     },
     {
       "type": "header",
@@ -622,6 +737,16 @@
     },
     {
       "type": "range",
+      "id": "subheading_margin_top",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Subheading Top Margin",
+      "default": 0
+    },
+    {
+      "type": "range",
       "id": "subheading_margin_bottom",
       "min": 0,
       "max": 60,
@@ -629,6 +754,16 @@
       "unit": "px",
       "label": "Subheading Bottom Margin",
       "default": 20
+    },
+    {
+      "type": "range",
+      "id": "subheading_letter_spacing",
+      "min": -2,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Subheading Letter Spacing",
+      "default": 0
     },
     {
       "type": "header",
@@ -671,6 +806,16 @@
     },
     {
       "type": "range",
+      "id": "text_margin_top",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Text Top Margin",
+      "default": 0
+    },
+    {
+      "type": "range",
       "id": "text_margin_bottom",
       "min": 0,
       "max": 60,
@@ -678,6 +823,16 @@
       "unit": "px",
       "label": "Text Bottom Margin",
       "default": 30
+    },
+    {
+      "type": "range",
+      "id": "text_letter_spacing",
+      "min": -2,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Text Letter Spacing",
+      "default": 0
     },
     {
       "type": "header",
