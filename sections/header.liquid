@@ -148,11 +148,26 @@
 
     /* Ensure products-mega-menu summary/button is transparent */
     products-mega-menu summary,
-    products-mega-menu .header__menu-item,
-    products-mega-menu .list-menu__item,
+    products-mega-menu summary.header__menu-item,
     products-mega-menu summary.header__menu-item--main,
+    products-mega-menu summary.list-menu__item,
+    products-mega-menu summary.products-mega-menu,
+    products-mega-menu details[open] summary,
+    products-mega-menu details summary,
     .products-mega-menu summary,
-    .products-mega-menu .header__menu-item {
+    .products-mega-menu summary.header__menu-item,
+    .products-mega-menu summary.header__menu-item--main,
+    .header__menu-item.products-mega-menu,
+    .header__menu-item--main.products-mega-menu,
+    summary.products-mega-menu,
+    summary.header__menu-item.products-mega-menu {
+      background: transparent !important;
+      background-color: transparent !important;
+    }
+
+    /* Ensure the summary span inside is also transparent */
+    products-mega-menu summary span,
+    products-mega-menu summary .header__active-menu-item {
       background: transparent !important;
       background-color: transparent !important;
     }
