@@ -188,6 +188,7 @@
       {% endunless %}
       border-radius: {{ block.settings.image_border_radius | default: 8 }}px;
       overflow: hidden;
+      position: relative;
     }
 
     .bundle-option-{{ block.id }} .bundle-placeholder-wrapper img {
@@ -197,6 +198,7 @@
       {% else %}
       height: 100%;
       object-fit: cover;
+      object-position: center;
       {% endif %}
       display: block;
     }
@@ -232,7 +234,9 @@
       {% if layout_mode == 'row' %}
       margin-left: 8px;
       {% else %}
-      margin-right: 8px;
+      margin-top: 4px;
+      margin-right: 0;
+      display: block;
       {% endif %}
       transition: color 0.3s ease;
     }
@@ -283,6 +287,10 @@
       {% if layout_mode == 'row' %}
       display: flex;
       flex-direction: row;
+      align-items: center;
+      {% else %}
+      display: flex;
+      flex-direction: column;
       align-items: center;
       {% endif %}
     }
