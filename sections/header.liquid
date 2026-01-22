@@ -168,7 +168,19 @@
 
     /* Ensure details element itself doesn't have background */
     products-mega-menu details,
-    products-mega-menu details[open] {
+    products-mega-menu details[open],
+    products-mega-menu details[closed],
+    .section-header products-mega-menu details,
+    .section-header products-mega-menu details[open] {
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
+    }
+
+    /* Ensure the products-mega-menu custom element itself is transparent */
+    products-mega-menu,
+    .section-header products-mega-menu,
+    .header-wrapper products-mega-menu {
       background: transparent !important;
       background-color: transparent !important;
     }
