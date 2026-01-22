@@ -14,8 +14,8 @@
     "country_list_function": "block",
     "country_list": "",
     "logo": "shopify://shop_images/PARLAY_ESSENTIAL.svg",
-    "logo_width": 140,
-    "mobile_logo_width": 100,
+    "logo_width": 90,
+    "mobile_logo_width": 80,
     "favicon": "shopify://shop_images/Frame_11.png",
     "type_header_font": "mono",
     "type_body_font": "sans_serif_n4",
@@ -830,11 +830,6 @@
     "blocks": {
       "14060646107696862457": {
         "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
-        "disabled": false,
-        "settings": {}
-      },
-      "3138269044488530766": {
-        "type": "shopify://apps/uppromote-affiliate/blocks/core-script/64c32457-930d-4cb9-9641-e24c0d9cf1f4",
         "disabled": false,
         "settings": {}
       },
