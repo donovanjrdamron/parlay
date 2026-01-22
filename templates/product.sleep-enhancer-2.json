@@ -2018,7 +2018,7 @@
         "them_label_font_size": 14,
         "them_label_font_weight": 400,
         "them_label_color": "#ffffff",
-        "them_image_enabled": true,
+        "them_image_enabled": false,
         "them_image": "shopify://shop_images/Gemini_Generated_Image_3z9zt33z9zt33z9z.png",
         "them_image_width": 120,
         "them_image_width_mobile": 80,
