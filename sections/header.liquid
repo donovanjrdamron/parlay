@@ -221,10 +221,27 @@
       display: none !important;
     }
 
-    products-mega-menu .products-mega-menu__body,
-    products-mega-menu .products-mega-menu__body * {
+    /* Only apply background to the body itself and its direct children, NOT the summary */
+    products-mega-menu .products-mega-menu__body {
       background-color: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
       background: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
+    }
+
+    /* Apply background to body children but exclude summary */
+    products-mega-menu .products-mega-menu__body > *:not(summary),
+    products-mega-menu .products-mega-menu__body .products-mega-menu__container,
+    products-mega-menu .products-mega-menu__body .products-mega-menu__list,
+    products-mega-menu .products-mega-menu__body .products-mega-menu__item,
+    products-mega-menu .products-mega-menu__body .products-mega-menu__content {
+      background-color: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
+      background: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
+    }
+
+    /* Ensure summary is NEVER affected by body background rules */
+    products-mega-menu summary,
+    products-mega-menu details summary {
+      background: transparent !important;
+      background-color: transparent !important;
     }
 
     .mega-menu__content,
