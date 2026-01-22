@@ -7,7 +7,6 @@
     min-height: {{ section.settings.min_height }}vh;
     overflow: hidden;
     background: {% if section.settings.background_gradient != blank %}{{ section.settings.background_gradient }}{% else %}{{ section.settings.background_color }}{% endif %};
-    border-radius: {{ section.settings.border_radius }}px;
   }
 
   .slideshow-hero-{{ section.id }} .slideshow-hero__container {
@@ -15,8 +14,6 @@
     width: 100%;
     height: 100%;
     min-height: {{ section.settings.min_height }}vh;
-    display: flex;
-    align-items: stretch;
   }
 
   .slideshow-hero-{{ section.id }} .slideshow-hero__slides {
@@ -24,7 +21,6 @@
     width: 100%;
     height: 100%;
     min-height: {{ section.settings.min_height }}vh;
-    display: flex;
   }
 
   .slideshow-hero-{{ section.id }} .slideshow-hero__slide {
@@ -38,7 +34,8 @@
     visibility: hidden;
     transition: opacity {{ section.settings.transition_duration }}ms ease-in-out, visibility {{ section.settings.transition_duration }}ms ease-in-out;
     display: flex;
-    align-items: stretch;
+    align-items: center;
+    justify-content: center;
   }
 
   .slideshow-hero-{{ section.id }} .slideshow-hero__slide.active {
@@ -47,22 +44,90 @@
     z-index: 2;
   }
 
-  /* Left Content Side */
+  /* Full-width Media Background */
+  .slideshow-hero-{{ section.id }} .slideshow-hero__media-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .slideshow-hero-{{ section.id }} .slideshow-hero__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    {% if section.settings.enable_blur %}
+      filter: blur({{ section.settings.blur_amount }}px);
+      transform: scale(1.1);
+    {% endif %}
+  }
+
+  .slideshow-hero-{{ section.id }} .slideshow-hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    {% if section.settings.enable_blur %}
+      filter: blur({{ section.settings.blur_amount }}px);
+      transform: scale(1.1);
+    {% endif %}
+  }
+
+  .slideshow-hero-{{ section.id }} .slideshow-hero__video-fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 1;
+    {% if section.settings.enable_blur %}
+      filter: blur({{ section.settings.blur_amount }}px);
+      transform: scale(1.1);
+    {% endif %}
+  }
+
+  .slideshow-hero-{{ section.id }} .slideshow-hero__media-container.video-error .slideshow-hero__video-fallback {
+    opacity: 1;
+  }
+
+  .slideshow-hero-{{ section.id }} .slideshow-hero__media-container.video-error .slideshow-hero__video {
+    opacity: 0;
+  }
+
+  /* Overlay */
+  .slideshow-hero-{{ section.id }} .slideshow-hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: {{ section.settings.overlay_color }};
+    opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Centered Content */
   .slideshow-hero-{{ section.id }} .slideshow-hero__content-wrapper {
-    flex: 0 0 {{ section.settings.content_width }}%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: {{ section.settings.content_padding_vertical }}px {{ section.settings.content_padding_horizontal }}px;
-    z-index: 3;
     position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: {{ section.settings.content_max_width }}px;
+    padding: {{ section.settings.content_padding_vertical }}px {{ section.settings.content_padding_horizontal }}px;
+    text-align: center;
+    color: {{ section.settings.text_color }};
+    margin: 0 auto;
   }
 
   .slideshow-hero-{{ section.id }} .slideshow-hero__content {
     width: 100%;
-    max-width: {{ section.settings.content_max_width }}px;
-    text-align: {{ section.settings.text_alignment }};
-    color: {{ section.settings.text_color }};
   }
 
   .slideshow-hero-{{ section.id }} .slideshow-hero__heading {
@@ -72,6 +137,7 @@
     margin: 0 0 {{ section.settings.heading_margin_bottom }}px 0;
     color: {{ section.settings.heading_color }};
     letter-spacing: {{ section.settings.heading_letter_spacing }}px;
+    text-align: center;
   }
 
   .slideshow-hero-{{ section.id }} .slideshow-hero__subheading {
@@ -81,6 +147,7 @@
     margin: 0 0 {{ section.settings.subheading_margin_bottom }}px 0;
     color: {{ section.settings.subheading_color }};
     letter-spacing: {{ section.settings.subheading_letter_spacing }}px;
+    text-align: center;
   }
 
   .slideshow-hero-{{ section.id }} .slideshow-hero__text {
@@ -89,6 +156,7 @@
     margin: 0 0 {{ section.settings.text_margin_bottom }}px 0;
     color: {{ section.settings.text_color }};
     letter-spacing: {{ section.settings.text_letter_spacing }}px;
+    text-align: center;
   }
 
   .slideshow-hero-{{ section.id }} .slideshow-hero__button {
@@ -114,87 +182,12 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
-  /* Right Media Side */
-  .slideshow-hero-{{ section.id }} .slideshow-hero__media-wrapper {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .slideshow-hero-{{ section.id }} .slideshow-hero__media-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .slideshow-hero-{{ section.id }} .slideshow-hero__video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .slideshow-hero-{{ section.id }} .slideshow-hero__image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .slideshow-hero-{{ section.id }} .slideshow-hero__video-fallback {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-    z-index: 1;
-  }
-
-  .slideshow-hero-{{ section.id }} .slideshow-hero__media-container.video-error .slideshow-hero__video-fallback {
-    opacity: 1;
-  }
-
-  .slideshow-hero-{{ section.id }} .slideshow-hero__media-container.video-error .slideshow-hero__video {
-    opacity: 0;
-  }
-
-  /* Overlay for media side */
-  .slideshow-hero-{{ section.id }} .slideshow-hero__overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: {{ section.settings.overlay_color }};
-    opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
-    z-index: 2;
-    pointer-events: none;
-  }
-
   /* Navigation */
   .slideshow-hero-{{ section.id }} .slideshow-hero__navigation {
     position: absolute;
     bottom: {{ section.settings.navigation_bottom }}px;
-    {% if section.settings.text_alignment == 'left' %}
-      left: {{ section.settings.content_padding_horizontal }}px;
-    {% elsif section.settings.text_alignment == 'right' %}
-      right: {{ section.settings.content_padding_horizontal }}px;
-    {% else %}
-      left: 50%;
-      transform: translateX(-50%);
-    {% endif %}
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 4;
     display: flex;
     gap: {{ section.settings.navigation_gap }}px;
@@ -293,24 +286,14 @@
   @media screen and (max-width: 749px) {
     .slideshow-hero-{{ section.id }} {
       min-height: {{ section.settings.min_height_mobile }}vh;
-      border-radius: {{ section.settings.border_radius_mobile }}px;
     }
 
     .slideshow-hero-{{ section.id }} .slideshow-hero__slide {
-      flex-direction: column;
       min-height: {{ section.settings.min_height_mobile }}vh;
     }
 
     .slideshow-hero-{{ section.id }} .slideshow-hero__content-wrapper {
-      flex: 0 0 100%;
-      order: 2;
       padding: {{ section.settings.content_padding_vertical_mobile }}px {{ section.settings.content_padding_horizontal_mobile }}px;
-    }
-
-    .slideshow-hero-{{ section.id }} .slideshow-hero__media-wrapper {
-      flex: 0 0 100%;
-      order: 1;
-      min-height: {{ section.settings.media_height_mobile }}vh;
     }
 
     .slideshow-hero-{{ section.id }} .slideshow-hero__heading {
@@ -339,23 +322,10 @@
         right: {{ section.settings.arrow_position_mobile }}px;
       }
     {% endif %}
-
-    .slideshow-hero-{{ section.id }} .slideshow-hero__navigation {
-      {% if section.settings.text_alignment == 'left' %}
-        left: {{ section.settings.content_padding_horizontal_mobile }}px;
-        transform: none;
-      {% elsif section.settings.text_alignment == 'right' %}
-        right: {{ section.settings.content_padding_horizontal_mobile }}px;
-        transform: none;
-      {% else %}
-        left: 50%;
-        transform: translateX(-50%);
-      {% endif %}
-    }
   }
 
   /* Animation */
-  .slideshow-hero-{{ section.id }} .slideshow-hero__content {
+  .slideshow-hero-{{ section.id }} .slideshow-hero__content-wrapper {
     animation: fadeInUp 0.8s ease-out;
   }
 
@@ -377,7 +347,37 @@
       {% for block in section.blocks %}
         {% if block.type == 'slide' %}
           <div class="slideshow-hero__slide {% if forloop.first %}active{% endif %}" data-slide-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
-            {% comment %} Left Content Side {% endcomment %}
+            {% comment %} Full-width Media Background {% endcomment %}
+            <div class="slideshow-hero__media-container" data-media-container>
+              {% if block.settings.video != blank %}
+                <link rel="preload" as="video" href="{{ block.settings.video.sources[1].url }}" type="video/mp4">
+                <video 
+                  class="slideshow-hero__video" 
+                  autoplay 
+                  muted 
+                  loop 
+                  playsinline 
+                  preload="auto"
+                  webkit-playsinline
+                  x5-playsinline
+                  data-video
+                >
+                  <source src="{{ block.settings.video.sources[1].url }}" type="video/mp4">
+                </video>
+                {% if block.settings.fallback_image %}
+                  {{ block.settings.fallback_image | image_url: width: 1920 | image_tag: class: 'slideshow-hero__video-fallback', loading: 'lazy', alt: block.settings.heading }}
+                {% endif %}
+              {% elsif block.settings.image %}
+                {{ block.settings.image | image_url: width: 1920 | image_tag: class: 'slideshow-hero__image', loading: 'lazy', alt: block.settings.heading }}
+              {% endif %}
+            </div>
+
+            {% comment %} Overlay {% endcomment %}
+            {% if section.settings.enable_overlay %}
+              <div class="slideshow-hero__overlay"></div>
+            {% endif %}
+
+            {% comment %} Centered Content {% endcomment %}
             <div class="slideshow-hero__content-wrapper">
               <div class="slideshow-hero__content">
                 {% if block.settings.heading != blank %}
@@ -404,38 +404,6 @@
                   </a>
                 {% endif %}
               </div>
-            </div>
-
-            {% comment %} Right Media Side {% endcomment %}
-            <div class="slideshow-hero__media-wrapper">
-              <div class="slideshow-hero__media-container" data-media-container>
-                {% if block.settings.video != blank %}
-                  <link rel="preload" as="video" href="{{ block.settings.video.sources[1].url }}" type="video/mp4">
-                  <video 
-                    class="slideshow-hero__video" 
-                    autoplay 
-                    muted 
-                    loop 
-                    playsinline 
-                    preload="auto"
-                    webkit-playsinline
-                    x5-playsinline
-                    data-video
-                  >
-                    <source src="{{ block.settings.video.sources[1].url }}" type="video/mp4">
-                  </video>
-                  {% if block.settings.fallback_image %}
-                    {{ block.settings.fallback_image | image_url: width: 1920 | image_tag: class: 'slideshow-hero__video-fallback', loading: 'lazy', alt: block.settings.heading }}
-                  {% endif %}
-                {% elsif block.settings.image %}
-                  {{ block.settings.image | image_url: width: 1920 | image_tag: class: 'slideshow-hero__image', loading: 'lazy', alt: block.settings.heading }}
-                {% endif %}
-              </div>
-
-              {% comment %} Overlay {% endcomment %}
-              {% if section.settings.enable_overlay %}
-                <div class="slideshow-hero__overlay"></div>
-              {% endif %}
             </div>
           </div>
         {% endif %}
@@ -633,49 +601,28 @@
     {
       "type": "range",
       "id": "min_height",
-      "min": 30,
+      "min": 50,
       "max": 100,
       "step": 5,
       "unit": "vh",
       "label": "Minimum Height (Desktop)",
-      "default": 80
+      "default": 90
     },
     {
       "type": "range",
       "id": "min_height_mobile",
-      "min": 30,
+      "min": 50,
       "max": 100,
       "step": 5,
       "unit": "vh",
       "label": "Minimum Height (Mobile)",
-      "default": 60
-    },
-    {
-      "type": "range",
-      "id": "content_width",
-      "min": 30,
-      "max": 70,
-      "step": 5,
-      "unit": "%",
-      "label": "Content Side Width (Desktop)",
-      "default": 50,
-      "info": "Percentage of width for the left content side"
-    },
-    {
-      "type": "range",
-      "id": "media_height_mobile",
-      "min": 30,
-      "max": 70,
-      "step": 5,
-      "unit": "vh",
-      "label": "Media Height (Mobile)",
-      "default": 50
+      "default": 80
     },
     {
       "type": "color",
       "id": "background_color",
       "label": "Background Color",
-      "default": "#f5f1eb"
+      "default": "#000000"
     },
     {
       "type": "text",
@@ -685,24 +632,25 @@
       "default": ""
     },
     {
-      "type": "range",
-      "id": "border_radius",
-      "min": 0,
-      "max": 50,
-      "step": 2,
-      "unit": "px",
-      "label": "Border Radius (Desktop)",
-      "default": 0
+      "type": "header",
+      "content": "Blur Effect"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_blur",
+      "label": "Enable Blur Effect",
+      "default": true,
+      "info": "Adds a blur effect to the video/image background"
     },
     {
       "type": "range",
-      "id": "border_radius_mobile",
+      "id": "blur_amount",
       "min": 0,
-      "max": 30,
-      "step": 2,
+      "max": 20,
+      "step": 1,
       "unit": "px",
-      "label": "Border Radius (Mobile)",
-      "default": 0
+      "label": "Blur Amount",
+      "default": 8
     },
     {
       "type": "header",
@@ -711,8 +659,8 @@
     {
       "type": "checkbox",
       "id": "enable_overlay",
-      "label": "Enable Overlay on Media",
-      "default": false
+      "label": "Enable Overlay",
+      "default": true
     },
     {
       "type": "color",
@@ -728,7 +676,7 @@
       "step": 5,
       "unit": "%",
       "label": "Overlay Opacity",
-      "default": 40
+      "default": 30
     },
     {
       "type": "header",
@@ -737,32 +685,12 @@
     {
       "type": "range",
       "id": "content_max_width",
-      "min": 400,
-      "max": 800,
+      "min": 500,
+      "max": 1200,
       "step": 50,
       "unit": "px",
       "label": "Content Max Width",
-      "default": 600
-    },
-    {
-      "type": "select",
-      "id": "text_alignment",
-      "label": "Text Alignment",
-      "options": [
-        {
-          "value": "left",
-          "label": "Left"
-        },
-        {
-          "value": "center",
-          "label": "Center"
-        },
-        {
-          "value": "right",
-          "label": "Right"
-        }
-      ],
-      "default": "left"
+      "default": 800
     },
     {
       "type": "range",
@@ -777,22 +705,22 @@
     {
       "type": "range",
       "id": "content_padding_horizontal",
-      "min": 40,
-      "max": 150,
+      "min": 20,
+      "max": 100,
       "step": 5,
       "unit": "px",
       "label": "Content Horizontal Padding (Desktop)",
-      "default": 60
+      "default": 40
     },
     {
       "type": "range",
       "id": "content_padding_vertical_mobile",
-      "min": 30,
+      "min": 40,
       "max": 100,
       "step": 5,
       "unit": "px",
       "label": "Content Vertical Padding (Mobile)",
-      "default": 40
+      "default": 60
     },
     {
       "type": "range",
@@ -819,20 +747,20 @@
       "id": "heading_font_size",
       "min": 32,
       "max": 120,
-      "step": 2,
+      "step": 4,
       "unit": "px",
       "label": "Heading Font Size (Desktop)",
-      "default": 56
+      "default": 72
     },
     {
       "type": "range",
       "id": "heading_font_size_mobile",
-      "min": 24,
-      "max": 60,
-      "step": 2,
+      "min": 28,
+      "max": 64,
+      "step": 4,
       "unit": "px",
       "label": "Heading Font Size (Mobile)",
-      "default": 36
+      "default": 48
     },
     {
       "type": "select",
@@ -870,7 +798,7 @@
       "type": "range",
       "id": "heading_line_height",
       "min": 1,
-      "max": 2,
+      "max": 1.5,
       "step": 0.1,
       "label": "Heading Line Height",
       "default": 1.2
@@ -893,7 +821,7 @@
       "step": 2,
       "unit": "px",
       "label": "Heading Bottom Margin",
-      "default": 16
+      "default": 20
     },
     {
       "type": "header",
@@ -913,7 +841,7 @@
       "step": 2,
       "unit": "px",
       "label": "Subheading Font Size (Desktop)",
-      "default": 24
+      "default": 28
     },
     {
       "type": "range",
@@ -923,7 +851,7 @@
       "step": 2,
       "unit": "px",
       "label": "Subheading Font Size (Mobile)",
-      "default": 20
+      "default": 22
     },
     {
       "type": "select",
@@ -1049,37 +977,37 @@
       "type": "color",
       "id": "button_background_color",
       "label": "Button Background Color",
-      "default": "#F5F1EB"
+      "default": "#620a0a"
     },
     {
       "type": "color",
       "id": "button_text_color",
       "label": "Button Text Color",
-      "default": "#3B1C00"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "button_hover_background_color",
       "label": "Button Hover Background Color",
-      "default": "#E8E0D6"
+      "default": "#7a0d0d"
     },
     {
       "type": "color",
       "id": "button_hover_text_color",
       "label": "Button Hover Text Color",
-      "default": "#3B1C00"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "button_border_color",
       "label": "Button Border Color",
-      "default": "#F5F1EB"
+      "default": "#620a0a"
     },
     {
       "type": "color",
       "id": "button_hover_border_color",
       "label": "Button Hover Border Color",
-      "default": "#E8E0D6"
+      "default": "#7a0d0d"
     },
     {
       "type": "range",
@@ -1099,7 +1027,7 @@
       "step": 2,
       "unit": "px",
       "label": "Button Border Radius",
-      "default": 8
+      "default": 4
     },
     {
       "type": "range",
@@ -1129,7 +1057,7 @@
       "step": 1,
       "unit": "px",
       "label": "Button Font Size",
-      "default": 15
+      "default": 16
     },
     {
       "type": "select",
@@ -1153,7 +1081,7 @@
           "label": "Bold"
         }
       ],
-      "default": "400"
+      "default": "600"
     },
     {
       "type": "range",
@@ -1403,25 +1331,25 @@
           "type": "text",
           "id": "heading",
           "label": "Heading",
-          "default": "Topical Peptide Serum for Hair Growth"
+          "default": "Welcome To Our Store"
         },
         {
           "type": "text",
           "id": "subheading",
           "label": "Subheading",
-          "default": ""
+          "default": "Improve Your Sleep"
         },
         {
           "type": "richtext",
           "id": "text",
           "label": "Text",
-          "default": "<p>A powerful blend of peptides that supports scalp health for thicker, fuller, stronger hair.</p>"
+          "default": "<p>Add your descriptive text here</p>"
         },
         {
           "type": "text",
           "id": "button_text",
           "label": "Button Text",
-          "default": "shop now"
+          "default": "Shop Now"
         },
         {
           "type": "url",
