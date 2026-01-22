@@ -401,6 +401,30 @@
       background-color: transparent !important;
     }
 
+    /* CRITICAL: Override CSS variables that might be creating white background */
+    products-mega-menu summary,
+    products-mega-menu details summary,
+    products-mega-menu details[open] > summary {
+      --color-background: 0, 0, 0 !important;
+      --color-base-background-1: 0, 0, 0 !important;
+      --color-base-background-2: 0, 0, 0 !important;
+      --gradient-background: transparent !important;
+      --gradient-base-background-1: transparent !important;
+      --gradient-base-background-2: transparent !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
+    }
+
+    /* Also override variables on parent elements */
+    products-mega-menu details[open],
+    products-mega-menu details {
+      --color-background: 0, 0, 0 !important;
+      --color-base-background-1: 0, 0, 0 !important;
+      background: transparent !important;
+      background-color: transparent !important;
+    }
+
     .mega-menu__content,
     .mega-menu__content *,
     .header__inline-menu .list-menu__item:hover .mega-menu,
