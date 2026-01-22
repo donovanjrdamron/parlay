@@ -190,6 +190,23 @@
       background-color: transparent !important;
     }
 
+    /* Override color-background-1 class if applied to summary */
+    products-mega-menu summary.color-background-1,
+    products-mega-menu .color-background-1 summary,
+    products-mega-menu summary .color-background-1 {
+      background: transparent !important;
+      background-color: transparent !important;
+    }
+
+    /* Target any element that might be creating the white square */
+    .section-header products-mega-menu summary,
+    .section-header .header__menu-item.products-mega-menu,
+    .section-header summary.products-mega-menu {
+      background: transparent !important;
+      background-color: transparent !important;
+      box-shadow: none !important;
+    }
+
     /* Ensure menus have solid backgrounds on homepage */
     .menu-drawer,
     .menu-drawer *,
