@@ -7,9 +7,13 @@
     min-height: {{ section.settings.min_height }}vh;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     overflow: hidden;
     background-color: {{ section.settings.background_color }};
+    border-radius: 0 0 {{ section.settings.border_radius }}px {{ section.settings.border_radius }}px;
+    margin-top: calc(var(--header-height, 0px) * -1);
+    padding-top: var(--header-height, 0px);
+    z-index: 1;
   }
 
   .video-hero-{{ section.id }} .video-hero__video-container {
@@ -26,10 +30,6 @@
     height: 100%;
     object-fit: cover;
     display: block;
-    {% if section.settings.enable_blur %}
-      filter: blur({{ section.settings.blur_amount }}px);
-      transform: scale(1.1);
-    {% endif %}
   }
 
   .video-hero-{{ section.id }} .video-hero__video-fallback {
@@ -42,10 +42,6 @@
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
     z-index: 1;
-    {% if section.settings.enable_blur %}
-      filter: blur({{ section.settings.blur_amount }}px);
-      transform: scale(1.1);
-    {% endif %}
   }
 
   .video-hero-{{ section.id }} .video-hero__video-container.video-error .video-hero__video-fallback {
@@ -68,16 +64,14 @@
   }
 
   .video-hero-{{ section.id }} .video-hero__content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
     z-index: 3;
     width: 100%;
     max-width: {{ section.settings.content_max_width }}px;
     padding: {{ section.settings.content_padding_vertical }}px {{ section.settings.content_padding_horizontal }}px;
-    text-align: {{ section.settings.text_alignment }};
+    text-align: left;
     color: {{ section.settings.text_color }};
+    margin-left: {{ section.settings.content_left_margin }}px;
   }
 
   .video-hero-{{ section.id }} .video-hero__heading {
@@ -86,6 +80,7 @@
     line-height: {{ section.settings.heading_line_height }};
     margin: 0 0 {{ section.settings.heading_margin_bottom }}px 0;
     color: {{ section.settings.heading_color }};
+    text-align: left;
   }
 
   .video-hero-{{ section.id }} .video-hero__subheading {
@@ -94,6 +89,7 @@
     line-height: {{ section.settings.subheading_line_height }};
     margin: 0 0 {{ section.settings.subheading_margin_bottom }}px 0;
     color: {{ section.settings.subheading_color }};
+    text-align: left;
   }
 
   .video-hero-{{ section.id }} .video-hero__text {
@@ -101,6 +97,7 @@
     line-height: {{ section.settings.text_line_height }};
     margin: 0 0 {{ section.settings.text_margin_bottom }}px 0;
     color: {{ section.settings.text_color }};
+    text-align: left;
   }
 
   .video-hero-{{ section.id }} .video-hero__button {
@@ -156,9 +153,13 @@
       min-height: {{ section.settings.min_height_mobile }}vh;
     }
 
+    .video-hero-{{ section.id }} {
+      border-radius: 0 0 {{ section.settings.border_radius_mobile }}px {{ section.settings.border_radius_mobile }}px;
+    }
+
     .video-hero-{{ section.id }} .video-hero__content {
       padding: {{ section.settings.content_padding_vertical_mobile }}px {{ section.settings.content_padding_horizontal_mobile }}px;
-      transform: translate(-50%, -50%);
+      margin-left: {{ section.settings.content_left_margin_mobile }}px;
     }
 
     .video-hero-{{ section.id }} .video-hero__heading {
@@ -361,24 +362,27 @@
     },
     {
       "type": "header",
-      "content": "Blur Effect"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_blur",
-      "label": "Enable Blur Effect",
-      "default": true,
-      "info": "Adds a blur effect to the video background"
+      "content": "Border Radius"
     },
     {
       "type": "range",
-      "id": "blur_amount",
+      "id": "border_radius",
       "min": 0,
-      "max": 20,
-      "step": 1,
+      "max": 50,
+      "step": 2,
       "unit": "px",
-      "label": "Blur Amount",
-      "default": 8
+      "label": "Bottom Corner Radius (Desktop)",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "border_radius_mobile",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom Corner Radius (Mobile)",
+      "default": 16
     },
     {
       "type": "header",
@@ -392,27 +396,27 @@
       "step": 50,
       "unit": "px",
       "label": "Content Max Width",
-      "default": 800
+      "default": 600
     },
     {
-      "type": "select",
-      "id": "text_alignment",
-      "label": "Text Alignment",
-      "options": [
-        {
-          "value": "left",
-          "label": "Left"
-        },
-        {
-          "value": "center",
-          "label": "Center"
-        },
-        {
-          "value": "right",
-          "label": "Right"
-        }
-      ],
-      "default": "center"
+      "type": "range",
+      "id": "content_left_margin",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Content Left Margin (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "content_left_margin_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Content Left Margin (Mobile)",
+      "default": 30
     },
     {
       "type": "range",
@@ -467,22 +471,22 @@
     {
       "type": "range",
       "id": "heading_font_size",
-      "min": 32,
-      "max": 120,
-      "step": 4,
+      "min": 24,
+      "max": 80,
+      "step": 2,
       "unit": "px",
       "label": "Heading Font Size (Desktop)",
-      "default": 72
+      "default": 48
     },
     {
       "type": "range",
       "id": "heading_font_size_mobile",
       "min": 20,
-      "max": 80,
+      "max": 48,
       "step": 2,
       "unit": "px",
       "label": "Heading Font Size (Mobile)",
-      "default": 40
+      "default": 32
     },
     {
       "type": "select",
