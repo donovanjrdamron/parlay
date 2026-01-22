@@ -379,6 +379,28 @@
       background-color: transparent !important;
     }
 
+    /* CRITICAL FIX: Target summary when details is open - highest specificity */
+    products-mega-menu details[open] > summary,
+    products-mega-menu details[open] > summary.header__menu-item,
+    products-mega-menu details[open] > summary.header__menu-item--main,
+    products-mega-menu details[open] > summary#HeaderMenu-shop,
+    .section-header products-mega-menu details[open] > summary,
+    .header-wrapper products-mega-menu details[open] > summary,
+    .header products-mega-menu details[open] > summary,
+    .header__inline-menu products-mega-menu details[open] > summary {
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
+      box-shadow: none !important;
+      -webkit-box-shadow: none !important;
+    }
+
+    /* Also ensure the details element itself doesn't create a white background */
+    products-mega-menu details[open] {
+      background: transparent !important;
+      background-color: transparent !important;
+    }
+
     .mega-menu__content,
     .mega-menu__content *,
     .header__inline-menu .list-menu__item:hover .mega-menu,
