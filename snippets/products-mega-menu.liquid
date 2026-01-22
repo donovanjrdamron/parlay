@@ -1,11 +1,10 @@
 <products-mega-menu>
   <details id="ProductsMegaMenu-{{ forloop.index }}">
-    <summary class="header__menu-item header__menu-item--main list-menu__item link products-mega-menu" style="background: transparent !important; background-color: transparent !important; background-image: none !important;">
+    <summary class="header__menu-item header__menu-item--main list-menu__item link products-mega-menu">
       <span
         {%- if link.child_active %}
           class="header__active-menu-item"
         {% endif %}
-        style="background: transparent !important; background-color: transparent !important;"
       >
         {{- link.title | escape -}}
       </span>
