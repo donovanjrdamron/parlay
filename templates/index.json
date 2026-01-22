@@ -9,6 +9,102 @@
  */
 {
   "sections": {
+    "video_hero_7wFKcV": {
+      "type": "video-hero",
+      "blocks": {
+        "heading_ddqLir": {
+          "type": "heading",
+          "settings": {
+            "heading": "Naturally support sleep, focus, and recovery."
+          }
+        },
+        "text_TN9khm": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Lenses designed to reduce the impact of screens and artificial lighting on the body.</p>"
+          }
+        },
+        "button_U7WBdU": {
+          "type": "button",
+          "settings": {
+            "button_text": "Shop Now",
+            "button_link": "shopify://collections"
+          }
+        }
+      },
+      "block_order": [
+        "heading_ddqLir",
+        "text_TN9khm",
+        "button_U7WBdU"
+      ],
+      "name": "Video Hero",
+      "settings": {
+        "hero_video_mobile": "shopify://files/videos/0119 (1)(2).mp4",
+        "min_height": 90,
+        "min_height_mobile": 60,
+        "background_color": "#000000",
+        "enable_overlay": true,
+        "overlay_color": "#000000",
+        "overlay_opacity": 30,
+        "border_radius": 24,
+        "border_radius_mobile": 16,
+        "content_width": 450,
+        "content_max_width": 450,
+        "content_width_mobile": 300,
+        "text_alignment": "left",
+        "content_position_type": "pixels",
+        "content_top_position": 50,
+        "content_bottom_position": 80,
+        "content_vertical_offset": 0,
+        "content_left_margin": 40,
+        "content_top_position_mobile": 50,
+        "content_bottom_position_mobile": 20,
+        "content_vertical_offset_mobile": 0,
+        "content_left_margin_mobile": 10,
+        "content_padding_vertical": 50,
+        "content_padding_horizontal": 40,
+        "content_padding_vertical_mobile": 10,
+        "content_padding_horizontal_mobile": 15,
+        "heading_color": "#FFFFFF",
+        "heading_font_size": 32,
+        "heading_font_size_mobile": 24,
+        "heading_font_weight": "700",
+        "heading_line_height": 1.2,
+        "heading_margin_top": 0,
+        "heading_margin_bottom": 20,
+        "heading_letter_spacing": 0,
+        "subheading_color": "#FFFFFF",
+        "subheading_font_size": 20,
+        "subheading_font_size_mobile": 18,
+        "subheading_font_weight": "500",
+        "subheading_line_height": 1.4,
+        "subheading_margin_top": 0,
+        "subheading_margin_bottom": 20,
+        "subheading_letter_spacing": 0,
+        "text_color": "#FFFFFF",
+        "text_font_size": 18,
+        "text_font_size_mobile": 16,
+        "text_line_height": 1.6,
+        "text_margin_top": 0,
+        "text_margin_bottom": 30,
+        "text_letter_spacing": 0,
+        "button_background_color": "#ffffff",
+        "button_text_color": "#000000",
+        "button_hover_background_color": "#7a0d0d",
+        "button_hover_text_color": "#FFFFFF",
+        "button_border_color": "#620a0a",
+        "button_hover_border_color": "#7a0d0d",
+        "button_border_width": 0,
+        "button_border_radius": 13,
+        "button_padding_vertical": 16,
+        "button_padding_horizontal": 32,
+        "button_font_size": 16,
+        "button_padding_vertical_mobile": 14,
+        "button_padding_horizontal_mobile": 24,
+        "button_font_size_mobile": 12,
+        "button_font_weight": "600"
+      }
+    },
     "1766809414a7e8cece": {
       "type": "_blocks",
       "blocks": {
@@ -32,6 +128,7 @@
       "block_order": [
         "ai_gen_block_d196a9d_Uh8hT3"
       ],
+      "disabled": true,
       "settings": {}
     },
     "horizontal_ticker_FmUnjR": {
@@ -1451,6 +1548,7 @@
     }
   },
   "order": [
+    "video_hero_7wFKcV",
     "1766809414a7e8cece",
     "horizontal_ticker_FmUnjR",
     "featured_collection_9aHqMY",
