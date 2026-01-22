@@ -160,7 +160,50 @@
     products-mega-menu summary::before,
     products-mega-menu summary::after,
     products-mega-menu summary.header__menu-item::before,
-    products-mega-menu summary.header__menu-item::after {
+    products-mega-menu summary.header__menu-item::after,
+    products-mega-menu summary.header__menu-item--main::before,
+    products-mega-menu summary.header__menu-item--main::after,
+    products-mega-menu summary.list-menu__item::before,
+    products-mega-menu summary.list-menu__item::after,
+    products-mega-menu summary.link::before,
+    products-mega-menu summary.link::after,
+    #HeaderMenu-shop::before,
+    #HeaderMenu-shop::after,
+    summary#HeaderMenu-shop::before,
+    summary#HeaderMenu-shop::after {
+      display: none !important;
+      content: none !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
+    }
+
+    /* Remove hover backgrounds on summary */
+    products-mega-menu summary:hover,
+    products-mega-menu summary.header__menu-item:hover,
+    products-mega-menu summary.header__menu-item--main:hover,
+    products-mega-menu summary.list-menu__item:hover,
+    products-mega-menu summary.link:hover,
+    products-mega-menu summary:focus,
+    products-mega-menu summary:active,
+    #HeaderMenu-shop:hover,
+    #HeaderMenu-shop:focus,
+    #HeaderMenu-shop:active,
+    summary#HeaderMenu-shop:hover,
+    summary#HeaderMenu-shop:focus,
+    summary#HeaderMenu-shop:active {
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
+    }
+
+    /* Remove hover backgrounds on summary pseudo-elements */
+    products-mega-menu summary:hover::before,
+    products-mega-menu summary:hover::after,
+    products-mega-menu summary:focus::before,
+    products-mega-menu summary:focus::after,
+    #HeaderMenu-shop:hover::before,
+    #HeaderMenu-shop:hover::after {
       display: none !important;
       background: transparent !important;
       background-color: transparent !important;
