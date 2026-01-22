@@ -222,6 +222,20 @@
       background: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
       position: relative;
       z-index: 1;
+      /* Ensure body doesn't overlap summary */
+      margin-top: 0;
+      top: auto;
+    }
+
+    /* Prevent body from covering summary - ensure proper stacking */
+    products-mega-menu details {
+      display: contents;
+    }
+
+    products-mega-menu details summary {
+      display: block;
+      position: relative;
+      z-index: 999;
     }
 
     /* CRITICAL: Ensure summary is ALWAYS transparent - MAXIMUM SPECIFICITY */
