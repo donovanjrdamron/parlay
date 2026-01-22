@@ -873,6 +873,7 @@
     },
     "featured_collection_n6mJXY": {
       "type": "featured-collection",
+      "disabled": true,
       "name": "Collection Grid (Simple)",
       "settings": {
         "collection": "sleep-enhancer",
