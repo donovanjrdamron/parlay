@@ -1,13 +1,20 @@
 {{ 'hero.css' | asset_url | stylesheet_tag }}
 
 {% style %}
+  /* Remove all borders from section and all child elements */
   section.video-hero-{{ section.id }},
+  section.video-hero-{{ section.id }} *,
   #shopify-section-{{ section.id }},
   #shopify-section-{{ section.id }} *,
   .shopify-section[data-section-id="{{ section.id }}"] {
     border-top: none !important;
     border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
     border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
   }
 
   .video-hero-{{ section.id }} {
@@ -30,19 +37,28 @@
   .video-hero-{{ section.id }} .video-hero__video-container,
   .video-hero-{{ section.id }} .video-hero__video,
   .video-hero-{{ section.id }} .video-hero__video-fallback,
-  .video-hero-{{ section.id }} .video-hero__overlay {
+  .video-hero-{{ section.id }} .video-hero__overlay,
+  .video-hero-{{ section.id }} .video-hero__media-desktop,
+  .video-hero-{{ section.id }} .video-hero__media-mobile {
     border: none !important;
     border-top: none !important;
     border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
     outline: none !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
   }
 
   #shopify-section-{{ section.id }} {
     border: none !important;
     border-top: none !important;
     border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
     outline: none !important;
     box-shadow: none !important;
+    -webkit-box-shadow: none !important;
   }
 
   {% if request.page_type == 'index' %}
