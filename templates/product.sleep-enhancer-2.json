@@ -372,7 +372,6 @@
         "product_bundle_TyQTmd": {
           "type": "product_bundle",
           "name": "Product Bundle Selector 2",
-          "disabled": true,
           "settings": {
             "bundle_layout": "one_and_two",
             "layout_mode": "row",
