@@ -9,91 +9,6 @@
  */
 {
   "sections": {
-    "video_hero_7VrVTb": {
-      "type": "video-hero",
-      "blocks": {
-        "heading_BXfwwh": {
-          "type": "heading",
-          "settings": {
-            "heading": "Welcome to Our Store"
-          }
-        },
-        "subheading_R7MrU4": {
-          "type": "subheading",
-          "settings": {
-            "subheading": "Discover amazing products"
-          }
-        },
-        "text_AUQeCw": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Add your descriptive text here</p>"
-          }
-        },
-        "button_3yrLwa": {
-          "type": "button",
-          "settings": {
-            "button_text": "Shop Now",
-            "button_link": ""
-          }
-        }
-      },
-      "block_order": [
-        "heading_BXfwwh",
-        "subheading_R7MrU4",
-        "text_AUQeCw",
-        "button_3yrLwa"
-      ],
-      "disabled": true,
-      "name": "Video Hero",
-      "settings": {
-        "hero_video": "shopify://files/videos/0119 (1).mp4",
-        "min_height": 80,
-        "min_height_mobile": 60,
-        "background_color": "#000000",
-        "enable_overlay": true,
-        "overlay_color": "#000000",
-        "overlay_opacity": 40,
-        "border_radius": 24,
-        "border_radius_mobile": 16,
-        "content_max_width": 800,
-        "content_left_margin": 60,
-        "content_left_margin_mobile": 30,
-        "content_padding_vertical": 60,
-        "content_padding_horizontal": 40,
-        "content_padding_vertical_mobile": 40,
-        "content_padding_horizontal_mobile": 20,
-        "heading_color": "#ffffff",
-        "heading_font_size": 64,
-        "heading_font_size_mobile": 40,
-        "heading_font_weight": "700",
-        "heading_line_height": 1.2,
-        "heading_margin_bottom": 20,
-        "subheading_color": "#ffffff",
-        "subheading_font_size": 32,
-        "subheading_font_size_mobile": 24,
-        "subheading_font_weight": "500",
-        "subheading_line_height": 1.4,
-        "subheading_margin_bottom": 20,
-        "text_color": "#ffffff",
-        "text_font_size": 18,
-        "text_font_size_mobile": 16,
-        "text_line_height": 1.6,
-        "text_margin_bottom": 30,
-        "button_background_color": "#620a0a",
-        "button_text_color": "#ffffff",
-        "button_hover_background_color": "#7a0d0d",
-        "button_hover_text_color": "#ffffff",
-        "button_border_color": "#620a0a",
-        "button_hover_border_color": "#7a0d0d",
-        "button_border_width": 0,
-        "button_border_radius": 4,
-        "button_padding_vertical": 16,
-        "button_padding_horizontal": 32,
-        "button_font_size": 16,
-        "button_font_weight": "600"
-      }
-    },
     "1766809414a7e8cece": {
       "type": "_blocks",
       "blocks": {
@@ -1536,7 +1451,6 @@
     }
   },
   "order": [
-    "video_hero_7VrVTb",
     "1766809414a7e8cece",
     "horizontal_ticker_FmUnjR",
     "featured_collection_9aHqMY",
