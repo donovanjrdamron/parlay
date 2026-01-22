@@ -26,6 +26,10 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    {% if section.settings.enable_blur %}
+      filter: blur({{ section.settings.blur_amount }}px);
+      transform: scale(1.1);
+    {% endif %}
   }
 
   .video-hero-{{ section.id }} .video-hero__video-fallback {
@@ -38,6 +42,10 @@
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
     z-index: 1;
+    {% if section.settings.enable_blur %}
+      filter: blur({{ section.settings.blur_amount }}px);
+      transform: scale(1.1);
+    {% endif %}
   }
 
   .video-hero-{{ section.id }} .video-hero__video-container.video-error .video-hero__video-fallback {
@@ -60,7 +68,10 @@
   }
 
   .video-hero-{{ section.id }} .video-hero__content {
-    position: relative;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 3;
     width: 100%;
     max-width: {{ section.settings.content_max_width }}px;
@@ -147,6 +158,7 @@
 
     .video-hero-{{ section.id }} .video-hero__content {
       padding: {{ section.settings.content_padding_vertical_mobile }}px {{ section.settings.content_padding_horizontal_mobile }}px;
+      transform: translate(-50%, -50%);
     }
 
     .video-hero-{{ section.id }} .video-hero__heading {
@@ -298,12 +310,12 @@
     {
       "type": "range",
       "id": "min_height",
-      "min": 30,
+      "min": 50,
       "max": 100,
       "step": 5,
       "unit": "vh",
       "label": "Minimum Height (Desktop)",
-      "default": 80
+      "default": 90
     },
     {
       "type": "range",
@@ -345,7 +357,28 @@
       "step": 5,
       "unit": "%",
       "label": "Overlay Opacity",
-      "default": 40
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Blur Effect"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_blur",
+      "label": "Enable Blur Effect",
+      "default": true,
+      "info": "Adds a blur effect to the video background"
+    },
+    {
+      "type": "range",
+      "id": "blur_amount",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Blur Amount",
+      "default": 8
     },
     {
       "type": "header",
@@ -434,12 +467,12 @@
     {
       "type": "range",
       "id": "heading_font_size",
-      "min": 24,
+      "min": 32,
       "max": 120,
-      "step": 2,
+      "step": 4,
       "unit": "px",
       "label": "Heading Font Size (Desktop)",
-      "default": 64
+      "default": 72
     },
     {
       "type": "range",
