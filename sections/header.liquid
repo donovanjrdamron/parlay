@@ -103,7 +103,7 @@
 
 {%- style -%}
   {% if request.page_type == 'index' %}
-    .header-wrapper {
+    .section-header .header-wrapper {
       background-color: transparent !important;
       background: transparent !important;
       position: absolute;
@@ -123,11 +123,19 @@
       right: 0;
       z-index: 101;
       margin-bottom: 0 !important;
+      background: transparent !important;
+      background-color: transparent !important;
     }
 
-    .header {
+    .section-header .header {
       background-color: transparent !important;
       background: transparent !important;
+    }
+
+    .section-header .header-wrapper,
+    .section-header .header-wrapper * {
+      background: transparent !important;
+      background-color: transparent !important;
     }
   {% else %}
     .header-wrapper {
