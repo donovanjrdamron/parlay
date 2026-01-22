@@ -238,6 +238,11 @@
     .video-hero-{{ section.id }} .video-hero__text {
       font-size: {{ section.settings.text_font_size_mobile }}px;
     }
+
+    .video-hero-{{ section.id }} .video-hero__button {
+      padding: {{ section.settings.button_padding_vertical_mobile }}px {{ section.settings.button_padding_horizontal_mobile }}px;
+      font-size: {{ section.settings.button_font_size_mobile }}px;
+    }
   }
 
   /* Animation */
@@ -1071,7 +1076,7 @@
       "max": 40,
       "step": 2,
       "unit": "px",
-      "label": "Button Vertical Padding",
+      "label": "Button Vertical Padding (Desktop)",
       "default": 16
     },
     {
@@ -1081,7 +1086,7 @@
       "max": 80,
       "step": 4,
       "unit": "px",
-      "label": "Button Horizontal Padding",
+      "label": "Button Horizontal Padding (Desktop)",
       "default": 32
     },
     {
@@ -1091,8 +1096,38 @@
       "max": 24,
       "step": 1,
       "unit": "px",
-      "label": "Button Font Size",
+      "label": "Button Font Size (Desktop)",
       "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical_mobile",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Button Vertical Padding (Mobile)",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal_mobile",
+      "min": 16,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Button Horizontal Padding (Mobile)",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "button_font_size_mobile",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Button Font Size (Mobile)",
+      "default": 14
     },
     {
       "type": "select",
