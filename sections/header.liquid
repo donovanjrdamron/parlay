@@ -274,11 +274,13 @@
     products-mega-menu .products-mega-menu__body {
       background-color: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
       background: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
-      position: relative;
-      z-index: 1;
-      /* Ensure body doesn't overlap summary */
-      margin-top: 0;
-      top: auto;
+      position: absolute !important;
+      z-index: 1 !important;
+      /* Ensure body doesn't overlap summary - position it below */
+      margin-top: 0 !important;
+      top: 100% !important;
+      left: 0 !important;
+      right: 0 !important;
     }
 
     /* Ensure summary displays properly and is always visible */
@@ -295,9 +297,13 @@
       position: relative;
     }
 
-    products-mega-menu .products-mega-menu__body {
-      display: block;
-      position: relative;
+    /* Only show body when details is open */
+    products-mega-menu details:not([open]) .products-mega-menu__body {
+      display: none !important;
+    }
+
+    products-mega-menu details[open] .products-mega-menu__body {
+      display: block !important;
     }
 
     /* CRITICAL: Target by ID for maximum specificity */
@@ -414,6 +420,12 @@
       background: transparent !important;
       background-color: transparent !important;
       background-image: none !important;
+      box-shadow: none !important;
+      -webkit-box-shadow: none !important;
+      border: none !important;
+      outline: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
     }
 
     /* Also override variables on parent elements */
@@ -423,6 +435,18 @@
       --color-base-background-1: 0, 0, 0 !important;
       background: transparent !important;
       background-color: transparent !important;
+      box-shadow: none !important;
+      -webkit-box-shadow: none !important;
+      border: none !important;
+      outline: none !important;
+    }
+
+    /* Remove any white background from the custom element itself */
+    products-mega-menu {
+      background: transparent !important;
+      background-color: transparent !important;
+      box-shadow: none !important;
+      -webkit-box-shadow: none !important;
     }
 
     .mega-menu__content,
