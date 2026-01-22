@@ -489,7 +489,7 @@
           "settings": {
             "text": "<p>Upgrade to the set for Day and Night protection</p>",
             "highlight_text": "",
-            "text_color": "#333333",
+            "text_color": "#da9100",
             "font_size_desktop": 16,
             "font_size_mobile": 14,
             "line_height_desktop": 1.6,
