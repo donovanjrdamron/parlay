@@ -38,7 +38,7 @@
       "settings": {
         "columns_desktop": 1,
         "columns_mobile": 1,
-        "desktop_spacing": 28,
+        "desktop_spacing": 24,
         "mobile_spacing": 12,
         "show_separator": false,
         "background_color": "#620a0a",
