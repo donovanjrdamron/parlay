@@ -34,7 +34,6 @@
       "block_order": [
         "announcement_F7G4kd"
       ],
-      "disabled": true,
       "name": "t:sections.announcement-bar.name",
       "settings": {
         "columns_desktop": 1,
