@@ -195,37 +195,6 @@
             "margin_bottom": 15
           }
         },
-        "frame_selector_UaGN8T": {
-          "type": "frame_selector",
-          "disabled": true,
-          "settings": {
-            "heading": "Choose your frame",
-            "heading_font_size_desktop": 24,
-            "heading_font_size_mobile": 20,
-            "heading_font_weight": 600,
-            "heading_color": "#000000",
-            "heading_alignment": "left",
-            "heading_margin_bottom": 16,
-            "frame_gap": 16,
-            "frame_gap_mobile": 12,
-            "grid_margin_top": 16,
-            "frame_background": "#ffffff",
-            "frame_border_radius": 8,
-            "frame_border_width": 2,
-            "frame_border_color": "#e5e5e5",
-            "selected_border_width": 3,
-            "selected_border_color": "#620a0a",
-            "selected_badge_background": "#620a0a",
-            "selected_badge_text_color": "#ffffff",
-            "frame_name_font_size_desktop": 16,
-            "frame_name_font_size_mobile": 14,
-            "frame_name_font_weight": 600,
-            "frame_text_color": "#ffffff",
-            "margin_top": 20,
-            "margin_bottom": 20,
-            "show_debug": false
-          }
-        },
         "aero_color_selector_LktyXD": {
           "type": "aero_color_selector",
           "settings": {
@@ -402,6 +371,7 @@
         },
         "product_bundle_TyQTmd": {
           "type": "product_bundle",
+          "name": "Product Bundle Selector 2",
           "disabled": true,
           "settings": {
             "bundle_layout": "one_and_two",
@@ -770,7 +740,6 @@
         "divider_biQQWb",
         "benefit_list_i9jafU",
         "product_text_block_GYxrtF",
-        "frame_selector_UaGN8T",
         "aero_color_selector_LktyXD",
         "frame_selector_8ebqEb",
         "product_bundle_CWRzMT",
