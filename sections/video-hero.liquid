@@ -33,6 +33,24 @@
     display: block;
   }
 
+  .video-hero-{{ section.id }} .video-hero__video--desktop {
+    display: block;
+  }
+
+  .video-hero-{{ section.id }} .video-hero__video--mobile {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .video-hero-{{ section.id }} .video-hero__video--desktop {
+      display: none;
+    }
+
+    .video-hero-{{ section.id }} .video-hero__video--mobile {
+      display: block;
+    }
+  }
+
   .video-hero-{{ section.id }} .video-hero__video-fallback {
     position: absolute;
     top: 0;
@@ -242,10 +260,11 @@
 <section class="video-hero-{{ section.id }}">
   {% comment %} Video Background {% endcomment %}
   <div class="video-hero__video-container">
+    {% comment %} Desktop Video {% endcomment %}
     {% if section.settings.hero_video != blank %}
       <link rel="preload" as="video" href="{{ section.settings.hero_video.sources[1].url }}" type="video/mp4">
       <video 
-        class="video-hero__video" 
+        class="video-hero__video video-hero__video--desktop" 
         autoplay 
         muted 
         loop 
@@ -253,14 +272,51 @@
         preload="auto"
         webkit-playsinline
         x5-playsinline
+        data-video-desktop
       >
         <source src="{{ section.settings.hero_video.sources[1].url }}" type="video/mp4">
       </video>
-      {% if section.settings.fallback_image %}
-        {{ section.settings.fallback_image | image_url: width: 1920 | image_tag: class: 'video-hero__video-fallback', loading: 'lazy', alt: section.settings.heading }}
-      {% endif %}
-    {% elsif section.settings.fallback_image %}
-      {{ section.settings.fallback_image | image_url: width: 1920 | image_tag: class: 'video-hero__video-fallback', loading: 'lazy', alt: section.settings.heading, style: 'opacity: 1;' }}
+    {% endif %}
+
+    {% comment %} Mobile Video {% endcomment %}
+    {% if section.settings.hero_video_mobile != blank %}
+      <link rel="preload" as="video" href="{{ section.settings.hero_video_mobile.sources[1].url }}" type="video/mp4">
+      <video 
+        class="video-hero__video video-hero__video--mobile" 
+        autoplay 
+        muted 
+        loop 
+        playsinline 
+        preload="auto"
+        webkit-playsinline
+        x5-playsinline
+        data-video-mobile
+      >
+        <source src="{{ section.settings.hero_video_mobile.sources[1].url }}" type="video/mp4">
+      </video>
+    {% elsif section.settings.hero_video != blank %}
+      {% comment %} Fallback to desktop video on mobile if no mobile video is set {% endcomment %}
+      <link rel="preload" as="video" href="{{ section.settings.hero_video.sources[1].url }}" type="video/mp4">
+      <video 
+        class="video-hero__video video-hero__video--mobile" 
+        autoplay 
+        muted 
+        loop 
+        playsinline 
+        preload="auto"
+        webkit-playsinline
+        x5-playsinline
+        data-video-mobile
+      >
+        <source src="{{ section.settings.hero_video.sources[1].url }}" type="video/mp4">
+      </video>
+    {% endif %}
+
+    {% comment %} Fallback Image {% endcomment %}
+    {% if section.settings.fallback_image %}
+      {{ section.settings.fallback_image | image_url: width: 1920 | image_tag: class: 'video-hero__video-fallback', loading: 'lazy', alt: section.settings.heading }}
+    {% elsif section.settings.fallback_image_mobile %}
+      {{ section.settings.fallback_image_mobile | image_url: width: 1920 | image_tag: class: 'video-hero__video-fallback video-hero__video-fallback--mobile', loading: 'lazy', alt: section.settings.heading }}
     {% endif %}
   </div>
 
@@ -308,24 +364,61 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const videoContainer = document.querySelector('.video-hero-{{ section.id }} .video-hero__video-container');
-    const video = document.querySelector('.video-hero-{{ section.id }} .video-hero__video');
+    const desktopVideo = document.querySelector('.video-hero-{{ section.id }} .video-hero__video--desktop');
+    const mobileVideo = document.querySelector('.video-hero-{{ section.id }} .video-hero__video--mobile');
     
-    if (video) {
-      video.addEventListener('loadeddata', function() {
-        videoContainer.classList.add('video-loaded');
-      });
+    function handleVideoLoad(video) {
+      if (video) {
+        video.addEventListener('loadeddata', function() {
+          videoContainer.classList.add('video-loaded');
+        });
 
-      video.addEventListener('error', function() {
-        videoContainer.classList.add('video-error');
-      });
-
-      // Fallback: if video doesn't load within 5 seconds, show fallback image
-      setTimeout(function() {
-        if (!videoContainer.classList.contains('video-loaded')) {
+        video.addEventListener('error', function() {
           videoContainer.classList.add('video-error');
-        }
-      }, 5000);
+        });
+      }
     }
+
+    // Handle desktop video
+    if (desktopVideo) {
+      handleVideoLoad(desktopVideo);
+    }
+
+    // Handle mobile video
+    if (mobileVideo) {
+      handleVideoLoad(mobileVideo);
+    }
+
+    // Fallback: if video doesn't load within 5 seconds, show fallback image
+    setTimeout(function() {
+      if (!videoContainer.classList.contains('video-loaded')) {
+        videoContainer.classList.add('video-error');
+      }
+    }, 5000);
+
+    // Handle responsive video switching
+    function handleResize() {
+      const isMobile = window.innerWidth <= 749;
+      if (desktopVideo && mobileVideo) {
+        if (isMobile) {
+          desktopVideo.pause();
+          mobileVideo.play().catch(() => {});
+        } else {
+          mobileVideo.pause();
+          desktopVideo.play().catch(() => {});
+        }
+      }
+    }
+
+    // Initial check
+    handleResize();
+    
+    // Listen for resize events
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(handleResize, 250);
+    });
   });
 </script>
 
@@ -342,14 +435,26 @@
     {
       "type": "video",
       "id": "hero_video",
-      "label": "Hero Video (MP4)",
-      "info": "Upload a video file from Shopify files. This will be used as the background."
+      "label": "Hero Video - Desktop (MP4)",
+      "info": "Upload a video file from Shopify files. This will be used as the background on desktop devices."
+    },
+    {
+      "type": "video",
+      "id": "hero_video_mobile",
+      "label": "Hero Video - Mobile (MP4)",
+      "info": "Upload a separate video for mobile devices. If not provided, desktop video will be used on mobile."
     },
     {
       "type": "image_picker",
       "id": "fallback_image",
       "label": "Fallback Image",
-      "info": "Image shown if video fails to load or on mobile devices"
+      "info": "Image shown if video fails to load"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_image_mobile",
+      "label": "Fallback Image - Mobile",
+      "info": "Optional: Separate fallback image for mobile devices"
     },
     {
       "type": "header",
