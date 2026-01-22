@@ -316,10 +316,43 @@
     products-mega-menu summary#HeaderMenu-shop,
     products-mega-menu summary#HeaderMenu-shop.header__menu-item,
     .section-header summary#HeaderMenu-shop,
-    .header-wrapper summary#HeaderMenu-shop {
+    .header-wrapper summary#HeaderMenu-shop,
+    header-menu summary#HeaderMenu-shop,
+    header-menu details.mega-menu summary#HeaderMenu-shop,
+    header-menu details.mega-menu[open] summary#HeaderMenu-shop {
       background: transparent !important;
       background-color: transparent !important;
       background-image: none !important;
+      box-shadow: none !important;
+      -webkit-box-shadow: none !important;
+      border: none !important;
+      outline: none !important;
+    }
+
+    /* Target the regular mega-menu details element */
+    header-menu details.mega-menu,
+    header-menu details.mega-menu[open] {
+      background: transparent !important;
+      background-color: transparent !important;
+      box-shadow: none !important;
+      -webkit-box-shadow: none !important;
+      border: none !important;
+      outline: none !important;
+    }
+
+    /* Target all mega-menu summaries */
+    header-menu details.mega-menu summary,
+    header-menu details.mega-menu[open] summary {
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
+      box-shadow: none !important;
+      -webkit-box-shadow: none !important;
+      border: none !important;
+      outline: none !important;
+      --color-background: 0, 0, 0 !important;
+      --color-base-background-1: 0, 0, 0 !important;
+      --color-base-background-2: 0, 0, 0 !important;
     }
 
     /* CRITICAL: Ensure summary is ALWAYS transparent - MAXIMUM SPECIFICITY */
