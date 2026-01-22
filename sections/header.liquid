@@ -102,13 +102,34 @@
 </style>
 
 {%- style -%}
-  .header-wrapper {
-    background-color: rgba({{ section.settings.bg_color.red }}, {{ section.settings.bg_color.green }}, {{ section.settings.bg_color.blue }}, {{ section.settings.background_opacity | divided_by: 100.0 }}) !important;
-    {% if section.settings.backdrop_blur > 0 %}
-      -webkit-backdrop-filter: blur({{ section.settings.backdrop_blur }}px);
-      backdrop-filter: blur({{ section.settings.backdrop_blur }}px);
-    {% endif %}
-  }
+  {% if request.page_type == 'index' %}
+    .header-wrapper {
+      background-color: transparent !important;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      width: 100%;
+    }
+
+    .section-header {
+      position: absolute !important;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      margin-bottom: 0 !important;
+    }
+  {% else %}
+    .header-wrapper {
+      background-color: rgba({{ section.settings.bg_color.red }}, {{ section.settings.bg_color.green }}, {{ section.settings.bg_color.blue }}, {{ section.settings.background_opacity | divided_by: 100.0 }}) !important;
+      {% if section.settings.backdrop_blur > 0 %}
+        -webkit-backdrop-filter: blur({{ section.settings.backdrop_blur }}px);
+        backdrop-filter: blur({{ section.settings.backdrop_blur }}px);
+      {% endif %}
+    }
+  {% endif %}
 
   .header__icon,
   .header__icon svg,
