@@ -227,15 +227,23 @@
       top: auto;
     }
 
-    /* Prevent body from covering summary - ensure proper stacking */
-    products-mega-menu details {
-      display: contents;
+    /* Ensure summary displays properly and is always visible */
+    products-mega-menu details summary {
+      display: block !important;
+      position: relative !important;
+      z-index: 999 !important;
+      visibility: visible !important;
+      opacity: 1 !important;
     }
 
-    products-mega-menu details summary {
+    /* Ensure body doesn't visually overlap summary */
+    products-mega-menu details {
+      position: relative;
+    }
+
+    products-mega-menu .products-mega-menu__body {
       display: block;
       position: relative;
-      z-index: 999;
     }
 
     /* CRITICAL: Ensure summary is ALWAYS transparent - MAXIMUM SPECIFICITY */
