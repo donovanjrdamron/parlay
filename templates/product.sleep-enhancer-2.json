@@ -487,7 +487,7 @@
         "product_text_block_EhhbKe": {
           "type": "product_text_block",
           "settings": {
-            "text": "<p>Upgrade to the set for Day and Night protection</p>",
+            "text": "<p>Upgrade to the set for <em>Day</em> and <em>Night</em> protection</p>",
             "highlight_text": "",
             "text_color": "#da9100",
             "font_size_desktop": 16,
