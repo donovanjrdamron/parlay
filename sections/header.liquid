@@ -148,8 +148,20 @@
 
     .mega-menu__content,
     .mega-menu__content *,
-    .header__inline-menu .list-menu__item:hover .mega-menu,
-    .header__inline-menu .mega-menu {
+    .header__inline-menu .list-menu__item:hover .mega-menu {
+      background-color: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
+      background: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
+    }
+
+    /* Make details.mega-menu and its summary transparent - only the content should have background */
+    .header__inline-menu details.mega-menu,
+    .header__inline-menu details.mega-menu summary {
+      background: transparent !important;
+      background-color: transparent !important;
+    }
+
+    /* Only apply background to the mega-menu content, not the details element */
+    .header__inline-menu details.mega-menu .mega-menu__content {
       background-color: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
       background: {{ section.settings.mega_menu_bg_color | default: '#ffffff' }} !important;
     }
