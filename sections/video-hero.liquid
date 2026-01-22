@@ -9,6 +9,15 @@
     background-color: {{ section.settings.background_color }};
     border-radius: 0 0 {{ section.settings.border_radius }}px {{ section.settings.border_radius }}px;
     z-index: 1;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  #shopify-section-{{ section.id }} {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
   }
 
   {% if request.page_type == 'index' %}
