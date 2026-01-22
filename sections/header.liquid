@@ -146,24 +146,7 @@
       background-color: transparent !important;
     }
 
-    /* Ensure products-mega-menu summary/button is transparent */
-    products-mega-menu summary,
-    products-mega-menu summary.header__menu-item,
-    products-mega-menu summary.header__menu-item--main,
-    products-mega-menu summary.list-menu__item,
-    products-mega-menu summary.products-mega-menu,
-    products-mega-menu details[open] summary,
-    products-mega-menu details summary,
-    .products-mega-menu summary,
-    .products-mega-menu summary.header__menu-item,
-    .products-mega-menu summary.header__menu-item--main,
-    .header__menu-item.products-mega-menu,
-    .header__menu-item--main.products-mega-menu,
-    summary.products-mega-menu,
-    summary.header__menu-item.products-mega-menu {
-      background: transparent !important;
-      background-color: transparent !important;
-    }
+    /* REMOVED - Using more specific rules below */
 
     /* Ensure the summary span inside is also transparent */
     products-mega-menu summary span,
@@ -229,23 +212,40 @@
       z-index: 1;
     }
 
-    /* Ensure summary is always above the body and transparent - MOST SPECIFIC */
+    /* CRITICAL: Ensure summary is ALWAYS transparent - MAXIMUM SPECIFICITY */
     products-mega-menu summary,
     products-mega-menu summary.header__menu-item,
     products-mega-menu summary.header__menu-item--main,
     products-mega-menu summary.list-menu__item,
     products-mega-menu summary.products-mega-menu,
     products-mega-menu summary.link,
+    products-mega-menu details summary,
+    products-mega-menu details[open] summary,
+    products-mega-menu details[closed] summary,
     .section-header products-mega-menu summary,
     .section-header products-mega-menu summary.header__menu-item,
     .header-wrapper products-mega-menu summary,
-    .header-wrapper products-mega-menu summary.header__menu-item {
+    .header-wrapper products-mega-menu summary.header__menu-item,
+    .header products-mega-menu summary,
+    .header .header__inline-menu products-mega-menu summary,
+    .header__inline-menu products-mega-menu summary {
       position: relative !important;
       z-index: 999 !important;
       background: transparent !important;
       background-color: transparent !important;
+      background-image: none !important;
       box-shadow: none !important;
       -webkit-box-shadow: none !important;
+    }
+
+    /* Override ANY color-background class on summary */
+    products-mega-menu summary.color-background-1,
+    products-mega-menu .color-background-1 summary,
+    products-mega-menu summary[class*="color-background"],
+    products-mega-menu summary[class*="background"] {
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
     }
 
     /* Ensure body doesn't overlap summary */
