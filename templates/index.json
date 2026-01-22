@@ -54,7 +54,7 @@
         "text_alignment": "left",
         "content_position_type": "pixels",
         "content_top_position": 50,
-        "content_bottom_position": 80,
+        "content_bottom_position": 20,
         "content_vertical_offset": 0,
         "content_left_margin": 40,
         "content_top_position_mobile": 50,
