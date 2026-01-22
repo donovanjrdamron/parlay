@@ -18,6 +18,10 @@
       background-color: {{ section.settings.background_color }};
     {% endif %}
     color: {{ section.settings.text_color }};
+    {% if request.page_type == 'index' %}
+      position: relative;
+      z-index: 1;
+    {% endif %}
   }
 
   .announcement-bar__message__svg-icon {

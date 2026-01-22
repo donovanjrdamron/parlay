@@ -105,12 +105,15 @@
   {% if request.page_type == 'index' %}
     .header-wrapper {
       background-color: transparent !important;
+      background: transparent !important;
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      z-index: 100;
+      z-index: 101;
       width: 100%;
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
     }
 
     .section-header {
@@ -118,8 +121,13 @@
       top: 0;
       left: 0;
       right: 0;
-      z-index: 100;
+      z-index: 101;
       margin-bottom: 0 !important;
+    }
+
+    .header {
+      background-color: transparent !important;
+      background: transparent !important;
     }
   {% else %}
     .header-wrapper {
