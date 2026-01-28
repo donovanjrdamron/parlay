@@ -813,7 +813,7 @@
         "thumbnail_border_color": "rgba(0,0,0,0)",
         "thumbnail_active_border_width": 1,
         "thumbnail_active_border_color": "#620a0a",
-        "mobile_media_corner_radius": 10,
+        "mobile_media_corner_radius": 0,
         "mobile_spacing_pixels": 0,
         "mobile_arrows_position": "hidden",
         "mobile_pagination": "dots_under",
@@ -865,7 +865,7 @@
         "image_icon_3_text_color": "#ffffff",
         "image_icon_3_border_color": "#000000",
         "image_icon_3_border_width": 2,
-        "mobile_padding_top": 16,
+        "mobile_padding_top": 0,
         "mobile_padding_bottom": 16,
         "desktop_padding_top": 36,
         "desktop_padding_bottom": 36
