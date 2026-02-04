@@ -1064,9 +1064,9 @@
         "image_wMxgzx": {
           "type": "image",
           "settings": {
-            "image_desktop": "shopify://shop_images/DSC06362.jpg",
+            "image_desktop": "shopify://shop_images/Fixed.jpg",
             "aspect_ratio_desktop": "1 / 1",
-            "image_mobile": "shopify://shop_images/DSC06362.jpg",
+            "image_mobile": "shopify://shop_images/Fixed.jpg",
             "aspect_ratio_mobile": "1 / 1",
             "border_radius": 10,
             "max_width": 100,
