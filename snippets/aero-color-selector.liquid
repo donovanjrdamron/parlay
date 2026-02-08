@@ -235,7 +235,7 @@
       .aero-color-selector-{{ block_id }} .color-swatch {
         width: {{ block.settings.swatch_size }}px;
         height: {{ block.settings.swatch_size }}px;
-        border-radius: {{ block.settings.swatch_border_radius }}px;
+        border-radius: 50%;
         border: {{ block.settings.swatch_border_width }}px solid {{ block.settings.swatch_border_color }};
         overflow: hidden;
         cursor: pointer;
@@ -255,7 +255,7 @@
       .aero-color-selector-{{ block_id }} .color-swatch.swatch-selected {
         border-color: {{ block.settings.selected_border_color }};
         border-width: {{ block.settings.selected_border_width }}px;
-        box-shadow: 0 0 0 {{ block.settings.selected_border_width }}px {{ block.settings.selected_border_color }};
+        box-shadow: 0 0 0 2px #fff, 0 0 0 {{ block.settings.selected_border_width | plus: 2 }}px {{ block.settings.selected_border_color }};
       }
       
       .aero-color-selector-{{ block_id }} .color-swatch-image {
@@ -263,6 +263,7 @@
         height: 100%;
         object-fit: cover;
         display: block;
+        border-radius: 50%;
       }
       
       .aero-color-selector-{{ block_id }} .color-swatch-label {
@@ -313,8 +314,15 @@
             assign color_name = 'Default'
           endif
           
-          # Get product image for swatch
-          assign swatch_image = variant_product.featured_image
+          # Get swatch image - prefer custom metafield, then fall back to product image
+          assign swatch_image = null
+          assign swatch_metafield = variant_product.metafields.custom.swatch_image
+          if swatch_metafield != blank and swatch_metafield.value != blank
+            assign swatch_image = swatch_metafield.value
+          endif
+          if swatch_image == blank
+            assign swatch_image = variant_product.featured_image
+          endif
           if swatch_image == blank
             assign swatch_image = variant_product.images.first
           endif
