@@ -1120,12 +1120,13 @@
         "benefit_item_6nWf8c",
         "button_VyRpcp"
       ],
+      "disabled": true,
       "name": "Icon Benefit List",
       "settings": {
-        "use_theme_colors": true,
+        "use_theme_colors": false,
         "section_background_color": "#ffffff",
-        "heading_before": "Why Choose Parlay?",
-        "highlighted_text": "",
+        "heading_before": "Feel the effects",
+        "highlighted_text": "instantly",
         "heading_after": "",
         "highlight_position": "inline_second",
         "heading_tag": "h2",
