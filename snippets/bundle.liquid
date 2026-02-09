@@ -260,13 +260,15 @@
     }
 
     .bundle-option-{{ block.id }} .bundle-badge-top-center:not(.bundle-badge-full-width) {
-      top: -10px;
-      left: 50%;
-      transform: translateX(-50%);
+      top: -8px;
+      right: 8px;
+      left: auto;
+      transform: none;
     }
 
     .bundle-option-{{ block.id }}.bundle-has-badge {
       margin-top: 0;
+      padding-top: calc({{ block.settings.button_padding_vertical | default: 16 }}px + 6px);
     }
 
     .bundle-option-{{ block.id }} .bundle-content {
