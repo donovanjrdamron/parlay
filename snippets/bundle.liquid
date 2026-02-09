@@ -234,12 +234,6 @@
       font-size: {{ block.settings.compare_price_font_size | default: 14 }}px;
       color: {{ block.settings.compare_price_color | default: '#999999' }};
       text-decoration: line-through;
-      {% if layout_mode == 'row' %}
-      display: inline;
-      margin-left: 6px;
-      {% else %}
-      margin-right: 8px;
-      {% endif %}
       transition: color 0.3s ease;
     }
 
@@ -272,7 +266,7 @@
     }
 
     .bundle-option-{{ block.id }}.bundle-has-badge {
-      margin-top: 6px;
+      margin-top: 0;
     }
 
     .bundle-option-{{ block.id }} .bundle-content {
@@ -287,8 +281,10 @@
     .bundle-option-{{ block.id }} .bundle-price-wrapper {
       {% if layout_mode == 'row' %}
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 6px;
+      flex-wrap: wrap;
       {% endif %}
     }
   </style>
