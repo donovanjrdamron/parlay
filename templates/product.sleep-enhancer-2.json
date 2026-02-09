@@ -458,7 +458,7 @@
             "bundle_3_badge_padding_left": 12,
             "bundle_3_badge_padding_right": 12,
             "bundle_3_badge_full_width": false,
-            "label_font_size": 14,
+            "label_font_size": 15,
             "label_font_weight": 600,
             "label_color": "#000000",
             "active_label_color": "#000000",
