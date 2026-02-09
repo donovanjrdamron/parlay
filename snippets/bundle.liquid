@@ -164,6 +164,8 @@
     .bundle-option-{{ block.id }}.active {
       background: {{ block.settings.active_bg_color | default: '#f0f0f0' }};
       border-color: {{ block.settings.active_border_color | default: '#000000' }};
+      border-width: 2px;
+      padding: calc({{ block.settings.button_padding_vertical | default: 16 }}px - 1px) calc({{ block.settings.button_padding_horizontal | default: 16 }}px - 1px);
     }
 
     .bundle-option-{{ block.id }} .bundle-placeholders {
@@ -233,9 +235,8 @@
       color: {{ block.settings.compare_price_color | default: '#999999' }};
       text-decoration: line-through;
       {% if layout_mode == 'row' %}
-      margin-top: 4px;
-      margin-left: 0;
-      display: block;
+      display: inline;
+      margin-left: 6px;
       {% else %}
       margin-right: 8px;
       {% endif %}
@@ -265,14 +266,13 @@
     }
 
     .bundle-option-{{ block.id }} .bundle-badge-top-center:not(.bundle-badge-full-width) {
-      top: 8px;
+      top: -10px;
       left: 50%;
       transform: translateX(-50%);
     }
 
     .bundle-option-{{ block.id }}.bundle-has-badge {
-      margin-top: -15px;
-      padding-top: calc({{ block.settings.button_padding_vertical | default: 16 }}px + 15px);
+      margin-top: 6px;
     }
 
     .bundle-option-{{ block.id }} .bundle-content {
