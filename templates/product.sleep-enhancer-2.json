@@ -1029,6 +1029,161 @@
         "view_all_icon_color": "#ffffff"
       }
     },
+    "icon_benefit_list_BLzgbK": {
+      "type": "icon-benefit-list",
+      "blocks": {
+        "benefit_item_RxthEF": {
+          "type": "benefit_item",
+          "settings": {
+            "material_icon": "check_circle",
+            "custom_svg": "",
+            "icon_color": "#ffffff",
+            "icon_bg_color": "#000000",
+            "title": "3rd Party Tested Lenses",
+            "title_color": "#1a1a1a",
+            "description": "Add a description for this benefit",
+            "text_color": "#666666"
+          }
+        },
+        "benefit_item_fRAfhb": {
+          "type": "benefit_item",
+          "settings": {
+            "material_icon": "check_circle",
+            "custom_svg": "",
+            "icon_color": "#ffffff",
+            "icon_bg_color": "#000000",
+            "title": "Assembled in the USA",
+            "title_color": "#1a1a1a",
+            "description": "Add a description for this benefit",
+            "text_color": "#666666"
+          }
+        },
+        "benefit_item_6nWf8c": {
+          "type": "benefit_item",
+          "settings": {
+            "material_icon": "check_circle",
+            "custom_svg": "",
+            "icon_color": "#ffffff",
+            "icon_bg_color": "#000000",
+            "title": "5 Star Customer Rating",
+            "title_color": "#1a1a1a",
+            "description": "Add a description for this benefit",
+            "text_color": "#666666"
+          }
+        },
+        "button_VyRpcp": {
+          "type": "button",
+          "settings": {
+            "button_text": "SHOP NOW",
+            "button_link": "",
+            "scroll_to_section": "product",
+            "hide_on_desktop": false,
+            "button_icon": "arrow_right_alt",
+            "button_icon_filled": false,
+            "button_custom_icon": "",
+            "icon_position": "right",
+            "button_icon_size": 20,
+            "button_icon_gap": 8,
+            "button_icon_color": "#ffffff",
+            "alignment_desktop": "center",
+            "alignment_mobile": "center",
+            "use_custom_styles": true,
+            "button_text_color": "#ffffff",
+            "button_bg_color": "#000000",
+            "use_gradient": false,
+            "button_gradient": "linear-gradient(54deg, rgba(114, 255, 179, 1) 14%, rgba(255, 250, 99, 1) 85%)",
+            "button_text_color_hover": "#ffffff",
+            "button_bg_color_hover": "#333333",
+            "border_width": 0,
+            "border_color": "#000000",
+            "border_radius": 4,
+            "font_size_desktop": 16,
+            "font_size_mobile": 14,
+            "font_weight": "600",
+            "text_transform": "uppercase",
+            "letter_spacing": 1,
+            "padding_vertical": 16,
+            "padding_horizontal": 24,
+            "full_width": false,
+            "full_width_mobile_only": true,
+            "use_custom_width": false,
+            "custom_width_desktop": 300,
+            "custom_width_mobile": 280,
+            "margin_top": 14,
+            "margin_bottom": 24
+          }
+        }
+      },
+      "block_order": [
+        "benefit_item_RxthEF",
+        "benefit_item_fRAfhb",
+        "benefit_item_6nWf8c",
+        "button_VyRpcp"
+      ],
+      "name": "Icon Benefit List",
+      "settings": {
+        "use_theme_colors": true,
+        "section_background_color": "#ffffff",
+        "heading_before": "Why Choose Parlay?",
+        "highlighted_text": "",
+        "heading_after": "",
+        "highlight_position": "inline_second",
+        "heading_tag": "h2",
+        "heading_text_align_desktop": "left",
+        "heading_text_align_mobile": "center",
+        "heading_color": "#000000",
+        "heading_font_size_desktop": 40,
+        "heading_font_size_mobile": 32,
+        "heading_font_weight": "500",
+        "heading_line_height": 1.2,
+        "heading_spacing_desktop": 30,
+        "heading_spacing_mobile": 20,
+        "highlighted_gradient_enabled": false,
+        "highlighted_color": "#000000",
+        "highlighted_gradient": "linear-gradient(180deg, rgba(255, 145, 129, 1), rgba(254, 91, 124, 1) 49%, rgba(255, 140, 162, 1) 100%)",
+        "highlight_font_size_desktop": 40,
+        "highlight_font_size_mobile": 32,
+        "highlight_font_weight": "500",
+        "highlight_margin_top": 0,
+        "highlight_margin_bottom": 10,
+        "subheading": "",
+        "subheading_color": "#666666",
+        "subheading_font_size_desktop": 16,
+        "subheading_font_size_mobile": 14,
+        "subheading_font_weight": "400",
+        "subheading_text_align_desktop": "left",
+        "subheading_text_align_mobile": "center",
+        "custom_html_above_heading": "",
+        "custom_html_above_heading_spacing": 0,
+        "custom_html_below_heading": "",
+        "custom_html_below_heading_spacing": 20,
+        "custom_html_below_subtext": "",
+        "custom_html_below_subtext_spacing": 20,
+        "image_position": "left",
+        "vertical_alignment": "center",
+        "image_width_desktop": 100,
+        "hide_image_mobile": false,
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "content_border_width_desktop": 0,
+        "content_border_width_mobile": 0,
+        "content_border_color": "#000000",
+        "content_border_radius": 8,
+        "content_padding_horizontal_desktop": 24,
+        "content_padding_vertical_desktop": 24,
+        "content_padding_horizontal_mobile": 14,
+        "content_padding_vertical_mobile": 14,
+        "icon_size": 38,
+        "icon_size_mobile": 24,
+        "icon_border_radius": 50,
+        "icon_padding": 10,
+        "icon_alignment": "center",
+        "title_font_size": 18,
+        "text_font_size_desktop": 16,
+        "text_font_size_mobile": 14,
+        "gap_between_items": 20
+      }
+    },
     "image_with_blocks_JKVYGX": {
       "type": "image-with-blocks",
       "blocks": {
@@ -1303,6 +1458,7 @@
         "review_rey9hX",
         "review_YFDKn8"
       ],
+      "disabled": true,
       "custom_css": [
         ".section-template--22818132590628__customer_review_slider_Ag9aVg .crs-card {height: 580px;}"
       ],
@@ -3234,6 +3390,7 @@
   "order": [
     "main",
     "featured_collection_n6mJXY",
+    "icon_benefit_list_BLzgbK",
     "image_with_blocks_JKVYGX",
     "customer_review_slider_JXrfmA",
     "stats_counter_rFYdDm",
