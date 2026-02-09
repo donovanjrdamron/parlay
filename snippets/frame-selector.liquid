@@ -184,14 +184,27 @@
             assign is_selected = true
           endif
           
-          # Use current product's image if it matches this frame, otherwise use frame product's image
-          assign frame_image = frame_product.featured_image
+          # Use 5th product image metafield first, then fall back to featured image
+          assign frame_image = null
           if is_selected
-            assign frame_image = current_product.featured_image
+            assign frame_metafield = current_product.metafields.custom.5th_product_image
+            if frame_metafield != blank and frame_metafield.value != blank
+              assign frame_image = frame_metafield.value
+            endif
+            if frame_image == blank
+              assign frame_image = current_product.featured_image
+            endif
             if frame_image == blank
               assign frame_image = current_product.images.first
             endif
           else
+            assign frame_metafield = frame_product.metafields.custom.5th_product_image
+            if frame_metafield != blank and frame_metafield.value != blank
+              assign frame_image = frame_metafield.value
+            endif
+            if frame_image == blank
+              assign frame_image = frame_product.featured_image
+            endif
             if frame_image == blank
               assign frame_image = frame_product.images.first
             endif
