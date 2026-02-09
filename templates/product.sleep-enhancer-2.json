@@ -179,7 +179,7 @@
         "product_text_block_GYxrtF": {
           "type": "product_text_block",
           "settings": {
-            "text": "<p>Screens and indoor lighting keep your brain in “day mode” long after the day ends. The Sleep Enhancer Lens reduces the most stimulating artificial light so your body can actually wind down and fall asleep effortlessly.</p>",
+            "text": "<p>Artificial light keeps your brain overstimulated by disrupting dopamine, cortisol, and melatonin signaling. Parlay Sleep Lenses filter the most biologically disruptive wavelengths so your nervous system can normalize — improving focus during the day and sleep at night.</p>",
             "highlight_text": "\"Artificial Light\"",
             "text_color": "#000000",
             "font_size_desktop": 16,
@@ -588,6 +588,7 @@
         },
         "delivery_date_wiADyG": {
           "type": "delivery_date",
+          "disabled": true,
           "settings": {
             "days_ahead": 7,
             "date_format": "[day], [month] [date]",
