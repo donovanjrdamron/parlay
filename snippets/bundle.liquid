@@ -118,141 +118,146 @@
 <div class="product-bundle-selector" data-bundle-id="{{ block.id }}" {{ block.shopify_attributes }}>
 
   <style>
-    /* === CONTAINER === */
     .bundle-selector-{{ block.id }} {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-      gap: {{ block.settings.bundles_gap | default: 10 }}px;
-      margin: {{ block.settings.section_margin_top | default: 0 }}px 0 {{ block.settings.section_margin_bottom | default: 8 }}px 0;
+      display: flex;
+      gap: {{ block.settings.bundles_gap | default: 16 }}px;
+      margin: {{ block.settings.section_margin_top | default: 0 }}px 0 {{ block.settings.section_margin_bottom | default: 20 }}px 0;
+      -webkit-overflow-scrolling: touch;
+      {% unless block.settings.equal_card_width %}
+      justify-content: flex-start;
+      {% endunless %}
     }
 
-    /* === CARD === */
     .bundle-option-{{ block.id }} {
-      border: 1px solid {{ block.settings.border_color | default: '#e5e5e5' }};
+      {% if block.settings.equal_card_width %}
+      flex: 1;
+      min-width: 0;
+      {% else %}
+      flex: 0 0 {{ block.settings.custom_card_width | default: 200 }}px;
+      width: {{ block.settings.custom_card_width | default: 200 }}px;
+      {% endif %}
+      border: {{ block.settings.border_width | default: 2 }}px solid {{ block.settings.border_color | default: '#e5e5e5' }};
       border-radius: {{ block.settings.border_radius | default: 12 }}px;
-      padding: 10px 12px;
+      padding: {{ block.settings.button_padding_vertical | default: 16 }}px {{ block.settings.button_padding_horizontal | default: 16 }}px;
       background: {{ block.settings.bg_color | default: '#ffffff' }};
       cursor: pointer;
-      transition: border-color 0.2s ease, background 0.2s ease;
+      transition: all 0.3s ease;
       position: relative;
       overflow: visible;
       display: flex;
+      {% if layout_mode == 'row' %}
       flex-direction: row;
       align-items: center;
       text-align: left;
-      gap: 10px;
+      gap: {{ block.settings.image_content_gap | default: 12 }}px;
+      {% else %}
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      {% endif %}
     }
 
     .bundle-option-{{ block.id }}:hover {
       border-color: {{ block.settings.active_border_color | default: '#000000' }};
     }
 
-    /* === SELECTED STATE === */
     .bundle-option-{{ block.id }}.active {
-      background: {{ block.settings.active_bg_color | default: '#ffffff' }};
-      border: 2px solid {{ block.settings.active_border_color | default: '#000000' }};
-      padding: 9px 11px; /* compensate for thicker border */
+      background: {{ block.settings.active_bg_color | default: '#f0f0f0' }};
+      border-color: {{ block.settings.active_border_color | default: '#000000' }};
     }
 
-    /* === IMAGE === */
     .bundle-option-{{ block.id }} .bundle-placeholders {
       display: flex;
-      gap: 4px;
+      gap: 8px;
       justify-content: center;
-      align-items: center;
+      {% if layout_mode == 'column' %}
+      margin-bottom: {{ block.settings.image_content_gap | default: 12 }}px;
+      {% endif %}
       position: relative;
+      {% if layout_mode == 'row' %}
       flex-shrink: 0;
+      {% endif %}
     }
 
     .bundle-option-{{ block.id }} .bundle-placeholder-wrapper {
-      width: {{ block.settings.placeholder_size | default: 48 }}px;
-      height: {{ block.settings.placeholder_size | default: 48 }}px;
-      border-radius: {{ block.settings.image_border_radius | default: 4 }}px;
+      {% unless block.settings.image_full_width %}
+      width: {{ block.settings.placeholder_size | default: 60 }}px;
+      height: {{ block.settings.placeholder_size | default: 60 }}px;
+      {% else %}
+      width: 100%;
+      {% endunless %}
+      border-radius: {{ block.settings.image_border_radius | default: 8 }}px;
       overflow: hidden;
       position: relative;
     }
 
     .bundle-option-{{ block.id }} .bundle-placeholder-wrapper img {
+      {% if block.settings.image_full_width %}
+      width: 100%;
+      height: auto;
+      {% else %}
       width: 100%;
       height: 100%;
       object-fit: contain;
       object-position: center;
+      {% endif %}
       display: block;
     }
 
-    /* === CONTENT === */
-    .bundle-option-{{ block.id }} .bundle-content {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-      flex: 1;
-      min-width: 0;
-    }
-
-    /* === LABEL === */
     .bundle-option-{{ block.id }} .bundle-label {
       font-size: {{ block.settings.label_font_size | default: 14 }}px;
-      font-weight: {{ block.settings.label_font_weight | default: 700 }};
+      font-weight: {{ block.settings.label_font_weight | default: 600 }};
       color: {{ block.settings.label_color | default: '#000000' }};
-      margin: 0 0 1px 0;
-      line-height: 1.2;
-      transition: color 0.2s ease;
+      margin-top: {{ block.settings.label_margin_top | default: 0 }}px;
+      margin-bottom: {{ block.settings.label_margin_bottom | default: 8 }}px;
+      transition: color 0.3s ease;
     }
 
     .bundle-option-{{ block.id }}.active .bundle-label {
       color: {{ block.settings.active_label_color | default: '#000000' }};
     }
 
-    /* === PRICE === */
     .bundle-option-{{ block.id }} .bundle-price {
-      font-size: {{ block.settings.price_font_size | default: 14 }}px;
-      font-weight: {{ block.settings.price_font_weight | default: 600 }};
+      font-size: {{ block.settings.price_font_size | default: 18 }}px;
+      font-weight: {{ block.settings.price_font_weight | default: 700 }};
       color: {{ block.settings.price_color | default: '#000000' }};
-      line-height: 1.2;
-      transition: color 0.2s ease;
+      transition: color 0.3s ease;
     }
 
     .bundle-option-{{ block.id }}.active .bundle-price {
       color: {{ block.settings.active_price_color | default: '#000000' }};
     }
 
-    /* === PRICE WRAPPER === */
-    .bundle-option-{{ block.id }} .bundle-price-wrapper {
-      display: flex;
-      flex-direction: row;
-      align-items: baseline;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    /* === COMPARE PRICE === */
     .bundle-option-{{ block.id }} .bundle-compare-price {
-      font-size: {{ block.settings.compare_price_font_size | default: 12 }}px;
-      color: {{ block.settings.compare_price_color | default: '#aaaaaa' }};
+      font-size: {{ block.settings.compare_price_font_size | default: 14 }}px;
+      color: {{ block.settings.compare_price_color | default: '#999999' }};
       text-decoration: line-through;
-      line-height: 1.2;
-      transition: color 0.2s ease;
+      {% if layout_mode == 'row' %}
+      margin-top: 4px;
+      margin-left: 0;
+      display: block;
+      {% else %}
+      margin-right: 8px;
+      {% endif %}
+      transition: color 0.3s ease;
     }
 
     .bundle-option-{{ block.id }}.active .bundle-compare-price {
-      color: {{ block.settings.active_compare_price_color | default: '#aaaaaa' }};
+      color: {{ block.settings.active_compare_price_color | default: '#999999' }};
     }
 
-    /* === CUSTOM TEXT === */
     .bundle-option-{{ block.id }} .bundle-custom-text {
-      font-size: {{ block.settings.custom_text_font_size | default: 11 }}px;
+      font-size: {{ block.settings.custom_text_font_size | default: 12 }}px;
       font-weight: {{ block.settings.custom_text_font_weight | default: 400 }};
-      color: {{ block.settings.custom_text_color | default: '#888888' }};
-      margin-top: 1px;
-      line-height: 1.2;
-      transition: color 0.2s ease;
+      color: {{ block.settings.custom_text_color | default: '#666666' }};
+      margin-top: 4px;
+      transition: color 0.3s ease;
     }
 
     .bundle-option-{{ block.id }}.active .bundle-custom-text {
       color: {{ block.settings.custom_text_active_color | default: '#000000' }};
     }
 
-    /* === BADGE === */
     .bundle-option-{{ block.id }} .bundle-badge {
       position: absolute;
       z-index: 1;
@@ -260,13 +265,31 @@
     }
 
     .bundle-option-{{ block.id }} .bundle-badge-top-center:not(.bundle-badge-full-width) {
-      top: -9px;
+      top: 8px;
       left: 50%;
       transform: translateX(-50%);
     }
 
     .bundle-option-{{ block.id }}.bundle-has-badge {
-      margin-top: 6px;
+      margin-top: -15px;
+      padding-top: calc({{ block.settings.button_padding_vertical | default: 16 }}px + 15px);
+    }
+
+    .bundle-option-{{ block.id }} .bundle-content {
+      {% if layout_mode == 'row' %}
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      {% endif %}
+    }
+
+    .bundle-option-{{ block.id }} .bundle-price-wrapper {
+      {% if layout_mode == 'row' %}
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      {% endif %}
     }
   </style>
 
