@@ -402,7 +402,7 @@
             "border_width": 2,
             "border_radius": 12,
             "image_full_width": false,
-            "placeholder_size": 100,
+            "placeholder_size": 90,
             "placeholder_bg_color": "#f5f5f5",
             "image_border_radius": 0,
             "image_content_gap": 8,
