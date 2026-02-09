@@ -265,14 +265,14 @@
     }
 
     .bundle-option-{{ block.id }} .bundle-badge-top-center:not(.bundle-badge-full-width) {
-      top: 8px;
+      top: -10px;
       left: 50%;
       transform: translateX(-50%);
     }
 
     .bundle-option-{{ block.id }}.bundle-has-badge {
-      margin-top: -15px;
-      padding-top: calc({{ block.settings.button_padding_vertical | default: 16 }}px + 15px);
+      margin-top: 8px;
+      padding-top: {{ block.settings.button_padding_vertical | default: 16 }}px;
     }
 
     .bundle-option-{{ block.id }} .bundle-content {
@@ -281,6 +281,11 @@
       flex-direction: column;
       gap: 4px;
       flex: 1;
+      {% else %}
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
       {% endif %}
     }
 
@@ -289,6 +294,11 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      {% else %}
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
       {% endif %}
     }
   </style>
