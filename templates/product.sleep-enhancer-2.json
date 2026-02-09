@@ -251,7 +251,7 @@
             "frame_name_font_weight": 500,
             "frame_text_color": "#ffffff",
             "margin_top": 20,
-            "margin_bottom": 44,
+            "margin_bottom": 24,
             "show_debug": false
           }
         },
