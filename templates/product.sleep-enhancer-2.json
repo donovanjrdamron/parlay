@@ -1734,7 +1734,6 @@
         "review_rey9hX",
         "review_YFDKn8"
       ],
-      "disabled": true,
       "custom_css": [
         ".section-template--22818132590628__customer_review_slider_Ag9aVg .crs-card {height: 580px;}"
       ],
@@ -1742,7 +1741,7 @@
       "settings": {
         "use_theme_colors": false,
         "use_section_gradient": false,
-        "background_color": "#651111",
+        "background_color": "#ffffff",
         "gradient_enabled": false,
         "gradient_background": "linear-gradient(180deg, rgba(94, 201, 255, 1), rgba(9, 138, 203, 1) 100%)",
         "padding_top_desktop": 80,
@@ -3441,9 +3440,9 @@
     "main",
     "featured_collection_n6mJXY",
     "icon_benefit_list_BLzgbK",
+    "customer_review_slider_JXrfmA",
     "image_with_blocks_JKVYGX",
     "us_vs_them_tqCyr8",
-    "customer_review_slider_JXrfmA",
     "stats_counter_rFYdDm",
     "hero_benefits_L86ixD",
     "icon_benefit_list_aFqRJt",
