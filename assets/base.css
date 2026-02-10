@@ -21,8 +21,8 @@ html {scroll-behavior: smooth;}img, video {max-width: 100%;height: auto;vertical
   display: inline-block !important;
 }
 
-/* Custom Judge.me Verified Badge for All Reviewers */
-#judgeme_product_reviews .jdgm-rev__author::after {
+/* Alternative selectors in case Judge.me uses different structure */
+#judgeme_product_reviews .jdgm-rev__header::after {
   content: "Verified" !important;
   display: inline-block !important;
   border: 1px solid #333 !important;
@@ -34,10 +34,18 @@ html {scroll-behavior: smooth;}img, video {max-width: 100%;height: auto;vertical
   color: #333 !important;
   background-color: transparent !important;
   vertical-align: middle !important;
-  line-height: 1.2 !important;
 }
 
-/* Ensure author name displays properly with badge */
-#judgeme_product_reviews .jdgm-rev__author {
+#judgeme_product_reviews .jdgm-rev__buyer::after {
+  content: "Verified" !important;
   display: inline-block !important;
+  border: 1px solid #333 !important;
+  border-radius: 4px !important;
+  padding: 2px 8px !important;
+  margin-left: 8px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: #333 !important;
+  background-color: transparent !important;
+  vertical-align: middle !important;
 }
