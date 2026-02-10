@@ -620,9 +620,8 @@
 
     {% comment %} Custom Judge.me Verified Badge {% endcomment %}
     <style>
-      /* Judge.me Verified Badge - broad selectors to match dynamic widget */
-      .jdgm-rev__author::after,
-      .jdgm-rev__buyer::after {
+      /* Judge.me Verified Badge - targets actual Vue-based widget classes */
+      .jm-reviewer-info__name::after {
         content: "Verified" !important;
         display: inline-block !important;
         border: 1px solid #333 !important;
@@ -635,10 +634,6 @@
         background-color: transparent !important;
         vertical-align: middle !important;
         line-height: 1.2 !important;
-      }
-      .jdgm-rev__author {
-        display: inline-flex !important;
-        align-items: center !important;
       }
     </style>
   </head>
