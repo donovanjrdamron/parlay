@@ -164,8 +164,6 @@
     .bundle-option-{{ block.id }}.active {
       background: {{ block.settings.active_bg_color | default: '#f0f0f0' }};
       border-color: {{ block.settings.active_border_color | default: '#000000' }};
-      border-width: 2px;
-      padding: calc({{ block.settings.button_padding_vertical | default: 16 }}px - 1px) calc({{ block.settings.button_padding_horizontal | default: 16 }}px - 1px);
     }
 
     .bundle-option-{{ block.id }} .bundle-placeholders {
@@ -234,6 +232,13 @@
       font-size: {{ block.settings.compare_price_font_size | default: 14 }}px;
       color: {{ block.settings.compare_price_color | default: '#999999' }};
       text-decoration: line-through;
+      {% if layout_mode == 'row' %}
+      margin-top: 4px;
+      margin-left: 0;
+      display: block;
+      {% else %}
+      margin-right: 8px;
+      {% endif %}
       transition: color 0.3s ease;
     }
 
@@ -260,28 +265,21 @@
     }
 
     .bundle-option-{{ block.id }} .bundle-badge-top-center:not(.bundle-badge-full-width) {
-      top: -9px;
+      top: 8px;
       left: 50%;
       transform: translateX(-50%);
     }
 
     .bundle-option-{{ block.id }}.bundle-has-badge {
-      margin-top: 0;
-    }
-
-    .bundle-option-{{ block.id }}.bundle-has-badge .bundle-content {
-      margin-top: 8px;
-    }
-
-    .bundle-option-{{ block.id }}.bundle-has-badge .bundle-placeholders {
-      margin-top: 4px;
+      margin-top: -15px;
+      padding-top: calc({{ block.settings.button_padding_vertical | default: 16 }}px + 15px);
     }
 
     .bundle-option-{{ block.id }} .bundle-content {
       {% if layout_mode == 'row' %}
       display: flex;
       flex-direction: column;
-      gap: 1px;
+      gap: 4px;
       flex: 1;
       {% endif %}
     }
@@ -289,10 +287,8 @@
     .bundle-option-{{ block.id }} .bundle-price-wrapper {
       {% if layout_mode == 'row' %}
       display: flex;
-      flex-direction: row;
-      align-items: baseline;
-      gap: 3px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: flex-start;
       {% endif %}
     }
   </style>
