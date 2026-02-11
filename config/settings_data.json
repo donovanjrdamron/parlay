@@ -44,7 +44,7 @@
     "button_hover_background_color": "#008ccc",
     "button_hover_gradient_enabled": true,
     "button_hover_gradient": "linear-gradient(90deg, rgba(0, 140, 204, 1), rgba(91, 203, 255, 1) 100%)",
-    "enable_scroll_animations": true,
+    "enable_scroll_animations": false,
     "scroll_animation_type": "fade-up",
     "scroll_animation_threshold": 25,
     "slider_arrow_size": 30,
