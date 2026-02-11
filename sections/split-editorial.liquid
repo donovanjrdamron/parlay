@@ -1,0 +1,819 @@
+{% comment %}
+  Split Editorial Section
+  Clean 50/50 split-view with full-bleed image and text content
+{% endcomment %}
+
+<section class="split-editorial section-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="se-container {% if section.settings.image_position == 'right' %}se-container--reversed{% endif %}">
+
+    {% comment %} Image Side {% endcomment %}
+    <div class="se-image-col">
+      {% if section.settings.image != blank %}
+        <img
+          src="{{ section.settings.image | image_url: width: 1200 }}"
+          srcset="{{ section.settings.image | image_url: width: 600 }} 600w,
+                  {{ section.settings.image | image_url: width: 900 }} 900w,
+                  {{ section.settings.image | image_url: width: 1200 }} 1200w"
+          sizes="(max-width: 749px) 100vw, 50vw"
+          alt="{{ section.settings.image.alt | default: section.settings.heading }}"
+          loading="lazy"
+          class="se-image"
+        >
+      {% else %}
+        <div class="se-image-placeholder">
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {% endif %}
+    </div>
+
+    {% comment %} Text Side {% endcomment %}
+    <div class="se-text-col">
+      <div class="se-text-inner">
+        {% if section.settings.date_text != blank %}
+          <span class="se-date">{{ section.settings.date_text }}</span>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <{{ section.settings.heading_tag }} class="se-heading">{{ section.settings.heading }}</{{ section.settings.heading_tag }}>
+        {% endif %}
+
+        {% if section.settings.body_text != blank %}
+          <div class="se-body rte">{{ section.settings.body_text }}</div>
+        {% endif %}
+
+        {% if section.settings.button_label != blank %}
+          <a
+            {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
+            class="se-button"
+          >
+            {{ section.settings.button_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{%- style -%}
+  /* ===========================
+     Container & Layout
+     =========================== */
+  .section-{{ section.id }} {
+    {% if section.settings.full_width %}
+      max-width: 100%;
+      padding: 0;
+    {% else %}
+      max-width: {{ settings.page_width }}px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    {% endif %}
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+    overflow: hidden;
+    border-radius: {{ section.settings.border_radius }}px;
+  }
+
+  .section-{{ section.id }} .se-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: {{ section.settings.min_height_desktop }}px;
+  }
+
+  .section-{{ section.id }} .se-container--reversed {
+    direction: rtl;
+  }
+
+  .section-{{ section.id }} .se-container--reversed > * {
+    direction: ltr;
+  }
+
+  /* ===========================
+     Image Column
+     =========================== */
+  .section-{{ section.id }} .se-image-col {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section-{{ section.id }} .se-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ section.settings.image_focal_point }};
+    display: block;
+  }
+
+  .section-{{ section.id }} .se-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e5e5e5;
+  }
+
+  .section-{{ section.id }} .se-image-placeholder svg {
+    width: 60%;
+    opacity: 0.4;
+  }
+
+  /* ===========================
+     Text Column
+     =========================== */
+  .section-{{ section.id }} .se-text-col {
+    {% if section.settings.text_gradient_enabled %}
+      background: {{ section.settings.text_gradient }};
+    {% else %}
+      background-color: {{ section.settings.text_bg_color }};
+    {% endif %}
+    display: flex;
+    align-items: {{ section.settings.vertical_align }};
+    justify-content: {{ section.settings.horizontal_align }};
+    padding: {{ section.settings.text_padding_vertical }}px {{ section.settings.text_padding_horizontal }}px;
+  }
+
+  .section-{{ section.id }} .se-text-inner {
+    max-width: {{ section.settings.text_max_width }}px;
+    width: 100%;
+  }
+
+  /* ===========================
+     Date
+     =========================== */
+  .section-{{ section.id }} .se-date {
+    display: block;
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    font-size: {{ section.settings.date_font_size }}px;
+    font-weight: {{ section.settings.date_font_weight }};
+    color: {{ section.settings.date_color }};
+    letter-spacing: {{ section.settings.date_letter_spacing }}em;
+    text-transform: {{ section.settings.date_text_transform }};
+    margin-bottom: {{ section.settings.date_margin_bottom }}px;
+  }
+
+  /* ===========================
+     Heading
+     =========================== */
+  .section-{{ section.id }} .se-heading {
+    font-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+    font-size: {{ section.settings.heading_font_size_desktop }}px;
+    font-weight: {{ section.settings.heading_font_weight }};
+    color: {{ section.settings.heading_color }};
+    line-height: {{ section.settings.heading_line_height }};
+    margin: 0 0 {{ section.settings.heading_margin_bottom }}px 0;
+    letter-spacing: -0.01em;
+  }
+
+  /* ===========================
+     Body Text
+     =========================== */
+  .section-{{ section.id }} .se-body {
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    font-size: {{ section.settings.body_font_size_desktop }}px;
+    font-weight: {{ section.settings.body_font_weight }};
+    color: {{ section.settings.body_color }};
+    line-height: {{ section.settings.body_line_height }};
+    margin-bottom: {{ section.settings.body_margin_bottom }}px;
+  }
+
+  .section-{{ section.id }} .se-body p {
+    margin: 0 0 1em 0;
+  }
+
+  .section-{{ section.id }} .se-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ===========================
+     Button
+     =========================== */
+  .section-{{ section.id }} .se-button {
+    display: inline-block;
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    font-size: {{ section.settings.button_font_size }}px;
+    font-weight: {{ section.settings.button_font_weight }};
+    color: {{ section.settings.button_text_color }};
+    background-color: {{ section.settings.button_bg_color }};
+    border: {{ section.settings.button_border_width }}px solid {{ section.settings.button_border_color }};
+    border-radius: {{ section.settings.button_border_radius }}px;
+    padding: {{ section.settings.button_padding_vertical }}px {{ section.settings.button_padding_horizontal }}px;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    margin-top: {{ section.settings.button_margin_top }}px;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+  }
+
+  .section-{{ section.id }} .se-button:hover {
+    opacity: 0.85;
+  }
+
+  /* ===========================
+     Mobile Responsive
+     =========================== */
+  @media screen and (max-width: 749px) {
+    .section-{{ section.id }} {
+      margin-top: {{ section.settings.margin_top_mobile }}px;
+      margin-bottom: {{ section.settings.margin_bottom_mobile }}px;
+    }
+
+    .section-{{ section.id }} .se-container {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+
+    .section-{{ section.id }} .se-container--reversed {
+      direction: ltr;
+    }
+
+    .section-{{ section.id }} .se-image-col {
+      {% if section.settings.mobile_image_position == 'below' %}
+        order: 2;
+      {% else %}
+        order: 1;
+      {% endif %}
+      min-height: {{ section.settings.mobile_image_height }}px;
+    }
+
+    .section-{{ section.id }} .se-text-col {
+      {% if section.settings.mobile_image_position == 'below' %}
+        order: 1;
+      {% else %}
+        order: 2;
+      {% endif %}
+      padding: {{ section.settings.text_padding_vertical_mobile }}px {{ section.settings.text_padding_horizontal_mobile }}px;
+    }
+
+    .section-{{ section.id }} .se-heading {
+      font-size: {{ section.settings.heading_font_size_mobile }}px;
+    }
+
+    .section-{{ section.id }} .se-body {
+      font-size: {{ section.settings.body_font_size_mobile }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Split Editorial",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "min_height_desktop",
+      "label": "Min height (Desktop)",
+      "min": 300,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top (Desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom (Desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_top_mobile",
+      "label": "Margin top (Mobile)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_mobile",
+      "label": "Margin bottom (Mobile)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_focal_point",
+      "label": "Image focal point",
+      "options": [
+        { "value": "top left", "label": "Top left" },
+        { "value": "top center", "label": "Top center" },
+        { "value": "top right", "label": "Top right" },
+        { "value": "center left", "label": "Center left" },
+        { "value": "center center", "label": "Center" },
+        { "value": "center right", "label": "Center right" },
+        { "value": "bottom left", "label": "Bottom left" },
+        { "value": "bottom center", "label": "Bottom center" },
+        { "value": "bottom right", "label": "Bottom right" }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_height",
+      "label": "Mobile image height",
+      "min": 200,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "default": 350
+    },
+    {
+      "type": "select",
+      "id": "mobile_image_position",
+      "label": "Mobile image position",
+      "options": [
+        { "value": "above", "label": "Above text" },
+        { "value": "below", "label": "Below text" }
+      ],
+      "default": "above"
+    },
+    {
+      "type": "header",
+      "content": "Text Background"
+    },
+    {
+      "type": "color",
+      "id": "text_bg_color",
+      "label": "Background color",
+      "default": "#2a3444"
+    },
+    {
+      "type": "checkbox",
+      "id": "text_gradient_enabled",
+      "label": "Enable gradient",
+      "default": false
+    },
+    {
+      "type": "color_background",
+      "id": "text_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(135deg, rgba(42, 52, 68, 1), rgba(30, 38, 50, 1) 100%)"
+    },
+    {
+      "type": "header",
+      "content": "Text Alignment"
+    },
+    {
+      "type": "select",
+      "id": "vertical_align",
+      "label": "Vertical alignment",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_align",
+      "label": "Horizontal alignment",
+      "options": [
+        { "value": "flex-start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Right" }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "range",
+      "id": "text_max_width",
+      "label": "Text max width",
+      "min": 250,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "default": 420
+    },
+    {
+      "type": "header",
+      "content": "Text Padding"
+    },
+    {
+      "type": "range",
+      "id": "text_padding_vertical",
+      "label": "Vertical padding (Desktop)",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "text_padding_horizontal",
+      "label": "Horizontal padding (Desktop)",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "text_padding_vertical_mobile",
+      "label": "Vertical padding (Mobile)",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_padding_horizontal_mobile",
+      "label": "Horizontal padding (Mobile)",
+      "min": 16,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Date"
+    },
+    {
+      "type": "text",
+      "id": "date_text",
+      "label": "Date text",
+      "default": "1.28.26"
+    },
+    {
+      "type": "range",
+      "id": "date_font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "date_font_weight",
+      "label": "Font weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "color",
+      "id": "date_color",
+      "label": "Color",
+      "default": "#a0aec0"
+    },
+    {
+      "type": "range",
+      "id": "date_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 0,
+      "info": "In 0.01em increments"
+    },
+    {
+      "type": "select",
+      "id": "date_text_transform",
+      "label": "Text transform",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "date_margin_bottom",
+      "label": "Margin bottom",
+      "min": 4,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Parlay Editorial"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_desktop",
+      "label": "Font size (Desktop)",
+      "min": 20,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_mobile",
+      "label": "Font size (Mobile)",
+      "min": 18,
+      "max": 44,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "select",
+      "id": "heading_font_weight",
+      "label": "Font weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi Bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_height",
+      "label": "Line height",
+      "default": "1.2"
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "label": "Margin bottom",
+      "min": 8,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Body Text"
+    },
+    {
+      "type": "richtext",
+      "id": "body_text",
+      "label": "Body text",
+      "default": "<p>Add your editorial content here. Share the story behind the collection, the inspiration, or the craftsmanship that goes into every detail.</p><p>Use multiple paragraphs to create clean visual rhythm with comfortable spacing between ideas.</p>"
+    },
+    {
+      "type": "range",
+      "id": "body_font_size_desktop",
+      "label": "Font size (Desktop)",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "body_font_size_mobile",
+      "label": "Font size (Mobile)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "body_font_weight",
+      "label": "Font weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Color",
+      "default": "#cbd5e0"
+    },
+    {
+      "type": "text",
+      "id": "body_line_height",
+      "label": "Line height",
+      "default": "1.7"
+    },
+    {
+      "type": "range",
+      "id": "body_margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Font size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "button_font_weight",
+      "label": "Font weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi Bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Background color",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "label": "Padding vertical",
+      "min": 6,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "label": "Padding horizontal",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "button_margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Split Editorial",
+      "category": "Image",
+      "settings": {
+        "full_width": true,
+        "image_position": "left",
+        "min_height_desktop": 500,
+        "text_bg_color": "#2a3444",
+        "heading": "Parlay Editorial",
+        "date_text": "1.28.26",
+        "body_text": "<p>Add your editorial content here. Share the story behind the collection, the inspiration, or the craftsmanship that goes into every detail.</p><p>Use multiple paragraphs to create clean visual rhythm with comfortable spacing between ideas.</p>"
+      }
+    }
+  ]
+}
+{% endschema %}
