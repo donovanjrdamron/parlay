@@ -11,13 +11,180 @@
   "sections": {
     "main": {
       "type": "main-page",
+      "disabled": true,
       "settings": {
         "padding_top": 100,
         "padding_bottom": 0
       }
+    },
+    "video_hero_QBU9d7": {
+      "type": "video-hero",
+      "blocks": {
+        "heading_tQgtGy": {
+          "type": "heading",
+          "settings": {
+            "heading": "Designed for the light we live under."
+          }
+        },
+        "subheading_yFNMTJ": {
+          "type": "subheading",
+          "settings": {
+            "subheading": "Parlay creates eyewear that helps protect focus, energy, and sleep in a world built on artificial light."
+          }
+        },
+        "text_LKRrjw": {
+          "type": "text",
+          "settings": {
+            "text": "<p>We don’t believe in extremes.<br/><br/>We believe in alignment.</p>"
+          }
+        },
+        "button_J7XPnU": {
+          "type": "button",
+          "settings": {
+            "button_text": "Shop Now",
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "heading_tQgtGy",
+        "subheading_yFNMTJ",
+        "text_LKRrjw",
+        "button_J7XPnU"
+      ],
+      "name": "Video Hero",
+      "settings": {
+        "min_height": 90,
+        "min_height_mobile": 60,
+        "background_color": "#000000",
+        "enable_overlay": true,
+        "overlay_color": "#000000",
+        "overlay_opacity": 30,
+        "border_radius": 0,
+        "border_radius_mobile": 0,
+        "content_width": 450,
+        "content_max_width": 450,
+        "content_width_mobile": 300,
+        "text_alignment": "left",
+        "content_position_type": "pixels",
+        "content_top_position": 50,
+        "content_bottom_position": 80,
+        "content_vertical_offset": 0,
+        "content_left_margin": 40,
+        "content_top_position_mobile": 50,
+        "content_bottom_position_mobile": 60,
+        "content_vertical_offset_mobile": 0,
+        "content_left_margin_mobile": 30,
+        "content_padding_vertical": 60,
+        "content_padding_horizontal": 40,
+        "content_padding_vertical_mobile": 40,
+        "content_padding_horizontal_mobile": 20,
+        "heading_color": "#FFFFFF",
+        "heading_font_size": 32,
+        "heading_font_size_mobile": 24,
+        "heading_font_weight": "700",
+        "heading_line_height": 1.2,
+        "heading_margin_top": 0,
+        "heading_margin_bottom": 20,
+        "heading_letter_spacing": 0,
+        "subheading_color": "#FFFFFF",
+        "subheading_font_size": 20,
+        "subheading_font_size_mobile": 18,
+        "subheading_font_weight": "500",
+        "subheading_line_height": 1.4,
+        "subheading_margin_top": 0,
+        "subheading_margin_bottom": 20,
+        "subheading_letter_spacing": 0,
+        "text_color": "#FFFFFF",
+        "text_font_size": 18,
+        "text_font_size_mobile": 16,
+        "text_line_height": 1.6,
+        "text_margin_top": 0,
+        "text_margin_bottom": 30,
+        "text_letter_spacing": 0,
+        "button_background_color": "#620a0a",
+        "button_text_color": "#FFFFFF",
+        "button_hover_background_color": "#7a0d0d",
+        "button_hover_text_color": "#FFFFFF",
+        "button_border_color": "#620a0a",
+        "button_hover_border_color": "#7a0d0d",
+        "button_border_width": 0,
+        "button_border_radius": 4,
+        "button_padding_vertical": 16,
+        "button_padding_horizontal": 32,
+        "button_font_size": 16,
+        "button_padding_vertical_mobile": 14,
+        "button_padding_horizontal_mobile": 28,
+        "button_font_size_mobile": 14,
+        "button_font_weight": "600"
+      }
+    },
+    "split_editorial_dRgxHD": {
+      "type": "split-editorial",
+      "name": "Split Editorial",
+      "settings": {
+        "full_width": true,
+        "image_position": "left",
+        "min_height_desktop": 500,
+        "border_radius": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_mobile": 0,
+        "image": "shopify://shop_images/Frame222_8a977833-d2f7-4050-ad77-ac9e34298b30.png",
+        "image_focal_point": "center center",
+        "mobile_image_height": 350,
+        "mobile_image_position": "below",
+        "text_bg_color": "#2a3444",
+        "text_gradient_enabled": false,
+        "text_gradient": "linear-gradient(135deg, rgba(42, 52, 68, 1), rgba(30, 38, 50, 1) 100%)",
+        "vertical_align": "center",
+        "horizontal_align": "flex-start",
+        "text_max_width": 420,
+        "text_padding_vertical": 60,
+        "text_padding_horizontal": 60,
+        "text_padding_vertical_mobile": 40,
+        "text_padding_horizontal_mobile": 24,
+        "date_text": "Parlay",
+        "date_font_size": 13,
+        "date_font_weight": "400",
+        "date_color": "#a0aec0",
+        "date_letter_spacing": 0,
+        "date_text_transform": "none",
+        "date_margin_bottom": 16,
+        "heading": "The Problem",
+        "heading_tag": "h2",
+        "heading_font_size_desktop": 32,
+        "heading_font_size_mobile": 26,
+        "heading_font_weight": "700",
+        "heading_color": "#ffffff",
+        "heading_line_height": "1.2",
+        "heading_margin_bottom": 24,
+        "body_text": "<p>For most of human history, light followed a rhythm. Bright during the day. Dim after sunset.</p><p>Modern life changed that.</p><p>Screens, LEDs, and overhead lighting now extend daylight deep into the night — quietly interfering with the biological signals that regulate focus, alertness, and sleep.</p><p>This isn’t a discipline issue.<br/>It’s an environmental one.</p><p>Use multiple paragraphs to create clean visual rhythm with comfortable spacing between ideas.</p>",
+        "body_font_size_desktop": 15,
+        "body_font_size_mobile": 14,
+        "body_font_weight": "400",
+        "body_color": "#cbd5e0",
+        "body_line_height": "1.7",
+        "body_margin_bottom": 0,
+        "button_label": "",
+        "button_link": "",
+        "button_font_size": 14,
+        "button_font_weight": "500",
+        "button_text_color": "#ffffff",
+        "button_bg_color": "rgba(0,0,0,0)",
+        "button_border_color": "#ffffff",
+        "button_border_width": 1,
+        "button_border_radius": 4,
+        "button_padding_vertical": 12,
+        "button_padding_horizontal": 24,
+        "button_margin_top": 24
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "video_hero_QBU9d7",
+    "split_editorial_dRgxHD"
   ]
 }
