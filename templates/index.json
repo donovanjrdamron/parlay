@@ -250,7 +250,7 @@
         "section_padding_top_desktop": 8,
         "section_padding_bottom_desktop": 60,
         "show_heading": true,
-        "heading_before": "Best Sellers",
+        "heading_before": "Best Sellers This Month",
         "heading_after": "",
         "highlighted_text": "",
         "highlight_position": "inline_second",
